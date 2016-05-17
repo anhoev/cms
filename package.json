@@ -5,7 +5,7 @@
   "main": "index.html",
   "repository": {
     "type": "git",
-    "url": ".git"
+    "url": "https://github.com/anhoev/cms.git"
   },
   "author": "Tran Tuan Anh <anhoev@yahoo.de>",
   "private": true,
