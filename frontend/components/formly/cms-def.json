@@ -1,0 +1,49 @@
+{
+  "!name": "cms-def",
+  "this": {
+    "!type": "fn()",
+    "$find": {
+      "!type": "fn(type: string, id: string|ObjectId) -> object",
+      "!url": "",
+      "!doc": "use to find a element with id or with ref. e.g. this.$find('Button', this.friend);"
+    },
+    "$send": {
+      "!type": "fn(event: string, obj: Object) -> Promise",
+      "!url": "",
+      "!doc": "to send obj to another element with id, result is a promise to run callback. event has a format : 'id/event'"
+    }
+  },
+  "cms": {
+    "findByID": {
+      "!type": "fn(type: string, ID: string) -> object",
+      "!url": "",
+      "!doc": "use to find a element with ID. e.g. cms.findByID('Button', 'button_id_here');"
+    },
+    "findByRef": {
+      "!type": "fn(type: string, ref: string) -> object",
+      "!url": "",
+      "!doc": "use to find a element with ID. e.g. cms.findByRef('Button', 'button_id_here');"
+    },
+    "findFnByID": {
+      "!type": "fn(type: string, ID: string) -> object",
+      "!url": "",
+      "!doc": "use to find a fn for element with ID. e.g. cms.findFnByID('Button', 'button_id_here');"
+    },
+    "findFnByRef": {
+      "!type": "fn(type: string, ref: string) -> object",
+      "!url": "",
+      "!doc": "use to find a fn for element with ref. e.g. cms.findFnByRef('Button', 'button_id_here');"
+    },
+    "createModel": {
+      "!type": "fn(type: string, cb: fn(Type: object, ref: string|ObjectId, element: object)) -> object",
+      "!url": "",
+      "!doc": "use to create new element with type. e.g. cms.createModel('Button', cb);"
+    },
+    "data": {
+      "types": {
+        "!type": "object",
+        "!doc": "a map of Types"
+      }
+    }
+  }
+}

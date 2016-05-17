@@ -1,0 +1,18 @@
+<div class="ui-select-container ui-select-multiple ui-select-bootstrap dropdown form-control">
+    <span>
+        <button type="button" class="ui-select-match-item btn btn-default btn-xs"
+                style="min-width: 30px;"
+                ng-click="model[options.key].splice($index,1)"
+                ng-repeat="item in model[options.key] track by $index">
+            {{item}}
+        </button>
+    </span>
+    <div class="btn-group" uib-dropdown>
+        <input class="ui-select-search input-xs" uib-dropdown-toggle>
+        <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
+            <li role="menuitem" ng-repeat="option in to.options track by $index">
+                <a ng-click="add(option.value)">{{option.name}}</a>
+            </li>
+        </ul>
+    </div>
+</div>

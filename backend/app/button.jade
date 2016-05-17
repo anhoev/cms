@@ -1,0 +1,3 @@
+div
+    button(ng-bind="model.text", ng-attr-class="{{model.class.join(' ')}}")
+    p(ng-repeat="_class in model.class track by $index") {{_class}}

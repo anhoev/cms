@@ -1,0 +1,8 @@
+div
+    div(
+    ng-repeat="product in serverFn.products() track by $index"
+    cms-editor="{ref: product._id, type: 'Product'}"
+    cms-remove="serverFn.products().splice($index, 1)"
+    cms-menu="true")
+        span(ng-bind="product.text")
+        span(ng-bind="product.price")

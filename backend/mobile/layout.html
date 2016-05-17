@@ -1,0 +1,12 @@
+<div ng-repeat="layout in model.layout track by $index">
+    <div ng-if="layout.choice === 'gridBS'">
+        <div ng-repeat="cols in layout.gridBS.cols track by $index" class="row">
+            <div ng-repeat="col in cols.col track by $index" style="margin-bottom:5px;" class="col-xs-{{col}}">
+                <div class="cms-layout"
+                     cms-container="{{cols._id}}-{{$index}}"
+                     cms-inline="{{layout.gridBS.orientation === &quot;horizontal&quot;?&quot;true&quot;:&quot;&quot;}}"
+                     cms-container-types="{{layout.gridBS.types.join(',')}}"></div>
+            </div>
+        </div>
+    </div>
+</div>

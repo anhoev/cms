@@ -1,0 +1,10 @@
+div
+    span(
+    ng-repeat="button in serverFn.buttons() track by $index"
+    cms-editor="{ref: button._id, type: 'Button'}"
+    cms-remove="serverFn.buttons().splice($index, 1)"
+    cms-menu="true")
+        button(
+        ng-bind="button.text"
+        ng-style="fn.getWebStyles(button)"
+        ng-click="model.onclick()")

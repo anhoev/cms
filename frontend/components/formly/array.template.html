@@ -1,0 +1,18 @@
+<div style="min-height: 20px;position: relative;"
+     ng-repeat="element in model[options.key] track by $index"
+     ng-init="fields = copyField(to.field, $index);">
+    <button type="button" class="btn btn-xs btn-white"
+            style="position: absolute;right: 0px;z-index: 1;"
+            ng-click="model[options.key].splice($index, 1)">
+        <i class="fa fa-trash-o"></i>
+    </button>
+    <formly-form fields="fields" model="model" form="form">
+    </formly-form>
+</div>
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+        <button type="button" class="btn btn-white btn-xs"
+                ng-click="addNew()" style="z-index: 1;">{{to.btnText}}
+        </button>
+    </div>
+</div>

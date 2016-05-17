@@ -1,0 +1,58 @@
+<div class="cms-wrapper animated fadeInRight cms-sidebar cms-admin">
+    <button type="button" class="btn btn-sm btn-white cms-close-position"
+            ng-click="cancel()">
+        <i class="fa fa-times"></i>
+    </button>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <h2>Administration:</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-3 cms-panel">
+            <div class="panel panel-default">
+                <div class="panel-heading">Types</div>
+                <div class="panel-body">
+                    <div js-tree="treeConfig" ng-model="tree"
+                         tree-events="changed:selectNode"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-9 cms-panel">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <button class="btn btn-white btn-xs pull-right" ng-click="add()">
+                        Add
+                    </button>
+                    List
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th ng-repeat="col in node.columns" ng-bind="col"></th>
+                            <th>Edit</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="element in list">
+                            <td ng-repeat="col in node.columns" ng-if="list.length < 50">
+                                <span
+                                      cms-editable="element[col]"
+                                      cms-property="model.{{col}}"
+                                      cms-id="{{element._id}}"
+                                      cms-type="{{node.text}}"
+                                      admin-list="true"></span>
+                            </td>
+                            <td ng-repeat="col in node.columns" ng-bind="get(element, col)" ng-if="list.length > 50"></td>
+                            <td><div cms-editor="{ref: element._id, type:node.text}" cms-remove="remove(element)"></div></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

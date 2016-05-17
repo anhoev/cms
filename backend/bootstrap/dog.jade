@@ -1,0 +1,8 @@
+div
+  h3(style="font-weight:200;") Here is a dog, whose name is&nbsp;
+    span(cms-editable='model.name')
+    | , has a child , whose name is&nbsp;
+    span(cms-editable='model.children.name')
+
+  div(ng-show= 'model.hasNested').panel.panel-default: .panel-body
+    div(cms-container= '_cats',cms-container-types='Cat,Button', style='width:600px')

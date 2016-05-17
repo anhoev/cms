@@ -1,0 +1,15 @@
+<div>
+    <uib-tabset ng-if="model.tab && model.tab.length > 0">
+        <uib-tab ng-repeat='tab in model.tab track by $index'
+                 heading='{{tab.text}}'
+                 active='tab.active'>
+            <div cms-container='tab_{{$index}}'
+                 cms-container-types='Layout'
+                 style="padding-top: 10px;padding-bottom: 10px;"></div>
+        </uib-tab>
+    </uib-tabset>
+    <div ng-if="!model.tab || model.tab.length === 0"
+         cms-container='rootpage'
+         cms-container-types='Layout'
+         style="padding-top: 10px;padding-bottom: 10px;"></div>
+</div>

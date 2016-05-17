@@ -1,0 +1,23 @@
+<div class="form-group">
+    <label class="control-label {{size.label}}" uib-tooltip='{{to.tooltip}}'>
+        {{to.label}}
+    </label>
+    <div class="{{size.input}}">
+
+        <button type="button"
+                class="btn btn-white btn-xs"
+                style="margin-top: 7px;"
+                ng-click="showCode(); selectTab();">
+            {{!show? 'show code': 'hide code'}}
+        </button>
+        <span class="label label-danger" ng-show="hasError">The code has error</span>
+    </div>
+
+</div>
+<ui-codemirror ng-show="show"
+                     ng-model="_model"
+                     ui-codemirror-opts="editorOptions"
+                     ui-codemirror="{ onLoad : codemirrorLoaded }"
+                     ui-refresh='refresh'>
+</ui-codemirror>
+<br>

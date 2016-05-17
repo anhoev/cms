@@ -1,0 +1,37 @@
+<ul role="menu" class="dropdown-menu" ng-init="vm._showType= true">
+    <li ng-repeat="type in vm.types"
+        dnd-draggable="type"
+        dnd-type="type.type"
+        dnd-dragstart="vm.start(type.type)"
+        dnd-effect-allowed="move"
+        dnd-dragend="vm.end()"
+        ng-show="vm._showType">
+        <a ng-click="vm._showType = !vm._showType;
+                    vm.selectType(type.type);
+                    $event.stopPropagation();">
+            {{type.type}}
+        </a>
+    </li>
+    <li ng-show="!vm._showType"
+        style="padding-left: 5px;padding-right: 20px;">
+        <div class="col-xs-10">
+            <input type="text" class="input-xs" ng-model="vm._filter">
+        </div>
+        <div class="col-xs-2">
+            <button type="button" class="btn btn-xs btn-white"
+                    ng-click="vm._showType = !vm._showType;$event.stopPropagation();">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+    </li>
+    <li ng-repeat="element in vm.list"
+        ng-init="_element = vm.convert(element)"
+        dnd-draggable="_element"
+        dnd-type="vm._type"
+        dnd-effect-allowed="move"
+        dnd-dragstart="vm.start(vm._type)"
+        dnd-dragend="vm.end()"
+        ng-show="!vm._showType">
+        <a ng-click="">{{vm.getTitle(element)}}</a>
+    </li>
+</ul>

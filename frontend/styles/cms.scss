@@ -1,0 +1,394 @@
+.cms-containers, .cms-containers-inline {
+  > div {
+    position: relative;
+  }
+
+  min-height: 42px;
+  padding-left: 0px;
+
+  .cms-element {
+    display: inline-block;
+  }
+  .dndDraggingSource {
+    display: none !important;
+  }
+}
+
+.cms-containers {
+  .dndPlaceholder {
+    display: block;
+    background-color: #ddd;
+    min-height: 42px;
+    position: relative;
+  }
+}
+
+.cms-containers-inline {
+  .dndPlaceholder {
+    display: inline-block;
+    background-color: #ddd;
+    min-height: 20px;
+    width: 50px;
+    position: relative;
+  }
+}
+
+[cms-editable] {
+  border-bottom: 1px solid rgba(221, 221, 221, 0.53);
+  display: inline;
+}
+
+.cms-element-controll-icon, .cms-element-controll {
+  position: absolute;
+  z-index: 1;
+}
+
+.cms-element-controll {
+  width: 150px;
+  right: 10px;
+}
+
+.cms-element-controll-icon {
+  right: 20px;
+}
+
+.cms-admin {
+  .cms-element-controll-icon {
+    right: initial;
+  }
+  .cms-element-controll {
+    right: initial;
+    margin-left: -115px;
+  }
+}
+
+.cms-window {
+  .modal-dialog {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .modal-content {
+    height: 100%;
+    border-radius: 0;
+    overflow: auto;
+  }
+}
+
+.vakata-context.jstree-contextmenu.jstree-proton-contextmenu {
+  z-index: 10000;
+}
+
+.cms-close-position {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  z-index: 1;
+}
+
+.cms-controll-panel-right {
+  position: absolute;
+  right: 3px;
+  top: 37px;
+  border-radius: 10px;
+  height: 94%;
+  background-color: rgba(0, 0, 0, 0.03);
+  padding: 10px;
+}
+
+.cms-sidebar {
+  h3, h4, h5 {
+    font-weight: 400;
+  }
+}
+
+a[ng-click], a[cms-admin] {
+  cursor: pointer;
+}
+
+.cms-btn-bottom.btn {
+  margin-bottom: 5px;
+  display: block;
+}
+
+.input-group-xs > .form-control,
+.input-group-xs > .input-group-addon,
+.input-group-xs > .input-group-btn > .btn,
+.form-control.input-xs, .cms-select .ui-select-toggle, .cms-select .ui-select-search {
+  height: 22px;
+  padding: 2px 5px;
+  font-size: 12px;
+  line-height: 1.5; //If Placeholder of the input is moved up, rem/modify this.
+  border-radius: 3px;
+}
+
+[cms-editable] {
+  .popover {
+    z-index: 10000;
+    min-width: 250px;
+    max-width: none;
+  }
+  .form-horizontal .control-label {
+    text-align: left;
+  }
+  .col-sm-10, .col-sm-2 {
+    width: 100%
+  }
+  .col-sm-10 {
+    margin-top: 5px;
+  }
+}
+
+[cms-login] {
+  .form-signin {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+    .form-signin-heading {
+      margin-bottom: 10px;
+    }
+    .checkbox {
+      margin-bottom: 10px;
+      font-weight: normal;
+    }
+    .form-control {
+      position: relative;
+      height: auto;
+      //Instead of the line below you could use @include box-sizing($bs)
+      box-sizing: border-box;
+      padding: 10px;
+      font-size: 16px;
+      &:focus {
+        z-index: 2;
+      }
+    }
+    input[type="email"] {
+      margin-bottom: -1px;
+      //Instead of the line below you could use @include border-bottom-right-radius($radius)
+      border-bottom-right-radius: 0;
+      //Instead of the line below you could use @include border-bottom-left-radius($radius)
+      border-bottom-left-radius: 0;
+    }
+    input[type="password"] {
+      margin-bottom: 10px;
+      //Instead of the line below you could use @include border-top-left-radius($radius)
+      border-top-left-radius: 0;
+      //Instead of the line below you could use @include border-top-right-radius($radius)
+      border-top-right-radius: 0;
+    }
+  }
+}
+
+.cms-panel {
+  .panel {
+    border-radius: 1px;
+    .panel-default {
+      border-color: #e7eaec;
+    }
+  }
+
+  .panel-heading {
+    border-radius: 1px;
+    color: black;
+    padding: 4px 10px;
+  }
+  .cms-border {
+    position: relative;
+    border: 1px solid #bbb;
+    margin: 10px 0px;
+    padding: 5px 5px 0px 5px;
+    background-color: #ddd;
+    -moz-box-shadow: inset 0 1px 1px #eeeeee;
+    -ms-box-shadow: inset 0 1px 1px #eeeeee;
+    -o-box-shadow: inset 0 1px 1px #eeeeee;
+    -webkit-box-shadow: inset 0 1px 1px #EEE;
+    box-shadow: inset 0 1px 1px #EEE;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    &:before {
+      z-index: -1;
+      position: absolute;
+      content: "";
+      bottom: 15px;
+      left: 10px;
+      width: 50%;
+      top: 50%;
+      max-width: 300px;
+      background: rgba(0, 0, 0, 0.7);
+      -webkit-box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+      -moz-box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+      -webkit-transform: rotate(-3deg);
+      -moz-transform: rotate(-3deg);
+      -o-transform: rotate(-3deg);
+      -ms-transform: rotate(-3deg);
+      transform: rotate(-3deg);
+    }
+    &:after {
+      z-index: -1;
+      position: absolute;
+      content: "";
+      bottom: 15px;
+      left: 10px;
+      width: 50%;
+      top: 50%;
+      max-width: 300px;
+      background: rgba(0, 0, 0, 0.7);
+      -webkit-box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+      -moz-box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+      -webkit-transform: rotate(-3deg);
+      -moz-transform: rotate(-3deg);
+      -o-transform: rotate(-3deg);
+      -ms-transform: rotate(-3deg);
+      transform: rotate(-3deg);
+      -webkit-transform: rotate(3deg);
+      -moz-transform: rotate(3deg);
+      -o-transform: rotate(3deg);
+      -ms-transform: rotate(3deg);
+      transform: rotate(3deg);
+      right: 10px;
+      left: auto;
+    }
+  }
+}
+
+.cms-wrapper {
+  padding: 20px;
+  position: relative;
+}
+
+.btn-white {
+  color: inherit;
+  background: white;
+  border: 1px solid #e7eaec;
+  &:hover, &:focus, &:active, &.active {
+    color: inherit;
+    border: 1px solid #d2d2d2;
+  }
+  &:active {
+    &:focus, &:hover {
+      color: inherit;
+      border: 1px solid #d2d2d2;
+    }
+  }
+  &.active {
+    &:hover, &:focus {
+      color: inherit;
+      border: 1px solid #d2d2d2;
+    }
+  }
+  &:active, &.active {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15) inset;
+  }
+  &:active, &.active {
+    background-image: none;
+  }
+
+  &.disabled {
+    color: #cacaca;
+    &:hover, &:focus, &:active, &.active {
+      color: #cacaca;
+    }
+  }
+  &[disabled] {
+    color: #cacaca;
+    &:hover, &:focus, &:active {
+      color: #cacaca;
+    }
+  }
+  &.active[disabled] {
+    color: #cacaca;
+  }
+
+}
+
+fieldset[disabled] .btn-white {
+  color: #cacaca;
+  &:hover, &:focus, &:active, &.active {
+    color: #cacaca;
+  }
+}
+
+.btn.btn-white {
+  border: 1px solid #e7eaec;
+}
+
+.cms-panel-highlight {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+// todo :mixin
+.cms-form {
+  .form-control {
+    @extend .input-sm;
+  }
+  .control-label {
+    font-weight: 500;
+  }
+}
+
+.lint-error {
+  font-family: arial;
+  font-size: 70%;
+  background: #ffa;
+  color: #a00;
+  padding: 2px 5px 3px;
+}
+
+.lint-error-icon {
+  color: white;
+  background-color: red;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 0 3px;
+  margin-right: 7px;
+}
+
+ul.CodeMirror-hints {
+  z-index: 100000001;
+}
+
+div.CodeMirror-lint-tooltip {
+  z-index: 100000000;
+}
+
+[data-ng-app] .CodeMirror-Tern-tooltip {
+  z-index: 100000000;
+}
+
+.scrollable-menu {
+  height: auto;
+  max-height: 200px;
+  overflow-x: hidden;
+}
+
+.cms-edit-shadow {
+  display: inline-block;
+  -webkit-box-shadow: 0 0 4px 0 #f0ad4e;
+  -moz-box-shadow: 0 0 4px 0 #f0ad4e;
+  box-shadow: 0 0 4px 0 #f0ad4e;
+}
+
+.nonDraggableImage {
+  -webkit-user-drag: none;
+}
+
+.cms-layout {
+  margin-top: 15px;
+  padding: 5px;
+  border: 1px dashed rgba(111, 164, 210, 0.4);
+  border-radius: 10px;
+}
+
+[cms-fragment] {
+  .cms-layout {
+    margin-top: 0px;
+    padding: 0px;
+    border: none;
+    border-radius: 0px;
+  }
+}

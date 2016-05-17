@@ -1,0 +1,22 @@
+doctype html
+html(lang='de')
+    head
+        meta(charset='UTF-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1')
+        link(rel="stylesheet", href="/lib/bootstrap/dist/css/bootstrap.css")
+        link(rel="stylesheet", href="/build/cms.css")
+        base(href='/')
+    body.pace-done.gray-bg
+        .container(cms-login="")
+            form(action="cms-login" method="post").form-signin
+                #alert.alert.alert-danger.hide login fail!
+                h2.form-signin-heading Please sign in
+                label.sr-only(for='inputEmail') Email address
+                input#inputEmail.form-control(name= 'email',type='email', placeholder='Email address', required='', autofocus='')
+                label.sr-only(for='inputPassword') Password
+                input#inputPassword.form-control(name= 'password',type='password', placeholder='Password', required='')
+                .checkbox
+                    label
+                        input(name= 'remember',type='checkbox', value='remember-me')
+                        |  Remember me
+                button.btn.btn-lg.btn-primary.btn-block(type='submit') Sign in

@@ -1,0 +1,7 @@
+<form ng-submit="vm.onSubmit()" novalidate class="form-horizontal" style="">
+    <formly-form model="model" fields="vm.fields" form="vm.form">
+        <button type="submit" class="btn btn-primary submit-button" ng-disabled="vm.form.$invalid">Submit</button>
+        <button type="button" class="btn btn-primary" ng-click="vm.isOpen = false">Cancel</button>
+    </formly-form>
+</form>
+<br ng-if="adminList === 'true'">

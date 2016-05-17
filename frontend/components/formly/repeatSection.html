@@ -1,0 +1,52 @@
+<div>
+    <div dnd-list="model[options.key]"
+         class="cms-containers" style="min-height: 0px">
+        <div class="repeatsection"
+             style="position: relative"
+             ng-repeat="element in model[options.key] "
+             dnd-draggable="element"
+             dnd-moved="model[options.key].splice($index, 1);"
+             dnd-effect-allowed="move"
+             ng-init="_fields = copyFields(to.fields);">
+            <button type="button" class="btn btn-xs btn-white"
+                    style="position: absolute;right: 0px;z-index: 10;"
+                    ng-style="{'margin-top': marginTop}"
+                    ng-click="model[options.key].splice($index, 1)">
+                <i class="fa fa-trash-o"></i>
+            </button>
+            <formly-form fields="_fields"
+                         model="element"
+                         options="{formState: {model: model, model2: formState.model, fields: formState.fields || fields}}"
+                         form="form">
+            </formly-form>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <div ng-if="!choice">
+                <button type="button" class="btn btn-white btn-xs"
+                        ng-click="addNew()">{{to.btnText}}
+                </button>
+            </div>
+            <div ng-if="choice">
+                <div class="btn-group-xs" uib-dropdown>
+                    <button type="button" class="btn btn-white" uib-dropdown-toggle>
+                        {{to.btnText}} <span class="caret"></span>
+                    </button>
+                    <ul class="scrollable-menu" uib-dropdown-menu role="menu" aria-labelledby="btn-append-to-body"
+                        style="z-index: 10000;">
+                        <li style="padding: 0px 20px;" ng-show="choice.length > 7">
+                            <input type="text" ng-model="_choice" ng-click="$event.stopPropagation();">
+                        </li>
+                        <li role="menuitem" ng-repeat="c in choice | filter: _choice track by $index">
+                            <a ng-click="addNewWithChoice(c); _choice = ''">{{c}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
