@@ -6,7 +6,7 @@ const cheerio = require('cheerio');
 const JsonFn = require('json-fn');
 
 module.exports = (cms) => {
-    const {app, data: {security},Q} = cms;
+    const {app, data: {security}, Q} = cms;
     const Wrapper = cms.registerSchema({
         name: String,
         ID: String,
@@ -29,12 +29,14 @@ module.exports = (cms) => {
                         postWrapper: [
                             function (template, options, scope) {
                                 scope.$watch('model.BindType', () => {
-                                    try {
-                                        const Type = cms.data.types[scope.model.BindType];
-                                        scope.to.options = Type.list;
-                                        scope.to.labelProp = Type.info.title;
-                                        scope.to.wholeObject = true;
-                                    } catch (e) {
+                                    if (scope.model.BindType) {
+                                        try {
+                                            const Type = cms.data.types[scope.model.BindType];
+                                            scope.to.options = Type.list;
+                                            scope.to.labelProp = Type.info.title;
+                                            scope.to.wholeObject = true;
+                                        } catch (e) {
+                                        }
                                     }
                                 })
                                 return template;
@@ -59,32 +61,6 @@ module.exports = (cms) => {
 
     cms.Wrapper = Wrapper;
     Wrapper.list = {};
-
-    cms.data.ngEn.push(ng => {
-
-        ng.angular.module('cms.wrapper', [])
-            .directive('cmsWrapper', function ($compile) {
-                return {
-                    restrict: "A",
-                    replace: true,
-                    scope: {
-                        cmsWrapper: '@',
-                        serverFn: '='
-                    },
-                    link: function (scope, element) {
-                        const {formatter, formatterUrl, fn} = cms.Wrapper.list[scope.cmsWrapper];
-                        const template = formatter ? formatter : cms.compile(formatterUrl)();
-                        scope.fn = fn;
-                        element.html(template);
-                        $compile(element.contents())(scope);
-                    }
-                }
-            })
-
-        ng._modules.push('cms.wrapper');
-
-    })
-
 
     app.post('/cms-wrappers/:name/:fn', function*(req, res) {
         const {name, fn} = req.params;
@@ -114,7 +90,7 @@ module.exports = (cms) => {
                 scope.serverFn[fnName] = function () {
                     const getFnData = args => _.find(scope.serverFnData,
                         v => JSON.stringify({args: v.args, k: v.k}) === JSON.stringify({args, k: fnName}));
-                    const data = getFnData(arguments);
+                    const data = getFnData(_.map(arguments, v => v));
                     if (data && data.result) return data.result;
                     if (!data) {
                         scope.serverFnData.push({args: arguments, k: fnName});
@@ -126,8 +102,10 @@ module.exports = (cms) => {
             }
         })
 
+        const template = formatter ? formatter : cms.compile(formatterUrl)();
+
         cms.Wrapper.list[name] = {
-            formatter, formatterUrl, fn, serverFn, serverFnForClient, mTemplate
+            formatter, formatterUrl, fn, serverFn, serverFnForClient, mTemplate, template
         };
 
         Wrapper.findOne({name}, (err, obj) => {
@@ -138,7 +116,7 @@ module.exports = (cms) => {
         cms.Types['Wrapper'].store[name] = {
             fn,
             serverFn: serverFnForClient,
-            template: formatter ? formatter : cms.compile(formatterUrl)()
+            template
         }
     }
 

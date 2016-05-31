@@ -1,4 +1,10 @@
-<div style="margin-top: 15px;cursor: pointer;"
-     ng-click="vm.editState.editMode = vm.editState.editMode ===0? 1: 0">
-    EditMode: {{vm.editState.editMode === 0? 'Element': 'Container' }}
+<div style="margin-top: 7px;cursor: pointer;">
+    <ui-select data-ng-model="vm.editState.editMode" theme="bootstrap">
+        <ui-select-match placeholder="">
+            {{$select.selected.label}}&nbsp;&nbsp;&nbsp;
+        </ui-select-match>
+        <ui-select-choices data-repeat="item.value as item in vm.modes | filterBy: ['label']: $select.search">
+            <div ng-bind-html="item.label | highlight: $select.search"></div>
+        </ui-select-choices>
+    </ui-select>
 </div>

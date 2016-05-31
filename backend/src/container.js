@@ -13,7 +13,7 @@ const multer = require('multer');
  * @param {{}} cms
  */
 module.exports = cms => {
-    const {Q,Types} = cms;
+    const {Q, Types} = cms;
     cms.app.use('/build', cms.express.static('frontend/build'));
     cms.app.use('/lib/jquery', cms.express.static('node_modules/jquery'));
     cms.app.use('/lib/tether', cms.express.static('node_modules/tether'));
@@ -206,12 +206,13 @@ module.exports = cms => {
         const {req, res, useForTemplate = false, useForCreatePage = false, adminMode = true} =options;
         const html = cms.compile(cms.resolvePath(content.path))();
         const $ = cheerio.load(html);
-        let types = {};
-        for (const type of Object.keys(cms.Types)){
-            types[type] = yield* cms.Types[type].getWebTypeWithData();
-        }
+
         content.containers = content.containers || [];
         // yield* renderContainers(content.containers, $);
+
+        // resolve
+        const types = yield* resolve($, content.containers);
+
         if (adminMode) {
             $('body').prepend(`
                 <script id="cms-data" type="application/json">
@@ -224,7 +225,7 @@ module.exports = cms => {
                 </script>
             `);
             injectCmsToHtml($);
-            cms.filters.page.forEach((fn) => fn($, content));
+            cms.filters.page.forEach(fn => fn($, content));
         } else {
             $('head').append(`
                 <link rel="stylesheet" href="build/angular.css"/>
@@ -234,107 +235,15 @@ module.exports = cms => {
         }
 
         return $.html();
-        function* renderContainers(containers, $) {
-            for (let i = 0; i < containers.length; i++) {
-                var html = yield* renderContainer(containers[i]);
-                if (!adminMode) $(`[cms-container = "${containers[i].name}"]`).html(html);
-            }
-        }
 
-        function* renderContainer(container) {
-            let html = '';
-            for (const element of container.elements) {
-                const {type, path, ref, containers} = element;
-                const eHtml = yield* processType(type, ref, path, element);
-                const $ = cheerio.load(eHtml);
-                if (containers && containers.length > 0) {
-                    yield* renderContainers(containers, $);
-                }
-                html += $.html();
-            }
-            return html;
-        }
-
-        function* processType(type, id, path, element) {
-            let {Model, fn , serverFn, webType} = cms.Types[type];
-            if (useForCreatePage && element._copy) {
-                element.ref = yield Model.create(element._data)._id;
-                delete element._data;
-                delete element._copy;
-                return '';
-            }
-
-            let obj = yield Model.findById(id).exec();
-            const _fn = {};
-            if (fn) Object.keys(fn).forEach(k => _fn[k] = fn[k].bind(obj));
-
-            const serverFnResult = [];
-            // todo : use async await to convert fn
-            function* convert(serverFn) {
-                let _serverFn = null;
-                if (serverFn) {
-                    _serverFn = {};
-                    for (const k  of Object.keys(serverFn)) {
-                        _serverFn[k] = function () {
-                            const args = _.map(arguments, v => v);
-                            if (!_.find(serverFnResult,
-                                    v => JSON.stringify(v.args) === JSON.stringify(args) && v.k === k)) {
-                                serverFnResult.push({args, k});
-                            }
-                            return null;
-                        }
-                    }
-                }
-                return _serverFn;
-            }
-
-
-            const scope = {model: obj, fn: _fn, serverFn: yield* convert(serverFn), vm: {}}
-            types[type] = types[type] || webType;
-
-            if (type === 'Wrapper') {
-                types[type].store = types[type].store || {};
-                const {formatterUrl, formatter, fn = {}, serverFn:_serverFn, serverFnForClient} =cms.Wrapper.list[obj.name];
-                const ref = types[type].store[obj.name] = {
-                    fn,
-                    serverFn: !adminMode ? yield* convert(_serverFn) : serverFnForClient
-                };
-                scope.refServerFn = ref.serverFn;
-                serverFn = _serverFn;
-                ref.template = formatter ? formatter : cms.compile(formatterUrl)();
-            }
-
-            types[type].list.push(obj);
-            if (useForTemplate) {
-                element._data = obj;
-                element._copy = true;
-            }
-
-            if (adminMode) {
-                return $.html();
-            } else {
-                const html = yield* cms.ng.$compile($.html())(scope, function* ($scope) {
-                    if (serverFnResult.length > 0) {
-                        for (const e of serverFnResult) {
-                            const {args,k} = e;
-                            e.result = yield* serverFn[k].bind(obj)(...args);
-                        }
-                        $scope.serverFn = $scope.serverFn || {};
-                        for (const k  of Object.keys(serverFn)) {
-                            const prop = scope.refServerFn ? 'refServerFn' : 'serverFn';
-                            $scope[prop][k] = function () {
-                                const args = _.map(arguments, v => v);
-                                return _.find(serverFnResult,
-                                    v => JSON.stringify(v.args) === JSON.stringify(args) && v.k === k)
-                                    .result;
-                            }
-                        }
-                        // with true: run $scope.$apply() again
-                        return true;
-                    }
-                });
-                return html.replace(/unsafe:/g, '');
-            }
+        function* resolve($, containers) {
+            
+            const html = yield* cms.ng.$compile($.html(), $rootScope => {
+                $rootScope.containers = containers;
+                $rootScope.typesBuilder = new cms.TypesBuilder();
+            })({});
+            
+            return cms.ng.services.$rootScope.typesBuilder.Types;
         }
     }
 };

@@ -1,6 +1,7 @@
 <div ng-if="vm.showJson()">
-    <div style="position: absolute;" ng-init="vm._show = false;">
-        <button popover-placement="bottom"
+    <div style="" ng-init="vm._show = false;">
+        <button style="width: 60px"
+                popover-placement="bottom"
                 popover-is-open="vm.isOpen"
                 uib-popover-template="'editable-formly.html'"
                 class="btn btn-white btn-xs">
@@ -13,5 +14,5 @@
       uib-popover-template="'editable-formly.html'"
       style="cursor: pointer"
       ng-if="!vm.showJson()">
-    {{vm.cmsValue?vm.cmsValue:'______'}}
+    {{vm.value?vm.value:'______'}}
 </span>

@@ -1,7 +1,7 @@
 import angular from 'angular';
 
 const module = angular
-    .module('components.cmsEditState', [])
+    .module('components.cmsEditState', ['ui.select'])
     .directive('cmsEditState', directive);
 
 import template from './tpl.html';
@@ -13,6 +13,7 @@ function directive(cms) {
     function controller() {
         const vm = this;
         vm.editState = cms.editState;
+        vm.modes = _.map(Enum.EditMode, (v, k) => ({label: k, value: v}));
     }
 
     return {

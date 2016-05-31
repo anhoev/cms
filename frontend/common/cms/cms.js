@@ -1,5 +1,11 @@
 "use strict";
 import angular from 'angular';
+import TypeClass from './Type';
+
+window.Enum = {
+    Load: {NOT: 'NOT', LOADING: 'LOADING', LOADED: 'LOADED'},
+    EditMode: {ALL: 'ALL', VIEWELEMENT: 'VIEWELEMENT', DATAELEMENT: 'DATAELEMENT', CONTAINER: 'CONTAINER'}
+}
 
 const modelModule = angular
     .module('common.data', [])
@@ -14,7 +20,7 @@ function cms($http, $timeout) {
          * 0: edit by drag and drop element
          * 1: edit by container
          */
-        editMode: 0,
+        editMode: Enum.EditMode.ALL,
         dragType: null
     }
 
@@ -56,19 +62,32 @@ function cms($http, $timeout) {
         });
     }
 
-    function loadElements(type, cb) {
-        return cb();
-        if (data.types[type] && data.types[type]._loaded) return cb();
-        $http.post(`/cms-types/${type}?template=true&element=false`, _transform).then(_res => {
-            if (!data.types[type]) data.types[type] = {};
-            _.assign(data.types[type], _res.data);
-            $http.get(`/api/v1/${type}`, _transform).then(res => {
-                data.types[type]._loaded = true;
-                data.types[type].list = res.data;
-                cb();
-            });
-        })
+    const loadElementsPending = [];
 
+    function loadElements(type, cb) {
+        if (data.types[type] && data.types[type]._load === Enum.Load.LOADED) return cb();
+        /*$http.post(`/cms-types/${type}?template=true&element=false`, _transform).then(_res => {
+         if (!data.types[type]) data.types[type] = {};
+         _.assign(data.types[type], JsonFn.clone(_res.data));
+         $http.get(`/api/v1/${type}`, _transform).then(res => {
+         data.types[type]._loaded = true;
+         data.types[type].list = res.data;
+         cb();
+         });
+         })*/
+
+        loadElementsPending.push(cb);
+        if (data.types[type]._load !== Enum.Load.LOADING) {
+            data.types[type]._load = Enum.Load.LOADING;
+
+            $http.get(`/api/v1/${type}`, _transform).then(res => {
+                data.types[type]._load = Enum.Load.LOADED;
+                data.types[type].list = JsonFn.clone(res.data);
+
+                loadElementsPending.forEach(cb => cb());
+                loadElementsPending.length = 0;
+            });
+        }
     }
 
     function findByRef(type, ref) {
@@ -97,17 +116,58 @@ function cms($http, $timeout) {
         function walk(containers) {
             _.each(containers, container => {
                 _.each(container.elements, element => {
-                    const Type = Types[element.type];
-                    const e = _.find(Type.list, e => e._id === element.ref);
-                    cb(element, e, container);
-                    if (element.containers && element.containers.length > 0) {
-                        walk(element.containers);
-                    }
+                    // save when no data in client exists
+                    loadElements(element.type, () => {
+                        const Type = Types[element.type];
+                        const e = _.find(Type.list, e => e._id === element.ref);
+                        cb(element, e, container);
+                        if (element.containers && element.containers.length > 0) {
+                            walk(element.containers);
+                        }
+                    })
                 });
             });
         }
 
         walk(containers);
+    }
+
+    function updateModel(type, ref, model) {
+        $http.post(`api/v1/${type}/${ref}`, _.pick(model, (v, k) => k !== '$data'))
+            .then(function (res) {
+                console.log(res.data);
+            });
+    }
+
+    function findField(form, property) {
+        if (form[0].isTab) {
+            let result;
+            form.forEach(({fields}) => {
+                const f = fields.find(f => f.key === property.split('\.')[1]);
+                if (f) result = [f];
+            })
+            return result;
+        }
+        return [form.find(f => f.key === property.split('\.')[1])];
+    }
+
+    function getContainer(name) {
+        const container = _.find(data.containers, {name});
+
+        // create if not exists
+        if (!container) {
+            data.containers.push(container);
+            updateContainerPage();
+        }
+
+        return container;
+    }
+
+    function parseAndSaveData(_data) {
+        Object.assign(data, _data);
+        for (let k in data.types) {
+            data.types[k] = new TypeClass(data.types[k]);
+        }
     }
 
     return window.cms = {
@@ -117,18 +177,23 @@ function cms($http, $timeout) {
         findFnByRef,
         getType,
         createModel,
+        updateModel,
+        findField,
         data,
         editState,
         loadElements,
+        loadElementsPending,
         updateContainerPage,
-        walkInContainers
+        walkInContainers,
+        getContainer,
+        parseAndSaveData
     }
 }
 run.$inject = ['cms', '$http'];
 function run(cms, $http) {
     const data = cms.data;
     try {
-        Object.assign(data, JsonFn.parse($('#cms-data').text()));
+        cms.parseAndSaveData(JsonFn.parse($('#cms-data').text()));
         data.serverFn = data.setupServerFn(data.serverFn, $http.post);
         delete data.setupServerFn;
         window.Types = data.types;

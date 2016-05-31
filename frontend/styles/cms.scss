@@ -1,3 +1,9 @@
+// Core variables and mixins
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/input-groups";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/grid";
+
 .cms-containers, .cms-containers-inline {
   > div {
     position: relative;
@@ -391,4 +397,16 @@ div.CodeMirror-lint-tooltip {
     border: none;
     border-radius: 0px;
   }
+}
+
+.cms-field-form {
+  .col-sm-2 {
+    @extend .col-xs-12;
+    text-align: start !important;
+    margin-bottom: 5px !important;
+  }
+  .col-sm-10 {
+    @extend .col-xs-12;
+  }
+
 }

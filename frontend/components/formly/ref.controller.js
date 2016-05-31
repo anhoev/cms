@@ -1,14 +1,18 @@
-controller.$inject = ['$scope', '$http'];
+controller.$inject = ['$scope', 'cms'];
 
-function controller($scope, $http) {
+function controller($scope, cms) {
     $scope.models = [{[$scope.to.labelProp]: 'None', _id: null}];
-    $http.get(`api/v1/${$scope.options.templateOptions.Type}`).then(({data}) => {
-        $scope.models.push(...data);
-        // resolve
+
+    // resolve
+    const type = $scope.options.templateOptions.Type;
+    cms.loadElements(type, () => {
+        $scope.models.push(...Types[type].list);
+
         if (typeof $scope.model[$scope.options.key] === 'string') {
             $scope.model[$scope.options.key] = _.find($scope.models, {_id: $scope.model[$scope.options.key]});
         }
     })
+
     $scope.inject = function () {
         if ($scope.model[$scope.options.key]) $scope.model[$scope.options.key].isObjectId = true;
     }

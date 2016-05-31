@@ -17,7 +17,8 @@ function ngCompile(modules, angularPath, settings, cb) {
 
     if (!ngCompile.prototype.envReady) throw new Error(ENVIORMENT_NOT_READY);
 
-    global['Node'] = class {};
+    global['Node'] = class {
+    };
     this._modules = [];
     this.modules.forEach(function (module) {
         require(path.resolve(process.cwd(), module.path));
@@ -72,24 +73,27 @@ ngCompile.prototype.$interpolate = function (html) {
     if (!this.ready) throw new Error(ENVIORMENT_NOT_READY);
     return this.services.$interpolate(html)
 }
-ngCompile.prototype.$compile = function (html) {
+ngCompile.prototype.$compile = function (html, init) {
     if (!this.ready) throw new Error(ENVIORMENT_NOT_READY);
     if (typeof html === "object") html = (html.length ? html[0].outerHTML : html.outerHTML);
     var $scope = this.$new(), _self = this;
     const fns = _self.services.$rootScope.fns = [];
-    return function* (context, cb) {
+    if (init) init(_self.services.$rootScope);
+    return function*(context) {
         _self.angular.extend($scope, context);
         let elem = _self.services.$compile(html)($scope);
         elem = _self.angular.element('<div/>').append(elem);
+
         $scope.$apply();
-        if (yield* cb($scope)) $scope.$apply();
-        for (const {fn, args} of fns) {
-            yield* fn(...args);
+        while (fns.length > 0) {
+            for (const {fn, args} of fns) yield* fn(...args);
+            fns.length = 0;
+            $scope.$apply();
         }
-        if (fns.length > 0) $scope.$apply();
+
         const str = elem[0].innerHTML;
         $scope.$destroy();
-        elem = $scope = null;
+        $scope = null;
         return str;
     }
 }

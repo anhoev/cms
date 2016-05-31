@@ -1,5 +1,8 @@
 'use strict';
 const _ = require('lodash');
+global['_'] = _;
+const JsonFn = require('json-fn');
+global['JsonFn'] = JsonFn;
 const express = require('express');
 const _app = express();
 const router = express.Router();
@@ -58,6 +61,7 @@ const cms = {
      * contain all important data
      */
     data: {
+        // ng environment filter
         ngEn: [],
         errors: {},
         handlers: [],
@@ -108,7 +112,14 @@ const cms = {
     listen,
     Q,
     serverFn: {},
-    fn: {}
+    fn: {},
+    Enum: {
+        Load: {NOT: 'NOT', LOADING: 'LOADING', LOADED: 'LOADED'},
+        Mode: {
+            ADMIN: 'ADMIN',
+            NORMAL: 'NORMAL'
+        }
+    }
 }
 
 ngcompile.prototype.onEnvReady(() => {
@@ -134,10 +145,13 @@ module.exports = cms;
 
 function listen() {
     cms.use(require('./form'));
+    cms.use(require('./angular_resolve'));
     cms.use(require('./types'));
+    cms.use(require('./types.builder'));
     cms.use(require('./wrapper'));
     cms.use(require('./container'));
     cms.use(require('./user'));
+    cms.use(require('./query'));
     cms.use(require('./admin'));
     cms.use(require('./category'));
     cms.use(require('./element.filter'));

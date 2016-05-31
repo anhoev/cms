@@ -13,9 +13,14 @@ function directive(cms, $http) {
     controller.$inject = [];
     function controller() {
         const vm = this;
+        vm.types = _.map(Types,(v,k) => ({type:k}));
+
+        /*
+        dedicated;
         $http.get('/cms-types').then(function (res) {
             vm.types = res.data;
         });
+        */
         vm.selectType = function (type) {
             cms.loadElements(type, () => {
                 vm.list = cms.data.types[type].list;

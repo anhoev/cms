@@ -11,6 +11,7 @@ import 'ng-json-explorer/dist/angular-json-explorer.css';
 const module = angular
     .module('components.cmsEditable', [formly, 'ui.bootstrap', 'ngJsonExplorer', common])
     .directive('cmsEditable', directive)
+    .directive('cmsDirectEditable', cmsDirectEditableDirective)
     .run(run);
 
 run.$inject = ['$templateCache'];
@@ -18,50 +19,27 @@ function run($templateCache) {
     $templateCache.put('editable-formly.html', formlyTemplate);
 }
 
+directive.$inject = ['cms'];
 
-directive.$inject = ['$http', 'cms', '$window'];
+function directive(cms) {
 
-function directive($http, cms, $window) {
+    function link(scope, element, attrs, elementController) {
+        // resolve type and ref
+        const {type, ref} = elementController.getElement();
 
-    function link(scope, element, attrs, ctrl) {
-        const vm = ctrl;
-        cms.getType(vm.cmsType,vm.cmsId, Type => {
-            const {form} = Type;
-            scope.model = _.find(Type.list, {_id: vm.cmsId});
-            vm.cmsEditable = vm.cmsProperty && vm.cmsProperty !== '' ? vm.cmsProperty : vm.cmsEditable;
-            vm.value = _.get(scope, vm.cmsEditable);
-            if (form[0].isTab) {
-                form.forEach(({fields}) => {
-                    const f = fields.find(f => f.key === vm.cmsEditable.split('\.')[1]);
-                    if (f) vm.fields = [f];
-                })
-            } else {
-                vm.fields = [form.find(f => f.key === vm.cmsEditable.split('\.')[1])];
-            }
-            vm.onSubmit = function () {
-                $http.post(`api/v1/${vm.cmsType}/${vm.cmsId}`, _.pick(scope.model, (v, k) => k !== '$data'))
-                    .then(function (res) {
-                        console.log(res.data);
-                    });
-                vm.isOpen = false;
-            }
-            vm.showJson = () => {
-                return vm.adminList === 'true' && vm.value instanceof Object;
-            }
-            scope.adminList = vm.adminList;
-        })
+        const {vm} = scope;
+
+        vm.showJson = () => false;
+
+        prepareForm(cms, type, ref, scope);
     }
 
     return {
+        require: '^^?cmsElement',
         restrict: 'A',
         scope: {},
         bindToController: {
-            cmsEditable: '@',
-            cmsValue: '=cmsEditable',
-            cmsProperty: '@',
-            cmsId: '@',
-            cmsType: '@',
-            adminList: '@'
+            property: '@cmsEditable'
         },
         template,
         controllerAs: 'vm',
@@ -69,6 +47,65 @@ function directive($http, cms, $window) {
         },
         link: link
     };
+}
+
+// inheritance
+
+cmsDirectEditableDirective.$inject = ['cms'];
+
+function cmsDirectEditableDirective(cms) {
+
+    function link(scope, element, attrs, elementController) {
+        const {vm} = scope;
+
+        // resolve type and ref
+        const {type, ref} = vm;
+
+        var property = vm.property.replace('model.', '');
+
+        const refKey = Types[type].checkAndGetRef(property);
+
+        vm.showJson = () => vm._value instanceof Object && !refKey;
+
+        scope.$watch('vm._value', v => vm.value = v && refKey ? v[refKey] : v);
+
+        if (!ref) return;
+
+        prepareForm(cms, type, ref, scope);
+    }
+
+    return {
+        restrict: 'A',
+        scope: {},
+        bindToController: {
+            _value: '=cmsValue',
+            property: '@cmsDirectEditable',
+            type: '@cmsType',
+            ref: '@cmsRef'
+        },
+        template,
+        controllerAs: 'vm',
+        controller: function () {
+        },
+        link: link
+    };
+}
+
+function prepareForm(cms, type, ref, scope) {
+    const {vm} = scope;
+
+    cms.getType(type, ref, Type => {
+        const {form} = Type;
+        scope.model = _.find(Type.list, {_id: ref});
+
+        // todo: create function in utils
+        vm.fields = cms.findField(form, vm.property);
+
+        vm.onSubmit = function () {
+            cms.updateModel(type, ref, scope.model);
+            vm.isOpen = false;
+        }
+    })
 }
 
 export default module.name;

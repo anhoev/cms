@@ -1,0 +1,29 @@
+<i class="fa fa-circle-o-notch cms-element-controll-icon"
+   ng-mouseover="vm.showControl()"
+   ng-show="!vm._showControl && (vm.editState.editMode === 1)"></i>
+<div class="cms-element-controll"
+     ng-mouseover="vm.__showControl = true"
+     ng-mouseleave="vm.__showControl = false"
+     ng-show="vm._showControl || vm.__showControl">
+    <button type="button" class="btn btn-sm btn-white pull-right" ng-click="">
+        <i class="fa fa-plus"></i>
+    </button>
+</div>
+<div class="{{vm.cmsInline === 'true'?'cms-containers-inline':'cms-containers'}}"
+     dnd-list="vm.elements"
+     dnd-disable-if="vm.elements.length > 0 && vm.elements[0].binding"
+     dnd-allowed-types="vm.allowedTypes"
+     dnd-horizontal-list="{{vm.cmsInline}}"
+     ng-class="{'cms-panel-highlight':vm.highlight()}">
+    <div ng-repeat="element in vm.elements"
+         dnd-disable-if="element.binding"
+         dnd-draggable="element"
+         dnd-type="element.type"
+         dnd-moved="vm.elements.splice($index, 1);"
+         dnd-effect-allowed="move"
+         dnd-dragstart="vm.start(element.type)"
+         dnd-dragend="vm.end();"
+         cms-element="element"
+         class="{{vm.cmsInline === 'true'?'cms-element':''}}"
+    ></div>
+</div>

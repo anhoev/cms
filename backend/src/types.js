@@ -10,48 +10,6 @@ const autopopulate = require('mongoose-autopopulate');
 module.exports = (cms) => {
     const {app, Q} = cms;
 
-    cms.data.ngEn.push(ng => {
-        ng.angular.module('cms.element', ['cms.editable'])
-            .directive('cmsElement', function ($compile, $rootScope) {
-                return {
-                    restrict: "A",
-                    // replace: true,
-                    scope: {
-                        cmsElement: '='
-                    },
-                    link: function (scope, element) {
-                        if (!scope.model) {
-                            $rootScope.fns.push({
-                                fn: function* (scope, element) {
-                                    const {Formatter, FormatterUrl, fn, serverFn, Model} = cms.Types[scope.cmsElement.type];
-                                    const obj = yield Model.findById(scope.cmsElement.ref);
-                                    const template = Formatter ? Formatter : cms.compile(FormatterUrl)(obj);
-                                    scope.model = obj;
-                                    scope.fn = fn;
-                                    scope.serverFn = serverFn;
-                                    element.html(template);
-                                    $compile(element.contents())(scope);
-                                }, args: [scope, element]
-                            });
-                        }
-                    }
-                }
-            })
-        ng.angular.module('cms.editable', [])
-            .directive('cmsEditable', function ($compile, $rootScope) {
-                return {
-                    restrict: "A",
-                    replace: true,
-                    scope: {
-                        cmsEditable: '='
-                    },
-                    template: '<span>{{cmsEditable}}</span>'
-                }
-            })
-
-        ng._modules.push('cms.element', 'cms.editable');
-    })
-
     app.get('/cms-types', function*(req, res) {
         res.send(_.map(cms.Types, (v, type) => ({type})));
     })
@@ -124,7 +82,7 @@ module.exports = (cms) => {
      * @returns {Model} Model
      */
     function registerSchema(schema, options) {
-        const {name, formatter, formatterUrl, initSchema, title, fn = {} , serverFn = {}, tabs, dynamic = false , mTemplate} = options;
+        const {name, formatter, formatterUrl, initSchema, title, fn = {}, serverFn = {}, tabs, isViewElement = true, mTemplate, admin= {query: []}} = options;
         cms.filters.schema.forEach((fn) => fn(schema, name));
         if (!(schema instanceof cms.mongoose.Schema)) {
             schema = new cms.mongoose.Schema(schema);
@@ -138,27 +96,6 @@ module.exports = (cms) => {
         _.merge(fn, cms.filters.fn);
         _.merge(serverFn, cms.filters.serverFn);
 
-        const serverFnForClient = {};
-        _.each(serverFn, (fn, k) => {
-            serverFnForClient[k] = function (post, scope, type, fnName) {
-                const model = this;
-                if (!scope.serverFnData) scope.serverFnData = [];
-                scope.serverFn[fnName] = function () {
-                    const getFnData = args => _.find(scope.serverFnData,
-                        v => JSON.stringify({args: v.args, k: v.k}) === JSON.stringify({args, k: fnName}));
-                    const data = getFnData(arguments);
-                    if (data && data.result) return data.result
-                    if (!data) {
-                        scope.serverFnData.push({args: arguments, k: fnName});
-                        const args = arguments;
-                        post(`/cms-types/${type}/${model._id}/${fnName}`, arguments)
-                            .then(res => {
-                                getFnData(args).result = res.data;
-                            })
-                    }
-                };
-            }
-        })
         cms.Types[name] = {
             schema,
             Model,
@@ -177,16 +114,38 @@ module.exports = (cms) => {
             FormatterUrl: formatterUrl,
             info: {
                 title,
-                dynamic
+                isViewElement,
+                admin
             },
             fn,
             serverFn,
-            serverFnForClient,
+            get serverFnForClient() {
+                if (!this._serverFnForClient) {
+                    this._serverFnForClient = {};
+                    _.each(serverFn, (fn, k) => {
+                        this._serverFnForClient[k] = function (post, scope, type, fnName) {
+                            const model = this;
+                            if (!scope.serverFnData) scope.serverFnData = [];
+                            scope.serverFn[fnName] = function () {
+                                const getFnData = args => _.find(scope.serverFnData,
+                                    v => JSON.stringify({args: v.args, k: v.k}) === JSON.stringify({args, k: fnName}));
+                                const data = getFnData(_.map(arguments, v => v));
+                                if (data && data.result) return data.result
+                                if (!data) {
+                                    scope.serverFnData.push({args: arguments, k: fnName});
+                                    const args = arguments;
+                                    post(`/cms-types/${type}/${model._id}/${fnName}`, arguments).then(res => getFnData(args).result = res.data)
+                                }
+                            };
+                        }
+                    })
+                }
+                return this._serverFnForClient;
+            },
             mTemplate,
             get webType() {
-                const template = this.Formatter ? this.Formatter : cms.compile(this.FormatterUrl)();
                 return {
-                    template,
+                    template: this.template,
                     form: this.Form,
                     list: [],
                     info: this.info,
@@ -202,10 +161,14 @@ module.exports = (cms) => {
                     store: this.store
                 }
             },
-            getWebTypeWithData: function* () {
+            getWebTypeWithData: function*() {
                 const Type = this.webType;
                 Type.list = yield this.Model.find({});
                 return Type;
+            },
+            get template() {
+                if (!this.Formatter && !this.FormatterUrl) return '';
+                return this.Formatter ? this.Formatter : cms.compile(this.FormatterUrl)();
             }
         };
 
@@ -246,7 +209,6 @@ module.exports = (cms) => {
         }
         return styles;
     }
-
 
     cms.registerSchema = registerSchema;
 }

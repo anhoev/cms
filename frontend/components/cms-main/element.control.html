@@ -1,0 +1,25 @@
+<div context-menu="menu"
+     ng-style="{display:vm.cmsMenu === 'true'?'inline-block':'block'}">
+    <div ng-if="vm.cmsMenu !== 'true'">
+        <i class="fa fa-circle-o-notch cms-element-controll-icon"
+           ng-mouseover="vm.showControl()" ng-show="vm.getControlVisible()"></i>
+        <div class="cms-element-controll"
+             ng-mouseover="vm.__showControl = true"
+             ng-mouseleave="vm.__showControl = false"
+             ng-show="vm._showControl || vm.__showControl">
+            <button type="button" class="btn btn-sm btn-white" ng-click="vm.cmsRefresh()">
+                <i class="fa fa-refresh"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-white" ng-click="vm.remove()">
+                <i class="fa fa-trash-o"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-white" ng-click="vm.removeByDatabase()">
+                <i class="fa fa-trash"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-white" ng-click="vm.edit()">
+                <i class="fa fa-pencil-square-o"></i>
+            </button>
+        </div>
+    </div>
+    <ng-transclude></ng-transclude>
+</div>
