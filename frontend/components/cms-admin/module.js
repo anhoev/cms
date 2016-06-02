@@ -79,6 +79,10 @@ function directive(cms, $http, $uibModal, $timeout, formService) {
                         formService.edit(ref, $scope.node.type, () => $scope.refreshList());
                     })
                 }
+
+                $scope.export = function () {
+                    cms.exportAll();
+                }
             }
 
             $uibModal.open({

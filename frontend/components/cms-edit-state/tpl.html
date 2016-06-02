@@ -1,5 +1,5 @@
 <div style="margin-top: 7px;cursor: pointer;">
-    <ui-select data-ng-model="vm.editState.editMode" theme="bootstrap">
+    <ui-select data-ng-model="vm.editState.editMode" theme="bootstrap" on-select="vm.onSelect($item)">
         <ui-select-match placeholder="">
             {{$select.selected.label}}&nbsp;&nbsp;&nbsp;
         </ui-select-match>

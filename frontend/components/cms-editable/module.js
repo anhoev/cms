@@ -32,6 +32,9 @@ function directive(cms) {
         vm.showJson = () => false;
 
         prepareForm(cms, type, ref, scope);
+
+        scope.$watch('model', v => vm.value = _.get(scope, vm.property));
+
     }
 
     return {
@@ -98,8 +101,9 @@ function prepareForm(cms, type, ref, scope) {
         const {form} = Type;
         scope.model = _.find(Type.list, {_id: ref});
 
-        // todo: create function in utils
-        vm.fields = cms.findField(form, vm.property);
+        vm.fields = JsonFn.clone(cms.findField(form, vm.property));
+
+        vm.fields[0].templateOptions.focus = 'true';
 
         vm.onSubmit = function () {
             cms.updateModel(type, ref, scope.model);

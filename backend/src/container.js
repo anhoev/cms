@@ -59,6 +59,9 @@ module.exports = cms => {
                             node.icon = 'fa fa-html5';
                             // node.icon = 'glyphicon glyphicon-leaf';
                         }
+                    } else {
+                        node.type = 'file';
+                        node.icon = 'fa fa-file';
                     }
                     node.path = path.replace(`${cms.data.basePath}`, '') + `/${item}`;
                     if (node.path[0] === '/') node.path = node.path.substring(1);
@@ -179,6 +182,22 @@ module.exports = cms => {
         arr.push(name);
         const path2 = arr.join('/');
         fs.renameSync(`${cms.data.basePath}/${path}`, `${cms.data.basePath}/${path2}`);
+        res.send();
+    })
+
+    cms.app.post('/cms-export/', function*({body: {type}}, res) {
+        if (!type) {
+            const Types = {};
+            // all
+            for (let type in cms.Types) {
+                const list = yield cms.Types[type].Model.find({});
+                Types[type] = {list};
+            }
+
+            fs.writeFileSync(`${cms.data.basePath}/.export/cms.dump.json`, JsonFn.stringify(Types), 'utf8');
+            
+        }
+        
         res.send();
     })
 

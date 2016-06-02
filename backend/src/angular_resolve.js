@@ -73,7 +73,7 @@ module.exports = (cms) => {
                         if (cms.Wrapper.list[scope.name]) {
                             // programmatic wrapper (in code)
                             const {template, fn, serverFn} = cms.Wrapper.list[scope.name];
-                            scope.fn = fn;
+                            // scope.fn = fn;
                             convertServerFn(serverFn, scope, $rootScope, serverFnData => {
                                 $rootScope.typesBuilder.setServerFnDataForWrapper(scope.name, serverFnData)
                             });

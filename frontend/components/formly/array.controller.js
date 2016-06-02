@@ -5,12 +5,10 @@ function controller($scope) {
     $scope.formOptions = {formState: $scope.formState};
     $scope.addNew = addNew;
 
-    $scope.copyField = copyField;
+    $scope.copyItemOptions = copyItemOptions;
 
-    function copyField(field, index) {
-        const _field = angular.copy(field);
-        _field.key = `${$scope.options.key}[${index}]`;
-        return [_field];
+    function copyItemOptions(field) {
+        return angular.copy(field);
     }
 
     function addNew() {

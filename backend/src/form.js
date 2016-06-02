@@ -48,11 +48,11 @@ module.exports = cms => {
 
             if (Array.isArray(field)) {
                 const fields = _.map(field, nestedField => convertObj(nestedField, '', k));
-                if (field.length === 1 && (!field[0].type && !Object.keys(field[0]).length)) {
+
+                if (field.length === 1 && (!field[0].type && !Object.keys(field[0]).length || field[0].type)) {
                     return {key: k, type: 'array', templateOptions: {btnText: `Add ${k}`, field: fields[0]}};
                 }
-                const formOpt = {key: k, type: 'repeatSection', templateOptions: {btnText: `Add ${k}`, fields}};
-                return formOpt;
+                return {key: k, type: 'repeatSection', templateOptions: {btnText: `Add ${k}`, fields}};
             } else {
                 return convertObj(field, k);
             }

@@ -13,9 +13,9 @@ const module = angular
 
 import template from './tpl.html';
 
-directive.$inject = ['$http', '$uibModal', '$timeout', 'Upload'];
+directive.$inject = ['$http', '$uibModal', '$timeout', 'Upload','cms'];
 
-function directive($http, $uibModal, $timeout, Upload) {
+function directive($http, $uibModal, $timeout, Upload, cms) {
     controller.$inject = [];
     function controller() {
         const vm = this;
@@ -37,8 +37,8 @@ function directive($http, $uibModal, $timeout, Upload) {
                     $timeout(() => $scope.treeConfig.version++);
                 });
 
-                $scope.templates = data.templates;
-                $scope.baseUrlPath = data.baseUrlPath;
+                $scope.templates = cms.data.templates;
+                $scope.baseUrlPath = cms.data.baseUrlPath;
                 $scope.open = function () {
                     location.href = `${$scope.baseUrlPath}/${$scope.node.path}`;
                 }

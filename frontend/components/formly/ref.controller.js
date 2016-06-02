@@ -12,11 +12,7 @@ function controller($scope, cms) {
             $scope.model[$scope.options.key] = _.find($scope.models, {_id: $scope.model[$scope.options.key]});
         }
     })
-
-    $scope.inject = function () {
-        if ($scope.model[$scope.options.key]) $scope.model[$scope.options.key].isObjectId = true;
-    }
-    $scope.inject();
+    
 }
 
 export default controller;

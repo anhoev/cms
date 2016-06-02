@@ -34,22 +34,45 @@ module.exports = (cms) => {
         serverFn: {}
     });
 
+    /*
+     <div ng-repeat="employee in model.employees" ng-init="shifts = employee.subMenge">
+     <h4>Name: {{employee.name}}</h4>
+     <div ng-repeat="shift in shifts">
+     Date: {{shift.day}}.{{shift.month}},weekDay:{{shift.weekDay}}, beginHour: {{shift.beginHour}}, endHour: {{shift.endHour}}
+     </div>
+     </div>
+     */
 
     cms.registerWrapper('Info', {
         formatter: `
         <div ng-init="fn.onInit()">
-            <div >
+            <div >                
                 <div class="form-group">
-                    <label>Begin:</label>
-                    <input type="date" class="form-control" ng-model="model.start">
+                    <label>Choose company:</label>
+                    <ui-select data-ng-model="model.company" on-select="model.chooseCompany($item)" theme="bootstrap">
+                        <ui-select-match placeholder="Choose company">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices data-repeat="item.name as item in model.companies | filterBy: ['name']: $select.search">
+                            <div ng-bind-html="item.name | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
                 </div>
                 
                 <div class="form-group">
-                    <label>End:</label>
-                    <input type="date" class="form-control" ng-model="model.end">
+                    <label>Choose Employees:</label>
+                    <ui-select multiple  data-ng-model="model._employees" theme="bootstrap">
+                        <ui-select-match placeholder="Choose Employees">{{$item.name}}</ui-select-match>
+                        <ui-select-choices data-repeat="item in model.employeeList | filterBy: ['name']: $select.search">
+                            <div ng-bind-html="item.name | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
                 </div>
                 
-                <button ng-click="model.calculateRange(model.start,model.end)">Calculate</button>
+                <div class="form-group">
+                    <label>Choose month:</label>
+                    <input type="month" class="form-control" ng-model="model.month">
+                </div>
+               
+                <button class="btn btn-white btn-sm" ng-click="model.calculateRange(model.month)">Calculate</button>
             </div>
             
             <div ng-if="model._calculated">
@@ -82,15 +105,6 @@ module.exports = (cms) => {
                         </tr>
                     </table>
                 </div>
-                
-                <hr>
-                
-                <div ng-repeat="employee in model.employees" ng-init="shifts = employee.subMenge">
-                    <h4>Name: {{employee.name}}</h4>
-                    <div ng-repeat="shift in shifts">
-                        Date: {{shift.day}}.{{shift.month}},weekDay:{{shift.weekDay}}, beginHour: {{shift.beginHour}}, endHour: {{shift.endHour}}
-                    </div>
-                </div>
             </div>
             
         </div>
@@ -116,6 +130,8 @@ module.exports = (cms) => {
                 });
             },
             onInit: function () {
+                const model = this;
+
                 const weekday = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 
                 function shuffle(array) {
@@ -160,10 +176,9 @@ module.exports = (cms) => {
                     return days;
                 }
 
-
                 function genShifts(d1, m1, y1, d2, m2, y2) {
                     const days = getDaysInMonth(d1, m1, y1, d2, m2, y2);
-                    let shifts = Types.Shift.list.map(shift => {
+                    let shifts = Types.Shift.list.filter(shift => shift.company.name === model.company).map(shift => {
                         return {
                             beginHour: shift.beginHour,
                             endHour: shift.endHour < shift.beginHour ? shift.endHour + 24 : shift.endHour,
@@ -192,7 +207,6 @@ module.exports = (cms) => {
                     }
                     return false;
                 }
-
 
                 function softByBeginHour(shifts) {
                     return shifts.sort((shift1, shift2) => {
@@ -279,9 +293,21 @@ module.exports = (cms) => {
                 }
 
                 try {
-                    const model = this;
+                    cms.loadElements('Company', () => {
+                        this.companies = Types.Company.list;
+                    })
+
+                    cms.loadElements('Shift');
+                    cms.loadElements('Employee', () => {
+                        this.employeeList = Types.Employee.list;
+                    });
+
+                    this.chooseCompany = $item => {
+                        this._employees = this.employeeList = _.filter(Types.Employee.list, employee => _.find(employee.company, {name: $item.name}));
+                    }
+
                     this.calculate = function (d1, m1, y1, d2, m2, y2) {
-                        const employees = JsonFn.clone(Types.Employee.list).sort((e1, e2) => e1.maxHour - e2.maxHour);
+                        const employees = JsonFn.clone(model._employees).sort((e1, e2) => e1.maxHour - e2.maxHour);
                         const {shifts, days} = genShifts(d1, m1, y1, d2, m2, y2);
                         assignShiftToPersons(shifts, employees, days);
                         model.employees = employees;
@@ -299,14 +325,13 @@ module.exports = (cms) => {
 
                         model.weeks = weeks;
                     }
-                    this.calculateRange = function (date1, date2) {
+                    this.calculateRange = function (date1) {
                         this._calculated = true;
+                        const date2 = new Date(date1);
+                        date2.setMonth(date2.getMonth() + 1);
+                        date2.setDate(date2.getDate() - 1);
                         this.calculate(date1.getDate(), date1.getMonth() + 1, date1.getFullYear(), date2.getDate(), date2.getMonth() + 1, date2.getFullYear())
                     }
-                    /*this.model.start = new Date(1, 2, 2016);
-                     this.model.end = new Date(31, 2, 2016);*/
-                    this.calculate(1, 3, 2016, 31, 3, 2016);
-                    this._calculated = false;
                     this.weekday = weekday;
                     this.weekday2 = [1, 2, 3, 4, 5, 6, 0];
                 } catch (e) {
@@ -336,7 +361,7 @@ module.exports = (cms) => {
         name: {type: String, default: 'Employee'},
         position: {type: String, form: makeSelect('waiter', 'chef', 'manager')},
         maxHour: Number,
-        company: {type: mongoose.Schema.Types.ObjectId, ref: 'Company', autopopulate: true}
+        company: [{type: mongoose.Schema.Types.ObjectId, ref: 'Company', autopopulate: true}]
     }, {
         name: 'Employee',
         formatter: `

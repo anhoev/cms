@@ -30,7 +30,7 @@ function elementDirective(cms, $compile, $http, $timeout) {
             render();
         })
 
-        function processBinding(e, template) {
+        function processBinding(binding, e, template) {
             if (binding.binds) {
                 scope.parentModel = binding.parentModel;
                 for (const bind of binding.binds) {
@@ -78,7 +78,7 @@ function elementDirective(cms, $compile, $http, $timeout) {
                 if (binding) {
                     let template = Type.template;
                     scope.model = angular.copy(e);
-                    template = processBinding(e, template);
+                    template = processBinding(binding, e, template);
                     element.html(template);
                 } else {
                     scope.model = e;

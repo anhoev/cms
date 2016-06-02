@@ -201,6 +201,7 @@ function config(formlyConfigProvider, size, $rootScopeProvider) {
         overwriteOk: true,
         wrapper: ['bootstrapLabel', 'bootstrapHasError']
     });
+
     config.setType({
         name: 'bs-grid-select',
         template: bsGridSelectTemplate,

@@ -65,18 +65,12 @@ function cms($http, $timeout) {
     const loadElementsPending = [];
 
     function loadElements(type, cb) {
-        if (data.types[type] && data.types[type]._load === Enum.Load.LOADED) return cb();
-        /*$http.post(`/cms-types/${type}?template=true&element=false`, _transform).then(_res => {
-         if (!data.types[type]) data.types[type] = {};
-         _.assign(data.types[type], JsonFn.clone(_res.data));
-         $http.get(`/api/v1/${type}`, _transform).then(res => {
-         data.types[type]._loaded = true;
-         data.types[type].list = res.data;
-         cb();
-         });
-         })*/
+        if (data.types[type] && data.types[type]._load === Enum.Load.LOADED) {
+            if (cb) cb();
+            return;
+        }
 
-        loadElementsPending.push(cb);
+        if (cb) loadElementsPending.push(cb);
         if (data.types[type]._load !== Enum.Load.LOADING) {
             data.types[type]._load = Enum.Load.LOADING;
 
@@ -133,7 +127,7 @@ function cms($http, $timeout) {
     }
 
     function updateModel(type, ref, model) {
-        $http.post(`api/v1/${type}/${ref}`, _.pick(model, (v, k) => k !== '$data'))
+        $http.post(`api/v1/${type}/${ref}`, JsonFn.stringify(_.pick(model, (v, k) => k !== '$data')))
             .then(function (res) {
                 console.log(res.data);
             });
@@ -170,6 +164,12 @@ function cms($http, $timeout) {
         }
     }
 
+    function exportAll() {
+        $http.post(`/cms-export`, {}).then(function (res) {
+            console.log('Export successful');
+        });
+    }
+
     return window.cms = {
         findByID,
         findFnByID,
@@ -186,7 +186,8 @@ function cms($http, $timeout) {
         updateContainerPage,
         walkInContainers,
         getContainer,
-        parseAndSaveData
+        parseAndSaveData,
+        exportAll
     }
 }
 run.$inject = ['cms', '$http'];

@@ -14,6 +14,13 @@ function directive(cms) {
         const vm = this;
         vm.editState = cms.editState;
         vm.modes = _.map(Enum.EditMode, (v, k) => ({label: k, value: v}));
+        vm.onSelect = function ({value}) {
+            if (value === Enum.EditMode.DATAELEMENT) {
+                $('body').addClass('cms-data-element');
+            } else {
+                $('body').removeClass('cms-data-element')
+            }
+        }
     }
 
     return {
