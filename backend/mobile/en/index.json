@@ -1,1 +1,41 @@
-{"path":"page.html","containers":[{"name":"buttons","elements":[{"type":"PageLayout","ref":"56e86e49ad23639f50360cd4","containers":[{"name":"tab_0","elements":[{"type":"Layout","ref":"57498249fc614d2a5c291f4e","containers":[{"name":"57498272fc614d2a5c291f52-0","elements":[{"type":"Wrapper","ref":"56e9bf8bfd12715e02b1e9a7","containers":[]}]}]}]},{"name":"tab_1","elements":[{"type":"Layout","ref":"56e980bfee4154fa740198ea","containers":[{"name":"56e98100ee4154fa740198ed-0","elements":[{"type":"Wrapper","ref":"56e97efaee4154fa740198e8","containers":[]}]}]}]},{"name":"tab_2","elements":[{"type":"Layout","ref":"56ea76ae01e9da780add12a7","containers":[{"name":"56ea76bc01e9da780add12a9-0","elements":[{"type":"Wrapper","ref":"56e8781f5f9aa7db66419356","containers":[]}]}]}]},{"name":"tab_3","elements":[]},{"name":"rootpage","elements":[{"type":"Layout","ref":"56e86e9dad23639f50360cd8","containers":[{"name":"56e86eeaad23639f50360cda-0","elements":[{"type":"Wrapper","ref":"56e8781f5f9aa7db66419356","containers":[]}]},{"name":"57496f7332cac1d55a2a4e72-0","elements":[]}]}]}]}]},{"elements":[{"type":"Wrapper","ref":"56e97efaee4154fa740198e8","containers":[]}]},{"elements":[{"type":"Wrapper","ref":"56e97efaee4154fa740198e8","containers":[]}]},{"elements":[]},{"elements":[{"type":"Button","ref":"56bd01c0baa4ea6d74e3925c","containers":[]}]},{"name":"57498272fc614d2a5c291f52-0","elements":[]},{"name":"57498272fc614d2a5c291f52-0","elements":[]},{"name":"57498272fc614d2a5c291f52-0","elements":[]}]}
+{
+  "path": "page.html",
+  "containers": [
+    {
+      "name": "main",
+      "elements": [
+        {
+          "type": "PageLayout",
+          "ref": "56e86e49ad23639f50360cd4",
+          "containers": [
+            {
+              "name": "rootpage",
+              "elements": [
+                {
+                  "type": "Layout",
+                  "ref": "56e86e9dad23639f50360cd8",
+                  "containers": [
+                    {
+                      "name": "56e86eeaad23639f50360cda-0",
+                      "elements": [
+                        {
+                          "type": "Wrapper",
+                          "ref": "56e8781f5f9aa7db66419356",
+                          "containers": []
+                        }
+                      ]
+                    },
+                    {
+                      "name": "57496f7332cac1d55a2a4e72-0",
+                      "elements": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
