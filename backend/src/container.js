@@ -14,7 +14,7 @@ const multer = require('multer');
  */
 module.exports = cms => {
     const {Q, Types} = cms;
-    cms.app.use('/build', cms.express.static('frontend/build'));
+    cms.app.use('/build', cms.express.static('../../frontend/build'));
     cms.app.use('/lib/jquery', cms.express.static('node_modules/jquery'));
     cms.app.use('/lib/tether', cms.express.static('node_modules/tether'));
     cms.app.use('/lib/bootstrap', cms.express.static('node_modules/bootstrap'));
