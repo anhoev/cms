@@ -201,6 +201,30 @@ module.exports = cms => {
         res.send();
     })
 
+    cms.app.post('/cms-import/', function*({body: {type}}, res) {
+        if (!type) {
+            const content = JsonFn.parse(fs.readFileSync(`${cms.data.basePath}/.export/cms.dump.json`, 'utf8'));
+            const Types = {};
+            // all
+            for (let type in content) {
+                const {list} = content[type];
+                for (let element of list) {
+                    if (cms.Types[type]) {
+                        var Model = cms.Types[type].Model;
+                        const model = yield Model.findOne({_id: element._id});
+                        if (model) {
+                            Model.update({_id: element._id}, {$set: element});
+                        } else {
+                            yield Model.create(element);
+                        }
+                    }
+                }
+            }
+        }
+
+        res.send();
+    })
+
 
     function injectCmsToHtml($) {
         const menu = cms.compile(Path.resolve(__dirname, 'menu.html'));

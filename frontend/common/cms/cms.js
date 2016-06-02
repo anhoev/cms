@@ -181,6 +181,12 @@ function cms($http, $timeout, Upload) {
         });
     }
 
+    function importAll() {
+        $http.post(`/cms-import`, {}).then(function (res) {
+            console.log('Import successful');
+        });
+    }
+
     const uploadFile = function (file, path, cb) {
         Upload.upload({
             url: `/cms-files/${path}`,
@@ -208,6 +214,7 @@ function cms($http, $timeout, Upload) {
         getContainer,
         parseAndSaveData,
         exportAll,
+        importAll,
         changeEditMode,
         uploadFile
     }

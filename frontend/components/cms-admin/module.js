@@ -83,6 +83,10 @@ function directive(cms, $http, $uibModal, $timeout, formService) {
                 $scope.export = function () {
                     cms.exportAll();
                 }
+
+                $scope.import = function () {
+                    cms.importAll();
+                }
             }
 
             $uibModal.open({

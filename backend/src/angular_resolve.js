@@ -26,7 +26,8 @@ module.exports = (cms) => {
                                 fn: function*(scope, element) {
                                     const {type, ref} = scope.element;
                                     const {template, fn, serverFn, Model} = cms.Types[type];
-                                    var model = (yield Model.findById(ref)).toJSON();
+                                    let model = yield Model.findById(ref);
+                                    if (model) model = model.toJSON()
                                     _.assign(scope, {model, fn, serverFn});
 
                                     // process ServerFn
