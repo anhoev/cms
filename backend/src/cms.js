@@ -17,6 +17,7 @@ const NodeCache = require("node-cache");
 const fs = require('fs');
 const cache = new NodeCache({useClones: false, stdTTL: 20 * 60});
 const ngcompile = require('../lib/ng.compile');
+const Path = require('path');
 
 const app = new Proxy(_app, {
     get(target, key) {

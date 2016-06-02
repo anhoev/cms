@@ -14,7 +14,7 @@ const multer = require('multer');
  */
 module.exports = cms => {
     const {Q, Types} = cms;
-    cms.app.use('/build', cms.express.static('../../frontend/build'));
+    cms.app.use('/build', cms.express.static(Path.resolve(__dirname, '../../frontend/build')));
     cms.app.use('/lib/jquery', cms.express.static('node_modules/jquery'));
     cms.app.use('/lib/tether', cms.express.static('node_modules/tether'));
     cms.app.use('/lib/bootstrap', cms.express.static('node_modules/bootstrap'));
@@ -195,9 +195,9 @@ module.exports = cms => {
             }
 
             fs.writeFileSync(`${cms.data.basePath}/.export/cms.dump.json`, JsonFn.stringify(Types), 'utf8');
-            
+
         }
-        
+
         res.send();
     })
 
@@ -256,12 +256,12 @@ module.exports = cms => {
         return $.html();
 
         function* resolve($, containers) {
-            
+
             const html = yield* cms.ng.$compile($.html(), $rootScope => {
                 $rootScope.containers = containers;
                 $rootScope.typesBuilder = new cms.TypesBuilder();
             })({});
-            
+
             return cms.ng.services.$rootScope.typesBuilder.Types;
         }
     }
