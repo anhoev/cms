@@ -14,14 +14,14 @@ cms.data.security = false;
 cms.listen(8888);
 mongoose.connect('mongodb://localhost/mobile');
 
-const {utils:{makeSelect,makeMultiSelect,makeTypeSelect,makeStyles,makeCustomSelect}} = cms;
+const {utils:{makeSelect, makeMultiSelect, makeTypeSelect, makeStyles, makeCustomSelect}} = cms;
 
 cms.use(require('./organize'));
 
 
 const Food = cms.registerSchema({
     text: {type: String, default: 'Demo Food'},
-    image: {type: String},
+    image: {type: String, form: {type: 'image'}},
     price: Number
 }, {
     name: 'Food',
@@ -115,7 +115,7 @@ const Button = cms.registerSchema({
     `,
     title: 'text',
     serverFn: {
-        customText: function* () {
+        customText: function*() {
             return this.model.text + ' Hina';
         }
     },
@@ -130,7 +130,7 @@ const Button = cms.registerSchema({
 
 const Image = cms.registerSchema({
     text: {type: String, default: 'image'},
-    url: String,
+    url: {type: String, default: 'image', form: {type: 'image'}},
     alt: String,
     ID: String,
     class: String,

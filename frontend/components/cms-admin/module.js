@@ -33,7 +33,7 @@ function directive(cms, $http, $uibModal, $timeout, formService) {
                         $timeout(() => $scope.treeConfig.version++);
                     })
                 }
-
+                
                 $http.get(`/cms-admin`).then((res)=> {
                     $scope.tree = (_.filter(res.data.tree, ({type}) => {
                         if (cms.editState.editMode === Enum.EditMode.ALL) return true;

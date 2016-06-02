@@ -5,17 +5,16 @@ import 'jstree-bootstrap-theme/dist/themes/proton/style.min.css'
 import 'ng-js-tree';
 import 'ui-select';
 import 'ui-select/dist/select.min.css';
-import 'ng-file-upload';
 
 const module = angular
-    .module('components.cmsSitemap', ['ui.bootstrap', 'ngJsTree', 'ui.select', 'ngFileUpload'])
+    .module('components.cmsSitemap', ['ui.bootstrap', 'ngJsTree', 'ui.select'])
     .directive('cmsSitemap', directive);
 
 import template from './tpl.html';
 
-directive.$inject = ['$http', '$uibModal', '$timeout', 'Upload','cms'];
+directive.$inject = ['$http', '$uibModal', '$timeout', 'cms'];
 
-function directive($http, $uibModal, $timeout, Upload, cms) {
+function directive($http, $uibModal, $timeout, cms) {
     controller.$inject = [];
     function controller() {
         const vm = this;
@@ -56,13 +55,10 @@ function directive($http, $uibModal, $timeout, Upload, cms) {
                 $scope.onFileSelect = function (files) {
                     //files: an array of files selected, each file has name, size, and type.
                     const [file] = files;
-                    Upload.upload({
-                        url: `/cms-files/${$scope.node.path}`,
-                        data: {file}
-                    }).then(function () {
+                    cms.uploadFile(file, $scope.node.path, () => {
                         console.log('upload successful');
                         $scope.refresh();
-                    });
+                    })
                 }
                 $scope.selectNode = function (e, select) {
                     $timeout(() =>

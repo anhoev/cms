@@ -1,5 +1,6 @@
 "use strict";
 import angular from 'angular';
+import 'ng-file-upload';
 import TypeClass from './Type';
 
 window.Enum = {
@@ -8,21 +9,31 @@ window.Enum = {
 }
 
 const modelModule = angular
-    .module('common.data', [])
+    .module('common.data', ['ngFileUpload'])
     .factory('cms', cms)
     .run(run);
 
-cms.$inject = ['$http', '$timeout'];
-function cms($http, $timeout) {
+cms.$inject = ['$http', '$timeout', 'Upload'];
+function cms($http, $timeout, Upload) {
     const data = {};
     const editState = {
         /**
          * 0: edit by drag and drop element
          * 1: edit by container
          */
-        editMode: Enum.EditMode.ALL,
+        editMode: Enum.EditMode.DATAELEMENT,
         dragType: null
     }
+
+    function changeEditMode(mode) {
+        if (mode === Enum.EditMode.DATAELEMENT) {
+            $('body').addClass('cms-data-element');
+        } else {
+            $('body').removeClass('cms-data-element')
+        }
+    }
+
+    changeEditMode(Enum.EditMode.DATAELEMENT);
 
     function getType(type, ref, cb, content) {
         let Type = data.types[type];
@@ -170,6 +181,15 @@ function cms($http, $timeout) {
         });
     }
 
+    const uploadFile = function (file, path, cb) {
+        Upload.upload({
+            url: `/cms-files/${path}`,
+            data: {file}
+        }).then(function () {
+            if (cb) cb();
+        });
+    }
+
     return window.cms = {
         findByID,
         findFnByID,
@@ -187,7 +207,9 @@ function cms($http, $timeout) {
         walkInContainers,
         getContainer,
         parseAndSaveData,
-        exportAll
+        exportAll,
+        changeEditMode,
+        uploadFile
     }
 }
 run.$inject = ['cms', '$http'];

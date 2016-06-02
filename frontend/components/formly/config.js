@@ -100,6 +100,50 @@ function config(formlyConfigProvider, size, $rootScopeProvider) {
         controller: code
     });
 
+    config.setType({
+        name: 'image',
+        template: `
+            <div class="row" style="padding-top:7px;">
+                <div class="col-sm-4">
+                    <input type="text" class="form-control input-xs" ng-model="model[options.key]" placeholder="URL">
+                </div>
+                <div class="col-sm-6">
+                    <button class="btn btn-white cms-btn-bottom btn-xs" type="button" ng-click="onFileUpload(file)"  style="position: absolute;right: 15px;">
+                        Up
+                    </button>
+                    <input type="file" ngf-select ng-model="file"
+                           name="file" class="form-control input-xs"
+                           placeholder="file upload">
+                </div>
+                <div class="col-sm-2">
+                    <div class="checkbox" style="padding-top: 0px;">
+                        <label>
+                            <input type="checkbox"
+                               class="formly-field-checkbox"
+                               ng-model="genName">
+                            Gen name
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <img ng-if="model[options.key]" ng-src="{{model[options.key]}}" width="30px" height="30px">
+        `,
+        controller: function ($scope, cms) {
+            $scope.genName = true;
+            $scope.onFileUpload = function (file) {
+                //files: an array of files selected, each file has name, size, and type.
+                cms.uploadFile(file, 'en/.image', () => {
+                    $scope.model[$scope.options.key] = `en/.image/${file.name}`;
+                    $scope.file = null;
+                    console.log('upload successful');
+                })
+            }
+
+        },
+        wrapper: ['bootstrapLabel', 'bootstrapHasError']
+    });
+
     /*
      <button class="btn btn-white"
      type="button"

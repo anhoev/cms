@@ -7,32 +7,15 @@ const webpack = require('gulp-webpack');
 const clean = require('gulp-clean');
 const minifyCss = require('gulp-minify-css');
 
-gulp.task('webpack', () => {
-    return gulp.src('./app/app.module.js')
-        .pipe(webpack(require('./webpack.config')))
-        .pipe(gulp.dest('app'));
-});
-
 gulp.task('frontend', () => {
     return gulp.src('./frontend/app.module.js')
         .pipe(webpack(require('./webpack.config')))
         .pipe(gulp.dest('frontend'));
 });
 
-gulp.task('custom', () => {
-    return gulp.src('./backend/app/form/test.js')
-        .pipe(webpack(require('./webpack.config')))
-        .pipe(gulp.dest('backend/app/form'));
-});
-
 gulp.task('clean', function () {
     return gulp.src('app/build/bundle.js.map')
         .pipe(clean({force: true}));
-});
-
-gulp.task('config', function () {
-    return gulp.src('./backend/config/**.*')
-        .pipe(gulp.dest('./backend/src/'));
 });
 
 gulp.task('font', function () {
@@ -43,12 +26,6 @@ gulp.task('font', function () {
         .pipe(gulp.dest('./app/build/fonts'));
 });
 
-gulp.task('angular-sass', function () {
-    return gulp.src('./frontend/styles/angular.scss')
-        .pipe(sass().on('error', sass.logError))
-        .pipe(minifyCss({compatibility: 'ie8'}))
-        .pipe(gulp.dest('./frontend/build'));
-});
 
 gulp.task('cms-sass', function () {
     return gulp.src('./frontend/styles/cms.scss')
@@ -71,6 +48,7 @@ gulp.task('watch', () => {
 
 gulp.task('default', ['watch']);
 
-gulp.task('build', ['config', 'font', 'sass', 'webpack', 'clean']);
+gulp.task('frontend_with_css', ['cms-sass', 'frontend']);
 
-gulp.task('frontend with css', ['cms-sass', 'frontend']);
+gulp.task('build', ['font', 'frontend_with_css']);
+

@@ -46,7 +46,7 @@ module.exports = (cms) => {
     cms.registerWrapper('Info', {
         formatter: `
         <div ng-init="fn.onInit()">
-            <div >                
+            <div class="hidden-print">                
                 <div class="form-group">
                     <label>Choose company:</label>
                     <ui-select data-ng-model="model.company" on-select="model.chooseCompany($item)" theme="bootstrap">
@@ -76,11 +76,11 @@ module.exports = (cms) => {
             </div>
             
             <div ng-if="model._calculated">
-                <div ng-repeat="week in model.weeks">
+                <div ng-repeat="week in model.weeks" style="page-break-after:always;page-break-inside: avoid;">
                     <h4>Week {{$index}}</h4>
                     <table border="1">
                         <tr>
-                            <th ng-repeat="_day in model.weekday2" style="padding-left: 20px;padding-right: 20px" ng-init="_index = $index">
+                            <th ng-repeat="_day in model.weekday2" style="padding-left: 20px;padding-right: 20px;vertical-align: top" ng-init="_index = $index">
                                 <p>{{model.weekday[_day]}}</p>
                                 <div ng-repeat="day in week">
                                     <div ng-if="day.day.getDay() === _day">
@@ -90,12 +90,12 @@ module.exports = (cms) => {
                             </th>
                         </tr>
                         <tr style="padding-top: 10px;padding-bottom: 10px;">
-                            <td ng-repeat="_day in model.weekday2" style="padding-left: 20px;padding-right: 20px">
+                            <td ng-repeat="_day in model.weekday2" style="padding-left: 20px;padding-right: 20px;vertical-align: top">
                                 <div ng-repeat="day in week">
                                     <div ng-if="day.day.getDay() === _day">
                                         <div ng-repeat="shift in day.shifts" ng-init="employee = shift.employee">
                                             <div ng-if="employee !== null">
-                                                <p>{{shift.beginHour}} - {{shift.endHour}}</p>
+                                                <p style="margin-bottom: 0px;">{{shift.beginHour}} - {{shift.endHour}}</p>
                                                 <p>{{employee.name}}</p>
                                             </div>
                                         </div>
