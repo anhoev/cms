@@ -1,2 +1,1 @@
-const cms = require('./backend/src/cms');
-module.exports = cms;
+module.exports = require('./backend/src/cms');

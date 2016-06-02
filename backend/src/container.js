@@ -203,7 +203,7 @@ module.exports = cms => {
 
 
     function injectCmsToHtml($) {
-        const menu = cms.compile(Path.resolve(__dirname, 'menu.jade'));
+        const menu = cms.compile(Path.resolve(__dirname, 'menu.html'));
         $('body').prepend(menu);
         $('html').attr('data-ng-app', 'app');
         $('body').append(`
