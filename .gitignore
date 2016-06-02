@@ -4,3 +4,4 @@
 node_modules/
 app/build/
 backend/config/config.js
+frontend/build
