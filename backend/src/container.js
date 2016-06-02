@@ -211,12 +211,8 @@ module.exports = cms => {
                 for (let element of list) {
                     if (cms.Types[type]) {
                         var Model = cms.Types[type].Model;
-                        const model = yield Model.findOne({_id: element._id});
-                        if (model) {
-                            Model.update({_id: element._id}, {$set: element});
-                        } else {
-                            yield Model.create(element);
-                        }
+                        const model = yield Model.findOneAndUpdate({_id: element._id}, element, {upsert:true});
+                        if (!model) res.status(500).send();
                     }
                 }
             }
