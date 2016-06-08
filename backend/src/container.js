@@ -212,7 +212,10 @@ module.exports = cms => {
                 if (cms.Types[type]) {
                     for (let element of list) {
                         var Model = cms.Types[type].Model;
-                        const model = yield Model.findByIdAndUpdate(element._id, element, {upsert: true}).exec();
+                        const model = yield Model.findByIdAndUpdate(element._id, element, {
+                            upsert: true,
+                            setDefaultsOnInsert: true
+                        }).exec();
                         if (!model) return res.status(500).send();
                     }
                 }
