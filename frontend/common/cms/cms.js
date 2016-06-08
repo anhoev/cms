@@ -157,11 +157,15 @@ function cms($http, $timeout, Upload) {
     }
 
     function getContainer(name) {
+        if (!data.containers) data.containers = [];
         const container = _.find(data.containers, {name});
 
         // create if not exists
         if (!container) {
-            data.containers.push(container);
+            data.containers.push({
+                name,
+                elements: []
+            });
             updateContainerPage();
         }
 
