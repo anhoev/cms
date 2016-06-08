@@ -210,10 +210,10 @@ module.exports = (cms) => {
         formatterUrl: Path.resolve(__dirname, 'layout.html'),
         title: 'title',
         mTemplate: `
-    <StackLayout *ngFor="#layout of model.layout">
+    <StackLayout *ngFor="let layout of model.layout">
         <StackLayout *ngIf="layout.choice === 'gridBS'">
-            <GridLayout  *ngFor="#cols of layout.gridBS.cols" [columns]="fn.getColOpt(cols.col)" rows="auto">
-                <template ngFor #col [ngForOf]="cols.col" #j="index">
+            <GridLayout  *ngFor="let cols of layout.gridBS.cols" [columns]="fn.getColOpt(cols.col)" rows="auto">
+                <template ngFor let-col [ngForOf]="cols.col" let-j="index">
                     <StackLayout [col]="j" [orientation]="layout.gridBS.orientation">
                         <template [cmsContainer]="cols._id+'-'+j" ></template>
                     </StackLayout>
@@ -267,7 +267,7 @@ module.exports = (cms) => {
          <template [cmsContainer]="'rootpage'" ></template>
     </StackLayout>
     <TabView *ngIf="model.tab && model.tab.length > 0">
-         <template ngFor #tab [ngForOf]="model.tab" #index="index">
+         <template ngFor let-tab [ngForOf]="model.tab" let-index="index">
             <StackLayout *tabItem="{title: tab.text}">
                 <template [ngIf]="!tab.scrollable">
                     <template [cmsContainer]="'tab_' + index" ></template>

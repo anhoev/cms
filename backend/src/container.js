@@ -108,14 +108,15 @@ module.exports = cms => {
                 type: 'directory',
                 path: ''
             };
-            _server(path, urlPath, _tree.children, true, true);
+            _server(`${path}/.mobile`, urlPath, _tree.children, true, true);
             const Types = {};
             for (const type of Object.keys(cms.Types)) {
                 Types[type] = {};
-                Types[type].list = yield cms.Types[type].Model.find({});
+                if (cms.Types[type].info.isViewElement) Types[type].list = yield cms.Types[type].Model.find({});
                 Types[type].template = cms.Types[type].mTemplate;
                 Types[type].fn = cms.Types[type].fn;
                 Types[type].serverFn = cms.Types[type].serverFnForClient;
+                Types[type].info = cms.Types[type].info;
                 if (type === 'Wrapper') {
                     Types[type].store = {};
                     _.each(cms.Wrapper.list, ({mTemplate: template, fn = {}, serverFnForClient}, k) => {
@@ -208,11 +209,11 @@ module.exports = cms => {
             // all
             for (let type in content) {
                 const {list} = content[type];
-                for (let element of list) {
-                    if (cms.Types[type]) {
+                if (cms.Types[type]) {
+                    for (let element of list) {
                         var Model = cms.Types[type].Model;
-                        const model = yield Model.findOneAndUpdate({_id: element._id}, element, {upsert:true}).exec();
-                        if (!model) res.status(500).send();
+                        const model = yield Model.findByIdAndUpdate(element._id, element, {upsert: true}).exec();
+                        if (!model) return res.status(500).send();
                     }
                 }
             }

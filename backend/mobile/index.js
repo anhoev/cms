@@ -12,9 +12,10 @@ cms.data.categories = [{Type: {Human: null, Animal: null}}, {Type2: {Human: null
 const resolvePath = cms.resolvePath = (p) => `backend/mobile/${p}`;
 cms.data.security = false;
 cms.listen(8888);
-mongoose.connect('mongodb://localhost/mobile1');
+mongoose.connect('mongodb://localhost/mobile');
 
 cms.use(require('./mobile'));
-cms.use(require('./organize'));
+cms.use(require('./restaurant'));
+// cms.use(require('./organize'));
 
 cms.server('backend/mobile/en', '/en');
