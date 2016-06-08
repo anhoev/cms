@@ -25,7 +25,7 @@ module.exports = (cms) => {
             {title: 'advance', fields: ['friend', 'tab', 'onclick']},
             {title: 'styles', fields: ['class', 'styles']}
         ],
-        mTemplate: `<Button [text]="model.text" [class]="model.class" [style]="fn.getStyles()" (tap)="model.onclick()"></Button>`,
+        mTemplate: `<Button [text]="model.text" [class]="model.class || ''" [style]="fn.getStyles()" (tap)="model.onclick()"></Button>`,
         autopopulate: true
     });
 
@@ -70,7 +70,7 @@ module.exports = (cms) => {
             {title: 'styles', fields: ['class', 'styles']}
         ],
         mTemplate: `
-    <Label [text]="model.text" [class]="model.class" [style]="fn.getStyles()"></Label>
+    <Label [text]="model.text" [class]="model.class || ''" [style]="fn.getStyles()"></Label>
     `
     });
 
