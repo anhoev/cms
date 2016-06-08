@@ -33,7 +33,9 @@ function directive(cms) {
 
         prepareForm(cms, type, ref, scope);
 
-        scope.$watch('model', v => vm.value = _.get(scope, vm.property));
+        scope.$watch('model', v => {
+            vm.value = _.get(scope, vm.property)
+        }, true);
 
     }
 
