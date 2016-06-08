@@ -156,6 +156,17 @@ function cms($http, $timeout, Upload) {
         return [form.find(f => f.key === property.split('\.')[1])];
     }
 
+    function checkAndFixContainer() {
+        for (let [k,container] of data.containers) {
+            if (!container) {
+                data.containers.splice(k, 1);
+                checkAndFixContainer();
+                updateContainerPage();
+                break;
+            }
+        }
+    }
+
     function getContainer(name) {
         if (!data.containers) data.containers = [];
         const container = _.find(data.containers, {name});
@@ -201,6 +212,7 @@ function cms($http, $timeout, Upload) {
     }
 
     return window.cms = {
+        checkAndFixContainer,
         findByID,
         findFnByID,
         findByRef,
@@ -232,6 +244,8 @@ function run(cms, $http) {
         delete data.setupServerFn;
         window.Types = data.types;
         window.Local = data.Local = {};
+
+        cms.checkAndFixContainer();
     } catch (e) {
     }
 
