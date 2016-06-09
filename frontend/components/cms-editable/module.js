@@ -108,7 +108,7 @@ function prepareForm(cms, type, ref, scope) {
         vm.fields[0].templateOptions.focus = 'true';
 
         vm.onSubmit = function () {
-            cms.updateModel(type, ref, scope.model);
+            cms.updateModel(type, scope.model);
             vm.isOpen = false;
         }
     })

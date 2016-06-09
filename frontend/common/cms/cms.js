@@ -137,8 +137,8 @@ function cms($http, $timeout, Upload) {
         walk(containers);
     }
 
-    function updateModel(type, ref, model) {
-        $http.post(`api/v1/${type}/${ref}`, JsonFn.stringify(_.pick(model, (v, k) => k !== '$data')))
+    function updateModel(type, model) {
+        $http.post(`api/v1/${type}/${model._id}`, JsonFn.stringify(_.pick(model, (v, k) => k !== '$data')))
             .then(function (res) {
                 console.log(res.data);
             });
