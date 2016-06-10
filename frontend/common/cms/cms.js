@@ -137,7 +137,7 @@ function cms($http, $timeout, Upload) {
         walk(containers);
     }
 
-    function updateModel(type, model) {
+    function updateElement(type, model) {
         $http.post(`api/v1/${type}/${model._id}`, JsonFn.stringify(_.pick(model, (v, k) => k !== '$data')))
             .then(function (res) {
                 console.log(res.data);
@@ -219,7 +219,7 @@ function cms($http, $timeout, Upload) {
         findFnByRef,
         getType,
         createModel,
-        updateModel,
+        updateElement,
         findField,
         data,
         editState,

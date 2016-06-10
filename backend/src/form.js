@@ -108,8 +108,12 @@ module.exports = cms => {
         if (field.type === Number) {
             return merge(defaultOptions.form, {type: 'input', templateOptions: {type: 'number'}}, field.form);
         }
+        if (field.type === Date) {
+            return merge(defaultOptions.form, {type: 'input', templateOptions: {type: 'date'}}, field.form);
+        }
         if (field === String) return merge(defaultOptions.form, {type: 'input'});
         if (field === Boolean) return merge(defaultOptions.form, {type: 'checkbox'});
+        if (field === Date) return merge(defaultOptions.form, {type: 'input', templateOptions: {type: 'date'}});
         if (field === Number) return merge(defaultOptions.form, {type: 'input', templateOptions: {type: 'number'}});
 
     })
