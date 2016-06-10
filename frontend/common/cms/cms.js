@@ -43,7 +43,7 @@ function cms($http, $timeout, Upload) {
             if (!Type.template) query += '&template=true';
             if (content) query = '';
             $http.post(`/cms-types/${type}?${query}`, JsonFn.stringify(content)).then(res => {
-                const result = JsonFn.clone(res.data);
+                const result = JsonFn.clone(res.data, true);
                 if (!ref || !_.find(Type.list, {_id: ref})) {
                     ref = result.data ? result.data._id : null;
                     Type.list.push(result.data);
@@ -87,7 +87,7 @@ function cms($http, $timeout, Upload) {
 
             $http.get(`/api/v1/${type}`, _transform).then(res => {
                 data.types[type]._load = Enum.Load.LOADED;
-                data.types[type].list = JsonFn.clone(res.data);
+                data.types[type].list = JsonFn.clone(res.data,true);
 
                 loadElementsPending.forEach(cb => cb());
                 loadElementsPending.length = 0;
