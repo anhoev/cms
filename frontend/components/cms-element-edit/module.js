@@ -86,9 +86,9 @@ function service($http, $timeout, cms, $uibModal) {
 
             $scope.add = function () {
                 $scope.apply()
-                cms.createModel(type, (Type, _ref) => {
+                cms.createElement(type, {}, model => {
                     $uibModalInstance.close();
-                    edit(_ref, type, cb);
+                    edit(model._id, type, cb);
                 })
             };
 

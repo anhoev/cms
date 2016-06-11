@@ -99,9 +99,9 @@ function cmsDirectEditableDirective(cms) {
 function prepareForm(cms, type, ref, scope) {
     const {vm} = scope;
 
-    cms.getType(type, ref, Type => {
-        const {form} = Type;
-        scope.model = _.find(Type.list, {_id: ref});
+    cms.getType(type, ref, (model) => {
+        const {form} = Types[type];
+        scope.model = model;
 
         vm.fields = JsonFn.clone(cms.findField(form, vm.property));
 

@@ -55,14 +55,14 @@ function cms($http, $timeout, Upload) {
                     Type.serverFn = result.serverFn;
                     Type.info = result.info;
                 }
-                cb(Type, ref, _.find(Type.list, {_id: ref}));
+                cb(_.find(Type.list, {_id: ref}));
             })
         } else {
-            cb(Type, ref, _.find(Type.list, {_id: ref}));
+            cb(_.find(Type.list, {_id: ref}));
         }
     }
 
-    function createModel(type, cb, content) {
+    function createElement(type, content, cb) {
         return getType(type, null, cb, content);
     }
 
@@ -87,7 +87,7 @@ function cms($http, $timeout, Upload) {
 
             $http.get(`/api/v1/${type}`, _transform).then(res => {
                 data.types[type]._load = Enum.Load.LOADED;
-                data.types[type].list = JsonFn.clone(res.data,true);
+                data.types[type].list = JsonFn.clone(res.data, true);
 
                 loadElementsPending.forEach(cb => cb());
                 loadElementsPending.length = 0;

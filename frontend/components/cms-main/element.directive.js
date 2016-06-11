@@ -18,15 +18,15 @@ function elementDirective(cms, $compile, $http, $timeout) {
 
         let Type;
 
-        cms.getType(type, ref, (_Type, _ref) => {
-            if (!_ref) {
+        cms.getType(type, ref, model => {
+            if (!model) {
                 vm.dndMoved();
                 cms.updateContainerPage();
                 return;
             }
-            vm.element.ref = _ref;
+            vm.element.ref = model._id;
             if (!ref) cms.updateContainerPage();
-            Type = _Type;
+            Type = Types[type];
             render();
         })
 

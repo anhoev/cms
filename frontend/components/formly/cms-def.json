@@ -34,10 +34,10 @@
       "!url": "",
       "!doc": "use to find a fn for element with ref. e.g. cms.findFnByRef('Button', 'button_id_here');"
     },
-    "createModel": {
-      "!type": "fn(type: string, cb: fn(Type: object, ref: string|ObjectId, element: object)) -> object",
+    "createElement": {
+      "!type": "fn(type: string, cb: fn(element: object)) -> object",
       "!url": "",
-      "!doc": "use to create new element with type. e.g. cms.createModel('Button', cb);"
+      "!doc": "use to create new element with type. e.g. cms.createElement('Button', cb);"
     },
     "data": {
       "types": {

@@ -75,8 +75,8 @@ function directive(cms, $http, $uibModal, $timeout, formService) {
                     _.remove($scope.list, e);
                 }
                 $scope.add = function () {
-                    cms.createModel($scope.node.type, (Type, ref, model) => {
-                        formService.edit(ref, $scope.node.type, () => $scope.refreshList());
+                    cms.createElement($scope.node.type, model => {
+                        formService.edit(model._id, $scope.node.type, () => $scope.refreshList());
                     })
                 }
 
