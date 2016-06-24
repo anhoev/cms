@@ -77,7 +77,7 @@ function directive(cms, $uibModal, $timeout, formService) {
                 }
                 $scope.add = function () {
                     cms.createElement($scope.node.type, {}, model => {
-                        formService.edit(model._id, $scope.node.type, () => $scope.refreshList());
+                        formService.edit(model._id, $scope.node.type, () => $scope.refresh());
                     })
                 }
 
@@ -95,7 +95,7 @@ function directive(cms, $uibModal, $timeout, formService) {
 
                 // pagination
                 $scope.page = {
-                    limit: 5,
+                    limit: 50,
                     currentPage: 1
                 };
 

@@ -70,7 +70,7 @@ function cmsDirectEditableDirective(cms) {
 
         const refKey = Types[type].checkAndGetRef(property);
 
-        vm.showJson = () => vm._value instanceof Object && !refKey;
+        vm.showJson = () => vm._value instanceof Object && !refKey && vm._value instanceof Date;
 
         scope.$watch('vm._value', v => vm.value = v && refKey ? v[refKey] : v);
 
