@@ -57,7 +57,7 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="element in list">
-                            <td ng-repeat="col in node.columns track by $index" ng-if="list.length < 50">
+                            <td ng-repeat="col in node.columns track by $index" ng-if="list.length <= 50">
                                 <span cms-direct-editable="model.{{col}}"
                                       cms-value="element[col]"
                                       cms-ref="{{element._id}}"
