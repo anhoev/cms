@@ -152,13 +152,13 @@ function listen() {
     cms.use(require('./wrapper'));
     cms.use(require('./container'));
     cms.use(require('./user'));
-    cms.use(require('./query'));
     cms.use(require('./admin'));
     cms.use(require('./category'));
     cms.use(require('./element.filter'));
     cms.use(require('./error.handler'));
     cms.use(require('./utils'));
     cms.use(require('./serverFn'));
+    cms.use(require('./config'));
     _.each(cms.routers, r => app.use(r));
     app.listen(...arguments);
 }

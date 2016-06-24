@@ -103,7 +103,7 @@ function prepareForm(cms, type, ref, scope) {
         const {form} = Types[type];
         scope.model = model;
 
-        vm.fields = JsonFn.clone(cms.findField(form, vm.property));
+        vm.fields = [cms.findField(form, vm.property.split("\.")[1])];
 
         vm.fields[0].templateOptions.focus = 'true';
 

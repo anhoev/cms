@@ -16,6 +16,6 @@ mongoose.connect('mongodb://localhost/mobile');
 
 cms.use(require('./mobile'));
 cms.use(require('./restaurant'));
-// cms.use(require('./organize'));
+cms.use(require('./organize'));
 
 cms.server('backend/mobile/en', '/en');

@@ -203,6 +203,7 @@ module.exports = cms => {
     })
 
     cms.app.post('/cms-import/', function*({body: {type}}, res) {
+        const errorList = [];
         if (!type) {
             const content = JsonFn.parse(fs.readFileSync(`${cms.data.basePath}/.export/cms.dump.json`, 'utf8'));
             const Types = {};
@@ -216,13 +217,13 @@ module.exports = cms => {
                             upsert: true,
                             setDefaultsOnInsert: true
                         }).exec();
-                        if (!model) return res.status(500).send();
+                        errorList.push({type, ref: element._id});
                     }
                 }
             }
         }
 
-        res.send();
+        res.send(errorList);
     })
 
 
@@ -280,10 +281,11 @@ module.exports = cms => {
         return $.html();
 
         function* resolve($, containers) {
-
+            const typesBuilder = new cms.TypesBuilder();
+            yield* typesBuilder.init();
             const html = yield* cms.ng.$compile($.html(), $rootScope => {
                 $rootScope.containers = containers;
-                $rootScope.typesBuilder = new cms.TypesBuilder();
+                $rootScope.typesBuilder = typesBuilder;
             })({});
 
             return cms.ng.services.$rootScope.typesBuilder.Types;

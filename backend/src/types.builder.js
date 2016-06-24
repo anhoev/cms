@@ -12,6 +12,14 @@ module.exports = (cms) => {
             }
         }
 
+        *init() {
+            for (const type in cms.Types) {
+                if (this.Types[type].info.alwaysLoad) {
+                    yield* this.getFullList(type);
+                }
+            }
+        }
+
         addElement(type, model) {
             this.Types[type].list.push(model);
         }

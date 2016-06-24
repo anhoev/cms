@@ -21,6 +21,15 @@ module.exports = (cms) => {
         const result = yield* serverFn[fn].bind(obj)(...args);
         res.send(result);
     })
+
+    app.delete('/cms-types/:type', function*(req, res) {
+        const {type} = req.params;
+        const {Model} = cms.Types[type];
+        Model.remove({});
+        const result = yield* Model.remove({}).exec();
+        res.send(result);
+    })
+
     app.post('/cms-types/:type', function*(req, res) {
         const withTemplate = req.query.template === 'true';
         const noElement = req.query.element === 'false';
@@ -82,7 +91,11 @@ module.exports = (cms) => {
      * @returns {Model} Model
      */
     function registerSchema(schema, options) {
-        const {name, formatter, formatterUrl, initSchema, title, fn = {}, serverFn = {}, tabs, isViewElement = true, mTemplate, admin= {query: []}} = options;
+        const {
+            name, formatter, formatterUrl, initSchema, title, fn = {},
+            serverFn = {}, tabs, isViewElement = true, mTemplate, admin= {query: []},
+            alwaysLoad = false
+        } = options;
         cms.filters.schema.forEach((fn) => fn(schema, name));
         if (!(schema instanceof cms.mongoose.Schema)) {
             schema = new cms.mongoose.Schema(schema);
@@ -115,7 +128,8 @@ module.exports = (cms) => {
             info: {
                 title,
                 isViewElement,
-                admin
+                admin,
+                alwaysLoad
             },
             fn,
             serverFn,

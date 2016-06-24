@@ -354,7 +354,8 @@ module.exports = (cms) => {
             <StackLayout>
                 <Label text="{{model.name}}"></Label>
             </StackLayout>
-        `
+        `,
+        alwaysLoad: true
     });
 
     const Employee = cms.registerSchema({

@@ -2,6 +2,7 @@
 import angular from 'angular';
 import 'ng-file-upload';
 import TypeClass from './Type';
+import QueryBuilder from "./QueryBuilder";
 
 window.Enum = {
     Load: {NOT: 'NOT', LOADING: 'LOADING', LOADED: 'LOADED'},
@@ -13,8 +14,8 @@ const modelModule = angular
     .factory('cms', cms)
     .run(run);
 
-cms.$inject = ['$http', '$timeout', 'Upload'];
-function cms($http, $timeout, Upload) {
+cms.$inject = ['$http', 'Upload'];
+function cms($http, Upload) {
     const data = {};
     const editState = {
         /**
@@ -75,7 +76,14 @@ function cms($http, $timeout, Upload) {
 
     const loadElementsPending = [];
 
-    function loadElements(type, cb) {
+
+    function countElements(type, cb, params) {
+        $http.get(`/api/v1/${type}/count?${params}`, _transform).then(res => {
+            if (cb) cb(res.data.count);
+        });
+    }
+
+    function loadElements(type, cb, params) {
         if (data.types[type] && data.types[type]._load === Enum.Load.LOADED) {
             if (cb) cb();
             return;
@@ -85,9 +93,13 @@ function cms($http, $timeout, Upload) {
         if (data.types[type]._load !== Enum.Load.LOADING) {
             data.types[type]._load = Enum.Load.LOADING;
 
-            $http.get(`/api/v1/${type}`, _transform).then(res => {
+            $http.get(`/api/v1/${type}?${params}`, _transform).then(res => {
                 data.types[type]._load = Enum.Load.LOADED;
-                data.types[type].list = JsonFn.clone(res.data, true);
+                if (!params) {
+                    data.types[type].list = JsonFn.clone(res.data, true);
+                } else {
+                    data.types[type].queryList = JsonFn.clone(res.data, true);
+                }
 
                 loadElementsPending.forEach(cb => cb());
                 loadElementsPending.length = 0;
@@ -144,16 +156,27 @@ function cms($http, $timeout, Upload) {
             });
     }
 
+    function listColumns(form) {
+        if (form[0].isTab) {
+            const _fields = [];
+            form.forEach(({fields}) => {
+                _fields.push(...fields.map(field => field.key));
+            })
+            return _fields;
+        }
+        return form.map(field => field.key);
+    }
+
     function findField(form, property) {
         if (form[0].isTab) {
             let result;
             form.forEach(({fields}) => {
-                const f = fields.find(f => f.key === property.split('\.')[1]);
-                if (f) result = [f];
+                const f = fields.find(f => f.key === property);
+                if (f) result = f;
             })
             return result;
         }
-        return [form.find(f => f.key === property.split('\.')[1])];
+        return form.find(f => f.key === property);
     }
 
     function checkAndFixContainer() {
@@ -211,6 +234,102 @@ function cms($http, $timeout, Upload) {
         });
     }
 
+    function deleteElements(type, cb) {
+        $http.delete(`/cms-type/${type}`).then(function (res) {
+            if (cb) cb();
+            console.log('delete successful');
+        });
+    }
+
+    function getAdminList() {
+        const _types = _.pick(data.types, function (Type) {
+            if (editState.editMode === Enum.EditMode.ALL) return true;
+            if (editState.editMode === Enum.EditMode.VIEWELEMENT) return Type.info.isViewElement;
+            if (editState.editMode === Enum.EditMode.DATAELEMENT) return !Type.info.isViewElement;
+            return true;
+        })
+
+        let i = -1;
+
+        return _.map(_types, (Type, k) => {
+            i++;
+            let _children = [];
+
+            const createChildren = (_properties, query, path) => {
+                const properties = JsonFn.clone(_properties);
+                const children = [];
+                if (!properties || properties.length === 0) return;
+                const property = properties.shift();
+                const field = findField(Type.form, property);
+                if (field.type === 'refSelect') {
+                    var _type = field.templateOptions.Type;
+                    data.types[_type].list.forEach((_element) => {
+                        const _path = `${path}.children[${children.length}]`;
+                        let _query = [{[property]: _element._id}];
+                        _query = query ? query.concat(_query) : _query;
+                        children.push({
+                            children: createChildren(properties, _query, _path),
+                            text: _element[data.types[_type].info.title],
+                            type: k,
+                            path: _path,
+                            columns: _.remove(listColumns(Type.form), _property => _property !== property),
+                            query: {$and: _query}
+                        });
+                    })
+                } else if (field.type === 'array' && field.templateOptions.field.type === 'refSelect') {
+                    var _type = field.templateOptions.field.templateOptions.Type;
+                    data.types[_type].list.forEach((_element) => {
+                        const _path = `${path}.children[${children.length}]`;
+                        let _query = [{[property]: _element._id}];
+                        _query = query ? query.concat(_query) : _query;
+                        children.push({
+                            children: createChildren(properties, _query, _path),
+                            text: _element[data.types[_type].info.title],
+                            type: k,
+                            path: _path,
+                            columns: _.remove(listColumns(Type.form), _property => _property !== property),
+                            query: {$and: _query}
+                        });
+                    })
+                } else if (field.type === 'select') {
+                    const {options} = field.templateOptions;
+                    _.each(options, ({name, value}) => {
+                        const _path = `${path}.children[${children.length}]`;
+                        let _query = [{[property]: value}];
+                        _query = query ? query.concat(_query) : _query;
+                        children.push({
+                            children: createChildren(properties, _query, _path),
+                            text: name,
+                            type: k,
+                            path: _path,
+                            columns: _.remove(listColumns(Type.form), _property => _property !== property),
+                            query: {$and: _query}
+                        });
+                    })
+                }
+
+                return children;
+            }
+
+            var config = data.types.Config.list.find(config => config.type === k);
+            const _path = `[${i}]`;
+
+            if (config) {
+                config.dynamicQuery.forEach(dynamicQuery => {
+                    if (dynamicQuery.field.length === 0) return;
+                    _children.push(...createChildren(dynamicQuery.field, null, _path));
+                });
+            }
+            return {
+                children: _children,
+                columns: listColumns(Type.form),
+                text: k,
+                type: k,
+                path: _path
+            }
+        });
+    }
+
     return window.cms = {
         checkAndFixContainer,
         findByID,
@@ -218,12 +337,13 @@ function cms($http, $timeout, Upload) {
         findByRef,
         findFnByRef,
         getType,
-        createModel,
+        createElement,
         updateElement,
         findField,
         data,
         editState,
         loadElements,
+        countElements,
         loadElementsPending,
         updateContainerPage,
         walkInContainers,
@@ -232,7 +352,10 @@ function cms($http, $timeout, Upload) {
         exportAll,
         importAll,
         changeEditMode,
-        uploadFile
+        uploadFile,
+        getAdminList,
+        listColumns,
+        QueryBuilder
     }
 }
 run.$inject = ['cms', '$http'];

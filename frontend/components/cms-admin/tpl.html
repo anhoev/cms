@@ -33,29 +33,50 @@
                     <button class="btn btn-white btn-xs pull-right" style="margin-right: 10px;" ng-click="import()">
                         Import
                     </button>
+
+                    <button class="btn btn-white btn-xs pull-right" style="margin-right: 10px;" ng-click="deleteAll()">
+                        Delete all
+                    </button>
+
+                    <ui-select style="min-width: 50px;margin-left: 10px;margin-right: 10px;" class="cms-select pull-right" data-ng-model="page.limit" theme="bootstrap" on-select="refresh()">
+                        <ui-select-match placeholder="">{{$select.selected}}</ui-select-match>
+                        <ui-select-choices data-repeat="item in [5,50,100,200]">{{item}}</ui-select-choices>
+                    </ui-select>
+
+                    <label class="pull-right"> Show : </label>
+
                     List
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" ng-if="node">
                     <table class="table">
                         <thead>
                         <tr>
-                            <th ng-repeat="col in node.columns" ng-bind="col"></th>
+                            <th ng-repeat="col in node.columns track by $index" ng-bind="col"></th>
                             <th>Edit</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr ng-repeat="element in list">
-                            <td ng-repeat="col in node.columns" ng-if="list.length < 50">
+                            <td ng-repeat="col in node.columns track by $index" ng-if="list.length < 50">
                                 <span cms-direct-editable="model.{{col}}"
                                       cms-value="element[col]"
                                       cms-ref="{{element._id}}"
                                       cms-type="{{node.type}}"></span>
                             </td>
-                            <td ng-repeat="col in node.columns" ng-bind="get(element, col)" ng-if="list.length > 50"></td>
-                            <td><div cms-editor="{ref: element._id, type:node.type}" cms-remove="remove(element)"></div></td>
+                            <td ng-repeat="col in node.columns" ng-bind="get(element, col)"
+                                ng-if="list.length > 50"></td>
+                            <td>
+                                <div cms-editor="{ref: element._id, type:node.type}" cms-remove="remove(element)"></div>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
+
+                    <uib-pagination ng-show="page.size > 1" total-items="page.size" ng-model="page.currentPage"
+                                    class="pagination-sm"
+                                    items-per-page="page.limit"
+                                    ng-change="refresh(true)"></uib-pagination>
+
                 </div>
             </div>
         </div>
