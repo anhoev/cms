@@ -91,7 +91,8 @@ function directive(cms, $uibModal, $timeout, formService) {
                 }
 
                 $scope.deleteAll = function () {
-                    cms.deleteElements();
+                    cms.deleteElements($scope.node.type, () => $scope.refresh());
+
                 }
 
                 // pagination

@@ -237,7 +237,7 @@ function cms($http, Upload) {
     }
 
     function deleteElements(type, cb) {
-        $http.delete(`/cms-type/${type}`).then(function (res) {
+        $http.delete(`/cms-types/${type}`).then(function (res) {
             if (cb) cb();
             console.log('delete successful');
         });
@@ -357,7 +357,8 @@ function cms($http, Upload) {
         uploadFile,
         getAdminList,
         listColumns,
-        QueryBuilder
+        QueryBuilder,
+        deleteElements
     }
 }
 run.$inject = ['cms', '$http'];

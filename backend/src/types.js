@@ -26,7 +26,7 @@ module.exports = (cms) => {
         const {type} = req.params;
         const {Model} = cms.Types[type];
         Model.remove({});
-        const result = yield* Model.remove({}).exec();
+        const result = yield Model.remove({}).exec();
         res.send(result);
     })
 
