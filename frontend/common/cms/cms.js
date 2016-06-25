@@ -95,10 +95,12 @@ function cms($http, Upload) {
 
             $http.get(`/api/v1/${type}?${params}`, _transform).then(res => {
                 data.types[type]._load = Enum.Load.LOADED;
+                var list = JsonFn.clone(res.data, true);
                 if (!params) {
-                    data.types[type].list = JsonFn.clone(res.data, true);
+                    data.types[type].list = list;
                 } else {
-                    data.types[type].queryList = JsonFn.clone(res.data, true);
+                    data.types[type].list = _.unionWith(data.types[type].list, list, (e1, e2) => e1._id === e2._id);
+                    data.types[type].queryList = list.map(e => _.find(data.types[type].list, e2 => e2._id === e._id));
                 }
 
                 loadElementsPending.forEach(cb => cb());

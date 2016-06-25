@@ -1,6 +1,12 @@
 import angular from 'angular';
 import 'jquery';
 import 'lodash';
+import unionWith from 'lodash/unionWith';
+_.unionWith = unionWith;
+
+import pickBy from 'lodash/pickBy';
+_.pickBy = pickBy;
+
 import _JsonFn from 'json-fn';
 window.JsonFn = _JsonFn;
 _JsonFn.stringify = function (obj) {

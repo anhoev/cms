@@ -56,9 +56,9 @@ function directive(cms) {
 
 // inheritance
 
-cmsDirectEditableDirective.$inject = ['cms'];
+cmsDirectEditableDirective.$inject = ['cms', '$filter'];
 
-function cmsDirectEditableDirective(cms) {
+function cmsDirectEditableDirective(cms, $filter) {
 
     function link(scope, element, attrs, elementController) {
         const {vm} = scope;
@@ -70,9 +70,15 @@ function cmsDirectEditableDirective(cms) {
 
         const refKey = Types[type].checkAndGetRef(property);
 
-        vm.showJson = () => vm._value instanceof Object && !refKey && vm._value instanceof Date;
+        vm.showJson = () => vm._value instanceof Object && !refKey && !(vm._value instanceof Date);
 
-        scope.$watch('vm._value', v => vm.value = v && refKey ? v[refKey] : v);
+        scope.$watch('vm._value', v => {
+            if (v instanceof Date) {
+                vm.value = $filter('date')(v, 'dd-MM-yyyy HH:mm');
+            } else {
+                vm.value = v && refKey ? v[refKey] : v
+            }
+        });
 
         if (!ref) return;
 

@@ -47,6 +47,7 @@ function directive(cms, $uibModal, $timeout, formService) {
                 $scope.get = _.get;
 
                 $scope.refresh = (onlyChangePage = false) => {
+                    $scope.list = null;
                     $timeout(() => {
                         // number of pages;
                         const queryBuilder = new QueryBuilder();
