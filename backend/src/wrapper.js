@@ -64,7 +64,7 @@ module.exports = (cms) => {
 
     app.post('/cms-wrappers/:name/:fn', function*(req, res) {
         const {name, fn} = req.params;
-        const args = _.map(req.body, v => v);
+        const args = _.map(JsonFn.clone(req.body, true), v => v);
         const {serverFn} = cms.Wrapper.list[name];
         const result = yield* serverFn[fn](...args);
         res.send(result);

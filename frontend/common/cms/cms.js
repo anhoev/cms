@@ -332,6 +332,14 @@ function cms($http, Upload) {
         });
     }
 
+    function execServerFn(type, model, fnName, ...args) {
+        return $http.post(`/cms-types/${type}/${model._id}/${fnName}`, args);
+    }
+
+    function execServerFnForWrapper(name, fnName, ...args) {
+        return $http.post(`/cms-wrappers/${name}/${fnName}`, args);
+    }
+
     return window.cms = {
         checkAndFixContainer,
         findByID,
@@ -358,7 +366,9 @@ function cms($http, Upload) {
         getAdminList,
         listColumns,
         QueryBuilder,
-        deleteElements
+        deleteElements,
+        execServerFn,
+        execServerFnForWrapper
     }
 }
 run.$inject = ['cms', '$http'];

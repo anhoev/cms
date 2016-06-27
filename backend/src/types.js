@@ -15,7 +15,7 @@ module.exports = (cms) => {
     })
     app.post('/cms-types/:type/:id/:fn', function*(req, res) {
         const {type, id, fn} = req.params;
-        const args = _.map(req.body, v => v);
+        const args = _.map(JsonFn.clone(req.body, true), v => v);
         const {Model, serverFn} = cms.Types[type];
         const obj = yield Model.findById(id).exec();
         const result = yield* serverFn[fn].bind(obj)(...args);
@@ -94,7 +94,7 @@ module.exports = (cms) => {
         const {
             name, formatter, formatterUrl, initSchema, title, fn = {},
             serverFn = {}, tabs, isViewElement = true, mTemplate, admin= {query: []},
-            alwaysLoad = false
+            alwaysLoad = false, restifyOptions
         } = options;
         cms.filters.schema.forEach((fn) => fn(schema, name));
         if (!(schema instanceof cms.mongoose.Schema)) {
@@ -105,7 +105,7 @@ module.exports = (cms) => {
 
         if (initSchema) initSchema(schema);
         const Model = cms.mongoose.model(name, schema);
-        cms.restify.serve(app, Model);
+        cms.restify.serve(app, Model, restifyOptions);
         _.merge(fn, cms.filters.fn);
         _.merge(serverFn, cms.filters.serverFn);
 
