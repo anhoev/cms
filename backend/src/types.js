@@ -114,7 +114,7 @@ module.exports = (cms) => {
             Model,
             get Form() {
                 if (!this._Form) {
-                    const _schema = _.pickBy(schema.tree, (v, k) => ['_id', '__v'].indexOf(k) === -1);
+                    const _schema = _.pickBy(schema.tree, (v, k) => ['id', '_id', '__v'].indexOf(k) === -1);
                     this._Form = cms.utils.convertForm(_schema, tabs);
                 }
                 if (cms.filters.form[name]) cms.filters.form[name](this._Form);
