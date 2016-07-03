@@ -78,6 +78,9 @@ function cmsDirectEditableDirective(cms, $filter) {
             } else {
                 vm.value = v && refKey ? v[refKey] : v
             }
+
+            vm.isValueUndefined = typeof vm.value === 'undefined';
+            
         });
 
         if (!ref) return;

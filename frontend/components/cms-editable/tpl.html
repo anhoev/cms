@@ -14,5 +14,5 @@
       uib-popover-template="'editable-formly.html'"
       style="cursor: pointer"
       ng-if="!vm.showJson()">
-    {{vm.value?vm.value:'______'}}
+    {{!vm.isValueUndefined? vm.value: '______'}}
 </span>
