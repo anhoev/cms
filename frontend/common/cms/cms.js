@@ -5,7 +5,7 @@ import TypeClass from './Type';
 import QueryBuilder from "./QueryBuilder";
 
 window.Enum = {
-    Load: {NOT: 'NOT', LOADING: 'LOADING', LOADED: 'LOADED'},
+    Load: {NOT: 'NOT', LOADING: 'LOADING', LOADED: 'LOADED', PART_LOADED: 'PART_LOADED'},
     EditMode: {ALL: 'ALL', VIEWELEMENT: 'VIEWELEMENT', DATAELEMENT: 'DATAELEMENT', CONTAINER: 'CONTAINER'}
 }
 
@@ -84,8 +84,8 @@ function cms($http, Upload) {
     }
 
     function loadElements(type, cb, params) {
-        if (data.types[type] && data.types[type]._load === Enum.Load.LOADED) {
-            if (cb) cb();
+        if (!params && data.types[type] && data.types[type]._load === Enum.Load.LOADED) {
+            if (cb) cb(data.types[type].list);
             return;
         }
 
@@ -94,16 +94,17 @@ function cms($http, Upload) {
             data.types[type]._load = Enum.Load.LOADING;
 
             $http.get(`/api/v1/${type}?${params}`, _transform).then(res => {
-                data.types[type]._load = Enum.Load.LOADED;
                 var list = JsonFn.clone(res.data, true);
                 if (!params) {
                     data.types[type].list = list;
+                    data.types[type]._load = Enum.Load.LOADED;
                 } else {
                     data.types[type].list = _.unionWith(data.types[type].list, list, (e1, e2) => e1._id === e2._id);
                     data.types[type].queryList = list.map(e => _.find(data.types[type].list, e2 => e2._id === e._id));
+                    data.types[type]._load = Enum.Load.PART_LOADED;
                 }
 
-                loadElementsPending.forEach(cb => cb());
+                loadElementsPending.forEach(cb => cb(data.types[type].queryList));
                 loadElementsPending.length = 0;
             });
         }

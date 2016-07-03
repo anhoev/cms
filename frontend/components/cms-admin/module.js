@@ -53,10 +53,9 @@ function directive(cms, $uibModal, $timeout, formService) {
                         const queryBuilder = new QueryBuilder();
                         const params = queryBuilder.limit($scope.page.limit).page($scope.page.currentPage).query($scope.node.query).build();
 
-                        cms.loadElements($scope.node.type, () => {
+                        cms.loadElements($scope.node.type, (list) => {
                             var Type = cms.data.types[$scope.node.type];
-                            $scope.list = Type.info.alwaysLoad ? Type.list : Type.queryList;
-                            Types[$scope.node.type]._load = Enum.Load.NOT;
+                            $scope.list = list;
                         }, params);
 
                         if (!onlyChangePage) cms.countElements($scope.node.type, (count) => {
