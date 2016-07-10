@@ -376,7 +376,7 @@ run.$inject = ['cms', '$http'];
 function run(cms, $http) {
     const data = cms.data;
     try {
-        cms.parseAndSaveData(JsonFn.parse($('#cms-data').text()));
+        cms.parseAndSaveData(JsonFn.parse($('#cms-data').text(), true));
         data.serverFn = data.setupServerFn(data.serverFn, $http.post);
         delete data.setupServerFn;
         window.Types = data.types;
