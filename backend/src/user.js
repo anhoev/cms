@@ -60,7 +60,10 @@ module.exports = (cms) => {
 
     if (security) {
         app.use(securityLayer.unless({
-            path: [{url: '/login', methods: ['GET', 'POST']}, {url: '/login-api', methods: ['POST']}]
+            path: [{url: '/login', methods: ['GET', 'POST']},
+                {url: '/login-api', methods: ['POST']},
+                /\/api\/v1/i
+            ]
         }))
     }
 
