@@ -1,6 +1,7 @@
 const path = require('path');
 const unless = require('express-unless');
 const cheerio = require('cheerio');
+const q = require('q');
 
 module.exports = (cms) => {
     const {app, data: {security}} = cms;
@@ -27,7 +28,7 @@ module.exports = (cms) => {
         },
         role: {
             type: String,
-            default: 'new name',
+            default: 'Admin',
             form: {
                 type: 'select',
                 templateOptions: {
@@ -39,38 +40,53 @@ module.exports = (cms) => {
                 }
             }
         }
-    }, {name: 'User', formatterUrl: path.resolve(__dirname, 'user.jade'), title: 'email'});
+    }, {
+        name: 'User',
+        formatterUrl: path.resolve(__dirname, 'user.jade'),
+        title: 'email',
+        isViewElement: false
+    });
 
     cms.User = User;
 
-    /*const securityLayer = (req, res, next)=> Q.spawn(function* () {
-     const {user} = req.session;
-     if (!user) return res.redirect('/cms-login');
-     next();
-     });
+    const securityLayer = (req, res, next)=> q.spawn(function*() {
+        const {user} = req.session;
+        req.session.pathBeforeLogin = req.baseUrl;
+        if (!user) return res.send(cms.compile(path.resolve(__dirname, 'login.jade'))());
+        next();
+    });
 
-     securityLayer.unless = unless;
+    securityLayer.unless = unless;
 
-     if (security) {
-     app.use(securityLayer.unless({
-     path: [{url: '/cms-login', methods: ['GET', 'POST']}]
-     }))
-     }*/
+    if (security) {
+        app.use(securityLayer.unless({
+            path: [{url: '/login', methods: ['GET', 'POST']}, {url: '/login-api', methods: ['POST']}]
+        }))
+    }
 
-    app.get('/cms-login', function*(req, res) {
+    app.get('/login', function*(req, res) {
         res.send(cms.compile(path.resolve(__dirname, 'login.jade'))());
     })
 
-    app.post('/cms-login', function*({body: {email, password, remember}, session}, res) {
+    app.post('/login', function*({body: {email, password, remember}, session}, res) {
         const user = yield User.findOne({email, password}).exec();
         if (user) {
             session.adminMode = user.role === 'Admin';
             session.user = user;
-            return res.redirect(cms.data.baseUrlPath);
+            return res.redirect(session.pathBeforeLogin !== '' ? session.pathBeforeLogin : '/');
         } else {
             const $ = cheerio.load(cms.compile(path.resolve(__dirname, 'login.jade'))());
             $('#alert').removeClass('hide');
             res.send($.html());
+        }
+    })
+
+    app.post('/login-api', function*({body: {password}, session}, res) {
+        const user = yield User.findOne({password, role: 'Admin'}).exec();
+        if (user) {
+            res.send();
+        } else {
+            res.status(401).send();
         }
     })
 }
