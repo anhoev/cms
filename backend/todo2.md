@@ -6,3 +6,5 @@
 * image field with upload (processing...)
 
 * bug : list in admin not update
+
+* add filter to ref-selection

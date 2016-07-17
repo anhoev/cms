@@ -133,8 +133,8 @@ function config(formlyConfigProvider, size, $rootScopeProvider) {
             $scope.genName = true;
             $scope.onFileUpload = function (file) {
                 //files: an array of files selected, each file has name, size, and type.
-                cms.uploadFile(file, 'en/.image', () => {
-                    $scope.model[$scope.options.key] = `en/.image/${file.name}`;
+                cms.uploadFile(file, '.image', () => {
+                    $scope.model[$scope.options.key] = `.image/${file.name}`;
                     $scope.file = null;
                     console.log('upload successful');
                 })
