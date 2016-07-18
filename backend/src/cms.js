@@ -45,6 +45,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(require('method-override')());
 
+const CMS_KEY = Symbol("CMS");
+
 // todo : use class for cms
 const cms = {
     readFile,
@@ -120,8 +122,13 @@ const cms = {
             ADMIN: 'ADMIN',
             NORMAL: 'NORMAL'
         }
+    },
+    get instance() {
+        return global[CMS_KEY];
     }
 }
+
+global[CMS_KEY] = cms;
 
 ngcompile.prototype.onEnvReady(() => {
     cms.ng = new ngcompile([
