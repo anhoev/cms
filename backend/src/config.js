@@ -8,7 +8,9 @@ module.exports = (cms) => {
         type: {type: String, form: {type: 'select-type'}},
         dynamicQuery: [{
             field: [makeCustomSelect(String, function (template, options, scope) {
-                scope.$watch('model.type', (type) => {
+                scope.$watch('model.type', () => {
+                    let {path, model, fields} = scope.formState;
+                    const {type} = model;
                     if (type) scope.to.options = _.map(cms.listColumns(Types[type].form), v => ({name: v, value: v}));
                 })
                 return template;
