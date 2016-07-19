@@ -24,6 +24,7 @@
          dnd-dragstart="vm.start(element.type)"
          dnd-dragend="vm.end();"
          cms-element="element"
+         cms-path="{{vm.path}}.elements[{{$index}}]"
          class="{{vm.cmsInline === 'true'?'cms-element':''}}"
     ></div>
 </div>

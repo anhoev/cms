@@ -80,7 +80,7 @@ function cmsDirectEditableDirective(cms, $filter) {
             }
 
             vm.isValueUndefined = typeof vm.value === 'undefined';
-            
+
         });
 
         if (!ref) return;
@@ -120,6 +120,8 @@ function prepareForm(cms, type, ref, scope) {
             cms.updateElement(type, scope.model);
             vm.isOpen = false;
         }
+
+        vm.options = {formState: {path: '', fields: vm.fields}}
     })
 }
 

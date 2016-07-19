@@ -31,7 +31,7 @@ function directive(cms, $http) {
             return {
                 type: vm._type,
                 ref: element._id,
-                containers: []
+                containers: {}
             }
         }
         vm.getTitle = function (element) {

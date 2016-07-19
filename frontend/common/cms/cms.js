@@ -182,27 +182,18 @@ function cms($http, Upload) {
         return form.find(f => f.key === property);
     }
 
-    function checkAndFixContainer() {
-        for (let [k,container] of data.containers) {
-            if (!container) {
-                data.containers.splice(k, 1);
-                checkAndFixContainer();
-                updateContainerPage();
-                break;
-            }
+    function getContainer(path) {
+        if (!data.containers) {
+            data.containers = {};
+            updateContainerPage();
         }
-    }
-
-    function getContainer(name) {
-        if (!data.containers) data.containers = [];
-        const container = _.find(data.containers, {name});
+        let container = _.get(data.containers, path);
 
         // create if not exists
         if (!container) {
-            data.containers.push({
-                name,
-                elements: []
-            });
+            const _path = _.dropRight(path.split('\.')).join('.');
+            (_.isEmpty(_path) ? data.containers : _.get(data.containers, _path))[path.split('\.').pop()] = {elements: []};
+            container = _.get(data.containers, path);
             updateContainerPage();
         }
 
@@ -342,7 +333,6 @@ function cms($http, Upload) {
     }
 
     return window.cms = {
-        checkAndFixContainer,
         findByID,
         findFnByID,
         findByRef,
@@ -381,8 +371,6 @@ function run(cms, $http) {
         delete data.setupServerFn;
         window.Types = data.types;
         window.Local = data.Local = {};
-
-        cms.checkAndFixContainer();
     } catch (e) {
     }
 

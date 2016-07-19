@@ -74,7 +74,7 @@ module.exports = (cms) => {
     `
     });
 
-    const _types = {type: [String], form: makeTypeSelect([{name: 'Layout', value: 'Layout'}])};
+    const _types = {type: [String], form: {type: 'select-type', templateOptions: {multiple: true}}};
     const _orientation = {type: String, default: 'vertical', form: makeSelect('horizontal', 'vertical')};
 
     const Layout = cms.registerSchema({
@@ -201,7 +201,7 @@ module.exports = (cms) => {
                 },
                 choice: String
             }],
-            BindType: {type: String, form: makeTypeSelect([], false)},
+            BindType: {type: String, form: {type: 'select-type'}},
             name: String,
             containers: {type: [mongoose.Schema.Types.Mixed], form: {type: 'save-containers'}}
         }]

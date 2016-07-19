@@ -1,7 +1,10 @@
 controller.$inject = ['$scope', 'cms'];
 
 function controller($scope, cms) {
-    const Type = cms.data.types[$scope.formState.model.BindType];
+    let {path, model, fields} = $scope.formState;
+    path = _.dropRight(path.split('\.')).join('.');
+
+    const Type = cms.data.types[_.get(model,path).BindType];
     $scope.to.options = _.map(Type.columns, v => ({name: v, value: v}));
 }
 

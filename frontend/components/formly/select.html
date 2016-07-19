@@ -1,6 +1,15 @@
-<ui-select data-ng-model="model[options.key]" theme="bootstrap">
+<ui-select ng-if="!to.multiple" data-ng-model="model[options.key]" theme="bootstrap">
     <ui-select-match placeholder="{{to.placeholder}}">
         {{$select.selected.name}}
+    </ui-select-match>
+    <ui-select-choices data-repeat="item.value as item in to.options | filterBy: ['name']: $select.search">
+        <div ng-bind-html="item.name | highlight: $select.search"></div>
+    </ui-select-choices>
+</ui-select>
+
+<ui-select ng-if="to.multiple" multiple data-ng-model="model[options.key]" theme="bootstrap">
+    <ui-select-match placeholder="{{to.placeholder}}">
+        {{$item.name}}
     </ui-select-match>
     <ui-select-choices data-repeat="item.value as item in to.options | filterBy: ['name']: $select.search">
         <div ng-bind-html="item.name | highlight: $select.search"></div>

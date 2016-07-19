@@ -3,7 +3,9 @@ directive.$inject = ['cms', '$timeout'];
 function directive(cms, $timeout) {
     function link(scope, element, attr, elementController) {
         const vm = scope.vm;
-        let container = elementController ? elementController.getContainer(vm.name) : cms.getContainer(vm.name);
+        const elementPath = elementController ? elementController.getPath() : null;
+        vm.path = `${elementPath ? elementPath + '.' : ''}${vm.name}`;
+        const container = cms.getContainer(vm.path);
 
         vm.showControl = function () {
             vm._showControl = true;

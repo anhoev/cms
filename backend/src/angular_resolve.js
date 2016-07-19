@@ -13,10 +13,12 @@ module.exports = (cms) => {
                     restrict: "A",
                     // replace: true,
                     scope: {
+                        path: '@cmsPath',
                         element: '=cmsElement'
                     },
                     controller: function ($scope) {
                         // expose api
+                        this.getPath = () => `${$scope.path}.containers`;
                         this.getContainer = name => _.find($scope.element.containers, {name});
 
                     },
@@ -52,9 +54,11 @@ module.exports = (cms) => {
                     scope: {
                         name: '@cmsContainer'
                     },
-                    template: `<div ng-repeat="element in elements" cms-element="element"></div>`,
+                    template: `<div ng-repeat="element in elements" cms-element="element" cms-path="{{path}}.elements[{{$index}}]"></div>`,
                     link: function (scope, element, attrs, elementController) {
-                        var container = elementController ? elementController.getContainer(scope.name) : _.find($rootScope.containers, {name: scope.name});
+                        const elementPath = elementController ? elementController.getPath() : null;
+                        scope.path = `${elementPath ? elementPath + '.' : ''}${scope.name}`;
+                        const container = _.get($rootScope.containers, scope.path);
                         scope.elements = container ? container.elements : null;
                         if (!container) {
                             console.warn('there is no container');

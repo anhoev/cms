@@ -1,1 +1,58 @@
-{"path":"page.html","containers":[{"name":"main","elements":[{"type":"PageLayout","ref":"56d06af72aa8eb74306bd9a2","containers":[{"name":"tab_0","elements":[{"type":"Layout","ref":"56c378105b15241c46637133","containers":[{"name":"56c45c5d81bbcf0f5266d1ca-0","elements":[{"type":"Button","ref":"56bd01c0baa4ea6d74e3925c","containers":[]}]},{"name":"56c45c5d81bbcf0f5266d1ca-1","elements":[]},{"name":"56c45c5d81bbcf0f5266d1c9-0","elements":[{"type":"Label","ref":"56bde4d682351c6c7cae92a9","containers":[]}]},{"name":"56c45c5d81bbcf0f5266d1c9-1","elements":[]},{"name":"56c770b0a5e9ad55ac71d9de-0","elements":[]},{"name":"56d35fe8e91df73b542e39d0-0","elements":[]}]}]},{"name":"tab_1","elements":[]}]}]}]}
+{
+  "path": "page.html",
+  "containers": {
+    "main": {
+      "elements": [
+        {
+          "type": "PageLayout",
+          "ref": "56d06af72aa8eb74306bd9a2",
+          "containers": {
+            "tab_0": {
+              "elements": [
+                {
+                  "type": "Layout",
+                  "ref": "56c378105b15241c46637133",
+                  "containers": {
+                    "56c45c5d81bbcf0f5266d1ca-0": {
+                      "elements": [
+                        {
+                          "type": "Button",
+                          "ref": "56bd01c0baa4ea6d74e3925c",
+                          "containers": {}
+                        }
+                      ]
+                    },
+                    "56c45c5d81bbcf0f5266d1ca-1": {
+                      "elements": []
+                    },
+                    "56c45c5d81bbcf0f5266d1c9-0": {
+                      "elements": [
+                        {
+                          "type": "Button",
+                          "ref": "56c493c3fd022d096aef5014",
+                          "containers": {}
+                        }
+                      ]
+                    },
+                    "56c45c5d81bbcf0f5266d1c9-1": {
+                      "elements": []
+                    },
+                    "56c770b0a5e9ad55ac71d9de-0": {
+                      "elements": []
+                    },
+                    "56d35fe8e91df73b542e39d0-0": {
+                      "elements": []
+                    }
+                  }
+                }
+              ]
+            },
+            "tab_1": {
+              "elements": []
+            }
+          }
+        }
+      ]
+    }
+  }
+}

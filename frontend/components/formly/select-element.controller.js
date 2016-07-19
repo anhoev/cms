@@ -2,8 +2,10 @@ controller.$inject = ['$scope'];
 
 function controller($scope) {
     const options = $scope.to.options = [];
-    let {containers} = $scope.formState.model;
-    if (!containers) containers = $scope.formState.model2.containers;
+    let {path, model, fields} = $scope.formState;
+    path = _.dropRight(path.split('\.')).join('.');
+
+    let {containers} = _.get(model, path);
     $scope.to.labelProp = 'Type';
     const map = {};
     $scope.getLabel = selected => selected && selected.ref ? map[selected.ref] : '';

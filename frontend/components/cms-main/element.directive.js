@@ -117,25 +117,11 @@ function elementDirective(cms, $compile, $http, $timeout) {
                     render();
                 }
 
-                controller.getContainer = getContainer;
+                controller.getPath = () => `${vm.path}.containers`;
                 controller.getElement = () => vm.element;
 
                 $compile(element.contents())(scope);
             }
-        }
-
-        function getContainer(name) {
-            var container = _.find(vm.element.containers, c => c.name === name);
-
-            // create if not exists
-            if (!container) {
-                container = {name, elements: []};
-                vm.element.containers = vm.element.containers || [];
-                vm.element.containers.push(container);
-                cms.updateContainerPage();
-            }
-
-            return container;
         }
     }
 
@@ -145,6 +131,7 @@ function elementDirective(cms, $compile, $http, $timeout) {
         replace: true,
         scope: {},
         bindToController: {
+            path: '@cmsPath',
             element: '=cmsElement',
             dndMoved: '&'
         },

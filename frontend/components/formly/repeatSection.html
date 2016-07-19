@@ -3,11 +3,11 @@
          class="cms-containers" style="min-height: 0px">
         <div class="repeatsection"
              style="position: relative"
-             ng-repeat="element in model[options.key] "
+             ng-repeat="element in model[options.key]"
              dnd-draggable="element"
              dnd-moved="model[options.key].splice($index, 1);"
              dnd-effect-allowed="move"
-             ng-init="_fields = copyFields(to.fields);">
+             ng-init="_fields = copyFields(to.fields);_options = createFormOptions($index)">
             <button type="button" class="btn btn-xs btn-white"
                     style="position: absolute;right: 0px;z-index: 10;"
                     ng-style="{'margin-top': marginTop}"
@@ -16,7 +16,7 @@
             </button>
             <formly-form fields="_fields"
                          model="element"
-                         options="{formState: {model: model, model2: formState.model, fields: formState.fields || fields}}"
+                         options="_options"
                          form="form">
             </formly-form>
         </div>
