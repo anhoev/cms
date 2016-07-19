@@ -6,6 +6,7 @@ const q = require('q');
 module.exports = (cms) => {
     const {app, data: {security}} = cms;
     const User = cms.registerSchema({
+        name: String,
         email: {
             type: String,
             form: {
@@ -43,7 +44,7 @@ module.exports = (cms) => {
     }, {
         name: 'User',
         formatterUrl: path.resolve(__dirname, 'user.jade'),
-        title: 'email',
+        title: 'name',
         isViewElement: false
     });
 
