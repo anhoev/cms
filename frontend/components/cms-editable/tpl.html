@@ -1,13 +1,11 @@
 <div ng-if="vm.showJson()">
-    <div style="" ng-init="vm._show = false;">
-        <button style="width: 60px"
-                popover-placement="bottom"
-                popover-is-open="vm.isOpen"
-                uib-popover-template="'editable-formly.html'"
-                class="btn btn-white btn-xs">
-            edit
-        </button>
-    </div>
+    <button style="width: 60px"
+            popover-placement="bottom"
+            popover-is-open="vm.isOpen"
+            uib-popover-template="'editable-formly.html'"
+            class="btn btn-white btn-xs">
+        edit
+    </button>
 </div>
 <span popover-placement="bottom"
       popover-is-open="vm.isOpen"

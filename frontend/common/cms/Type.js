@@ -10,7 +10,7 @@ class TypeClass {
      * @returns {obj}
      */
     checkAndGetRef(fieldName) {
-        const field = _.find(this.form, {key: fieldName});
+        const field = cms.findField(this.form, fieldName);
         if (field && field.type === 'refSelect') {
             const type = field.templateOptions.Type;
             return Types[type].info.title;
