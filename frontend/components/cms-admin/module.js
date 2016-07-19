@@ -81,6 +81,17 @@ function directive(cms, $uibModal, $timeout, formService) {
                     })
                 }
 
+                $scope.setting = function () {
+                    const config = _.find(Types.Config.list, {type: $scope.node.type});
+                    if (config) {
+                        formService.edit(config._id, 'Config', () => $scope.refresh());
+                    } else {
+                        cms.getType('Config', null, ({_id}) => {
+                            formService.edit(_id, 'Config', () => $scope.refresh());
+                        }, {type: $scope.node.type});
+                    }
+                }
+
                 $scope.export = function () {
                     cms.exportAll();
                 }

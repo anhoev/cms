@@ -16,6 +16,16 @@ function controller($scope) {
         var array = $scope.model[$scope.options.key];
         array.push('');
     }
+
+    $scope.createFormState = ($index) => {
+        let path = `${$scope.formState.path}.${$scope.options.key}[${$index}]`;
+        if (_.startsWith(path, '.')) path = path.substring(1);
+        return {
+            path,
+            model: $scope.formState.model || $scope.model,
+            fields: $scope.formState.fields
+        }
+    }
 }
 
 export default controller;

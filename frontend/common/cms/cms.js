@@ -308,21 +308,28 @@ function cms($http, Upload) {
             var config = data.types.Config.list.find(config => config.type === k);
             const _path = `[${i}]`;
 
+            let columns = listColumns(Type.form);
             if (config) {
                 config.dynamicQuery.forEach(dynamicQuery => {
                     if (dynamicQuery.field.length === 0) return;
                     _children.push(...createChildren(dynamicQuery.field, null, _path));
                 });
+                columns = _.filter(columns, col => {
+                    if (!config.hideFields) return true;
+                    return config.hideFields.indexOf(col) === -1;
+                })
             }
             return {
                 children: _children,
-                columns: listColumns(Type.form),
+                columns,
                 text: k,
                 type: k,
                 path: _path
             }
         });
     }
+
+
 
     function execServerFn(type, model, fnName, ...args) {
         return $http.post(`/cms-types/${type}/${model._id}/${fnName}`, args);

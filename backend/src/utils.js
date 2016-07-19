@@ -85,11 +85,15 @@ module.exports = (cms) => {
         }]
     }
 
-    utils.makeCustomSelect = function (type, fn, whole = false) {
+    utils.makeCustomSelect = function (type, fn, whole = false, multiple = false) {
         return {
             type: type, form: {
-                type: whole ? 'select-whole' : 'select', templateManipulators: {
+                type: whole ? 'select-whole' : 'select',
+                templateManipulators: {
                     postWrapper: [fn]
+                },
+                templateOptions: {
+                    multiple
                 }
             }
         }
