@@ -121,7 +121,7 @@ function prepareForm(cms, type, ref, scope) {
             vm.isOpen = false;
         }
 
-        vm.options = {formState: {path: '', fields: vm.fields}}
+        vm.options = {formState: {path: ''}}
     })
 }
 

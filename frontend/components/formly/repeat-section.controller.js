@@ -26,8 +26,7 @@ function controller($scope) {
         return {
             formState: {
                 path,
-                model: $scope.formState.model || $scope.model,
-                fields: $scope.formState.fields
+                model: $scope.formState.model || $scope.model
             }
         }
     }

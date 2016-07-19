@@ -1,7 +1,7 @@
 controller.$inject = ['$scope', 'cms'];
 
 function controller($scope, cms) {
-    let {path, model, fields} = $scope.formState;
+    let {path, model} = $scope.formState;
     path = _.dropRight(path.split('\.')).join('.');
 
     const {BindType} = _.get(model, path);

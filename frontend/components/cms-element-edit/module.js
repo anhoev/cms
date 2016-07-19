@@ -25,7 +25,7 @@ function directive() {
                 vm.fullScreenText = 'Minimize';
             }
         }
-        vm.options = {formState: {path: '', fields: vm.cmsFields}};
+        vm.options = {formState: {path: ''}};
     }
 
     return {

@@ -46,9 +46,14 @@ function directive(cms, $uibModal, $timeout, formService) {
                 }
                 $scope.get = _.get;
 
-                $scope.refresh = (onlyChangePage = false) => {
+                $scope.refresh = (onlyChangePage = false, changeAdminList = false) => {
                     $scope.list = null;
                     $timeout(() => {
+                        if (changeAdminList) {
+                            $scope.tree = cms.getAdminList();
+                            $scope.treeConfig.version++;
+                        }
+
                         // number of pages;
                         const queryBuilder = new QueryBuilder();
                         const params = queryBuilder.limit($scope.page.limit).page($scope.page.currentPage).query($scope.node.query).build();
@@ -84,10 +89,10 @@ function directive(cms, $uibModal, $timeout, formService) {
                 $scope.setting = function () {
                     const config = _.find(Types.Config.list, {type: $scope.node.type});
                     if (config) {
-                        formService.edit(config._id, 'Config', () => $scope.refresh());
+                        formService.edit(config._id, 'Config', () => $scope.refresh(false, true));
                     } else {
                         cms.getType('Config', null, ({_id}) => {
-                            formService.edit(_id, 'Config', () => $scope.refresh());
+                            formService.edit(_id, 'Config', () => $scope.refresh(false, true));
                         }, {type: $scope.node.type});
                     }
                 }

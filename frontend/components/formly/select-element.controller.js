@@ -2,7 +2,7 @@ controller.$inject = ['$scope'];
 
 function controller($scope) {
     const options = $scope.to.options = [];
-    let {path, model, fields} = $scope.formState;
+    let {path, model} = $scope.formState;
     path = _.dropRight(path.split('\.')).join('.');
 
     let {containers} = _.get(model, path);

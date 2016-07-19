@@ -22,8 +22,7 @@ function controller($scope) {
         if (_.startsWith(path, '.')) path = path.substring(1);
         return {
             path,
-            model: $scope.formState.model || $scope.model,
-            fields: $scope.formState.fields
+            model: $scope.formState.model || $scope.model
         }
     }
 }
