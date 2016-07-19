@@ -251,7 +251,7 @@ module.exports = cms => {
         const html = cms.compile(cms.resolvePath(content.path))();
         const $ = cheerio.load(html);
 
-        content.containers = content.containers || [];
+        content.containers = content.containers || {};
         // yield* renderContainers(content.containers, $);
 
         // resolve
