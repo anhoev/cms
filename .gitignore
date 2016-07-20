@@ -3,3 +3,5 @@
 
 node_modules/
 backend/config/config.js
+
+webpack

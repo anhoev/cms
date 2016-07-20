@@ -2,6 +2,7 @@ const webpack = require('webpack');
 
 module.exports = {
     devtool: 'source-map',
+    context: __dirname + "/frontend",
     entry: {
         // create two library bundles, one with jQuery and
         // another with Angular and related libraries
@@ -18,9 +19,9 @@ module.exports = {
             'font-awesome/css/font-awesome.css',
             'ng-file-upload',
             'jshint',
-            './frontend/components/formly/ecma6.json',
-            './frontend/components/formly/ecma5.json',
-            './frontend/components/formly/cms-def.json',
+            './components/formly/ecma6.json',
+            './components/formly/ecma5.json',
+            './components/formly/cms-def.json',
             'jquery-ui/effect',
             'angular-ui-bootstrap',
             'jstree',
@@ -65,7 +66,8 @@ module.exports = {
         ]
     },
     output: {
-        filename: 'frontend/build/[name].bundle.js',
+        path: './frontend',
+        filename: 'build/[name].bundle.js',
         library: '[name]_lib',
     },
     module: {
@@ -87,9 +89,9 @@ module.exports = {
             {test: /\.(png|gif)$/, loader: "url-loader?limit=100000"},
             {
                 test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "url-loader?limit=10000&name=frontend/build/fonts/[name].[ext]"
+                loader: "url-loader?limit=10000&name=build/fonts/[name].[ext]"
             },
-            {test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?name=frontend/build/fonts/[name].[ext]"}
+            {test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?name=build/fonts/[name].[ext]"}
         ]
     },
     plugins: [
