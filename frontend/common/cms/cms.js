@@ -386,6 +386,7 @@ function run(cms, $http) {
         $('body').css('padding-top', menu.bodyPaddingTop);
         $('body').append(menuTemplate);
         if (menu.inverse) $('.cms-menu').addClass('navbar-inverse');
+        if (menu.bottom) $('.cms-menu').removeClass('navbar-fixed-top').addClass('navbar-fixed-bottom');
     } catch (e) {
     }
 

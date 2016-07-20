@@ -68,11 +68,12 @@ window._transform = {transformResponse: d => {
     return JsonFn.parse(d);
 }};
 import './build/cms.css';
+import 'font-awesome/css/font-awesome.css'
+/*
 import 'bootstrap-sass';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
-import 'font-awesome/css/font-awesome.css'
-
+*/
 
 import components from './components/components.module';
 import common from './common/common.module';

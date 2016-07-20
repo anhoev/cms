@@ -252,7 +252,7 @@ module.exports = cms => {
 
 
     function injectCmsToHtml($) {
-        const menu = cms.compile(Path.resolve(__dirname, 'menu.html'));
+        //const menu = cms.compile(Path.resolve(__dirname, 'menu.html'));
         // $('body').append(menu);
         $('html').attr('data-ng-app', 'app');
         $('body').append(`
