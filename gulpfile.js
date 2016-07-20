@@ -6,6 +6,19 @@ const sourcemaps = require('gulp-sourcemaps');
 const webpack = require('gulp-webpack');
 const clean = require('gulp-clean');
 const minifyCss = require('gulp-minify-css');
+const run = require('gulp-run');
+
+gulp.task('frontend.lib', function() {
+    return run('webpack --config lib.webpack.config.js').exec()
+        .pipe(gulp.dest('.'));
+});
+
+gulp.task('frontend.app', function() {
+    return run('webpack --config webpack.config.js').exec()
+        .pipe(gulp.dest('.'));
+});
+
+gulp.task('frontend_with_css', ['cms-sass', 'frontend.app']);
 
 gulp.task('frontend', () => {
     return gulp.src('./frontend/app.module.js')
@@ -18,6 +31,7 @@ gulp.task('clean', function () {
         .pipe(clean({force: true}));
 });
 
+
 gulp.task('font', function () {
     return gulp.src([
         './node_modules/font-awesome/fonts/**.*',
@@ -25,7 +39,6 @@ gulp.task('font', function () {
     ])
         .pipe(gulp.dest('./app/build/fonts'));
 });
-
 
 gulp.task('cms-sass', function () {
     return gulp.src('./frontend/styles/cms.scss')
@@ -47,8 +60,6 @@ gulp.task('watch', () => {
 });
 
 gulp.task('default', ['watch']);
-
-gulp.task('frontend_with_css', ['cms-sass', 'frontend']);
 
 gulp.task('build', ['font', 'frontend_with_css']);
 

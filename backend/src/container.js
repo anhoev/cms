@@ -7,6 +7,8 @@ const cheerio = require('cheerio');
 require('generator-bind').polyfill();
 const JsonFn = require('json-fn');
 const multer = require('multer');
+const filewalker = require('filewalker');
+const traverse = require('traverse');
 
 /**
  *
@@ -19,11 +21,29 @@ module.exports = cms => {
     cms.app.use('/lib/tether', cms.express.static('node_modules/tether'));
     cms.app.use('/lib/bootstrap', cms.express.static('node_modules/bootstrap'));
 
+    cms.resolvePageTemplate = function (path, cb) {
+        let _path;
+
+        filewalker(cms.data.basePath)
+            .on('file', function (p, s) {
+                if (_.endsWith(p, 'index.html')) {
+                    const _p = p.replace('index.html', '');
+                    if (_p === '' || _.startsWith(path, p)) _path = p;
+                }
+            })
+            .on('done', function () {
+                if (cb) cb(_path);
+            })
+            .walk();
+
+    }
+
     cms.server = function (path, urlPath, onlyGetTree = false) {
         let _tree = {
             text: 'root', children: [],
             state: {opened: true},
-            path: ''
+            path: '',
+            pageTemplate: 'index.html'
         };
         let _templates = [];
 
@@ -44,7 +64,7 @@ module.exports = cms => {
                         cms.app.get([urlPath, `${urlPath}/index.html`], function*(req, res) {
                             const content = JSON.parse(cms.readFile(`${path}/index.json`));
                             let adminMode = req.session.adminMode || !cms.data.security ? true : false;
-                            const html = yield* render(content, {req, res, adminMode});
+                            const html = yield* render(content, {req, res, adminMode, path:urlPath});
                             res.send(html);
                         })
                     }
@@ -58,6 +78,9 @@ module.exports = cms => {
                             node.type = 'containerDirectory';
                             node.icon = 'fa fa-html5';
                             // node.icon = 'glyphicon glyphicon-leaf';
+                            cms.resolvePageTemplate(`${path}/index.json`, (p) => {
+                                node.pageTemplate = p;
+                            });
                         }
                     } else {
                         node.type = 'file';
@@ -80,6 +103,7 @@ module.exports = cms => {
         cms.data.templates = _templates;
 
         if (_server(path, urlPath, _tree.children, onlyGetTree)) _tree.type = 'containerDirectory';
+
         if (!onlyGetTree) {
             cms._server = () => cms.server(path, urlPath, true);
             cms.app.use(urlPath, cms.express.static(path));
@@ -229,9 +253,10 @@ module.exports = cms => {
 
     function injectCmsToHtml($) {
         const menu = cms.compile(Path.resolve(__dirname, 'menu.html'));
-        $('body').prepend(menu);
+        // $('body').append(menu);
         $('html').attr('data-ng-app', 'app');
         $('body').append(`
+            <script src="build/lib.bundle.js"></script>
             <script src="build/bundle.js"></script>
         `);
         $('body').attr('ng-controller', 'appCtrl');
@@ -247,8 +272,20 @@ module.exports = cms => {
      * @returns {*|string}
      */
     function* render(content, options) {
-        const {req, res, useForTemplate = false, useForCreatePage = false, adminMode = true} =options;
-        const html = cms.compile(cms.resolvePath(content.path))();
+        const {req, res, useForTemplate = false, useForCreatePage = false, adminMode = true, path} =options;
+        function getPath(path) {
+            let _path;
+
+            traverse(cms.data.tree).forEach(function (node) {
+                if (node.text && node.type === 'containerDirectory' && node.path === path) {
+                    _path = node.pageTemplate;
+                    this.stop();
+                }
+            })
+
+            return `${cms.data.basePath}/${_path}`;
+        }
+        const html = cms.compile(content.path ? cms.resolvePath(content.path) : getPath(path))();
         const $ = cheerio.load(html);
 
         content.containers = content.containers || {};
@@ -263,6 +300,7 @@ module.exports = cms => {
                     {
                         "types": ${JsonFn.stringify(types)},
                         "containers": ${JsonFn.stringify(content.containers)},
+                        "online": ${JsonFn.stringify(cms.data.online)},
                         "serverFn": ${JsonFn.stringify(_.map(cms.serverFn, (fn, k) => k))},
                         "setupServerFn": ${JsonFn.stringify(cms.utils.setupServerFn)}
                     }

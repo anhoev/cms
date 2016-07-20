@@ -47,6 +47,12 @@ app.use(require('method-override')());
 
 const CMS_KEY = Symbol("CMS");
 
+const menu = {
+    top: '51px',
+    bodyPaddingTop: '51px',
+    inverse: false
+}
+
 // todo : use class for cms
 const cms = {
     readFile,
@@ -65,6 +71,8 @@ const cms = {
      */
     data: {
         // ng environment filter
+        basePath: '',
+        baseUrlPath: '',
         ngEn: [],
         errors: {},
         handlers: [],
@@ -81,7 +89,10 @@ const cms = {
          * format: [Object]
          * e.g. [{Type:{Clothes:'',Food:''}}]
          */
-        categories: {}
+        categories: {},
+        online: {
+            menu
+        }
     },
     filters: {
         element: [],
@@ -125,6 +136,9 @@ const cms = {
     },
     get instance() {
         return global[CMS_KEY];
+    },
+    set menu(menu) {
+        _.assign(this.data.online.menu, menu);
     }
 }
 
@@ -215,4 +229,3 @@ function readFile(path) {
 function clearCache() {
     cms.cache.del(cms.cache.keys());
 }
-

@@ -19,3 +19,8 @@ cms.use(require('./restaurant'));
 cms.use(require('./organize'));
 
 cms.server('backend/mobile/en', '');
+
+cms.menu = {
+    bodyPaddingTop: '120px',
+    inverse: false
+}

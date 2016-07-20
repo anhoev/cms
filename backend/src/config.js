@@ -16,10 +16,16 @@ module.exports = (cms) => {
                 return template;
             })]
         }],
-        hideFields: makeCustomSelect([String], function (template, options, scope) {
+        showFields: makeCustomSelect([String], function (template, options, scope) {
             scope.$watch('model.type', (type) => {
-                if (type) scope.to.options = _.map(cms.listColumns(Types[type].form), v => ({name: v, value: v}));
-            })
+                if (type) {
+                    var fields = cms.listColumns(Types[type].form);
+                    scope.to.options = _.map(fields, v => ({name: v, value: v}));
+                    if (_.isEmpty(scope.model[options.key])) {
+                        scope.model[options.key].push(...fields);
+                    }
+                }
+            });
             return template;
         }, false, true),
         query: [{name: String, filter: {type: String, form: {type: 'code'}}}]

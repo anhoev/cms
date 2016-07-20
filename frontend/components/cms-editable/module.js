@@ -5,11 +5,9 @@ import formlyTemplate from './editable-formly.html';
 import formly from '../formly/module';
 import template from './tpl.html';
 import common from '../../common/common.module';
-import 'ng-json-explorer/dist/angular-json-explorer';
-import 'ng-json-explorer/dist/angular-json-explorer.css';
 
 const module = angular
-    .module('components.cmsEditable', [formly, 'ui.bootstrap', 'ngJsonExplorer', common])
+    .module('components.cmsEditable', [formly, 'ui.bootstrap', common])
     .directive('cmsEditable', directive)
     .directive('cmsDirectEditable', cmsDirectEditableDirective)
     .run(run);

@@ -3,6 +3,11 @@
 @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
 @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/input-groups";
 @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/grid";
+@import "./navbar-fixed-side";
+
+.cms-navbar-fix {
+  top: 75px;
+}
 
 .cms-containers, .cms-containers-inline {
   > div {

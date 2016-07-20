@@ -2,6 +2,7 @@
 import angular from 'angular';
 import 'ng-file-upload';
 import TypeClass from './Type';
+import menuTemplate from "./menu.html";
 import QueryBuilder from "./QueryBuilder";
 
 window.Enum = {
@@ -315,8 +316,8 @@ function cms($http, Upload) {
                     _children.push(...createChildren(dynamicQuery.field, null, _path));
                 });
                 columns = _.filter(columns, col => {
-                    if (!config.hideFields) return true;
-                    return config.hideFields.indexOf(col) === -1;
+                    if (_.isEmpty(config.showFields)) return true;
+                    return config.showFields.indexOf(col) !== -1;
                 })
             }
             return {
@@ -328,7 +329,6 @@ function cms($http, Upload) {
             }
         });
     }
-
 
 
     function execServerFn(type, model, fnName, ...args) {
@@ -373,11 +373,19 @@ run.$inject = ['cms', '$http'];
 function run(cms, $http) {
     const data = cms.data;
     try {
+
         cms.parseAndSaveData(JsonFn.parse($('#cms-data').text(), true));
         data.serverFn = data.setupServerFn(data.serverFn, $http.post);
         delete data.setupServerFn;
         window.Types = data.types;
         window.Local = data.Local = {};
+
+        //menu
+        const menu = cms.data.online.menu;
+        $('.main-nav').css('top', menu.top);
+        $('body').css('padding-top', menu.bodyPaddingTop);
+        $('body').append(menuTemplate);
+        if (menu.inverse) $('.cms-menu').addClass('navbar-inverse');
     } catch (e) {
     }
 
