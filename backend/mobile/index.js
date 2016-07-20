@@ -10,7 +10,7 @@ const cms = require('../src/cms');
 cms.mongoose = mongoose;
 cms.data.categories = [{Type: {Human: null, Animal: null}}, {Type2: {Human: null, Animal: null}}];
 const resolvePath = cms.resolvePath = (p) => `backend/mobile/${p}`;
-cms.data.security = false;
+cms.data.security = true;
 cms.listen(8888);
 mongoose.connect('mongodb://localhost/mobile');
 

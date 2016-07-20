@@ -64,7 +64,7 @@ module.exports = cms => {
                         cms.app.get([urlPath, `${urlPath}/index.html`], function*(req, res) {
                             const content = JSON.parse(cms.readFile(`${path}/index.json`));
                             let adminMode = req.session.adminMode || !cms.data.security ? true : false;
-                            const html = yield* render(content, {req, res, adminMode, path:urlPath});
+                            const html = yield* render(content, {req, res, adminMode, path: urlPath});
                             res.send(html);
                         })
                     }
@@ -273,6 +273,7 @@ module.exports = cms => {
      */
     function* render(content, options) {
         const {req, res, useForTemplate = false, useForCreatePage = false, adminMode = true, path} =options;
+
         function getPath(path) {
             let _path;
 
@@ -285,6 +286,7 @@ module.exports = cms => {
 
             return `${cms.data.basePath}/${_path}`;
         }
+
         const html = cms.compile(content.path ? cms.resolvePath(content.path) : getPath(path))();
         const $ = cheerio.load(html);
 
@@ -292,7 +294,7 @@ module.exports = cms => {
         // yield* renderContainers(content.containers, $);
 
         // resolve
-        const types = yield* resolve($, content.containers);
+        const {types, _html} = yield* resolve($, content.containers);
 
         if (adminMode) {
             $('body').prepend(`
@@ -309,10 +311,9 @@ module.exports = cms => {
             injectCmsToHtml($);
             cms.filters.page.forEach(fn => fn($, content));
         } else {
+            $('body').html(_html);
             $('head').append(`
-                <link rel="stylesheet" href="build/angular.css"/>
-                <script src="/lib/jquery/dist/jquery.js"></script>
-                <script src="/lib/bootstrap/dist/js/bootstrap.js"></script>
+                 <link rel="stylesheet" href="build/angular.css"/>
             `);
         }
 
@@ -321,12 +322,12 @@ module.exports = cms => {
         function* resolve($, containers) {
             const typesBuilder = new cms.TypesBuilder();
             yield* typesBuilder.init();
-            const html = yield* cms.ng.$compile($.html(), $rootScope => {
+            const _html = yield* cms.ng.$compile($('body').html(), $rootScope => {
                 $rootScope.containers = containers;
                 $rootScope.typesBuilder = typesBuilder;
             })({});
 
-            return cms.ng.services.$rootScope.typesBuilder.Types;
+            return {types: cms.ng.services.$rootScope.typesBuilder.Types, _html};
         }
     }
 };

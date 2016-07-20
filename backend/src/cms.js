@@ -53,6 +53,8 @@ const menu = {
     inverse: false
 }
 
+const WebType = {APPLICATION: 'APPLICATION', WEB: 'WEB'};
+
 // todo : use class for cms
 const cms = {
     readFile,
@@ -92,7 +94,8 @@ const cms = {
         categories: {},
         online: {
             menu
-        }
+        },
+        webtype: WebType.WEB
     },
     filters: {
         element: [],
@@ -132,7 +135,8 @@ const cms = {
         Mode: {
             ADMIN: 'ADMIN',
             NORMAL: 'NORMAL'
-        }
+        },
+        WebType
     },
     get instance() {
         return global[CMS_KEY];
