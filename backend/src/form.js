@@ -3,16 +3,17 @@ const path = require('path');
 const unless = require('express-unless');
 const cheerio = require('cheerio');
 const _ = require('lodash');
-const {Schema: {Types}, VirtualType} = require('mongoose');
 const _merge = require('extend');
 function merge() {
     return _merge(true, ...arguments);
 }
 
 module.exports = cms => {
+    const {Schema: {Types}, VirtualType} = cms.mongoose;
+
     const convert = (schema, tabs) => {
 
-        var _schema = _.pickBy(schema, (field,k) => !(field instanceof cms.mongoose.VirtualType));
+        var _schema = _.pickBy(schema, (field,k) => !(field instanceof cms.mongoose.VirtualType),true);
         const fields = _.map(_schema, (field, k) => {
 
             function convertObj(field, k, label) {
