@@ -126,8 +126,8 @@ module.exports = (cms) => {
     }, {
         name: 'Product',
         formatter: `
-    <span cms-editable="model.text")></span>
-    <span cms-editable="model.price")></span>
+    <span cms-editable="model.text"></span>
+    <span cms-editable="model.price"></span>
     `,
         title: 'text',
         mTemplate: `

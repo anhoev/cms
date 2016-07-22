@@ -58,8 +58,19 @@
   @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/theme";
 }
 
+body.modal-open {
+  // block scroll for mobile;
+  // causes underlying page to jump to top;
+  // prevents scrolling on all screens
+  overflow: visible;
+}
+
 .cms-navbar-fix {
   top: 75px;
+}
+
+[cms-container] {
+  min-height: 42px;
 }
 
 .cms-containers, .cms-containers-inline {
@@ -102,26 +113,41 @@
   display: inline;
 }
 
+.cms-element-wrapper {
+  position: relative;
+}
+
+.cms-element-controll-wrapper {
+  width: 0px;
+}
+
 .cms-element-controll-icon, .cms-element-controll {
   position: absolute;
-  z-index: 1;
+  z-index: 1000;
 }
 
 .cms-element-controll {
-  width: 150px;
-  right: 10px;
+  width: 160px;
+  right: 20px;
+  top: -10px;
 }
 
 .cms-element-controll-icon {
   right: 20px;
+  top: -10px;
 }
 
 .cms-admin {
+  .cms-element-wrapper {
+    width: 20px;
+  }
   .cms-element-controll-icon {
-    right: initial;
+    top: initial;
+    right: 0px;
   }
   .cms-element-controll {
-    right: initial;
+    top: initial;
+    right: 0px;
     margin-left: -115px;
   }
 }

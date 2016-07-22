@@ -96,6 +96,16 @@ function service($http, $timeout, cms, $uibModal) {
         }
 
         cms.getType(type, ref, () => {
+            let mouseEnter = false;
+
+            $('body').on('scroll mousewheel touchmove', function (e) {
+                if (!mouseEnter) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            });
+
             const modalInstance = $uibModal.open({
                 animation: false,
                 size: 'lg',
@@ -114,8 +124,21 @@ function service($http, $timeout, cms, $uibModal) {
                 windowClass: 'cms-window-placeholder'
             });
 
-            if (cb) modalInstance.result.then(() => {
-                $timeout(cb, 100);
+            $timeout(() => {
+                $('.cms-window-placeholder').find('.modal-content').mouseover(() => {
+                    mouseEnter = true;
+                }).mouseout(() => {
+                    mouseEnter = false;
+                });
+            }, 100);
+
+            modalInstance.result.then(() => {
+                if (cb) $timeout(cb, 100);
+            })['finally'](function () {
+                $timeout(()=> {
+                    $('body').off('scroll mousewheel touchmove');
+                    $('.cms-window-placeholder').find('.modal-content').off();
+                }, 100);
             });
         })
 

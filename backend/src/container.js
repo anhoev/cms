@@ -258,6 +258,7 @@ module.exports = cms => {
         $('body').append(`
             <script src="build/lib.bundle.js"></script>
             <script src="build/bundle.js"></script>
+            <link rel="stylesheet" href="build/cms.css"/>
         `);
         $('body').attr('ng-controller', 'appCtrl');
     }
@@ -313,6 +314,7 @@ module.exports = cms => {
         } else {
             $('body').html(_html);
             $('head').append(`
+                 <link rel="stylesheet" href="build/cms.css"/>
                  <link rel="stylesheet" href="build/angular.css"/>
             `);
         }

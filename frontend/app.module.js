@@ -67,7 +67,7 @@ _JsonFn.parse = function (str, date2obj) {
 window._transform = {transformResponse: d => {
     return JsonFn.parse(d);
 }};
-import './build/cms.css';
+
 import 'font-awesome/css/font-awesome.css'
 /*
 import 'bootstrap-sass';

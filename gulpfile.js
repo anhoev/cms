@@ -18,6 +18,13 @@ gulp.task('frontend.app', function() {
         .pipe(gulp.dest('.'));
 });
 
+gulp.task('cms-sass', function () {
+    return gulp.src('./frontend/styles/cms.scss')
+        .pipe(sass().on('error', sass.logError))
+        .pipe(minifyCss({compatibility: 'ie8'}))
+        .pipe(gulp.dest('./frontend/build'));
+});
+
 gulp.task('frontend_with_css', ['cms-sass', 'frontend.app']);
 
 gulp.task('frontend', () => {
@@ -26,11 +33,11 @@ gulp.task('frontend', () => {
         .pipe(gulp.dest('frontend'));
 });
 
+
 gulp.task('clean', function () {
     return gulp.src('app/build/bundle.js.map')
         .pipe(clean({force: true}));
 });
-
 
 gulp.task('font', function () {
     return gulp.src([
@@ -38,13 +45,6 @@ gulp.task('font', function () {
         './node_modules/bootstrap-sass/assets/fonts/**/**.*'
     ])
         .pipe(gulp.dest('./app/build/fonts'));
-});
-
-gulp.task('cms-sass', function () {
-    return gulp.src('./frontend/styles/cms.scss')
-        .pipe(sass().on('error', sass.logError))
-        .pipe(minifyCss({compatibility: 'ie8'}))
-        .pipe(gulp.dest('./frontend/build'));
 });
 
 gulp.task('watch', () => {

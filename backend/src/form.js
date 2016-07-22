@@ -3,7 +3,7 @@ const path = require('path');
 const unless = require('express-unless');
 const cheerio = require('cheerio');
 const _ = require('lodash');
-const {Schema: {Types}} = require('mongoose');
+const {Schema: {Types}, VirtualType} = require('mongoose');
 const _merge = require('extend');
 function merge() {
     return _merge(true, ...arguments);
@@ -12,7 +12,7 @@ function merge() {
 module.exports = cms => {
     const convert = (schema, tabs) => {
 
-        const fields = _.map(schema, (field, k) => {
+        const fields = _.map(_.filter(schema, field => !(field instanceof VirtualType)), (field, k) => {
 
             function convertObj(field, k, label) {
                 const defaultOptions = {form: {key: k, templateOptions: {label: label ? label : k}}};
@@ -113,7 +113,10 @@ module.exports = cms => {
         }
         if (field === String) return merge(defaultOptions.form, {type: 'input'});
         if (field === Boolean) return merge(defaultOptions.form, {type: 'checkbox'});
-        if (field === Date) return merge(defaultOptions.form, {type: 'input', templateOptions: {type: 'datetime-local'}});
+        if (field === Date) return merge(defaultOptions.form, {
+            type: 'input',
+            templateOptions: {type: 'datetime-local'}
+        });
         if (field === Number) return merge(defaultOptions.form, {type: 'input', templateOptions: {type: 'number'}});
 
     })
