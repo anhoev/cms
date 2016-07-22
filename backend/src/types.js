@@ -93,19 +93,19 @@ module.exports = (cms) => {
     function registerSchema(schema, options) {
         const {
             name, formatter, formatterUrl, initSchema, title, fn = {},
-            serverFn = {}, tabs, isViewElement = true, mTemplate, admin= {query: []},
+            serverFn = {}, tabs, isViewElement = true, mTemplate, admin = {query: []},
             alwaysLoad = false, restifyOptions
         } = options;
         cms.filters.schema.forEach((fn) => fn(schema, name));
         if (!(schema instanceof cms.mongoose.Schema)) {
-            schema = new cms.mongoose.Schema(schema);
+            schema = new cms.mongoose.Schema(schema, {toObject: {virtuals: true}, toJSON: {virtuals: true}});
         }
 
         if (options.autopopulate) schema.plugin(autopopulate);
 
         if (initSchema) initSchema(schema);
         const Model = cms.mongoose.model(name, schema);
-        cms.restify.serve(app, Model, restifyOptions);
+        cms.restify.serve(app, Model, _.assign(restifyOptions, {lean: false}));
         _.merge(fn, cms.filters.fn);
         _.merge(serverFn, cms.filters.serverFn);
 
