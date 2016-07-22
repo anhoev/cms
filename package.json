@@ -34,7 +34,6 @@
     "karma-sourcemap-loader": "^0.3.6",
     "karma-spec-reporter": "0.0.22",
     "karma-webpack": "^1.7.0",
-    "node-sass": "^3.8.0",
     "webpack": "^1.12.6",
     "webpack-stream": "^2.1.1"
   },
