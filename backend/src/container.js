@@ -279,7 +279,7 @@ module.exports = cms => {
             let _path;
 
             traverse(cms.data.tree).forEach(function (node) {
-                if (node.text && node.type === 'containerDirectory' && node.path === path) {
+                if (node.text && node.type === 'containerDirectory' && (node.path === path || `/${node.path}` === path)) {
                     _path = node.pageTemplate;
                     this.stop();
                 }
