@@ -12,7 +12,8 @@ function merge() {
 module.exports = cms => {
     const convert = (schema, tabs) => {
 
-        const fields = _.map(_.pickBy(schema, field => !(field instanceof VirtualType)), (field, k) => {
+        var _schema = _.pickBy(schema, (field,k) => !(field instanceof cms.mongoose.VirtualType));
+        const fields = _.map(_schema, (field, k) => {
 
             function convertObj(field, k, label) {
                 const defaultOptions = {form: {key: k, templateOptions: {label: label ? label : k}}};
