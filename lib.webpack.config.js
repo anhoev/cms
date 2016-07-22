@@ -63,6 +63,7 @@ module.exports = {
             'angular-drag-and-drop-lists',
             'angular-ui-bootstrap',
             'angular-bootstrap-contextmenu',
+            'bootstrap/dist/js/boostrap'
         ]
     },
     output: {

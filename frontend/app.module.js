@@ -69,6 +69,7 @@ window._transform = {transformResponse: d => {
 }};
 
 import 'font-awesome/css/font-awesome.css'
+import 'bootstrap/dist/js/bootstrap'
 /*
 import 'bootstrap-sass';
 import 'bootstrap/dist/css/bootstrap.css';
