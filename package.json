@@ -115,7 +115,6 @@
     "multer": "^1.1.0",
     "ng-file-upload": "^11.2.2",
     "ng-js-tree": "0.0.7",
-    "ng-json-explorer": "git+https://github.com/Goldark/ng-json-explorer.git",
     "ng-node-compile": "^2.0.52",
     "ng-sanitize": "0.0.2",
     "node-cache": "^3.0.0",
