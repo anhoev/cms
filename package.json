@@ -39,7 +39,6 @@
     "webpack-stream": "^2.1.1"
   },
   "scripts": {
-    "preinstall": "node-gyp configure && node-gyp rebuild",
     "pretest": "npm install",
     "test": "./node_modules/.bin/karma start tests/karma.conf.js",
     "prestart": "gulp build",
@@ -105,8 +104,6 @@
     "jsonwebtoken": "^5.4.1",
     "jstree": "^3.2.1",
     "jstree-bootstrap-theme": "git+https://github.com/orangehill/jstree-bootstrap-theme.git",
-    "less": "^2.5.3",
-    "less-loader": "^2.2.2",
     "lodash": "^4.13.1",
     "method-override": "^2.3.5",
     "moment": "^2.10.6",
@@ -119,7 +116,6 @@
     "ng-node-compile": "^2.0.52",
     "ng-sanitize": "0.0.2",
     "node-cache": "^3.0.0",
-    "npm": "^3.6.0",
     "q": "^1.4.1",
     "raw-loader": "^0.5.1",
     "rmdir": "^1.1.0",
