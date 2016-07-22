@@ -12,7 +12,7 @@ function merge() {
 module.exports = cms => {
     const convert = (schema, tabs) => {
 
-        const fields = _.map(_.filter(schema, field => !(field instanceof VirtualType)), (field, k) => {
+        const fields = _.map(_.pickBy(schema, field => !(field instanceof VirtualType)), (field, k) => {
 
             function convertObj(field, k, label) {
                 const defaultOptions = {form: {key: k, templateOptions: {label: label ? label : k}}};
