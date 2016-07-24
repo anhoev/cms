@@ -11,3 +11,11 @@
 
 * `create list for fast navigation in form`
 
+* admin template
+
+* sort, filter
+
+* websocket
+
+* support for arrow function for json-fn
+

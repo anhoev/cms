@@ -4,6 +4,8 @@ import 'ng-file-upload';
 import TypeClass from './Type';
 import menuTemplate from "./menu.html";
 import QueryBuilder from "./QueryBuilder";
+import 'angular-websocket';
+import Uuid from 'uuid';
 
 window.Enum = {
     Load: {NOT: 'NOT', LOADING: 'LOADING', LOADED: 'LOADED', PART_LOADED: 'PART_LOADED'},
@@ -11,13 +13,15 @@ window.Enum = {
 }
 
 const modelModule = angular
-    .module('common.data', ['ngFileUpload'])
+    .module('common.data', ['ngFileUpload', 'ngWebSocket'])
     .factory('cms', cms)
     .run(run);
 
 cms.$inject = ['$http', 'Upload'];
 function cms($http, Upload) {
-    const data = {};
+    const data = {
+        socketQueue: {}
+    };
     const editState = {
         /**
          * 0: edit by drag and drop element
@@ -78,14 +82,29 @@ function cms($http, Upload) {
     const loadElementsPending = [];
 
 
-    function countElements(type, cb, params) {
-        $http.get(`/api/v1/${type}/count?${params}`, _transform).then(res => {
-            if (cb) cb(res.data.count);
+    function countElements(type, cb, paramsBuilder) {
+        sendWs({path: `get/api/v1/${type}/count`, params: paramsBuilder.buildJson()}, (count) => {
+            if (cb) cb(count);
         });
+        /*$http.get(`/api/v1/${type}/count?${params}`, _transform).then(res => {
+            if (cb) cb(res.data.count);
+        });*/
     }
 
-    function loadElements(type, cb, params) {
-        if (!params && data.types[type] && data.types[type]._load === Enum.Load.LOADED) {
+    function sendWs(msg, cb) {
+        const _uuid = Uuid.v1();
+        socket.onMessage((event) => {
+            const _data = JsonFn.parse(event.data);
+            if (_data.uuid === _uuid) {
+                cb(_data.result)
+            }
+        });
+
+        socket.send(_.assign(msg, {uuid: _uuid}));
+    }
+
+    function loadElements(type, cb, paramsBuilder) {
+        if (!paramsBuilder && data.types[type] && data.types[type]._load === Enum.Load.LOADED) {
             if (cb) cb(data.types[type].list);
             return;
         }
@@ -94,9 +113,9 @@ function cms($http, Upload) {
         if (data.types[type]._load !== Enum.Load.LOADING) {
             data.types[type]._load = Enum.Load.LOADING;
 
-            $http.get(`/api/v1/${type}?${params}`, _transform).then(res => {
-                var list = JsonFn.clone(res.data, true);
-                if (!params) {
+            sendWs({path: `get/api/v1/${type}`, params: paramsBuilder.buildJson()}, (_list) => {
+                var list = JsonFn.clone(_list, true);
+                if (!paramsBuilder) {
                     data.types[type].list = list;
                     data.types[type]._load = Enum.Load.LOADED;
                 } else {
@@ -108,6 +127,20 @@ function cms($http, Upload) {
                 loadElementsPending.forEach(cb => cb(data.types[type].queryList));
                 loadElementsPending.length = 0;
             });
+            /*$http.get(`/api/v1/${type}?${JsonFn.stringify(paramsBuilder)}`, _transform).then(res => {
+             var list = JsonFn.clone(res.data, true);
+             if (!paramsBuilder) {
+             data.types[type].list = list;
+             data.types[type]._load = Enum.Load.LOADED;
+             } else {
+             data.types[type].list = _.unionWith(data.types[type].list, list, (e1, e2) => e1._id === e2._id);
+             data.types[type].queryList = list.map(e => _.find(data.types[type].list, e2 => e2._id === e._id));
+             data.types[type]._load = Enum.Load.PART_LOADED;
+             }
+
+             loadElementsPending.forEach(cb => cb(data.types[type].queryList));
+             loadElementsPending.length = 0;
+             });*/
         }
     }
 
@@ -340,6 +373,7 @@ function cms($http, Upload) {
     }
 
     return window.cms = {
+        sendWs,
         findByID,
         findFnByID,
         findByRef,
@@ -369,8 +403,8 @@ function cms($http, Upload) {
         execServerFnForWrapper
     }
 }
-run.$inject = ['cms', '$http'];
-function run(cms, $http) {
+run.$inject = ['cms', '$http', '$websocket'];
+function run(cms, $http, $websocket) {
     const data = cms.data;
     try {
 
@@ -390,5 +424,7 @@ function run(cms, $http) {
     } catch (e) {
     }
 
+    window.socket = cms.socket = $websocket('ws://localhost:8888');
 }
+
 export default modelModule.name;

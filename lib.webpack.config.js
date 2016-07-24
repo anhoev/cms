@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 
 module.exports = {
-    devtool: 'source-map',
     context: __dirname + "/frontend",
     entry: {
         // create two library bundles, one with jQuery and
@@ -63,7 +62,8 @@ module.exports = {
             'angular-drag-and-drop-lists',
             'angular-ui-bootstrap',
             'angular-bootstrap-contextmenu',
-            'bootstrap/dist/js/boostrap'
+            'bootstrap/dist/js/bootstrap',
+            'angular-websocket'
         ]
     },
     output: {

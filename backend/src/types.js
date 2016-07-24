@@ -94,7 +94,8 @@ module.exports = (cms) => {
         const {
             name, formatter, formatterUrl, initSchema, title, fn = {},
             serverFn = {}, tabs, isViewElement = true, mTemplate, admin = {query: []},
-            alwaysLoad = false, restifyOptions
+            alwaysLoad = false, restifyOptions,
+            info = {}
         } = options;
         cms.filters.schema.forEach((fn) => fn(schema, name));
         if (!(schema instanceof cms.mongoose.Schema)) {
@@ -106,6 +107,7 @@ module.exports = (cms) => {
         if (initSchema) initSchema(schema);
         const Model = cms.mongoose.model(name, schema);
         cms.restify.serve(app, Model, _.assign(restifyOptions, {lean: false}));
+
         _.merge(fn, cms.filters.fn);
         _.merge(serverFn, cms.filters.serverFn);
 
@@ -125,12 +127,12 @@ module.exports = (cms) => {
             },
             Formatter: formatter,
             FormatterUrl: formatterUrl,
-            info: {
+            info: _.assign({
                 title,
                 isViewElement,
                 admin,
                 alwaysLoad
-            },
+            }, info),
             fn,
             serverFn,
             get serverFnForClient() {
@@ -225,4 +227,35 @@ module.exports = (cms) => {
     }
 
     cms.registerSchema = registerSchema;
+
+    // websocket
+
+    app.ws(`/`, function (ws, req) {
+        ws.on('error', function (e) {
+            console.warn(e);
+        })
+        ws.on('message', function*({path, params = {}, uuid}) {
+            const base = '([^\/]*)\/api\/v1\/([^\/]*)';
+            const modelQueryTester = new RegExp(`${base}$`);
+            const countQueryTester = new RegExp(`${base}\/count$`);
+            if (modelQueryTester.test(path)) {
+                const [,method,modelName] = path.match(modelQueryTester);
+                if (method === 'get') {
+                    if (Object.keys(cms.Types).indexOf(modelName) !== -1) {
+                        const result = yield cms.Types[modelName].Model.find(params.query).sort(params.sort).skip(params.skip).limit(params.limit);
+                        ws.send({result,uuid});
+                    }
+                }
+            }
+            if (countQueryTester.test(path)) {
+                const [,method,modelName] = path.match(countQueryTester);
+                if (method === 'get') {
+                    if (Object.keys(cms.Types).indexOf(modelName) !== -1) {
+                        const result = yield cms.Types[modelName].Model.find(params.query).sort(params.sort).skip(params.skip).limit(params.limit).count(params.query);
+                        ws.send({result,uuid});
+                    }
+                }
+            }
+        });
+    });
 }

@@ -1,4 +1,3 @@
-import angular from 'angular';
 import formly from '../formly/module';
 
 const module = angular

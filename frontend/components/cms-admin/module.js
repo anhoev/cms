@@ -55,17 +55,16 @@ function directive(cms, $uibModal, $timeout, formService) {
                         }
 
                         // number of pages;
-                        const queryBuilder = new QueryBuilder();
-                        const params = queryBuilder.limit($scope.page.limit).page($scope.page.currentPage).query($scope.node.query).build();
+                        const paramsBuilder = new QueryBuilder().limit($scope.page.limit).page($scope.page.currentPage).query($scope.node.query);
 
                         cms.loadElements($scope.node.type, (list) => {
                             var Type = cms.data.types[$scope.node.type];
                             $scope.list = list;
-                        }, params);
+                        }, paramsBuilder);
 
                         if (!onlyChangePage) cms.countElements($scope.node.type, (count) => {
                             $scope.page.size = count;
-                        }, params);
+                        }, paramsBuilder);
                     })
                 }
 

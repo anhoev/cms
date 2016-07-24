@@ -18,10 +18,11 @@ const fs = require('fs');
 const cache = new NodeCache({useClones: false, stdTTL: 20 * 60});
 const ngcompile = require('../lib/ng.compile');
 const Path = require('path');
+require('express-ws')(_app);
 
 const app = new Proxy(_app, {
     get(target, key) {
-        if (['get', 'post', 'put', 'delete'].indexOf(key) !== -1) {
+        if (['get', 'post', 'put', 'patch', 'delete'].indexOf(key) !== -1) {
             return function () {
                 if (arguments[1] && arguments[1].constructor && arguments[1].constructor.name === 'GeneratorFunction') {
                     const cb = arguments[1];
@@ -35,8 +36,49 @@ const app = new Proxy(_app, {
             };
         }
 
-        return target[key];
+        if (key === 'ws') {
+            return function () {
+                const _fn = arguments[1];
+                if (_fn && _fn.constructor) {
+                    const fn = function (ws, req) {
+                        const _on = ws.on;
+                        ws.on = function (path, cb) {
+                            if (cb && cb.constructor && cb.constructor.name === 'GeneratorFunction') {
+                                const callback = function (msg) {
+                                    Q.onerror = e => {
+                                    };
+                                    try {
+                                        let json = JsonFn.parse(msg);
+                                        Q.spawn(cb.bind(this, json));
+                                    } catch (e) {
+                                        Q.spawn(cb.bind(this, msg));
+                                    }
+                                };
 
+                                _on.bind(ws)(path, callback);
+                            } else {
+                                _on.bind(ws)(path, cb);
+                            }
+                        }
+
+                        const _send = ws.send;
+                        ws.send = function (result) {
+                            if (typeof result === 'string') {
+                                _send.bind(ws)(result);
+                            } else {
+                                _send.bind(ws)(JsonFn.stringify(result));
+                            }
+                        }
+                        _fn.bind(this)(ws, req);
+                    }
+
+                    arguments[1] = fn;
+                    target[key](...arguments);
+                }
+            };
+        }
+
+        return target[key];
     }
 });
 
