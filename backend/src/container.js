@@ -238,8 +238,7 @@ module.exports = cms => {
                     for (let element of list) {
                         var Model = cms.Types[type].Model;
                         const model = yield Model.findByIdAndUpdate(element._id, element, {
-                            upsert: true,
-                            setDefaultsOnInsert: true
+                            upsert: true
                         }).exec();
                         errorList.push({type, ref: element._id});
                     }
