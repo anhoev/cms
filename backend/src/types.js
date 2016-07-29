@@ -19,7 +19,7 @@ module.exports = (cms) => {
         const {Model, serverFn} = cms.Types[type];
         const obj = yield Model.findById(id).exec();
         const result = yield* serverFn[fn].bind(obj)(...args);
-        res.send(result);
+        res.send(isNaN(result) ? result : result + '');
     })
 
     app.delete('/cms-types/:type', function*(req, res) {

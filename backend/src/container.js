@@ -227,6 +227,7 @@ module.exports = cms => {
     })
 
     cms.app.post('/cms-import/', function*({body: {type}}, res) {
+        debugger;
         const errorList = [];
         if (!type) {
             const content = JsonFn.parse(fs.readFileSync(`${cms.data.basePath}/.export/cms.dump.json`, 'utf8'));
@@ -237,8 +238,9 @@ module.exports = cms => {
                 if (cms.Types[type]) {
                     for (let element of list) {
                         var Model = cms.Types[type].Model;
-                        const model = yield Model.findByIdAndUpdate(element._id, element, {
-                            upsert: true
+                        const model = yield Model.findByIdAndUpdate(element._id, _.pickBy(element, (v, k) => k !== '__v', true), {
+                            upsert: true,
+                            setDefaultsOnInsert: true
                         }).exec();
                         errorList.push({type, ref: element._id});
                     }
