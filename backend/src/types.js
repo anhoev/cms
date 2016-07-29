@@ -104,6 +104,8 @@ module.exports = (cms) => {
 
         if (options.autopopulate) schema.plugin(autopopulate);
 
+        schema.index({'$**': 'text'});
+
         if (initSchema) initSchema(schema);
         const Model = cms.mongoose.model(name, schema);
         cms.restify.serve(app, Model, _.assign(restifyOptions, {lean: false}));
@@ -145,8 +147,10 @@ module.exports = (cms) => {
                             scope.serverFn[fnName] = function () {
                                 const getFnData = args => _.find(scope.serverFnData,
                                     v => JSON.stringify({args: v.args, k: v.k}) === JSON.stringify({args, k: fnName}));
-                                const data = getFnData(_.map(arguments, v => v));
-                                if (data && data.result) return data.result
+                                const data = getFnData(arguments);
+                                if (data && data.result) {
+                                    return data.result;
+                                }
                                 if (!data) {
                                     scope.serverFnData.push({args: arguments, k: fnName});
                                     const args = arguments;
@@ -243,7 +247,14 @@ module.exports = (cms) => {
                 if (method === 'get') {
                     if (Object.keys(cms.Types).indexOf(modelName) !== -1) {
                         const result = yield cms.Types[modelName].Model.find(params.query).sort(params.sort).skip(params.skip).limit(params.limit);
-                        ws.send({result,uuid});
+                        if (!params.part) {
+                            ws.send({result, uuid, last: true});
+                        } else {
+                            while (result.length > 0) {
+                                const _result = result.splice(0, 10);
+                                ws.send({result: _result, uuid, last: result.length <= 10});
+                            }
+                        }
                     }
                 }
             }
@@ -251,8 +262,8 @@ module.exports = (cms) => {
                 const [,method,modelName] = path.match(countQueryTester);
                 if (method === 'get') {
                     if (Object.keys(cms.Types).indexOf(modelName) !== -1) {
-                        const result = yield cms.Types[modelName].Model.find(params.query).sort(params.sort).skip(params.skip).limit(params.limit).count(params.query);
-                        ws.send({result,uuid});
+                        const result = yield cms.Types[modelName].Model.find(params.query).count(params.query);
+                        ws.send({result, uuid});
                     }
                 }
             }

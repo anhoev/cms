@@ -10,6 +10,7 @@
 <span popover-placement="bottom"
       popover-is-open="vm.isOpen"
       uib-popover-template="'editable-formly.html'"
+      popover-append-to-body="true"
       style="cursor: pointer"
       ng-if="!vm.showJson()">
     {{!vm.isValueUndefined? vm.value: '______'}}

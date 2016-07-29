@@ -359,7 +359,7 @@ module.exports = (cms) => {
     });
 
     const Employee = cms.registerSchema({
-        name: {type: String, default: 'Employee'},
+        name: {type: String, default: 'Employee', index: true},
         position: {type: String, form: makeSelect('waiter', 'chef', 'manager')},
         maxHour: Number,
         company: [{type: mongoose.Schema.Types.ObjectId, ref: 'Company', autopopulate: true}]
@@ -379,8 +379,12 @@ module.exports = (cms) => {
             order: function () {
             }
         },
-        autopopulate: true
-
+        autopopulate: true,
+        info: {
+            adminTemplate: `
+                <h4>{{model.name}} - {{model.position}} - {{model.maxHour}}</h4>
+            `
+        }
     });
 
     const Shift = cms.registerSchema({

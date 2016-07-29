@@ -1,13 +1,13 @@
-<ui-select ng-if="!to.multiple" data-ng-model="model[options.key]" theme="bootstrap">
+<ui-select ng-if="!to.multiple" data-ng-model="model[options.key]" theme="bootstrap" append-to-body="true">
     <ui-select-match placeholder="{{to.placeholder}}">
-        {{$select.selected[to.labelProp]}}
+        {{$select.selected[to.labelProp]}}&nbsp;&nbsp;&nbsp;&nbsp;
     </ui-select-match>
     <ui-select-choices data-repeat="model in models | filterBy: [to.labelProp]: $select.search">
         <div ng-bind-html="model[to.labelProp] | highlight: $select.search"></div>
     </ui-select-choices>
 </ui-select>
 
-<ui-select ng-if="to.multiple" multiple data-ng-model="model[options.key]" theme="bootstrap">
+<ui-select ng-if="to.multiple" multiple data-ng-model="model[options.key]" theme="bootstrap" append-to-body="true">
     <ui-select-match placeholder="{{to.placeholder}}">
         {{$item[to.labelProp]}}
     </ui-select-match>

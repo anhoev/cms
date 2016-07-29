@@ -9,6 +9,7 @@ import common from '../../common/common.module';
 const module = angular
     .module('components.cmsEditable', [formly, 'ui.bootstrap', common])
     .directive('cmsEditable', directive)
+    .directive('cmsEditableTransclude', cmsEditableTransclude)
     .directive('cmsDirectEditable', cmsDirectEditableDirective)
     .run(run);
 
@@ -96,6 +97,70 @@ function cmsDirectEditableDirective(cms, $filter) {
             ref: '@cmsRef'
         },
         template,
+        controllerAs: 'vm',
+        controller: function () {
+        },
+        link: link
+    };
+}
+
+cmsEditableTransclude.$inject = ['cms', '$timeout'];
+
+function cmsEditableTransclude(cms, $timeout) {
+
+    function link(scope, element, attrs, elementController) {
+        // resolve type and ref
+        const {type, ref} = elementController.getElement();
+
+        const {vm} = scope;
+
+        vm.showJson = () => false;
+
+        prepareForm(cms, type, ref, scope);
+
+        scope.$watch('model', v => vm.value = _.get(scope, vm.property), true);
+
+        vm.hide = function () {
+            $timeout(() => vm.show = false, 1000);
+        }
+    }
+
+    return {
+        require: '^^?cmsElement',
+        restrict: 'A',
+        scope: {},
+        bindToController: {
+            property: '@cmsEditableTransclude',
+            withEditBtn: '@withEditBtn'
+        },
+        transclude: true,
+        template: `
+<span class="cms">
+    <span   ng-if="vm.withEditBtn !== 'true'"
+            popover-placement="bottom"
+            popover-is-open="vm.isOpen"
+            uib-popover-template="'editable-formly.html'"
+            popover-append-to-body="true"
+            style="cursor: pointer">
+        <ng-transclude></ng-transclude>
+    </span>
+    <span ng-if="vm.withEditBtn === 'true'" style="position: relative">
+        <button ng-style="{opacity:vm.show? 1: 0.1}"
+                class="btn btn-white btn-xs"
+                popover-placement="bottom"
+                popover-is-open="vm.isOpen"
+                uib-popover-template="'editable-formly.html'"
+                popover-append-to-body="true"
+                style="position: absolute;z-index: 1000;top:-24px">
+                   Edit
+        </button>
+        <ng-transclude 
+            ng-mouseover="vm.show = true" 
+            ng-mouseout="vm.hide();"
+            ></ng-transclude>
+    </span>
+</span>
+`,
         controllerAs: 'vm',
         controller: function () {
         },

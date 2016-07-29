@@ -9,11 +9,11 @@
 
 * add filter to ref-selection
 
-* `create list for fast navigation in form`
+* create list for fast navigation in form
 
-* admin template
+* `admin template`
 
-* sort, filter
+* `sort, filter`
 
 * websocket
 

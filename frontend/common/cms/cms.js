@@ -83,24 +83,18 @@ function cms($http, Upload) {
 
 
     function countElements(type, cb, paramsBuilder) {
-        sendWs({path: `get/api/v1/${type}/count`, params: paramsBuilder.buildJson()}, (count) => {
+        sendWs({path: `get/api/v1/${type}/count`, params: paramsBuilder.buildJson()}, ({data:count}) => {
             if (cb) cb(count);
         });
         /*$http.get(`/api/v1/${type}/count?${params}`, _transform).then(res => {
-            if (cb) cb(res.data.count);
-        });*/
+         if (cb) cb(res.data.count);
+         });*/
     }
 
     function sendWs(msg, cb) {
         const _uuid = Uuid.v1();
-        socket.onMessage((event) => {
-            const _data = JsonFn.parse(event.data);
-            if (_data.uuid === _uuid) {
-                cb(_data.result)
-            }
-        });
-
-        socket.send(_.assign(msg, {uuid: _uuid}));
+        data.socketQueue[_uuid] = cb;
+        socket.send(JsonFn.stringify(_.assign(msg, {uuid: _uuid})));
     }
 
     function loadElements(type, cb, paramsBuilder) {
@@ -109,39 +103,37 @@ function cms($http, Upload) {
             return;
         }
 
-        if (cb) loadElementsPending.push(cb);
-        if (data.types[type]._load !== Enum.Load.LOADING) {
-            data.types[type]._load = Enum.Load.LOADING;
-
-            sendWs({path: `get/api/v1/${type}`, params: paramsBuilder.buildJson()}, (_list) => {
-                var list = JsonFn.clone(_list, true);
+        sendWs({
+                path: `get/api/v1/${type}`,
+                params: paramsBuilder ? paramsBuilder.buildJson() : {}
+            }, ({data:_list, last}) => {
                 if (!paramsBuilder) {
-                    data.types[type].list = list;
+                    data.types[type].list = _list;
                     data.types[type]._load = Enum.Load.LOADED;
                 } else {
-                    data.types[type].list = _.unionWith(data.types[type].list, list, (e1, e2) => e1._id === e2._id);
-                    data.types[type].queryList = list.map(e => _.find(data.types[type].list, e2 => e2._id === e._id));
+                    data.types[type].list = _.unionWith(_list, data.types[type].list, (e1, e2) => e1._id === e2._id);
+                    data.types[type].queryList = _list.map(e => _.find(data.types[type].list, e2 => e2._id === e._id));
                     data.types[type]._load = Enum.Load.PART_LOADED;
                 }
 
-                loadElementsPending.forEach(cb => cb(data.types[type].queryList));
-                loadElementsPending.length = 0;
-            });
-            /*$http.get(`/api/v1/${type}?${JsonFn.stringify(paramsBuilder)}`, _transform).then(res => {
-             var list = JsonFn.clone(res.data, true);
-             if (!paramsBuilder) {
-             data.types[type].list = list;
-             data.types[type]._load = Enum.Load.LOADED;
-             } else {
-             data.types[type].list = _.unionWith(data.types[type].list, list, (e1, e2) => e1._id === e2._id);
-             data.types[type].queryList = list.map(e => _.find(data.types[type].list, e2 => e2._id === e._id));
-             data.types[type]._load = Enum.Load.PART_LOADED;
-             }
+                if (cb) cb(data.types[type].queryList);
+            }
+        );
+        /*$http.get(`/api/v1/${type}?${JsonFn.stringify(paramsBuilder)}`, _transform).then(res => {
+         var list = JsonFn.clone(res.data, true);
+         if (!paramsBuilder) {
+         data.types[type].list = list;
+         data.types[type]._load = Enum.Load.LOADED;
+         } else {
+         data.types[type].list = _.unionWith(data.types[type].list, list, (e1, e2) => e1._id === e2._id);
+         data.types[type].queryList = list.map(e => _.find(data.types[type].list, e2 => e2._id === e._id));
+         data.types[type]._load = Enum.Load.PART_LOADED;
+         }
 
-             loadElementsPending.forEach(cb => cb(data.types[type].queryList));
-             loadElementsPending.length = 0;
-             });*/
-        }
+         loadElementsPending.forEach(cb => cb(data.types[type].queryList));
+         loadElementsPending.length = 0;
+         });*/
+
     }
 
     function findByRef(type, ref) {
@@ -424,16 +416,27 @@ function run(cms, $http, $websocket) {
     } catch (e) {
     }
 
-    let loc = window.location, new_uri;
-    if (loc.protocol === "https:") {
-        new_uri = "wss:";
+    let new_uri;
+    const {wsAddress} = cms.data.online;
+    if (wsAddress) {
+        new_uri = wsAddress;
     } else {
-        new_uri = "ws:";
+        let loc = window.location;
+        if (loc.protocol === "https:") {
+            new_uri = "wss:";
+        } else {
+            new_uri = "ws:";
+        }
+        new_uri += "//" + loc.host;
+        new_uri += loc.pathname;
     }
-    new_uri += "//" + loc.host;
-    new_uri += loc.pathname;
 
-    window.socket = cms.socket = $websocket(new_uri);
+    window.socket = cms.socket = $websocket(new_uri, {reconnectIfNotNormalClose: true});
+
+    socket.onMessage((event) => {
+        const _data = JsonFn.parse(event.data, true);
+        cms.data.socketQueue[_data.uuid]({data: _data.result, last: _data.last})
+    });
 }
 
 export default modelModule.name;

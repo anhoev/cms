@@ -1,4 +1,13 @@
 class QueryBuilder {
+    constructor() {
+        this._part = false;
+    }
+
+    part(part) {
+        this._part = part;
+        return this;
+    }
+
     limit(limit) {
         this._limit = limit;
         return this;
@@ -19,6 +28,11 @@ class QueryBuilder {
         return this;
     }
 
+    search(_search) {
+        if (_search) this._search = _search;
+        return this;
+    }
+
     build() {
         this._skip = (this._page - 1) * this._limit;
 
@@ -31,12 +45,26 @@ class QueryBuilder {
     }
 
     buildJson() {
-        return {
-            limit: this._limit,
-            skip: this._skip,
-            query: this._query,
-            sort: this._sort
+        this._skip = (this._page - 1) * this._limit;
+
+        let query;
+        if (this._search && this._query) {
+            query = {$and: [{$text: {$search: this._search}}, this._query]}
+        } else if (this._search) {
+            query = {$text: {$search: this._search}};
+        } else if (this._query) {
+            query = this._query;
         }
+
+        const result = {};
+
+        if (this._limit) result.limit = this._limit;
+        if (this._skip) result.limit = this._skip;
+        if (query) result.query = query;
+        if (this._sort) result.limit = this._sort;
+        if (this._part) result.limit = this._part;
+
+        return result;
     }
 }
 

@@ -26,6 +26,7 @@ function directive(cms, $uibModal, $timeout, formService) {
 
         vm.openSitemap = function () {
             function modalCtrl($scope, $uibModalInstance) {
+                $scope.list = [];
                 $scope.cancel = function () {
                     $uibModalInstance.dismiss('cancel');
                 };
@@ -47,31 +48,45 @@ function directive(cms, $uibModal, $timeout, formService) {
                 $scope.get = _.get;
 
                 $scope.refresh = (onlyChangePage = false, changeAdminList = false) => {
-                    $scope.list = null;
+                    if (!$scope.node) return;
+
+                    $scope.list.length = 0;
                     $timeout(() => {
                         if (changeAdminList) {
                             $scope.tree = cms.getAdminList();
                             $scope.treeConfig.version++;
                         }
 
-                        // number of pages;
-                        const paramsBuilder = new QueryBuilder().limit($scope.page.limit).page($scope.page.currentPage).query($scope.node.query);
-
-                        cms.loadElements($scope.node.type, (list) => {
-                            var Type = cms.data.types[$scope.node.type];
-                            $scope.list = list;
-                        }, paramsBuilder);
-
-                        if (!onlyChangePage) cms.countElements($scope.node.type, (count) => {
-                            $scope.page.size = count;
-                        }, paramsBuilder);
                     })
+
+                    const paramsBuilder = new QueryBuilder().part(false).limit($scope.page.limit).page($scope.page.currentPage).query($scope.node.query);
+                    if (!_.isEmpty($scope.search.text)) {
+                        paramsBuilder.search($scope.search.text);
+                    }
+
+                    console.time("loadElements");
+                    cms.loadElements($scope.node.type, (list) => {
+                        console.timeEnd("loadElements");
+                        var Type = cms.data.types[$scope.node.type];
+                        $scope.list.push(...list);
+                        $scope.$apply();
+                    }, paramsBuilder);
+
+                    // number of pages;
+                    if (!onlyChangePage) cms.countElements($scope.node.type, (count) => {
+                        $scope.page.size = count;
+                    }, paramsBuilder);
+
                 }
 
                 // onclick
                 $scope.selectNode = function (e, select) {
                     const _node = JsonFn.clone((select && select.node) ? select.node.original : null);
                     $scope.node = _.get($scope.tree, _node.path);
+
+                    const config = getConfig();
+                    $scope.showAs.type = config && config.showAs === 'list' ? 'list' : 'table';
+
                     $scope.refresh();
                 }
 
@@ -84,9 +99,12 @@ function directive(cms, $uibModal, $timeout, formService) {
                         formService.edit(model._id, $scope.node.type, () => $scope.refresh());
                     })
                 }
+                function getConfig() {
+                    return _.find(Types.Config.list, {type: $scope.node.type});
+                }
 
                 $scope.setting = function () {
-                    const config = _.find(Types.Config.list, {type: $scope.node.type});
+                    const config = getConfig();
                     if (config) {
                         formService.edit(config._id, 'Config', () => $scope.refresh(false, true));
                     } else {
@@ -106,18 +124,28 @@ function directive(cms, $uibModal, $timeout, formService) {
 
                 $scope.deleteAll = function () {
                     cms.deleteElements($scope.node.type, () => $scope.refresh());
-
                 }
+
+                $scope.search = {text: ''};
+                // search
+                $scope.$watch('search.text', function (tmpStr) {
+                    $scope.refresh();
+                }, true);
 
                 // pagination
                 $scope.page = {
-                    limit: 50,
+                    limit: 25,
                     currentPage: 1
                 };
 
                 $scope.setItemsPerPage = function (num) {
                     $scope.itemsPerPage = num;
                     $scope.currentPage = 1; //reset to first page
+                }
+
+                // show as
+                $scope.showAs = {
+                    type: 'table'
                 }
 
             }

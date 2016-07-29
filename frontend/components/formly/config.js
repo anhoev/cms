@@ -9,6 +9,8 @@ import codeTemplate from './code.html';
 import code from './code.controller';
 import arrayController from './array.controller';
 import arrayTemplate from './array.template.html';
+import tableController from './table.controller';
+import tableTemplate from './table.template.html';
 import selectTypeController from './select-type.controller';
 import selectElementController from './select-element.controller';
 import selectPropertyController from './select-property.controller';
@@ -169,6 +171,12 @@ function config(formlyConfigProvider, size, $rootScopeProvider) {
         name: 'array',
         template: arrayTemplate,
         controller: arrayController
+    });
+
+    config.setType({
+        name: 'tableSection',
+        template: tableTemplate,
+        controller: tableController
     });
 
     config.setType({

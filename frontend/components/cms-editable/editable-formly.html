@@ -1,7 +1,11 @@
-<form ng-submit="vm.onSubmit()" novalidate class="form-horizontal cms-field-form">
-    <formly-form model="model" fields="vm.fields" form="vm.form" options="vm.options">
-    </formly-form>
-    <button type="submit" class="btn btn-primary submit-button" ng-disabled="vm.form.$invalid">Submit</button>
-    <button type="button" class="btn btn-primary" ng-click="vm.isOpen = false">Cancel</button>
-</form>
-<br ng-if="adminList === 'true'">
+<div class="cms">
+    <form ng-submit="vm.onSubmit()" novalidate class="form-horizontal cms-field-form">
+        <div style="overflow: auto;max-height: 700px;padding-right: 20px;">
+            <formly-form model="model" fields="vm.fields" form="vm.form" options="vm.options">
+            </formly-form>
+        </div>
+        <button type="submit" class="btn btn-primary submit-button" ng-disabled="vm.form.$invalid">Submit</button>
+        <button type="button" class="btn btn-primary" ng-click="vm.isOpen = false">Cancel</button>
+    </form>
+    <br ng-if="adminList === 'true'">
+</div>

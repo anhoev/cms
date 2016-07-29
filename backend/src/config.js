@@ -28,6 +28,7 @@ module.exports = (cms) => {
             });
             return template;
         }, false, true),
+        showAs: {type: String, form: makeSelect('list', 'table')},
         query: [{name: String, filter: {type: String, form: {type: 'code'}}}]
     }, {
         name: 'Config',

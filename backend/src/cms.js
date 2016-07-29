@@ -7,6 +7,7 @@ const express = require('express');
 const _app = express();
 const router = express.Router();
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 const restify = require('express-restify-mongoose');
 const Q = require('q');
 const session = require('express-session');
@@ -19,6 +20,7 @@ const cache = new NodeCache({useClones: false, stdTTL: 20 * 60});
 const ngcompile = require('../lib/ng.compile');
 const Path = require('path');
 require('express-ws')(_app);
+var deasync = require('deasync');
 
 const app = new Proxy(_app, {
     get(target, key) {
@@ -163,6 +165,7 @@ const cms = {
     utils: {},
     express,
     app,
+    mongoose,
     routers: {},
     restify,
     Types: {},
@@ -185,7 +188,8 @@ const cms = {
     },
     set menu(menu) {
         _.assign(this.data.online.menu, menu);
-    }
+    },
+    async
 }
 
 global[CMS_KEY] = cms;
@@ -274,4 +278,21 @@ function readFile(path) {
 
 function clearCache() {
     cms.cache.del(cms.cache.keys());
+}
+
+
+function async(fn) {
+    function _async(fn, _this) {
+        let result = false, done = false;
+        Q.spawn(function*() {
+            result = yield* fn.bind(_this)();
+            done = true;
+        })
+        deasync.loopWhile(()=>!done);
+        return result;
+    }
+
+    return function () {
+        return _async(fn, this);
+    }
 }

@@ -62,12 +62,22 @@ function elementDirective(cms, $compile, $http, $timeout) {
         }
 
         function render() {
-            scope.cmsInline = scope.$parent.vm.cmsInline === 'true';
 
-            scope.$parent.$watch('vm.cmsInline', () => {
-                scope.cmsInline = scope.$parent.vm.cmsInline === 'true';
+            if (vm.inline) {
+                scope.cmsInline = vm.inline === 'true';
                 reRender();
-            });
+            } else {
+                try {
+                    scope.cmsInline = scope.$parent.vm.cmsInline === 'true';
+
+                    scope.$parent.$watch('vm.cmsInline', () => {
+                        scope.cmsInline = scope.$parent.vm.cmsInline === 'true';
+                        reRender();
+                    });
+                } catch (e) {
+                }
+            }
+
             $timeout(() => scope.$watch('vm.element.ref', (newValue, oldValue) => {
                 if (newValue !== oldValue) reRender();
             }), 2000);
@@ -109,7 +119,7 @@ function elementDirective(cms, $compile, $http, $timeout) {
 
                 scope.serverFn = {};
                 _.each(serverFn, (fn, k) => {
-                    fn($http.post, scope, type, k);
+                    fn.bind(scope.model)($http.post, scope, type, k);
                 })
 
                 controller.refresh = function () {
@@ -133,6 +143,7 @@ function elementDirective(cms, $compile, $http, $timeout) {
         bindToController: {
             path: '@cmsPath',
             element: '=cmsElement',
+            inline: '@inline',
             dndMoved: '&'
         },
         controllerAs: 'vm',

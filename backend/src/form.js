@@ -11,41 +11,44 @@ function merge() {
 module.exports = cms => {
     const {Schema: {Types}, VirtualType} = cms.mongoose;
 
+    const nestedConvert = function (defaultOptions) {
+        if (defaultOptions.form.fieldGroup.find(f => f.key === 'choice')) {
+            defaultOptions.form.templateOptions.choice = defaultOptions.form.fieldGroup
+                .map(f => f.key).filter(k => k !== 'choice');
+            defaultOptions.form.fieldGroup.forEach(f => f.hideExpression = 'model.choice !== options.key')
+        } else if (defaultOptions.form.fieldGroup.find(f => f.key === 'null')) {
+            defaultOptions.form.templateOptions.null = true;
+        }
+    };
+
+    function convertObj(field, k, label) {
+        const defaultOptions = {form: {key: k, templateOptions: {label: label ? label : k}}};
+
+        if (field.type) {
+            for (const filter of cms.filters.field) {
+                let form = filter(field, {key: k, label});
+                if (form) return form;
+            }
+            merge(defaultOptions, field);
+            return defaultOptions.form;
+        } else if (Object.keys(field).length) {
+            // nested
+            merge(defaultOptions.form, {wrapper: 'panel', fieldGroup: convert(field)});
+            nestedConvert(defaultOptions, field);
+            return defaultOptions.form;
+        } else {
+            for (const filter of cms.filters.field) {
+                let form = filter(field, {key: k, label});
+                if (form) return form;
+            }
+            return defaultOptions.form;
+        }
+    }
+
     const convert = (schema, tabs) => {
 
-        var _schema = _.pickBy(schema, (field,k) => !(field instanceof cms.mongoose.VirtualType),true);
+        var _schema = _.pickBy(schema, (field, k) => !(field instanceof cms.mongoose.VirtualType), true);
         const fields = _.map(_schema, (field, k) => {
-
-            function convertObj(field, k, label) {
-                const defaultOptions = {form: {key: k, templateOptions: {label: label ? label : k}}};
-
-                if (field.type) {
-                    for (const filter of cms.filters.field) {
-                        let form = filter(field, {key: k, label});
-                        if (form) return form;
-                    }
-                    merge(defaultOptions, field);
-                    return defaultOptions.form;
-                } else if (Object.keys(field).length) {
-                    // nested
-                    merge(defaultOptions.form, {wrapper: 'panel', fieldGroup: convert(field)});
-                    if (defaultOptions.form.fieldGroup.find(f => f.key === 'choice')) {
-                        defaultOptions.form.templateOptions.choice = defaultOptions.form.fieldGroup
-                            .map(f => f.key).filter(k => k !== 'choice');
-                        defaultOptions.form.fieldGroup.forEach(f => f.hideExpression = 'model.choice !== options.key')
-                    } else if (defaultOptions.form.fieldGroup.find(f => f.key === 'null')) {
-                        defaultOptions.form.templateOptions.null = true;
-                    }
-                    return defaultOptions.form;
-                } else {
-                    for (const filter of cms.filters.field) {
-                        let form = filter(field, {key: k, label});
-                        if (form) return form;
-                    }
-                    return defaultOptions.form;
-                }
-            }
-
             // todo: tabs
 
             if (Array.isArray(field)) {
@@ -113,6 +116,22 @@ module.exports = cms => {
         if (field.type === Date) {
             return merge(defaultOptions.form, {type: 'input', templateOptions: {type: 'datetime-local'}}, field.form);
         }
+
+        if (field.type instanceof Object && field.nested) {
+            merge(defaultOptions.form, {wrapper: 'panel', fieldGroup: convert(field.type)}, field.form);
+            nestedConvert(defaultOptions);
+            return defaultOptions.form;
+        }
+
+        if (Array.isArray(field.type) && Object.keys(field.type[0]).length > 1) {
+            const fields = _.map(field.type[0], (nestedField, k) => convertObj(nestedField, k, k));
+            return merge({
+                key,
+                type: 'repeatSection',
+                templateOptions: {label: label || key, btnText: `Add ${key}`, fields}
+            }, field.form);
+        }
+
         if (field === String) return merge(defaultOptions.form, {type: 'input'});
         if (field === Boolean) return merge(defaultOptions.form, {type: 'checkbox'});
         if (field === Date) return merge(defaultOptions.form, {
