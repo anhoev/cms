@@ -19,3 +19,4 @@
 
 * support for arrow function for json-fn
 
+* copy ,paste, selection 

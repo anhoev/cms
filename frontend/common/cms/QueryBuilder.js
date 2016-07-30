@@ -59,7 +59,7 @@ class QueryBuilder {
         const result = {};
 
         if (this._limit) result.limit = this._limit;
-        if (this._skip) result.limit = this._skip;
+        if (this._skip) result.skip = this._skip;
         if (query) result.query = query;
         if (this._sort) result.limit = this._sort;
         if (this._part) result.limit = this._part;

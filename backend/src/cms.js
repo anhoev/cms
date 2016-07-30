@@ -21,6 +21,7 @@ const ngcompile = require('../lib/ng.compile');
 const Path = require('path');
 require('express-ws')(_app);
 var deasync = require('deasync');
+const co = require('co');
 
 const app = new Proxy(_app, {
     get(target, key) {
@@ -284,10 +285,10 @@ function clearCache() {
 function async(fn) {
     function _async(fn, _this) {
         let result = false, done = false;
-        Q.spawn(function*() {
-            result = yield* fn.bind(_this)();
+        co(fn.bind(_this)).then((_result) => {
+            result = _result;
             done = true;
-        })
+        }, () => done = true);
         deasync.loopWhile(()=>!done);
         return result;
     }

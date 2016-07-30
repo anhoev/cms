@@ -46,7 +46,6 @@ module.exports = cms => {
     }
 
     const convert = (schema, tabs) => {
-
         var _schema = _.pickBy(schema, (field, k) => !(field instanceof cms.mongoose.VirtualType), true);
         const fields = _.map(_schema, (field, k) => {
             // todo: tabs
@@ -124,6 +123,10 @@ module.exports = cms => {
         }
 
         if (Array.isArray(field.type) && Object.keys(field.type[0]).length > 1) {
+            if ((!field.type[0].type && !Object.keys(field.type[0]).length || field.type[0].type)) {
+                // if custom form;
+                return null;
+            }
             const fields = _.map(field.type[0], (nestedField, k) => convertObj(nestedField, k, k));
             return merge({
                 key,

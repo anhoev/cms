@@ -526,7 +526,7 @@ div.CodeMirror-lint-tooltip {
     text-align: start !important;
     margin-bottom: 5px !important;
   }
-  .col-sm-10 {
+  .col-sm-10, .col-sm-4, .col-sm-6 {
     @extend .col-xs-12;
   }
 
