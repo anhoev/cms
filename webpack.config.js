@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 
 module.exports = {
+	cache: true,
 	devtool: 'source-map',
 	context: __dirname + "/frontend",
 	entry: {
@@ -15,7 +16,11 @@ module.exports = {
 			{
 				test: /\.js$/,
 				exclude: /node_modules/,
-				loader: 'babel'
+				loader: 'babel',
+				query: {
+					cacheDirectory: true, //important for performance
+					plugins: ["transform-regenerator"]
+				}
 			},
 			{
 				test: /\.html$/,
@@ -32,15 +37,15 @@ module.exports = {
 		]
 	},
 	plugins: [
+		new webpack.DllReferencePlugin({
+			context: '.',
+			manifest: require('./frontend/build/lib-manifest.json')
+		}),
 		new webpack.ProvidePlugin({
 			$: 'jquery',
 			jQuery: 'jquery',
 			'window.jQuery': 'jquery',
 			'root.jQuery': 'jquery'
 		}),
-		new webpack.DllReferencePlugin({
-			context: '.',
-			manifest: require('./frontend/build/lib-manifest.json')
-		})
 	]
 };

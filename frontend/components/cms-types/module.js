@@ -40,9 +40,11 @@ function directive(cms, $http) {
         vm.end = function () {
             cms.updateContainerPage();
             cms.editState.dragType = null;
+            $('body').removeClass('cms-drag');
         }
         vm.start = type => {
             cms.editState.dragType = type;
+            $('body').addClass('cms-drag');
         }
     }
 

@@ -63,6 +63,8 @@ $fa-font-path: "/build/fonts" !default;
 
 @import "../../node_modules/ui-select/dist/select.css";
 
+@import "../../node_modules/lobipanel/lib/jquery-ui.min.css";
+
 // fix for ui-select
 .cms .ui-select-container.form-control {
   height: auto;

@@ -6,6 +6,8 @@ import menuTemplate from "./menu.html";
 import QueryBuilder from "./QueryBuilder";
 import 'angular-websocket';
 import Uuid from 'uuid';
+import 'jquery-ui/draggable';
+import 'jquery-ui/resizable';
 
 window.Enum = {
     Load: {NOT: 'NOT', LOADING: 'LOADING', LOADED: 'LOADED', PART_LOADED: 'PART_LOADED'},
@@ -415,6 +417,27 @@ function run(cms, $http, $websocket) {
         if (menu.bottom) $('.cms-menu').removeClass('navbar-fixed-top').addClass('navbar-fixed-bottom');
     } catch (e) {
     }
+
+    /*//panel
+    $('body').prepend(`
+<div class="cms-container-panel panel panel-default ui-widget-content"
+    style="position: fixed; top: 70px; right: 50px;width: 300px;height: 600px;z-index:1000">
+    <div class="panel-heading" style="padding: 0px 0px 0px 10px;height: 26px;cursor: move">
+        <div class="panel-title">
+            <h5>Edit panel</h5>
+        </div>
+    </div>
+    <div class="panel-body">
+       
+    </div>
+</div>
+`);
+    $(function () {
+        $('.cms-container-panel').draggable({
+            cancel: ".panel-body",
+            handle: ".panel-heading",
+        });
+    });*/
 
     let new_uri;
     const {wsAddress} = cms.data.online;

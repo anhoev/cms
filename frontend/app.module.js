@@ -73,6 +73,7 @@ import 'bootstrap-sass';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
 */
+import 'bootstrap/dist/js/bootstrap';
 
 import components from './components/components.module';
 import common from './common/common.module';
