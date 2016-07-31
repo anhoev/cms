@@ -238,23 +238,25 @@ module.exports = (cms) => {
         ws.on('error', function (e) {
             console.warn(e);
         })
-        ws.on('message', function*({path, params = {}, uuid}) {
+        ws.on('message', function*({path, params = {}, uuid, model}) {
             const base = '([^\/]*)\/api\/v1\/([^\/]*)';
             const modelQueryTester = new RegExp(`${base}$`);
             const countQueryTester = new RegExp(`${base}\/count$`);
             if (modelQueryTester.test(path)) {
-                const [,method,modelName] = path.match(modelQueryTester);
+                const [,method,type] = path.match(modelQueryTester);
                 if (method === 'get') {
-                    if (Object.keys(cms.Types).indexOf(modelName) !== -1) {
-                        const result = yield cms.Types[modelName].Model.find(params.query).sort(params.sort).skip(params.skip).limit(params.limit);
-                        if (!params.part) {
-                            ws.send({result, uuid, last: true});
-                        } else {
-                            while (result.length > 0) {
-                                const _result = result.splice(0, 10);
-                                ws.send({result: _result, uuid, last: result.length <= 10});
-                            }
-                        }
+                    if (Object.keys(cms.Types).indexOf(type) !== -1) {
+                        const result = yield cms.Types[type].Model.find(params.query).sort(params.sort).skip(params.skip).limit(params.limit);
+                        ws.send({result, uuid});
+                    }
+                } else if (method === 'post') {
+                    if (Object.keys(cms.Types).indexOf(type) !== -1) {
+                        var Model = cms.Types[type].Model;
+                        const _model = yield Model.findByIdAndUpdate(model._id, _.pickBy(model, (v, k) => k !== '__v', true), {
+                            upsert: true,
+                            setDefaultsOnInsert: true
+                        }).exec();
+                        ws.send({result: _model, uuid});
                     }
                 }
             }

@@ -218,7 +218,7 @@ module.exports = cms => {
                 const list = yield cms.Types[type].Model.find({});
                 Types[type] = {list};
             }
-
+            
             fs.writeFileSync(`${cms.data.basePath}/.export/cms.dump.json`, JsonFn.stringify(Types), 'utf8');
 
         }
@@ -227,7 +227,6 @@ module.exports = cms => {
     })
 
     cms.app.post('/cms-import/', function*({body: {type}}, res) {
-        debugger;
         const errorList = [];
         if (!type) {
             const content = JsonFn.parse(fs.readFileSync(`${cms.data.basePath}/.export/cms.dump.json`, 'utf8'));

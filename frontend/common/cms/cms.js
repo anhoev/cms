@@ -108,7 +108,7 @@ function cms($http, Upload) {
         sendWs({
                 path: `get/api/v1/${type}`,
                 params: paramsBuilder ? paramsBuilder.buildJson() : {}
-            }, ({data:_list, last}) => {
+            }, ({result:_list}) => {
                 if (!paramsBuilder) {
                     data.types[type].list = _list;
                     data.types[type]._load = Enum.Load.LOADED;
@@ -180,11 +180,14 @@ function cms($http, Upload) {
         walk(containers);
     }
 
-    function updateElement(type, model) {
-        $http.post(`api/v1/${type}/${model._id}`, JsonFn.stringify(_.pick(model, (v, k) => k !== '$data')))
-            .then(function (res) {
-                console.log(res.data);
-            });
+    function updateElement(type, model, resolve, fail) {
+        sendWs({
+                path: `post/api/v1/${type}`,
+                model
+            }, ({result:model}) => {
+                if (resolve) resolve(model);
+            }
+        );
     }
 
     function listColumns(form) {
@@ -419,25 +422,25 @@ function run(cms, $http, $websocket) {
     }
 
     /*//panel
-    $('body').prepend(`
-<div class="cms-container-panel panel panel-default ui-widget-content"
-    style="position: fixed; top: 70px; right: 50px;width: 300px;height: 600px;z-index:1000">
-    <div class="panel-heading" style="padding: 0px 0px 0px 10px;height: 26px;cursor: move">
-        <div class="panel-title">
-            <h5>Edit panel</h5>
-        </div>
-    </div>
-    <div class="panel-body">
-       
-    </div>
-</div>
-`);
-    $(function () {
-        $('.cms-container-panel').draggable({
-            cancel: ".panel-body",
-            handle: ".panel-heading",
-        });
-    });*/
+     $('body').prepend(`
+     <div class="cms-container-panel panel panel-default ui-widget-content"
+     style="position: fixed; top: 70px; right: 50px;width: 300px;height: 600px;z-index:1000">
+     <div class="panel-heading" style="padding: 0px 0px 0px 10px;height: 26px;cursor: move">
+     <div class="panel-title">
+     <h5>Edit panel</h5>
+     </div>
+     </div>
+     <div class="panel-body">
+
+     </div>
+     </div>
+     `);
+     $(function () {
+     $('.cms-container-panel').draggable({
+     cancel: ".panel-body",
+     handle: ".panel-heading",
+     });
+     });*/
 
     let new_uri;
     const {wsAddress} = cms.data.online;
@@ -458,7 +461,7 @@ function run(cms, $http, $websocket) {
 
     socket.onMessage((event) => {
         const _data = JsonFn.parse(event.data, true);
-        cms.data.socketQueue[_data.uuid]({data: _data.result, last: _data.last})
+        cms.data.socketQueue[_data.uuid](_data)
     });
 }
 

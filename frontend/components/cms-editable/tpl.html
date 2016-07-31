@@ -12,6 +12,7 @@
       uib-popover-template="'editable-formly.html'"
       popover-append-to-body="true"
       style="cursor: pointer"
+      ng-class="{'cms-empty-value': vm.isValueUndefined}"
       ng-if="!vm.showJson()">
-    {{!vm.isValueUndefined? vm.value: '______'}}
+    {{!vm.isValueUndefined? vm.value: 'empty'}}
 </span>

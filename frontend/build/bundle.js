@@ -3048,7 +3048,7 @@
 /* 89 */
 /***/ function(module, exports) {
 
-	module.exports = "<div ng-if=\"vm.showJson()\">\n    <button style=\"width: 60px\"\n            popover-placement=\"bottom\"\n            popover-is-open=\"vm.isOpen\"\n            uib-popover-template=\"'editable-formly.html'\"\n            class=\"btn btn-white btn-xs\">\n        edit\n    </button>\n</div>\n<span popover-placement=\"bottom\"\n      popover-is-open=\"vm.isOpen\"\n      uib-popover-template=\"'editable-formly.html'\"\n      popover-append-to-body=\"true\"\n      style=\"cursor: pointer\"\n      ng-if=\"!vm.showJson()\">\n    {{!vm.isValueUndefined? vm.value: '______'}}\n</span>"
+	module.exports = "<div ng-if=\"vm.showJson()\">\n    <button style=\"width: 60px\"\n            popover-placement=\"bottom\"\n            popover-is-open=\"vm.isOpen\"\n            uib-popover-template=\"'editable-formly.html'\"\n            class=\"btn btn-white btn-xs\">\n        edit\n    </button>\n</div>\n<span popover-placement=\"bottom\"\n      popover-is-open=\"vm.isOpen\"\n      uib-popover-template=\"'editable-formly.html'\"\n      popover-append-to-body=\"true\"\n      style=\"cursor: pointer\"\n      ng-class=\"{'cms-empty-value': vm.isValueUndefined}\"\n      ng-if=\"!vm.showJson()\">\n    {{!vm.isValueUndefined? vm.value: 'empty'}}\n</span>"
 
 /***/ },
 /* 90 */
@@ -3218,8 +3218,7 @@
 	            path: 'get/api/v1/' + type,
 	            params: paramsBuilder ? paramsBuilder.buildJson() : {}
 	        }, function (_ref2) {
-	            var _list = _ref2.data;
-	            var last = _ref2.last;
+	            var _list = _ref2.result;
 	
 	            if (!paramsBuilder) {
 	                data.types[type].list = _list;
@@ -3301,11 +3300,14 @@
 	        walk(containers);
 	    }
 	
-	    function updateElement(type, model) {
-	        $http.post('api/v1/' + type + '/' + model._id, JsonFn.stringify(_.pick(model, function (v, k) {
-	            return k !== '$data';
-	        }))).then(function (res) {
-	            console.log(res.data);
+	    function updateElement(type, model, resolve, fail) {
+	        sendWs({
+	            path: 'post/api/v1/' + type,
+	            model: model
+	        }, function (_ref3) {
+	            var model = _ref3.result;
+	
+	            if (resolve) resolve(model);
 	        });
 	    }
 	
@@ -3313,8 +3315,8 @@
 	        if (form[0].isTab) {
 	            var _ret = function () {
 	                var _fields = [];
-	                form.forEach(function (_ref3) {
-	                    var fields = _ref3.fields;
+	                form.forEach(function (_ref4) {
+	                    var fields = _ref4.fields;
 	
 	                    _fields.push.apply(_fields, _toConsumableArray(fields.map(function (field) {
 	                        return field.key;
@@ -3335,8 +3337,8 @@
 	    function findField(form, property) {
 	        if (form[0].isTab) {
 	            var result = undefined;
-	            form.forEach(function (_ref4) {
-	                var fields = _ref4.fields;
+	            form.forEach(function (_ref5) {
+	                var fields = _ref5.fields;
 	
 	                var f = fields.find(function (f) {
 	                    return f.key === property;
@@ -3460,9 +3462,9 @@
 	                } else if (field.type === 'select') {
 	                    var options = field.templateOptions.options;
 	
-	                    _.each(options, function (_ref7) {
-	                        var name = _ref7.name;
-	                        var value = _ref7.value;
+	                    _.each(options, function (_ref8) {
+	                        var name = _ref8.name;
+	                        var value = _ref8.value;
 	
 	                        var _path = path + '.children[' + children.length + ']';
 	                        var _query = [_defineProperty({}, property, value)];
@@ -3577,25 +3579,24 @@
 	    } catch (e) {}
 	
 	    /*//panel
-	    $('body').prepend(`
-	    <div class="cms-container-panel panel panel-default ui-widget-content"
-	    style="position: fixed; top: 70px; right: 50px;width: 300px;height: 600px;z-index:1000">
-	    <div class="panel-heading" style="padding: 0px 0px 0px 10px;height: 26px;cursor: move">
-	        <div class="panel-title">
-	            <h5>Edit panel</h5>
-	        </div>
-	    </div>
-	    <div class="panel-body">
-	       
-	    </div>
-	    </div>
-	    `);
-	    $(function () {
-	        $('.cms-container-panel').draggable({
-	            cancel: ".panel-body",
-	            handle: ".panel-heading",
-	        });
-	    });*/
+	     $('body').prepend(`
+	     <div class="cms-container-panel panel panel-default ui-widget-content"
+	     style="position: fixed; top: 70px; right: 50px;width: 300px;height: 600px;z-index:1000">
+	     <div class="panel-heading" style="padding: 0px 0px 0px 10px;height: 26px;cursor: move">
+	     <div class="panel-title">
+	     <h5>Edit panel</h5>
+	     </div>
+	     </div>
+	     <div class="panel-body">
+	      </div>
+	     </div>
+	     `);
+	     $(function () {
+	     $('.cms-container-panel').draggable({
+	     cancel: ".panel-body",
+	     handle: ".panel-heading",
+	     });
+	     });*/
 	
 	    var new_uri = undefined;
 	    var wsAddress = cms.data.online.wsAddress;
@@ -3617,7 +3618,7 @@
 	
 	    socket.onMessage(function (event) {
 	        var _data = JsonFn.parse(event.data, true);
-	        cms.data.socketQueue[_data.uuid]({ data: _data.result, last: _data.last });
+	        cms.data.socketQueue[_data.uuid](_data);
 	    });
 	}
 	
