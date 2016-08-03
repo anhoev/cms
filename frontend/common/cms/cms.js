@@ -2,7 +2,6 @@
 import angular from 'angular';
 import 'ng-file-upload';
 import TypeClass from './Type';
-import menuTemplate from "./menu.html";
 import QueryBuilder from "./QueryBuilder";
 import 'angular-websocket';
 import Uuid from 'uuid';
@@ -30,7 +29,8 @@ function cms($http, Upload) {
          * 1: edit by container
          */
         editMode: Enum.EditMode.DATAELEMENT,
-        dragType: null
+        dragType: null,
+        showContainerEdit: false
     }
 
     function changeEditMode(mode) {
@@ -85,7 +85,7 @@ function cms($http, Upload) {
 
 
     function countElements(type, cb, paramsBuilder) {
-        sendWs({path: `get/api/v1/${type}/count`, params: paramsBuilder.buildJson()}, ({data:count}) => {
+        sendWs({path: `get/api/v1/${type}/count`, params: paramsBuilder.buildJson()}, ({result:count}) => {
             if (cb) cb(count);
         });
         /*$http.get(`/api/v1/${type}/count?${params}`, _transform).then(res => {
@@ -113,7 +113,7 @@ function cms($http, Upload) {
                     data.types[type].list = _list;
                     data.types[type]._load = Enum.Load.LOADED;
                 } else {
-                    data.types[type].list = _.unionWith(_list, data.types[type].list, (e1, e2) => e1._id === e2._id);
+                    data.types[type].list = _.unionWith(_list, _.filter(data.types[type].list, e => e !== null), (e1, e2) => e1._id === e2._id);
                     data.types[type].queryList = _list.map(e => _.find(data.types[type].list, e2 => e2._id === e._id));
                     data.types[type]._load = Enum.Load.PART_LOADED;
                 }
@@ -369,6 +369,12 @@ function cms($http, Upload) {
         return $http.post(`/cms-wrappers/${name}/${fnName}`, args);
     }
 
+    function getTitle(type, ref) {
+        const Type = data.types[type];
+        const e = _.find(Type.list, {_id: ref})
+        return e[Type.info.title];
+    }
+
     return window.cms = {
         sendWs,
         findByID,
@@ -397,7 +403,8 @@ function cms($http, Upload) {
         QueryBuilder,
         deleteElements,
         execServerFn,
-        execServerFnForWrapper
+        execServerFnForWrapper,
+        getTitle
     }
 }
 run.$inject = ['cms', '$http', '$websocket'];
@@ -411,36 +418,14 @@ function run(cms, $http, $websocket) {
         window.Types = data.types;
         window.Local = data.Local = {};
 
-        //menu
-        const menu = cms.data.online.menu;
-        $('.main-nav').css('top', menu.top);
-        $('body').css('padding-top', menu.bodyPaddingTop);
-        $('body').append(menuTemplate);
-        if (menu.inverse) $('.cms-menu').addClass('navbar-inverse');
-        if (menu.bottom) $('.cms-menu').removeClass('navbar-fixed-top').addClass('navbar-fixed-bottom');
     } catch (e) {
     }
 
-    /*//panel
-     $('body').prepend(`
-     <div class="cms-container-panel panel panel-default ui-widget-content"
-     style="position: fixed; top: 70px; right: 50px;width: 300px;height: 600px;z-index:1000">
-     <div class="panel-heading" style="padding: 0px 0px 0px 10px;height: 26px;cursor: move">
-     <div class="panel-title">
-     <h5>Edit panel</h5>
-     </div>
-     </div>
-     <div class="panel-body">
+    //menu
+    $('body').append(`<div cms-nav></div>`);
 
-     </div>
-     </div>
-     `);
-     $(function () {
-     $('.cms-container-panel').draggable({
-     cancel: ".panel-body",
-     handle: ".panel-heading",
-     });
-     });*/
+    //panel
+    $('body').prepend(`<div cms-container-edit></div>`);
 
     let new_uri;
     const {wsAddress} = cms.data.online;

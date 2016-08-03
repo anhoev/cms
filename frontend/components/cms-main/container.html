@@ -16,7 +16,7 @@
      dnd-horizontal-list="{{vm.cmsInline}}"
      ng-class="{'cms-panel-highlight':vm.highlight()}">
     <div ng-repeat="element in vm.elements"
-         dnd-disable-if="element.binding"
+         dnd-disable-if="element.binding || !vm.matchEditMode(element.type)"
          dnd-draggable="element"
          dnd-type="element.type"
          dnd-moved="vm.elements.splice($index, 1);"

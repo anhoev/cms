@@ -24,6 +24,13 @@ function directive(cms, $timeout) {
         }
         vm.allowedTypes = vm.cmsContainerTypes ? vm.cmsContainerTypes.split(',') : [];
         vm.highlight = ()=> vm.allowedTypes.indexOf(vm.editState.dragType) !== -1 && !(vm.elements.length > 0 && vm.elements[0].binding);
+
+        vm.editState = cms.editState;
+        vm.matchEditMode = function (type) {
+            return  (vm.editState.editMode === Enum.EditMode.ALL ||
+            (vm.editState.editMode === Enum.EditMode.VIEWELEMENT && cms.data.types[type].info.isViewElement) ||
+            (vm.editState.editMode === Enum.EditMode.DATAELEMENT && !cms.data.types[type].info.isViewElement))
+        }
     }
 
     return {
