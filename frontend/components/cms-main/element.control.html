@@ -1,8 +1,10 @@
 <div context-menu="menu"
      ng-style="{display:vm.cmsMenu === 'true'?'inline-block':'block'}">
-    <div ng-if="vm.cmsMenu !== 'true'" class="cms cms-element-wrapper">
-        <i class="fa fa-circle-o-notch cms-element-controll-icon"
-           ng-mouseover="vm.showControl()" ng-show="vm.getControlVisible()"></i>
+    <div ng-if="vm.cmsMenu !== 'true'" class="cms cms-element-wrapper" ng-style="vm.editorIcon">
+        <div class="cms-element-controll-icon label label-primary" style="font-size: 15px"
+             ng-mouseover="vm.showControl()" ng-show="vm.getControlVisible()">
+            <i class="fa fa-circle-o-notch"></i>
+        </div>
 
         <div class="cms-element-controll"
              ng-mouseover="vm.__showControl = true"

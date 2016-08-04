@@ -50,6 +50,7 @@ function directive(cms, $http, $timeout, formService) {
     function link(scope, element, attr, elementController) {
         scope.menu = [];
         const {vm} = scope;
+        const {ref, type} = vm.cmsEditor;
         if (vm.cmsMenu === 'true') {
             scope.menu = [
                 ['Edit', () => vm.edit(refresh)],
@@ -71,7 +72,8 @@ function directive(cms, $http, $timeout, formService) {
                 }]
             ];
         }
-
+        var Type = cms.data.types[type];
+        vm.editorIcon = Type.info.editorIcon;
     }
 
     return {

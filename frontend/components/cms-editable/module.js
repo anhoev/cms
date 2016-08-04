@@ -34,6 +34,7 @@ function directive(cms) {
 
         scope.$watch('model', v => {
             vm.value = _.get(scope, vm.property)
+            vm.isValueUndefined = _.isEmpty(vm.value);
         }, true);
 
     }
@@ -118,7 +119,10 @@ function cmsEditableTransclude(cms, $timeout) {
 
         prepareForm(cms, type, ref, scope);
 
-        scope.$watch('model', v => vm.value = _.get(scope, vm.property), true);
+        scope.$watch('model', v => {
+            vm.value = _.get(scope, vm.property);
+            vm.isValueUndefined = _.isEmpty(vm.value);
+        }, true);
 
         vm.hide = function () {
             $timeout(() => vm.show = false, 1000);
@@ -143,6 +147,9 @@ function cmsEditableTransclude(cms, $timeout) {
             popover-append-to-body="true"
             style="cursor: pointer">
         <ng-transclude></ng-transclude>
+        <span ng-show="vm.isValueUndefined" class="cms-empty-value">
+            empty
+        </span> 
     </span>
     <span ng-if="vm.withEditBtn === 'true'" style="position: relative">
         <button ng-style="{opacity:vm.show? 1: 0.1}"
@@ -151,14 +158,19 @@ function cmsEditableTransclude(cms, $timeout) {
                 popover-is-open="vm.isOpen"
                 uib-popover-template="'editable-formly.html'"
                 popover-append-to-body="true"
-                style="position: absolute;z-index: 1000;top:-24px">
+                style="position: absolute;z-index: 1000;top:-24px"
+                ng-mouseover="vm.show = true" 
+                ng-mouseout="vm.hide();">
                    Edit
         </button>
         <ng-transclude 
             ng-mouseover="vm.show = true" 
             ng-mouseout="vm.hide();"
             ></ng-transclude>
-    </span>
+        <span ng-show="vm.isValueUndefined" class="cms-empty-value">
+            empty
+        </span> 
+    </span>   
 </span>
 `,
         controllerAs: 'vm',

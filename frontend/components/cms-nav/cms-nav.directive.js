@@ -12,6 +12,14 @@ function directive(cms) {
         vm.toggleContainer = function () {
             cms.editState.showContainerEdit = !cms.editState.showContainerEdit;
         }
+
+        $(element).find('.cms-types-dropdown').on('show.bs.dropdown', function () {
+            $('body').addClass('dnd-mode');
+        });
+
+        $(element).find('.cms-types-dropdown').on('hide.bs.dropdown', function () {
+            $('body').removeClass('dnd-mode');
+        });
     }
 
     return {
