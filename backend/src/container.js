@@ -9,6 +9,7 @@ const JsonFn = require('json-fn');
 const multer = require('multer');
 const filewalker = require('filewalker');
 const traverse = require('traverse');
+var gm = require('gm');
 
 /**
  *
@@ -104,9 +105,59 @@ module.exports = cms => {
 
         if (_server(path, urlPath, _tree.children, onlyGetTree)) _tree.type = 'containerDirectory';
 
+        // make directories
+        {
+            try {
+                fs.mkdirSync(`${cms.data.basePath}/.export`);
+            } catch (e) {
+            }
+            try {
+                fs.mkdirSync(`${cms.data.basePath}/.image`);
+            } catch (e) {
+            }
+            try {
+                fs.mkdirSync(`${cms.data.basePath}/.image/.cache`);
+            } catch (e) {
+            }
+        }
+
+
         if (!onlyGetTree) {
+            cms.app.get('/.image/*', function*(req, res) {
+                const {basePath, baseUrlPath} = cms.data;
+                const {resize, w} = req.query;
+                let _path = req.url.split('?')[0].replace(baseUrlPath, '');
+
+                let __path = _path.split('/');
+                let name = __path.pop();
+                name = name.split('.')[0] + '-' + req.url.split('?')[1] + '.' + name.split('.')[1];
+                __path = `${__path.join('/')}/.cache/${name}`;
+
+                if (fs.existsSync(`${basePath}${__path}`)) {
+                    let build = gm(`${basePath}${__path}`);
+                    build.stream((err, stdout, stderr) => {
+                        stdout.pipe(res);
+                    });
+                } else {
+                    let build = gm(`${basePath}${_path}`);
+                    if (resize) {
+                        build.resize(parseInt(resize.split('x')[0]), parseInt(resize.split('x')[1]), '!');
+                    }
+                    if (w) build.resize(parseInt(w));
+
+                    build.stream((err, stdout, stderr) => {
+                        stdout.pipe(res);
+                    });
+
+                    if (resize || w) build.write(`${basePath}${__path}`, function (err) {
+                    })
+                }
+            });
+
             cms._server = () => cms.server(path, urlPath, true);
             cms.app.use(urlPath, cms.express.static(path));
+            // images
+
             cms.app.get('/cms-site-map', function*(req, res) {
                 cms._server();
                 res.send({tree: cms.data.tree, templates: cms.data.templates, baseUrlPath: cms.data.baseUrlPath});
@@ -218,7 +269,7 @@ module.exports = cms => {
                 const list = yield cms.Types[type].Model.find({});
                 Types[type] = {list};
             }
-            
+
             fs.writeFileSync(`${cms.data.basePath}/.export/cms.dump.json`, JsonFn.stringify(Types), 'utf8');
 
         }

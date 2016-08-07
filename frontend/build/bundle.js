@@ -85,12 +85,21 @@
 	window.JsonFn = _jsonFn2.default;
 	_jsonFn2.default.stringify = function (obj) {
 	    return JSON.stringify(obj, function (key, value) {
+	        var fnBody;
 	        if (value instanceof Function || typeof value == 'function') {
-	            return value.toString();
+	
+	            fnBody = value.toString();
+	
+	            if (fnBody.length < 8 || fnBody.substring(0, 8) !== 'function') {
+	                //this is ES6 Arrow Function
+	                return '_NuFrRa_' + fnBody;
+	            }
+	            return fnBody;
 	        }
 	        if (value instanceof RegExp) {
 	            return '_PxEgEr_' + value;
 	        }
+	
 	        if (typeof key === 'string' && key.charAt(0) === '$' && key.charAt(1) === '$') {
 	            value = undefined;
 	        }
@@ -122,16 +131,17 @@
 	            return new Date(value);
 	        }
 	        if (prefix === 'function') {
-	
 	            try {
 	                return eval('(' + value + ')');
-	            } catch (e) {
-	                console.log(e);
-	                console.log(value);
-	            }
+	            } catch (e) {}
 	        }
 	        if (prefix === '_PxEgEr_') {
 	            return eval(value.slice(8));
+	        }
+	        if (prefix === '_NuFrRa_') {
+	            try {
+	                return eval(value.slice(8));
+	            } catch (e) {}
 	        }
 	
 	        return value;
@@ -3587,6 +3597,8 @@
 	
 	    //panel
 	    $('body').prepend('<div cms-container-edit></div>');
+	
+	    $('body').addClass('cms-admin-mode');
 	
 	    var new_uri = undefined;
 	    var wsAddress = cms.data.online.wsAddress;

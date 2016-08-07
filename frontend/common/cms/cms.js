@@ -427,6 +427,8 @@ function run(cms, $http, $websocket) {
     //panel
     $('body').prepend(`<div cms-container-edit></div>`);
 
+    $('body').addClass('cms-admin-mode');
+
     let new_uri;
     const {wsAddress} = cms.data.online;
     if (wsAddress) {

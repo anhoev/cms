@@ -130,6 +130,7 @@ module.exports = (cms) => {
             })
             .config(['$compileProvider', function ($compileProvider) {
                 $compileProvider.imgSrcSanitizationWhitelist(/.*/);
+                $compileProvider.aHrefSanitizationWhitelist(/.*/);
             }]);
 
         ng.angular.module('cms.editable', [])

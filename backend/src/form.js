@@ -11,13 +11,13 @@ function merge() {
 module.exports = cms => {
     const {Schema: {Types}, VirtualType} = cms.mongoose;
 
-    const nestedConvert = function (defaultOptions) {
-        if (defaultOptions.form.fieldGroup.find(f => f.key === 'choice')) {
-            defaultOptions.form.templateOptions.choice = defaultOptions.form.fieldGroup
+    const nestedConvert = function (form) {
+        if (form.fieldGroup.find(f => f.key === 'choice')) {
+            form.templateOptions.choice = form.fieldGroup
                 .map(f => f.key).filter(k => k !== 'choice');
-            defaultOptions.form.fieldGroup.forEach(f => f.hideExpression = 'model.choice !== options.key')
-        } else if (defaultOptions.form.fieldGroup.find(f => f.key === 'null')) {
-            defaultOptions.form.templateOptions.null = true;
+            form.fieldGroup.forEach(f => f.hideExpression = 'model.choice !== options.key')
+        } else if (form.fieldGroup.find(f => f.key === 'null')) {
+            form.templateOptions.null = true;
         }
     };
 
@@ -34,7 +34,7 @@ module.exports = cms => {
         } else if (Object.keys(field).length) {
             // nested
             merge(defaultOptions.form, {wrapper: 'panel', fieldGroup: convert(field)});
-            nestedConvert(defaultOptions, field);
+            nestedConvert(defaultOptions.form);
             return defaultOptions.form;
         } else {
             for (const filter of cms.filters.field) {
@@ -118,7 +118,7 @@ module.exports = cms => {
 
         if (field.type instanceof Object && field.nested) {
             merge(defaultOptions.form, {wrapper: 'panel', fieldGroup: convert(field.type)}, field.form);
-            nestedConvert(defaultOptions);
+            nestedConvert(defaultOptions.form);
             return defaultOptions.form;
         }
 
@@ -127,7 +127,10 @@ module.exports = cms => {
                 // if custom form;
                 return null;
             }
-            const fields = _.map(field.type[0], (nestedField, k) => convertObj(nestedField, k, k));
+
+            let fields = field.form.type === 'tableSection' ? _.map(field.type[0], (nestedField, k) => convertObj(nestedField, k, k)) :
+                _.map(field.type, (nestedField, k) => convertObj(nestedField, '', k));
+
             return merge({
                 key,
                 type: 'repeatSection',

@@ -121,9 +121,11 @@ body.modal-open {
   }
 }
 
-[cms-editable] {
-  border-bottom: 1px solid rgba(221, 221, 221, 0.53);
-  display: inline;
+.cms-admin-mode {
+  [cms-editable] {
+    border-bottom: 1px solid rgba(221, 221, 221, 0.53);
+    display: inline;
+  }
 }
 
 .cms-element-wrapper {
