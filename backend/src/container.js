@@ -138,9 +138,9 @@ module.exports = cms => {
                 } else if (fs.existsSync(`${basePath}${__path}`)) {
                     res.redirect(__path);
                     /*let build = gm(`${basePath}${__path}`);
-                    build.stream((err, stdout, stderr) => {
-                        stdout.pipe(res);
-                    });*/
+                     build.stream((err, stdout, stderr) => {
+                     stdout.pipe(res);
+                     });*/
                 } else {
                     let build = gm(`${basePath}${_path}`);
                     if (resize) {
@@ -264,29 +264,31 @@ module.exports = cms => {
         res.send();
     })
 
-    cms.app.post('/cms-export/', function*({body: {type}}, res) {
-        if (!type) {
-            const Types = {};
-            // all
-            for (let type in cms.Types) {
-                const list = yield cms.Types[type].Model.find({});
+    cms.app.post('/cms-export/', function*({body: {types, filename}}, res) {
+
+        const Types = {};
+        // all
+        for (let type in cms.Types) {
+            if (_.includes(types, type)) {
+                const list = yield cms.Types[type].Model.find({}).lean();
                 Types[type] = {list};
             }
-
-            fs.writeFileSync(`${cms.data.basePath}/.export/cms.dump.json`, JsonFn.stringify(Types), 'utf8');
-
         }
+
+        fs.writeFileSync(`${cms.data.basePath}/.export/${filename}`, JsonFn.stringify(Types), 'utf8');
 
         res.send();
     })
 
-    cms.app.post('/cms-import/', function*({body: {type}}, res) {
+    cms.app.post('/cms-import/', function*({body: {types}}, res) {
         const errorList = [];
-        if (!type) {
-            const content = JsonFn.parse(fs.readFileSync(`${cms.data.basePath}/.export/cms.dump.json`, 'utf8'));
-            const Types = {};
-            // all
-            for (let type in content) {
+        if (!types) types = Object.keys(cms.Types);
+
+        const content = JsonFn.parse(fs.readFileSync(`${cms.data.basePath}/.export/cms.dump.json`, 'utf8'));
+        const Types = {};
+        // all
+        for (let type in content) {
+            if (_.includes(types, type)) {
                 const {list} = content[type];
                 if (cms.Types[type]) {
                     for (let element of list) {
@@ -302,6 +304,13 @@ module.exports = cms => {
         }
 
         res.send(errorList);
+    })
+
+    cms.app.post('/cms-import/types', function ({body: {url}}, res) {
+        if (url) {
+            const content = JsonFn.parse(fs.readFileSync(`${cms.data.basePath}/${url}`, 'utf8'));
+            res.send(Object.keys(content));
+        }
     })
 
 

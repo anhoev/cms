@@ -8,18 +8,22 @@ import 'ui-select/dist/select.min.css';
 import mainModule from '../cms-main/module'
 import cmsElementEdit from '../cms-element-edit/module';
 import cmsList from './cms-list';
+import _importService from './importService';
+import _exportService from './exportService';
 
 const module = angular
     .module('components.cmsAdmin', ['ui.bootstrap', 'ngJsTree', 'ui.select', mainModule, cmsElementEdit])
+    .factory('importService', _importService)
+    .factory('exportService', _exportService)
     .directive('cmsAdmin', directive)
     .directive('cmsList', cmsList);
 
 import template from './tpl.html';
 import QueryBuilder from "../../common/cms/QueryBuilder";
 
-directive.$inject = ['cms', '$uibModal', '$timeout', 'formService'];
+directive.$inject = ['cms', '$uibModal', '$timeout', 'formService', 'importService', 'exportService'];
 
-function directive(cms, $uibModal, $timeout, formService) {
+function directive(cms, $uibModal, $timeout, formService, importService, exportService) {
     controller.$inject = [];
     function controller() {
         const vm = this;
@@ -116,11 +120,13 @@ function directive(cms, $uibModal, $timeout, formService) {
                 }
 
                 $scope.export = function () {
-                    cms.exportAll();
+                    exportService.start();
+                    //cms.exportAll();
                 }
 
                 $scope.import = function () {
-                    cms.importAll();
+                    //cms.importAll();
+                    importService.start();
                 }
 
                 $scope.deleteAll = function () {

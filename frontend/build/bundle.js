@@ -247,7 +247,7 @@
 	
 	var _module12 = _interopRequireDefault(_module11);
 	
-	var _module13 = __webpack_require__(125);
+	var _module13 = __webpack_require__(129);
 	
 	var _module14 = _interopRequireDefault(_module13);
 	
@@ -3445,14 +3445,14 @@
 	        }
 	    }
 	
-	    function exportAll() {
-	        $http.post('/cms-export', {}).then(function (res) {
+	    function exportAll(filename, types) {
+	        $http.post('/cms-export', { filename: filename, types: types }).then(function (res) {
 	            console.log('Export successful');
 	        });
 	    }
 	
-	    function importAll() {
-	        $http.post('/cms-import', {}).then(function (res) {
+	    function importAll(types) {
+	        $http.post('/cms-import', { types: types }).then(function (res) {
 	            console.log('Import successful');
 	        });
 	    }
@@ -5379,7 +5379,15 @@
 	
 	var _cmsList2 = _interopRequireDefault(_cmsList);
 	
-	var _tpl = __webpack_require__(124);
+	var _importService2 = __webpack_require__(124);
+	
+	var _importService3 = _interopRequireDefault(_importService2);
+	
+	var _exportService2 = __webpack_require__(126);
+	
+	var _exportService3 = _interopRequireDefault(_exportService2);
+	
+	var _tpl = __webpack_require__(128);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -5391,11 +5399,11 @@
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
-	var _module = _angular2.default.module('components.cmsAdmin', ['ui.bootstrap', 'ngJsTree', 'ui.select', _module3.default, _module5.default]).directive('cmsAdmin', directive).directive('cmsList', _cmsList2.default);
+	var _module = _angular2.default.module('components.cmsAdmin', ['ui.bootstrap', 'ngJsTree', 'ui.select', _module3.default, _module5.default]).factory('importService', _importService3.default).factory('exportService', _exportService3.default).directive('cmsAdmin', directive).directive('cmsList', _cmsList2.default);
 	
-	directive.$inject = ['cms', '$uibModal', '$timeout', 'formService'];
+	directive.$inject = ['cms', '$uibModal', '$timeout', 'formService', 'importService', 'exportService'];
 	
-	function directive(cms, $uibModal, $timeout, formService) {
+	function directive(cms, $uibModal, $timeout, formService, importService, exportService) {
 	    controller.$inject = [];
 	    function controller() {
 	        var vm = this;
@@ -5504,11 +5512,13 @@
 	                };
 	
 	                $scope.export = function () {
-	                    cms.exportAll();
+	                    exportService.start();
+	                    //cms.exportAll();
 	                };
 	
 	                $scope.import = function () {
-	                    cms.importAll();
+	                    //cms.importAll();
+	                    importService.start();
 	                };
 	
 	                $scope.deleteAll = function () {
@@ -5611,12 +5621,209 @@
 
 /***/ },
 /* 124 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = "<div class=\"cms-wrapper animated fadeInRight cms-sidebar cms\">\n    <button type=\"button\" class=\"btn btn-sm btn-white cms-close-position\"\n            ng-click=\"cancel()\">\n        <i class=\"fa fa-times\"></i>\n    </button>\n\n    <br>\n    <div class=\"row\">\n        <div class=\"col-xs-3 cms-panel\">\n            <div class=\"panel panel-primary\">\n                <div class=\"panel-heading\">Types</div>\n                <div class=\"panel-body\">\n                    <div js-tree=\"treeConfig\" ng-model=\"tree\"\n                         tree-events=\"changed:selectNode\" tree=\"treeInstance\"></div>\n                </div>\n            </div>\n        </div>\n        <div class=\"col-xs-9 cms-panel\">\n            <div class=\"panel panel-primary\">\n                <div class=\"panel-heading\">\n                    <div class=\"cms-admin-right-panel\">\n                        <label style=\"color: white\"> Show : </label>\n\n                        <ui-select style=\"min-width: 50px;margin-left: 10px;margin-right: 10px;\"\n                                   class=\"cms-select\" data-ng-model=\"page.limit\" theme=\"bootstrap\"\n                                   on-select=\"refresh()\">\n                            <ui-select-match placeholder=\"\">{{$select.selected}}&nbsp;&nbsp;</ui-select-match>\n                            <ui-select-choices data-repeat=\"item in [10,25,50,100,200]\">{{item}}</ui-select-choices>\n                        </ui-select>\n\n                        <ui-select style=\"min-width: 60px;margin-left: 10px;margin-right: 10px;\"\n                                   class=\"cms-select\" data-ng-model=\"showAs.type\" theme=\"bootstrap\"\n                                   on-select=\"refresh()\">\n                            <ui-select-match placeholder=\"\">\n                                {{$select.selected.label}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</ui-select-match>\n                            <ui-select-choices\n                                    data-repeat=\"item.value as item in [{value:'list',label:'List'},{value:'table',label:'Table'},{value:'element',label:'Element'}]\">\n                                {{item.label}}\n                            </ui-select-choices>\n                        </ui-select>\n\n                        <button class=\"btn btn-white btn-xs\" style=\"margin-right: 10px;\"\n                                ng-click=\"deleteAll()\">\n                            Delete all\n                        </button>\n\n                        <button class=\"btn btn-white btn-xs\" style=\"margin-right: 10px;\" ng-click=\"import()\">\n                            Import\n                        </button>\n\n                        <button class=\"btn btn-white btn-xs\" style=\"margin-right: 10px;\" ng-click=\"export()\">\n                            Export\n                        </button>\n\n                        <button class=\"btn btn-white btn-xs\" style=\"margin-right: 10px;\"\n                                ng-click=\"setting()\">\n                            Setting\n                        </button>\n\n                        <button class=\"btn btn-white btn-xs\" ng-click=\"add()\">\n                            Add\n                        </button>\n\n                    </div>\n\n                    <input type=\"text\" class=\"form-control input-xs\"\n                           style=\"margin-left: 10px;width: 100px;display: inline-block;\"\n                           ng-model=\"search.text\" ng-model-options=\"{debounce: 300}\" placeholder=\"search ...\">\n\n                </div>\n                <div class=\"panel-body\" ng-if=\"node\">\n\n                    <div style=\"width: 100%;overflow-x: auto\" ng-if=\"showAs.type === 'table'\">\n                        <table class=\"table cms-admin-table\">\n                            <thead>\n                            <tr>\n                                <th ng-repeat=\"col in node.columns track by $index\" ng-bind=\"col\"></th>\n                                <th>Edit</th>\n                            </tr>\n                            </thead>\n                            <tbody>\n                            <tr ng-repeat=\"element in list track by $index\">\n                                <td ng-repeat=\"col in node.columns track by $index\">\n                                <span cms-direct-editable=\"model.{{col}}\"\n                                      cms-value=\"element[col]\"\n                                      cms-ref=\"{{element._id}}\"\n                                      cms-type=\"{{node.type}}\"></span>\n                                </td>\n                                <td>\n                                    <div cms-editor=\"{ref: element._id, type: node.type}\"\n                                         cms-remove=\"remove(element)\"></div>\n                                </td>\n                            </tr>\n                            </tbody>\n                        </table>\n                    </div>\n\n                    <div class=\"cms-panel-list-content\" ng-if=\"showAs.type === 'list'\">\n                        <div ng-repeat=\"element in list track by $index\"\n                             cms-element=\"{ref: element._id, type: node.type, containers: {}}\"\n                             dnd-moved=\"remove(element)\"\n                             inline=\"false\"></div>\n                    </div>\n\n                    <div class=\"\" ng-if=\"showAs.type === 'element'\">\n                        <button class=\"btn cms-btn btn-primary btn-outline btn-xs\" style=\"margin-right: 10px;\" ng-repeat=\"e in list track by $index\"\n                            ng-click=\"element._id = e._id\">\n                            {{getTitle(node.type, e._id)}}\n                        </button>\n                        <br><br>\n\n                        <div ng-if=\"element._id\"\n                             cms-element=\"{ref: element._id, type: node.type, containers: {}}\"\n                             inline=\"false\"></div>\n                    </div>\n\n                    <uib-pagination ng-show=\"page.size > 1\" total-items=\"page.size\" ng-model=\"page.currentPage\"\n                                    class=\"pagination-sm\"\n                                    items-per-page=\"page.limit\"\n                                    ng-change=\"refresh(true)\"></uib-pagination>\n\n                </div>\n            </div>\n        </div>\n    </div>\n\n</div>\n"
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _importService = __webpack_require__(125);
+	
+	var _importService2 = _interopRequireDefault(_importService);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function service($http, $timeout, cms, $uibModal) {
+	    function start() {
+	        function modalCtrl($scope, $uibModalInstance) {
+	            $scope.refresh = function () {
+	                $http.get('/cms-site-map').then(function (_ref) {
+	                    var data = _ref.data;
+	
+	                    $scope.tree = [data.tree];
+	                    $timeout(function () {
+	                        return $scope.treeConfig.version++;
+	                    });
+	                });
+	            };
+	            $scope.refresh();
+	
+	            $scope.treeConfig = {
+	                core: {
+	                    themes: { name: 'proton', responsive: true },
+	                    animation: true,
+	                    check_callback: true
+	                },
+	                plugins: [],
+	                version: 1
+	            };
+	
+	            $scope.selectNode = function (e, select) {
+	                var _node = JsonFn.clone(select && select.node ? select.node.original : null);
+	                $scope.url = _node.path;
+	            };
+	
+	            $scope.choose = function () {
+	                $uibModalInstance.close($scope.url);
+	            };
+	
+	            $scope.cancel = function () {
+	                $uibModalInstance.dismiss('cancel');
+	            };
+	        }
+	
+	        function typesChooseCtrl($scope, $uibModalInstance, url) {
+	            $scope.treeConfig = {
+	                core: {
+	                    themes: { name: 'proton', responsive: true },
+	                    animation: true,
+	                    check_callback: true
+	                },
+	                plugins: ["checkbox"],
+	                version: 1
+	            };
+	
+	            $scope.refresh = function () {
+	                $http.post('/cms-import/types', { url: url }).then(function (_ref2) {
+	                    var data = _ref2.data;
+	
+	                    $scope.tree = data.map(function (type) {
+	                        return { text: type };
+	                    });
+	                    $timeout(function () {
+	                        return $scope.treeConfig.version++;
+	                    });
+	                });
+	            };
+	
+	            $scope.refresh();
+	
+	            $scope.selectNode = function (e, select) {
+	                var _node = JsonFn.clone(select && select.node ? select.node.original : null);
+	            };
+	
+	            $scope.choose = function () {
+	                var _arr = $scope.treeInstance.jstree(true).get_checked();
+	                _arr = _arr.map(function (id) {
+	                    return $scope.treeInstance.jstree(true).get_node(id).text;
+	                });
+	                $uibModalInstance.close(_arr);
+	            };
+	
+	            $scope.cancel = function () {
+	                $uibModalInstance.dismiss('cancel');
+	            };
+	        }
+	
+	        var modalInstance = $uibModal.open({
+	            size: 'lg',
+	            animation: true,
+	            template: _importService2.default,
+	            controller: modalCtrl
+	        });
+	
+	        modalInstance.result.then(function (_url) {
+	            var modal2 = $uibModal.open({
+	                size: 'lg',
+	                animation: true,
+	                template: _importService2.default,
+	                controller: typesChooseCtrl,
+	                resolve: { url: function url() {
+	                        return _url;
+	                    } }
+	            });
+	            modal2.result.then(function (types) {
+	                cms.importAll(types);
+	            });
+	        });
+	    }
+	
+	    return {
+	        start: start
+	    };
+	}
+	
+	exports.default = service;
 
 /***/ },
 /* 125 */
+/***/ function(module, exports) {
+
+	module.exports = "<div style=\"padding: 20px\">\n    <div class=\"panel panel-default\">\n        <div class=\"panel-body\">\n            <div js-tree=\"treeConfig\" ng-model=\"tree\"\n                 tree=\"treeInstance\"\n                 tree-events=\"changed:selectNode\"></div>\n        </div>\n    </div>\n    <br><br>\n    <button type=\"button\" class=\"btn btn-primary submit-button\" ng-click=\"choose()\">Choose</button>\n    <button type=\"button\" class=\"btn btn-primary\" ng-click=\"cancel()\">Cancel</button>\n</div>\n"
+
+/***/ },
+/* 126 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _exportService = __webpack_require__(127);
+	
+	var _exportService2 = _interopRequireDefault(_exportService);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function service($http, $timeout, cms, $uibModal) {
+	    function start() {
+	        function modalCtrl($scope, $uibModalInstance, cms) {
+	            $scope.data = {
+	                types: []
+	            };
+	            $scope.types = Object.keys(cms.types).map(function (k) {
+	                return { name: k, value: k };
+	            });
+	
+	            $scope.choose = function () {
+	                $uibModalInstance.close({ filename: $scope.filename, types: $scope.data.types });
+	            };
+	
+	            $scope.cancel = function () {
+	                $uibModalInstance.dismiss('cancel');
+	            };
+	        }
+	
+	        var modalInstance = $uibModal.open({
+	            size: 'lg',
+	            animation: true,
+	            template: _exportService2.default,
+	            controller: modalCtrl
+	        });
+	
+	        modalInstance.result.then(function (_ref) {
+	            var filename = _ref.filename;
+	            var types = _ref.types;
+	
+	            cms.exportAll(filename, types);
+	        });
+	    }
+	
+	    return {
+	        start: start
+	    };
+	}
+	
+	exports.default = service;
+
+/***/ },
+/* 127 */
+/***/ function(module, exports) {
+
+	module.exports = "<div style=\"padding: 20px\">\n    <form role=\"form\" class=\"form-horizontal\">\n        <div class=\"form-group\">\n            <label class=\"col-sm-12\">Filename:</label>\n            <div class=\"col-sm-12\"><input type=\"text\" ng-model=\"filename\"></div>\n        </div>\n        <div class=\"form-group\">\n            <label class=\"col-sm-12\">Select Types:</label>\n            <div class=\"col-sm-12\">\n                <ui-select data-ng-model=\"data.types\" multiple theme=\"bootstrap\">\n                    <ui-select-match placeholder=\"Choose company\">{{$item.name}}</ui-select-match>\n                    <ui-select-choices\n                            data-repeat=\"item.value as item in types | filterBy: ['name']: $select.search\">\n                        <div ng-bind-html=\"item.name | highlight: $select.search\"></div>\n                    </ui-select-choices>\n                </ui-select>\n            </div>\n        </div>\n    </form>\n    <br><br>\n    <button type=\"button\" class=\"btn btn-primary submit-button\" ng-click=\"choose()\">Choose</button>\n    <button type=\"button\" class=\"btn btn-primary\" ng-click=\"cancel()\">Cancel</button>\n</div>\n"
+
+/***/ },
+/* 128 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"cms-wrapper animated fadeInRight cms-sidebar cms\">\n    <button type=\"button\" class=\"btn btn-sm btn-white cms-close-position\"\n            ng-click=\"cancel()\">\n        <i class=\"fa fa-times\"></i>\n    </button>\n\n    <br>\n    <div class=\"row\">\n        <div class=\"col-xs-3 cms-panel\">\n            <div class=\"panel panel-primary\">\n                <div class=\"panel-heading\">Types</div>\n                <div class=\"panel-body\">\n                    <div js-tree=\"treeConfig\" ng-model=\"tree\"\n                         tree-events=\"changed:selectNode\" tree=\"treeInstance\"></div>\n                </div>\n            </div>\n        </div>\n        <div class=\"col-xs-9 cms-panel\">\n            <div class=\"panel panel-primary\">\n                <div class=\"panel-heading\">\n                    <div class=\"cms-admin-right-panel\">\n                        <label style=\"color: white\"> Show : </label>\n\n                        <ui-select style=\"min-width: 50px;margin-left: 10px;margin-right: 10px;\"\n                                   class=\"cms-select\" data-ng-model=\"page.limit\" theme=\"bootstrap\"\n                                   on-select=\"refresh()\">\n                            <ui-select-match placeholder=\"\">{{$select.selected}}&nbsp;&nbsp;</ui-select-match>\n                            <ui-select-choices data-repeat=\"item in [10,25,50,100,200]\">{{item}}</ui-select-choices>\n                        </ui-select>\n\n                        <ui-select style=\"min-width: 60px;margin-left: 10px;margin-right: 10px;\"\n                                   class=\"cms-select\" data-ng-model=\"showAs.type\" theme=\"bootstrap\"\n                                   on-select=\"refresh()\">\n                            <ui-select-match placeholder=\"\">\n                                {{$select.selected.label}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</ui-select-match>\n                            <ui-select-choices\n                                    data-repeat=\"item.value as item in [{value:'list',label:'List'},{value:'table',label:'Table'},{value:'element',label:'Element'}]\">\n                                {{item.label}}\n                            </ui-select-choices>\n                        </ui-select>\n\n                        <button class=\"btn btn-white btn-xs\" style=\"margin-right: 10px;\"\n                                ng-click=\"deleteAll()\">\n                            Delete all\n                        </button>\n\n                        <button class=\"btn btn-white btn-xs\" style=\"margin-right: 10px;\" ng-click=\"import()\">\n                            Import\n                        </button>\n\n                        <button class=\"btn btn-white btn-xs\" style=\"margin-right: 10px;\" ng-click=\"export()\">\n                            Export\n                        </button>\n\n                        <button class=\"btn btn-white btn-xs\" style=\"margin-right: 10px;\"\n                                ng-click=\"setting()\">\n                            Setting\n                        </button>\n\n                        <button class=\"btn btn-white btn-xs\" ng-click=\"add()\">\n                            Add\n                        </button>\n\n                    </div>\n\n                    <input type=\"text\" class=\"form-control input-xs\"\n                           style=\"margin-left: 10px;width: 100px;display: inline-block;\"\n                           ng-model=\"search.text\" ng-model-options=\"{debounce: 300}\" placeholder=\"search ...\">\n\n                </div>\n                <div class=\"panel-body\" ng-if=\"node\">\n\n                    <div style=\"width: 100%;overflow-x: auto\" ng-if=\"showAs.type === 'table'\">\n                        <table class=\"table cms-admin-table\">\n                            <thead>\n                            <tr>\n                                <th ng-repeat=\"col in node.columns track by $index\" ng-bind=\"col\"></th>\n                                <th>Edit</th>\n                            </tr>\n                            </thead>\n                            <tbody>\n                            <tr ng-repeat=\"element in list track by $index\">\n                                <td ng-repeat=\"col in node.columns track by $index\">\n                                <span cms-direct-editable=\"model.{{col}}\"\n                                      cms-value=\"element[col]\"\n                                      cms-ref=\"{{element._id}}\"\n                                      cms-type=\"{{node.type}}\"></span>\n                                </td>\n                                <td>\n                                    <div cms-editor=\"{ref: element._id, type: node.type}\"\n                                         cms-remove=\"remove(element)\"></div>\n                                </td>\n                            </tr>\n                            </tbody>\n                        </table>\n                    </div>\n\n                    <div class=\"cms-panel-list-content\" ng-if=\"showAs.type === 'list'\">\n                        <div ng-repeat=\"element in list track by $index\"\n                             cms-element=\"{ref: element._id, type: node.type, containers: {}}\"\n                             dnd-moved=\"remove(element)\"\n                             inline=\"false\"></div>\n                    </div>\n\n                    <div class=\"\" ng-if=\"showAs.type === 'element'\">\n                        <button class=\"btn cms-btn btn-primary btn-outline btn-xs\" style=\"margin-right: 10px;\" ng-repeat=\"e in list track by $index\"\n                            ng-click=\"element._id = e._id; apply()\">\n                            {{getTitle(node.type, e._id)}}\n                        </button>\n                        <br><br>\n\n                        <div ng-if=\"element._id\"\n                             cms-element=\"{ref: element._id, type: node.type, containers: {}}\"\n                             inline=\"false\"></div>\n                    </div>\n\n                    <uib-pagination ng-show=\"page.size > 1\" total-items=\"page.size\" ng-model=\"page.currentPage\"\n                                    class=\"pagination-sm\"\n                                    items-per-page=\"page.limit\"\n                                    ng-change=\"refresh(true)\"></uib-pagination>\n\n                </div>\n            </div>\n        </div>\n    </div>\n\n</div>\n"
+
+/***/ },
+/* 129 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5633,7 +5840,7 @@
 	
 	var _common2 = _interopRequireDefault(_common);
 	
-	var _cmsNav = __webpack_require__(126);
+	var _cmsNav = __webpack_require__(130);
 	
 	var _cmsNav2 = _interopRequireDefault(_cmsNav);
 	
@@ -5660,7 +5867,7 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 126 */
+/* 130 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -5669,7 +5876,7 @@
 	    value: true
 	});
 	
-	var _cmsNav = __webpack_require__(127);
+	var _cmsNav = __webpack_require__(131);
 	
 	var _cmsNav2 = _interopRequireDefault(_cmsNav);
 	
@@ -5719,7 +5926,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 127 */
+/* 131 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms\">\n    <nav role=\"navigation\" class=\"navbar navbar-fixed-top navbar-default cms-menu\">\n        <div class=\"container\">\n            <div class=\"navbar-header\">\n                <button type=\"button\" data-toggle=\"collapse\" data-target=\"#dropdown_menu\" aria-expanded=\"false\"\n                        aria-controls=\"navbar\" class=\"navbar-toggle collapsed\"><span\n                        class=\"sr-only\">Toggle navigation</span><span class=\"icon-bar\"></span><span\n                        class=\"icon-bar\"></span><span\n                        class=\"icon-bar\"></span></button>\n                <a href=\"#\" class=\"navbar-brand\">Cms Mon</a></div>\n            <div id=\"dropdown_menu\" class=\"collapse navbar-collapse\">\n                <ul class=\"nav navbar-nav\">\n                    <li class=\"dropdown cms-types-dropdown\">\n                        <a href=\"#\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\"\n                                            class=\"dropdown-toggle\">Types<span class=\"caret\"></span></a>\n                        <ul role=\"menu\" cms-types=\"\" class=\"dropdown-menu\"></ul>\n                    </li>\n                    <li><a cms-admin>Admin</a></li>\n                    <li><a href=\"#\" cms-sitemap>Sitemap</a></li>\n                </ul>\n                <ul class=\"nav navbar-nav navbar-right\">\n                    <li>\n                        <div cms-edit-state></div>\n                    </li>\n                    <li><button class=\"btn btn-default navbar-btn\"\n                                style=\"margin-left: 10px\"\n                                ng-click=\"vm.toggleContainer()\">Container</button></li>\n                </ul>\n            </div>\n        </div>\n    </nav>\n</div>"

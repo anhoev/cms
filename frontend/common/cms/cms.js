@@ -263,14 +263,14 @@ function cms($http, Upload) {
         }
     }
 
-    function exportAll() {
-        $http.post(`/cms-export`, {}).then(function (res) {
+    function exportAll(filename, types) {
+        $http.post(`/cms-export`, {filename, types}).then(function (res) {
             console.log('Export successful');
         });
     }
 
-    function importAll() {
-        $http.post(`/cms-import`, {}).then(function (res) {
+    function importAll(types) {
+        $http.post(`/cms-import`, {types}).then(function (res) {
             console.log('Import successful');
         });
     }
@@ -429,7 +429,7 @@ function cms($http, Upload) {
         updateElement,
         findField,
         data,
-        get types(){
+        get types() {
             return data.types;
         },
         editState,
