@@ -7,6 +7,7 @@ import 'angular-websocket';
 import Uuid from 'uuid';
 import 'jquery-ui/draggable';
 import 'jquery-ui/resizable';
+import traverse from 'traverse';
 
 window.Enum = {
     Load: {NOT: 'NOT', LOADING: 'LOADING', LOADED: 'LOADED', PART_LOADED: 'PART_LOADED'},
@@ -201,16 +202,40 @@ function cms($http, Upload) {
         return form.map(field => field.key);
     }
 
-    function findField(form, property) {
-        if (form[0].isTab) {
-            let result;
-            form.forEach(({fields}) => {
-                const f = fields.find(f => f.key === property);
-                if (f) result = f;
-            })
-            return result;
+    function findField(form, property, deep = false) {
+        if (!deep) {
+            if (form[0].isTab) {
+                let result;
+                form.forEach(({fields}) => {
+                    const f = fields.find(f => f.key === property);
+                    if (f) result = f;
+                })
+                return result;
+            }
+            return form.find(f => f.key === property);
         }
-        return form.find(f => f.key === property);
+
+        let result;
+        const last = property.split('.').pop();
+        traverse(form).forEach(function (node) {
+            if (node && node.key === last) {
+                let path = _.reduce(this.parents.filter(({node:{key}}) => !_.isEmpty(key)), (path, parent) => {
+                    path += `.${parent.node.key}`;
+                    return path;
+                }, '');
+                if (_.isEmpty(path)) {
+                    path = last
+                } else {
+                    path = path.substring(1) + '.' + last;
+                }
+                if (path === property) {
+                    result = node;
+                    this.stop();
+                }
+
+            }
+        });
+        return result;
     }
 
     function getContainer(path) {
@@ -285,12 +310,27 @@ function cms($http, Upload) {
                 const children = [];
                 if (!properties || properties.length === 0) return;
                 const property = properties.shift();
-                const field = findField(Type.form, property);
+                const field = findField(Type.form, property, true);
                 if (field.type === 'refSelect') {
                     var _type = field.templateOptions.Type;
                     data.types[_type].list.forEach((_element) => {
                         const _path = `${path}.children[${children.length}]`;
                         let _query = [{[property]: _element._id}];
+                        _query = query ? query.concat(_query) : _query;
+                        children.push({
+                            children: createChildren(properties, _query, _path),
+                            text: _element[data.types[_type].info.title],
+                            type: k,
+                            path: _path,
+                            columns: _.remove(listColumns(Type.form), _property => _property !== property),
+                            query: {$and: _query}
+                        });
+                    })
+                } else if (field.type === 'select-ref-static') {
+                    var _type = field.templateOptions.Type;
+                    data.types[_type].list.forEach((_element) => {
+                        const _path = `${path}.children[${children.length}]`;
+                        let _query = [{[property]: _element[data.types[_type].info.title]}];
                         _query = query ? query.concat(_query) : _query;
                         children.push({
                             children: createChildren(properties, _query, _path),
@@ -341,14 +381,17 @@ function cms($http, Upload) {
 
             let columns = listColumns(Type.form);
             if (config) {
-                config.dynamicQuery.forEach(dynamicQuery => {
-                    if (dynamicQuery.field.length === 0) return;
-                    _children.push(...createChildren(dynamicQuery.field, null, _path));
-                });
-                columns = _.filter(columns, col => {
-                    if (_.isEmpty(config.showFields)) return true;
-                    return config.showFields.indexOf(col) !== -1;
-                })
+                try {
+                    config.dynamicQuery.forEach(dynamicQuery => {
+                        if (dynamicQuery.field.length === 0) return;
+                        _children.push(...createChildren(dynamicQuery.field, null, _path));
+                    });
+                    columns = _.filter(columns, col => {
+                        if (_.isEmpty(config.showFields)) return true;
+                        return config.showFields.indexOf(col) !== -1;
+                    })
+                } catch (e) {
+                }
             }
             return {
                 children: _children,
@@ -386,6 +429,9 @@ function cms($http, Upload) {
         updateElement,
         findField,
         data,
+        get types(){
+            return data.types;
+        },
         editState,
         loadElements,
         countElements,

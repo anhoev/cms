@@ -123,7 +123,7 @@ module.exports = cms => {
 
 
         if (!onlyGetTree) {
-            cms.app.get('/.image/*', function*(req, res) {
+            cms.app.get('/.image/*', function (req, res, next) {
                 const {basePath, baseUrlPath} = cms.data;
                 const {resize, w} = req.query;
                 let _path = req.url.split('?')[0].replace(baseUrlPath, '');
@@ -133,11 +133,14 @@ module.exports = cms => {
                 name = name.split('.')[0] + '-' + req.url.split('?')[1] + '.' + name.split('.')[1];
                 __path = `${__path.join('/')}/.cache/${name}`;
 
-                if (fs.existsSync(`${basePath}${__path}`)) {
-                    let build = gm(`${basePath}${__path}`);
+                if (!resize && !w) {
+                    next();
+                } else if (fs.existsSync(`${basePath}${__path}`)) {
+                    res.redirect(__path);
+                    /*let build = gm(`${basePath}${__path}`);
                     build.stream((err, stdout, stderr) => {
                         stdout.pipe(res);
-                    });
+                    });*/
                 } else {
                     let build = gm(`${basePath}${_path}`);
                     if (resize) {

@@ -1,5 +1,5 @@
-elementDirective.$inject = ['cms', '$compile', '$http', '$timeout'];
-function elementDirective(cms, $compile, $http, $timeout) {
+elementDirective.$inject = ['cms', '$compile', '$http', '$timeout', '$controller'];
+function elementDirective(cms, $compile, $http, $timeout, $controller) {
 
     function link(scope, element, attr, controller) {
         const {vm} = scope;
@@ -107,7 +107,7 @@ function elementDirective(cms, $compile, $http, $timeout) {
             }
 
             function _render() {
-                let {serverFn} = Type;
+                let {serverFn, controller: ctrl} = Type;
                 let fn = JsonFn.clone(Type.fn);
                 if (fn) {
                     const _fn = {};
@@ -121,6 +121,7 @@ function elementDirective(cms, $compile, $http, $timeout) {
                 _.each(serverFn, (fn, k) => {
                     fn.bind(scope.model)($http.post, scope, type, k);
                 })
+                if (ctrl) $controller(ctrl, {$scope: scope});
 
                 controller.refresh = function () {
                     if (scope.serverFnData) scope.serverFnData = null;

@@ -1,12 +1,18 @@
 import template from './cms-nav.html';
-directive.$inject = ['cms'];
-function directive(cms) {
+directive.$inject = ['cms', '$timeout'];
+function directive(cms, $timeout) {
     function link(scope, element, attr) {
-        const menu = cms.data.online.menu;
-        $('.main-nav').css('top', menu.top);
+        var menu = cms.data.online.menu;
+
+        $timeout(() => {
+            $('.main-nav').css('top', menu.top);
+            $('.main-nav').css('right', menu.right);
+        }, 400);
+
         $('body').css('padding-top', menu.bodyPaddingTop);
         if (menu.inverse) $(element).find('.cms-menu').addClass('navbar-inverse');
         if (menu.bottom) $(element).find('.cms-menu').removeClass('navbar-fixed-top').addClass('navbar-fixed-bottom');
+
 
         const vm = scope.vm;
         vm.toggleContainer = function () {

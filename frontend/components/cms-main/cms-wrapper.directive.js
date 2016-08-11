@@ -1,5 +1,5 @@
-directive.$inject = ['cms', '$compile', '$http', '$timeout'];
-function directive(cms, $compile, $http, $timeout) {
+directive.$inject = ['cms', '$compile', '$http', '$timeout', '$controller'];
+function directive(cms, $compile, $http, $timeout, $controller) {
 
     function link(scope, element) {
         const {vm} = scope;
@@ -20,12 +20,14 @@ function directive(cms, $compile, $http, $timeout) {
 
         function render() {
             if (Type.store[vm.cmsWrapper]) {
-                const {template, serverFn, fn, serverFnData} = Type.store[vm.cmsWrapper];
+                const {template, serverFn, fn, serverFnData, controller} = Type.store[vm.cmsWrapper];
 
                 _.assign(scope, {fn: {}, model: vm.element, serverFn: {}, serverFnData});
 
                 _.each(fn, (v, k) => scope.fn[k] = v.bind(scope.model));
                 _.each(serverFn, (fn, k) =>fn($http.post, scope, vm.cmsWrapper, k))
+
+                if (controller) $controller(controller, {$scope: scope});
 
                 element.html(template);
             } else {

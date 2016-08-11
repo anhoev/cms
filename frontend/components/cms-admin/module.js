@@ -5,12 +5,12 @@ import 'jstree-bootstrap-theme/dist/themes/proton/style.min.css'
 import 'ng-js-tree';
 import 'ui-select';
 import 'ui-select/dist/select.min.css';
-import cmsContainer from '../cms-main/module'
+import mainModule from '../cms-main/module'
 import cmsElementEdit from '../cms-element-edit/module';
 import cmsList from './cms-list';
 
 const module = angular
-    .module('components.cmsAdmin', ['ui.bootstrap', 'ngJsTree', 'ui.select', cmsContainer, cmsElementEdit])
+    .module('components.cmsAdmin', ['ui.bootstrap', 'ngJsTree', 'ui.select', mainModule, cmsElementEdit])
     .directive('cmsAdmin', directive)
     .directive('cmsList', cmsList);
 
@@ -51,6 +51,7 @@ function directive(cms, $uibModal, $timeout, formService) {
                     if (!$scope.node) return;
 
                     $scope.list.length = 0;
+                    $scope.element = {};
                     $timeout(() => {
                         if (changeAdminList) {
                             $scope.tree = cms.getAdminList();
@@ -69,7 +70,6 @@ function directive(cms, $uibModal, $timeout, formService) {
                         console.timeEnd("loadElements");
                         var Type = cms.data.types[$scope.node.type];
                         $scope.list.push(...list);
-                        $scope.$apply();
                     }, paramsBuilder);
 
                     // number of pages;
@@ -85,7 +85,8 @@ function directive(cms, $uibModal, $timeout, formService) {
                     $scope.node = _.get($scope.tree, _node.path);
 
                     const config = getConfig();
-                    $scope.showAs.type = config && config.showAs === 'list' ? 'list' : 'table';
+                    $scope.showAs.type = 'table';
+                    if (config && config.showAs) $scope.showAs.type = config.showAs;
 
                     $scope.refresh();
                 }
@@ -148,6 +149,8 @@ function directive(cms, $uibModal, $timeout, formService) {
                     type: 'table'
                 }
 
+                $scope.getTitle = cms.getTitle;
+
             }
 
             $uibModal.open({
@@ -157,6 +160,8 @@ function directive(cms, $uibModal, $timeout, formService) {
                 windowClass: 'cms-window'
             });
         }
+
+        if (cms.data.online.autoOpenAdmin) vm.openSitemap();
 
     }
 

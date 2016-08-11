@@ -30,8 +30,10 @@ const app = new Proxy(_app, {
                 if (arguments[1] && arguments[1].constructor && arguments[1].constructor.name === 'GeneratorFunction') {
                     const cb = arguments[1];
                     const callback = function (req, res) {
-                        Q.onerror = onerror.bind(onerror, req, res);
-                        Q.spawn(cb.bind(this, ...arguments));
+                        /*Q.onerror = onerror.bind(onerror, req, res);
+                        Q.spawn(cb.bind(this, ...arguments));*/
+                        co(cb.bind(this, ...arguments)).then(() => {
+                        }, onerror.bind(onerror, req, res));
                     };
                     arguments[1] = callback;
                 }
@@ -48,13 +50,11 @@ const app = new Proxy(_app, {
                         ws.on = function (path, cb) {
                             if (cb && cb.constructor && cb.constructor.name === 'GeneratorFunction') {
                                 const callback = function (msg) {
-                                    Q.onerror = e => {
-                                    };
                                     try {
                                         let json = JsonFn.parse(msg);
-                                        Q.spawn(cb.bind(this, json));
+                                        co(cb.bind(this, json)).then();
                                     } catch (e) {
-                                        Q.spawn(cb.bind(this, msg));
+                                        co(cb.bind(this, msg)).then();
                                     }
                                 };
 
@@ -138,7 +138,8 @@ const cms = {
          */
         categories: {},
         online: {
-            menu
+            menu,
+            autoOpenAdmin: false
         },
         webtype: WebType.WEB
     },
@@ -190,7 +191,10 @@ const cms = {
     set menu(menu) {
         _.assign(this.data.online.menu, menu);
     },
-    async
+    async,
+    getModel : function (type) {
+        return this.Types[type].Model;
+    }
 }
 
 global[CMS_KEY] = cms;

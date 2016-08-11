@@ -2,6 +2,7 @@ const path = require('path');
 const unless = require('express-unless');
 const cheerio = require('cheerio');
 const q = require('q');
+const co = require('co');
 
 module.exports = (cms) => {
     const {app, data: {security}} = cms;
@@ -71,6 +72,12 @@ module.exports = (cms) => {
 
     app.get('/login', function*(req, res) {
         res.send(cms.compile(path.resolve(__dirname, 'login.jade'))());
+    })
+
+    app.get('/logout', function*({session}, res) {
+        session.adminMode = false;
+        session.user = null;
+        res.send();
     })
 
     app.post('/login', function*({body: {email, password, remember}, session}, res) {

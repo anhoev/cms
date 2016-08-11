@@ -56,6 +56,7 @@ module.exports = (cms) => {
         mTemplate: `
         <WrapLayout cms-wrapper [name]="model.name" [element]="model"></WrapLayout>
         `,
+        isViewElement: false,
         autopopulate: true
     });
 
@@ -79,7 +80,7 @@ module.exports = (cms) => {
     })
 
     // what to do with template ?
-    function registerWrapper(name, {formatter, formatterUrl, fn = {}, serverFn = {}, mTemplate}) {
+    function registerWrapper(name, {formatter, formatterUrl, fn = {}, serverFn = {}, mTemplate, controller}) {
         _.merge(fn, cms.filters.fn);
         _.merge(serverFn, cms.filters.serverFn);
         const serverFnForClient = {};
@@ -96,7 +97,10 @@ module.exports = (cms) => {
                         scope.serverFnData.push({args: arguments, k: fnName});
                         const args = arguments;
                         post(`/cms-wrappers/${wrapperName}/${fnName}`, arguments)
-                            .then(res => getFnData(args).result = res.data)
+                            .then(res => {
+                                getFnData(args).result = res.data;
+                            })
+                        return scope.serverFnData.length - 1;
                     }
                 };
             }
@@ -105,7 +109,7 @@ module.exports = (cms) => {
         const template = formatter ? formatter : cms.compile(formatterUrl)();
 
         cms.Wrapper.list[name] = {
-            formatter, formatterUrl, fn, serverFn, serverFnForClient, mTemplate, template
+            formatter, formatterUrl, fn, serverFn, serverFnForClient, mTemplate, template, controller
         };
 
         Wrapper.findOne({name}, (err, obj) => {
@@ -116,7 +120,8 @@ module.exports = (cms) => {
         cms.Types['Wrapper'].store[name] = {
             fn,
             serverFn: serverFnForClient,
-            template
+            template,
+            controller
         }
     }
 

@@ -6,12 +6,10 @@
 @import "./navbar-fixed-side";
 
 $fa-font-path: "/build/fonts" !default;
+$brand-primary: #428bca !default; // #337ab7
 @import "../../node_modules/font-awesome/scss/font-awesome";
 
 .cms {
-  @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables";
-  @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
-
   // Reset and dependencies
   @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/normalize";
   @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/print";
@@ -20,7 +18,6 @@ $fa-font-path: "/build/fonts" !default;
   @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/scaffolding";
   @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/type";
   @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/code";
-  @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/grid";
   @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/tables";
   @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/forms";
   @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/buttons";
@@ -60,6 +57,50 @@ $fa-font-path: "/build/fonts" !default;
 
   @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/theme";
 }
+
+.cms-btn {
+  &.btn-outline {
+    color: inherit;
+    transition: all .5s;
+    text-shadow: initial;
+    box-shadow: initial;
+    background: transparent;
+    border-color: $brand-primary;
+  }
+
+  &.btn-primary.btn-outline:hover {
+    background-color: #428bca !important;
+  }
+
+  &.btn-primary.btn-outline {
+    color: #428bca;
+  }
+
+  &.btn-success.btn-outline {
+    color: #5cb85c;
+  }
+
+  &.btn-info.btn-outline {
+    color: #5bc0de;
+  }
+
+  &.btn-warning.btn-outline {
+    color: #f0ad4e;
+  }
+
+  &.btn-danger.btn-outline {
+    color: #d9534f;
+  }
+
+  &.btn-primary.btn-outline:hover,
+  &.btn-success.btn-outline:hover,
+  &.btn-info.btn-outline:hover,
+  &.btn-warning.btn-outline:hover,
+  &.btn-danger.btn-outline:hover {
+    color: #fff;
+  }
+}
+
 
 @import "../../node_modules/ui-select/dist/select.css";
 
@@ -142,7 +183,7 @@ body.modal-open {
 }
 
 .cms-element-controll {
-  width: 160px;
+  width: 164px;
   right: 20px;
   top: -10px;
 }
@@ -150,6 +191,9 @@ body.modal-open {
 .cms-element-controll-icon {
   right: 20px;
   top: -10px;
+  i {
+    //color: $brand-primary;
+  }
 }
 
 .cms-admin-right-panel {
@@ -565,7 +609,7 @@ div.CodeMirror-lint-tooltip {
 
 }
 
-body>.ui-select-bootstrap.open{
+body > .ui-select-bootstrap.open {
   z-index: 10000 !important;
 }
 

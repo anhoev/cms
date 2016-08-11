@@ -34,7 +34,7 @@ function directive(cms) {
 
         scope.$watch('model', v => {
             vm.value = _.get(scope, vm.property)
-            vm.isValueUndefined = _.isEmpty(vm.value);
+            vm.isValueUndefined = _.isEmpty(vm.value) && isNaN(vm.value);
         }, true);
 
     }
@@ -121,7 +121,7 @@ function cmsEditableTransclude(cms, $timeout) {
 
         scope.$watch('model', v => {
             vm.value = _.get(scope, vm.property);
-            vm.isValueUndefined = _.isEmpty(vm.value);
+            vm.isValueUndefined = _.isEmpty(vm.value) && isNaN(vm.value);
         }, true);
 
         vm.hide = function () {

@@ -31,8 +31,12 @@
                         <ui-select style="min-width: 60px;margin-left: 10px;margin-right: 10px;"
                                    class="cms-select" data-ng-model="showAs.type" theme="bootstrap"
                                    on-select="refresh()">
-                            <ui-select-match placeholder="">{{$select.selected.label}}&nbsp;&nbsp;&nbsp;</ui-select-match>
-                            <ui-select-choices data-repeat="item.value as item in [{value:'list',label:'List'},{value:'table',label:'Table'}]">{{item.label}}</ui-select-choices>
+                            <ui-select-match placeholder="">
+                                {{$select.selected.label}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</ui-select-match>
+                            <ui-select-choices
+                                    data-repeat="item.value as item in [{value:'list',label:'List'},{value:'table',label:'Table'},{value:'element',label:'Element'}]">
+                                {{item.label}}
+                            </ui-select-choices>
                         </ui-select>
 
                         <button class="btn btn-white btn-xs" style="margin-right: 10px;"
@@ -67,7 +71,7 @@
                 <div class="panel-body" ng-if="node">
 
                     <div style="width: 100%;overflow-x: auto" ng-if="showAs.type === 'table'">
-                        <table class="table cms-admin-table" >
+                        <table class="table cms-admin-table">
                             <thead>
                             <tr>
                                 <th ng-repeat="col in node.columns track by $index" ng-bind="col"></th>
@@ -95,6 +99,18 @@
                         <div ng-repeat="element in list track by $index"
                              cms-element="{ref: element._id, type: node.type, containers: {}}"
                              dnd-moved="remove(element)"
+                             inline="false"></div>
+                    </div>
+
+                    <div class="" ng-if="showAs.type === 'element'">
+                        <button class="btn cms-btn btn-primary btn-outline btn-xs" style="margin-right: 10px;" ng-repeat="e in list track by $index"
+                            ng-click="element._id = e._id">
+                            {{getTitle(node.type, e._id)}}
+                        </button>
+                        <br><br>
+
+                        <div ng-if="element._id"
+                             cms-element="{ref: element._id, type: node.type, containers: {}}"
                              inline="false"></div>
                     </div>
 

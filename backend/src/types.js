@@ -95,7 +95,8 @@ module.exports = (cms) => {
             name, formatter, formatterUrl, initSchema, title, fn = {},
             serverFn = {}, tabs, isViewElement = true, mTemplate, admin = {query: []},
             alwaysLoad = false, restifyOptions,
-            info = {}
+            info = {},
+            controller
         } = options;
         cms.filters.schema.forEach((fn) => fn(schema, name));
         if (!(schema instanceof cms.mongoose.Schema)) {
@@ -137,6 +138,7 @@ module.exports = (cms) => {
             }, info),
             fn,
             serverFn,
+            controller,
             get serverFnForClient() {
                 if (!this._serverFnForClient) {
                     this._serverFnForClient = {};
@@ -178,7 +180,8 @@ module.exports = (cms) => {
                         }
                         return k;
                     }).filter(k =>['id', '_id', '__v'].indexOf(k) === -1),
-                    store: this.store
+                    store: this.store,
+                    controller: this.controller
                 }
             },
             getWebTypeWithData: function*() {
@@ -246,7 +249,7 @@ module.exports = (cms) => {
                 const [,method,type] = path.match(modelQueryTester);
                 if (method === 'get') {
                     if (Object.keys(cms.Types).indexOf(type) !== -1) {
-                        const result = yield cms.Types[type].Model.find(params.query).sort(params.sort).skip(params.skip).limit(params.limit);
+                        const result = yield cms.Types[type].Model.find(params.query).sort(params.sort).skip(params.skip).limit(params.limit).lean();
                         ws.send({result, uuid});
                     }
                 } else if (method === 'post') {

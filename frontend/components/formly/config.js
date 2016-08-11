@@ -176,13 +176,34 @@ function config(formlyConfigProvider, size, $rootScopeProvider) {
     config.setType({
         name: 'tableSection',
         template: tableTemplate,
-        controller: tableController
+        controller: tableController,
+        wrapper: ['bootstrapLabel', 'bootstrapHasError']
     });
 
     config.setType({
         name: 'select',
         template: selectTemplate,
         controller: function () {
+        },
+        overwriteOk: true,
+        wrapper: ['bootstrapLabel', 'bootstrapHasError']
+    });
+
+    config.setType({
+        name: 'select-ref-static',
+        template: selectTemplate,
+        controller: function ($scope, cms) {
+            const type = $scope.options.templateOptions.Type;
+
+            cms.loadElements(type, () => {
+                $scope.to.options = _.map(Types[type].list, e => {
+                    const value = cms.getTitle(type, e._id);
+                    return ({
+                        value: value,
+                        name: value
+                    });
+                });
+            })
         },
         overwriteOk: true,
         wrapper: ['bootstrapLabel', 'bootstrapHasError']

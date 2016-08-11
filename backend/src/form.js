@@ -4,6 +4,7 @@ const unless = require('express-unless');
 const cheerio = require('cheerio');
 const _ = require('lodash');
 const _merge = require('extend');
+const traverse = require('traverse');
 function merge() {
     return _merge(true, ...arguments);
 }
@@ -46,7 +47,11 @@ module.exports = cms => {
     }
 
     const convert = (schema, tabs) => {
-        var _schema = _.pickBy(schema, (field, k) => !(field instanceof cms.mongoose.VirtualType), true);
+        const _schema = traverse(schema).map(function (node) {
+            if (node && (node.form === false || node instanceof cms.mongoose.VirtualType)) {
+                this.delete();
+            }
+        });
         const fields = _.map(_schema, (field, k) => {
             // todo: tabs
 
@@ -129,7 +134,7 @@ module.exports = cms => {
             }
 
             let fields = field.form.type === 'tableSection' ? _.map(field.type[0], (nestedField, k) => convertObj(nestedField, k, k)) :
-                _.map(field.type, (nestedField, k) => convertObj(nestedField, '', k));
+                _.map(field.type, (nestedField, k) => convertObj(nestedField, k, label || key));
 
             return merge({
                 key,

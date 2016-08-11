@@ -1,4 +1,4 @@
-import template from './element.control.html';
+import template from './editor.html';
 
 directive.$inject = ['cms', '$http', '$timeout', 'formService'];
 function directive(cms, $http, $timeout, formService) {
@@ -27,6 +27,15 @@ function directive(cms, $http, $timeout, formService) {
         vm.edit = function (cb) {
             const {ref, type} = vm.cmsEditor;
             formService.edit(ref, type, cb);
+        }
+
+        vm.copy = function (cb) {
+            const {ref, type} = vm.cmsEditor;
+            const e = cms.findByRef(type, ref);
+
+            cms.createElement(type, _.pickBy(e, (v, k)=> k !== '_id', true), model => {
+                formService.edit(model._id, type, cb);
+            })
         }
 
         vm.remove = function () {
