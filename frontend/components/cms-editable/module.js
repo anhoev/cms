@@ -110,10 +110,10 @@ cmsEditableTransclude.$inject = ['cms', '$timeout'];
 function cmsEditableTransclude(cms, $timeout) {
 
     function link(scope, element, attrs, elementController) {
-        // resolve type and ref
-        const {type, ref} = elementController.getElement();
-
         const {vm} = scope;
+
+        // resolve type and ref
+        const {type, ref} = vm.element ? vm.element : elementController.getElement();
 
         vm.showJson = () => false;
 
@@ -135,7 +135,8 @@ function cmsEditableTransclude(cms, $timeout) {
         scope: {},
         bindToController: {
             property: '@cmsEditableTransclude',
-            withEditBtn: '@withEditBtn'
+            withEditBtn: '@withEditBtn',
+            element: '=element'
         },
         transclude: true,
         template: `
@@ -147,7 +148,7 @@ function cmsEditableTransclude(cms, $timeout) {
             popover-append-to-body="true"
             style="cursor: pointer">
         <ng-transclude></ng-transclude>
-        <span ng-show="vm.isValueUndefined" class="cms-empty-value">
+        <span ng-show="vm.isValueUndefined && !vm.element" class="cms-empty-value">
             empty
         </span> 
     </span>
@@ -167,7 +168,7 @@ function cmsEditableTransclude(cms, $timeout) {
             ng-mouseover="vm.show = true" 
             ng-mouseout="vm.hide();"
             ></ng-transclude>
-        <span ng-show="vm.isValueUndefined" class="cms-empty-value">
+        <span ng-show="vm.isValueUndefined && !vm.element" class="cms-empty-value">
             empty
         </span> 
     </span>   

@@ -32,17 +32,35 @@ function config(formlyConfigProvider, size, $rootScopeProvider) {
     $rootScopeProvider.digestTtl(20);
 
     const config = formlyConfigProvider;
+
+    config.disableWarnings = true;
+
     config.removeWrapperByName('bootstrapLabel');
 
     config.setWrapper({
         name: 'bootstrapLabel',
         template: `
         <div>
-          <label for="{{id}}" class="control-label ${size.label}"
+          <label for="{{id}}" class="control-label {{!to.class ? '${size.label}' : ''}}"
                  uib-tooltip-html='to.tooltip'>
             {{to.label}} {{to.required ? '*' : ''}}
           </label>
-          <div class="${size.input}"><formly-transclude></formly-transclude></div>
+          <div class="{{!to.class ? '${size.input}' : ''}}"><formly-transclude></formly-transclude></div>
+        </div>
+        `
+    });
+
+    config.removeWrapperByName('bootstrapHasError');
+    config.setWrapper({
+        name: 'bootstrapHasError',
+        template: `
+        <div ng-if="!to.class" class="clearfix"></div>
+        <div ng-if="!to.class" ng-class="['form-group','']" ng-class="{'has-error': showError}" >
+          <formly-transclude></formly-transclude>
+        </div>
+        
+        <div ng-if="to.class" ng-class="[to.class]" ng-class="{'has-error': showError}" style="margin-bottom: 15px;">
+          <formly-transclude></formly-transclude>
         </div>
         `
     });
@@ -196,13 +214,13 @@ function config(formlyConfigProvider, size, $rootScopeProvider) {
             const type = $scope.options.templateOptions.Type;
 
             cms.loadElements(type, () => {
-                $scope.to.options = _.map(Types[type].list, e => {
+                $scope.to.options = [{name: 'None', value: null}].concat(_.map(Types[type].list, e => {
                     const value = cms.getTitle(type, e._id);
                     return ({
                         value: value,
-                        name: value
+                        name: $scope.to.labelProp ? e[$scope.to.labelProp] : value
                     });
-                });
+                }));
             })
         },
         overwriteOk: true,

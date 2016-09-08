@@ -67,6 +67,17 @@
                            style="margin-left: 10px;width: 100px;display: inline-block;"
                            ng-model="search.text" ng-model-options="{debounce: 300}" placeholder="search ...">
 
+                    <div ng-if="queries && queries.length > 0">
+                        <hr style="margin-top: 10px;margin-bottom: 5px;">
+
+                        <div class="cms-admin-heading-form" style="height: 60px;">
+                            <formly-form ng-repeat="query in queries" model="query.model" fields="query.form"
+                                         form="form"
+                                         options="options">
+                            </formly-form>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="panel-body" ng-if="node">
 
@@ -74,15 +85,15 @@
                         <table class="table cms-admin-table">
                             <thead>
                             <tr>
-                                <th ng-repeat="col in node.columns track by $index" ng-bind="col"></th>
+                                <th ng-repeat="col in node.columns track by $index" ng-bind="col.label"></th>
                                 <th>Edit</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat="element in list track by $index">
                                 <td ng-repeat="col in node.columns track by $index">
-                                <span cms-direct-editable="model.{{col}}"
-                                      cms-value="element[col]"
+                                <span cms-direct-editable="model.{{col.value}}"
+                                      cms-value="element[col.value]"
                                       cms-ref="{{element._id}}"
                                       cms-type="{{node.type}}"></span>
                                 </td>
@@ -95,16 +106,22 @@
                         </table>
                     </div>
 
+                    <div ng-if="loading">
+                        <img src="/build/images/ajax-loader.gif">
+                    </div>
+
                     <div class="cms-panel-list-content" ng-if="showAs.type === 'list'">
                         <div ng-repeat="element in list track by $index"
+                             ng-class="elementClass"
                              cms-element="{ref: element._id, type: node.type, containers: {}}"
                              dnd-moved="remove(element)"
                              inline="false"></div>
                     </div>
 
                     <div class="" ng-if="showAs.type === 'element'">
-                        <button class="btn cms-btn btn-primary btn-outline btn-xs" style="margin-right: 10px;" ng-repeat="e in list track by $index"
-                            ng-click="element._id = e._id; apply()">
+                        <button class="btn cms-btn btn-primary btn-outline btn-xs" style="margin-right: 10px;"
+                                ng-repeat="e in list track by $index"
+                                ng-click="selectElement(e._id);">
                             {{getTitle(node.type, e._id)}}
                         </button>
                         <br><br>
@@ -114,6 +131,7 @@
                              inline="false"></div>
                     </div>
 
+                    <div class="clearfix"></div>
                     <uib-pagination ng-show="page.size > 1" total-items="page.size" ng-model="page.currentPage"
                                     class="pagination-sm"
                                     items-per-page="page.limit"

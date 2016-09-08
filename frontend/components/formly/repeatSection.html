@@ -1,3 +1,4 @@
+<div class="clearfix"></div>
 <div>
     <div dnd-list="model[options.key]"
          class="cms-containers" style="min-height: 0px">
@@ -7,18 +8,26 @@
              dnd-draggable="element"
              dnd-moved="model[options.key].splice($index, 1);"
              dnd-effect-allowed="move"
-             ng-init="_fields = copyFields(to.fields);_options = createFormOptions($index)">
-            <button type="button" class="btn btn-xs btn-white"
-                    style="position: absolute;right: 0px;z-index: 10;"
-                    ng-style="{'margin-top': marginTop}"
-                    ng-click="model[options.key].splice($index, 1)">
-                <i class="fa fa-trash-o"></i>
-            </button>
-            <formly-form fields="_fields"
-                         model="element"
-                         options="_options"
-                         form="form">
-            </formly-form>
+             ng-init="_fields = copyFields(to.fields)[0];_options = createFormOptions($index)">
+
+
+
+            <dnd-nodrag style="display: block">
+                <div style="position: absolute;right: 0px;z-index: 10;" ng-style="{'margin-top': marginTop}">
+                    <button type="button" class="btn btn-xs btn-white"
+                            ng-click="model[options.key].splice($index, 1)">
+                        <i class="fa fa-trash-o"></i>
+                    </button>
+                    <button type="button" dnd-handle class="btn btn-xs btn-white" style="cursor: move;">:::</button>
+                </div>
+
+                <formly-field options="_fields"
+                              form-options="{}"
+                              form-state="_options.formState"
+                              model="element"
+                              form="form">
+                </formly-field>
+            </dnd-nodrag>
         </div>
     </div>
 

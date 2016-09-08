@@ -27,6 +27,7 @@ module.exports = {
             'ng-js-tree',
             'ui-select',
             'angular-filter',
+            'api-check',
             'angular-formly',
             'angular-formly-templates-bootstrap',
             'angularjs-color-picker',
@@ -64,7 +65,8 @@ module.exports = {
             'angular-websocket',
             'jquery-ui/draggable',
             'jquery-ui/resizable',
-            'traverse'
+            'traverse',
+            'moment'
         ]
     },
     output: {

@@ -25,6 +25,7 @@ function elementDirective(cms, $compile, $http, $timeout, $controller) {
                 return;
             }
             vm.element.ref = model._id;
+            vm.element.containers = vm.element.containers || {};
             if (!ref) cms.updateContainerPage();
             Type = Types[type];
             render();

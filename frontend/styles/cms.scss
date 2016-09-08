@@ -8,6 +8,7 @@
 $fa-font-path: "/build/fonts" !default;
 $brand-primary: #428bca !default; // #337ab7
 @import "../../node_modules/font-awesome/scss/font-awesome";
+@import "../../node_modules/codemirror/lib/codemirror.css";
 
 .cms {
   // Reset and dependencies
@@ -56,6 +57,27 @@ $brand-primary: #428bca !default; // #337ab7
   @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/responsive-utilities";
 
   @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/theme";
+
+  pre {
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    border-width: 0;
+    background: transparent;
+    font-family: inherit;
+    font-size: inherit;
+    margin: 0;
+    white-space: pre;
+    word-wrap: normal;
+    line-height: 0.8;
+    color: inherit;
+    z-index: 2;
+    position: relative;
+    overflow: visible;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .CodeMirror-cursors {
+  }
 }
 
 .cms-btn {
@@ -100,7 +122,6 @@ $brand-primary: #428bca !default; // #337ab7
     color: #fff;
   }
 }
-
 
 @import "../../node_modules/ui-select/dist/select.css";
 
@@ -242,6 +263,10 @@ body.modal-open {
   }
 }
 
+.modal-lg {
+  width: 1000px !important;
+}
+
 .vakata-context.jstree-contextmenu.jstree-proton-contextmenu {
   z-index: 10000;
 }
@@ -289,7 +314,7 @@ a[ng-click], a[cms-admin] {
   border-radius: 3px;
 }
 
-.cms .popover {
+.popover {
   max-width: 700px;
   [class^="col-"] {
     width: 100%;
@@ -501,6 +526,9 @@ fieldset[disabled] .btn-white {
   .control-label {
     font-weight: 500;
   }
+  input {
+    min-width: 55px;
+  }
 }
 
 .lint-error {
@@ -590,8 +618,12 @@ div.CodeMirror-lint-tooltip {
 
 }
 
-.cms-panel-list-content > * {
-  margin-bottom: 20px;
+.cms-panel-list-content {
+  > * {
+    padding-top: 20px;
+    margin-bottom: 20px;
+  }
+  display: block;
 }
 
 .cms-table-section {
@@ -604,6 +636,7 @@ div.CodeMirror-lint-tooltip {
   .checkbox {
     label {
       display: inline;
+      color: transparent;
     }
   }
 
@@ -618,4 +651,52 @@ body > .ui-select-bootstrap.open {
     font-style: italic;
     color: #a94442;
   }
+}
+
+.panel-xs {
+  hr {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+.shadow {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+}
+
+.panel-text {
+  background-color: #E1ECF4;
+  color: #8835b7;
+  font-size: small;
+  font-weight: 500;
+  padding: 2px;
+}
+
+.cms-admin-heading-form {
+  margin-left: -5px;
+  .ui-select-container {
+    @extend .cms-select;
+  }
+  .form-control {
+    @extend .input-xs;
+  }
+  .col-sm-2 {
+    width: 20%;
+    text-align: start !important;
+    margin-bottom: 5px !important;
+  }
+  .col-sm-10, .col-sm-4, .col-sm-6 {
+    width: 20%;
+  }
+}
+
+.text-danger-2 {
+  color: crimson !important;
 }

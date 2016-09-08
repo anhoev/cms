@@ -6,6 +6,7 @@ const _ = require('lodash');
 require('generator-bind').polyfill();
 const JsonFn = require('json-fn');
 const autopopulate = require('mongoose-autopopulate');
+const traverse = require('traverse');
 
 module.exports = (cms) => {
     const {app, Q} = cms;
@@ -92,7 +93,7 @@ module.exports = (cms) => {
      */
     function registerSchema(schema, options) {
         const {
-            name, formatter, formatterUrl, initSchema, title, fn = {},
+            name, label, formatter, formatterUrl, initSchema, title, fn = {},
             serverFn = {}, tabs, isViewElement = true, mTemplate, admin = {query: []},
             alwaysLoad = false, restifyOptions,
             info = {},
@@ -105,7 +106,33 @@ module.exports = (cms) => {
 
         if (options.autopopulate) schema.plugin(autopopulate);
 
-        schema.index({'$**': 'text'});
+        schema.add({_textIndex: {type: String, form: false, index: 'text'}});
+        schema.pre('findOneAndUpdate', function (next) {
+            let _textIndex = ''
+            traverse(this._update).forEach(function (node) {
+                if (this.key && !_.includes(['$set', '$setOnInsert', '__v', '_id', 'id'], this.key)) {
+                    const _type = schema.path(this.path.filter(p=> p !== '$set' && p !== '$setOnInsert').join('.'));
+                    if (_type) {
+                        const type = _type.instance;
+                        if (type === 'ObjectID') {
+                            this.block();
+                            _textIndex += node[cms.Types[_type.options.ref].info.title] + ' ';
+                        } else if (type === 'Number') {
+                            _textIndex += node + ' ';
+                        }
+                    } else {
+                        this.block();
+                    }
+                } else if (this.key) {
+                    this.block();
+                }
+            })
+            this._update._textIndex = _textIndex;
+            next();
+        });
+
+
+        //schema.index({'$**': 'text'});
 
         if (initSchema) initSchema(schema);
         const Model = cms.mongoose.model(name, schema);
@@ -114,19 +141,15 @@ module.exports = (cms) => {
         _.merge(fn, cms.filters.fn);
         _.merge(serverFn, cms.filters.serverFn);
 
+
         cms.Types[name] = {
             schema,
             Model,
-            get Form() {
-                if (!this._Form) {
-                    const _schema = _.pickBy(schema.tree, (v, k) => ['id', '_id', '__v'].indexOf(k) === -1);
-                    this._Form = cms.utils.convertForm(_schema, tabs);
-                }
-                if (cms.filters.form[name]) cms.filters.form[name](this._Form);
-                return this._Form;
-            },
-            clearForm() {
-                this._Form = null;
+            label,
+            clear() {
+                this.Form = null;
+                this.Paths = null;
+                this.Queries = null;
             },
             Formatter: formatter,
             FormatterUrl: formatterUrl,
@@ -157,6 +180,7 @@ module.exports = (cms) => {
                                     scope.serverFnData.push({args: arguments, k: fnName});
                                     const args = arguments;
                                     post(`/cms-types/${type}/${model._id}/${fnName}`, arguments).then(res => getFnData(args).result = res.data)
+                                    return scope.serverFnData.length - 1;
                                 }
                             };
                         }
@@ -166,20 +190,24 @@ module.exports = (cms) => {
             },
             mTemplate,
             get webType() {
+                if (!this.Form) {
+                    _.assign(this, cms.utils.initType(schema, tabs, name));
+                }
+
                 return {
                     template: this.template,
+                    label: this.label,
                     form: this.Form,
+                    tabs: tabs,
+                    queries: this.Queries,
+                    paths: this.Paths,
                     list: [],
                     info: this.info,
                     fn: this.fn,
                     serverFn: this.serverFnForClient,
-                    columns: _.map(this.Model.schema.tree, (v, k) => {
-                        if (v instanceof cms.mongoose.Schema.Types.ObjectId && k !== '_id') {
-                            const prop = v.options.form.templateOptions.labelProp;
-                            return `${k}.${prop ? prop : ''}`;
-                        }
-                        return k;
-                    }).filter(k =>['id', '_id', '__v'].indexOf(k) === -1),
+                    columns: _.map(_.pickBy(this.Model.schema.paths, k =>['id', '_id', '__v', '_textIndex'].indexOf(k) === -1, true), (v, k) => {
+                        return v.options && v.options.label ? v.options.label : k;
+                    }),
                     store: this.store,
                     controller: this.controller
                 }
@@ -249,7 +277,11 @@ module.exports = (cms) => {
                 const [,method,type] = path.match(modelQueryTester);
                 if (method === 'get') {
                     if (Object.keys(cms.Types).indexOf(type) !== -1) {
-                        const result = yield cms.Types[type].Model.find(params.query).sort(params.sort).skip(params.skip).limit(params.limit).lean();
+                        let q = cms.Types[type].Model.find(params.query);
+                        if (params.populate) {
+                            q = q.populate(params.populate);
+                        }
+                        const result = yield q.sort(params.sort).skip(params.skip).limit(params.limit);
                         ws.send({result, uuid});
                     }
                 } else if (method === 'post') {
@@ -271,6 +303,16 @@ module.exports = (cms) => {
                         ws.send({result, uuid});
                     }
                 }
+            }
+
+            var serverFnPath = /\/cms-types\/([^\/]*)\/([^\/]*)\/([^\/]*)/;
+            if (serverFnPath.test(path)) {
+                const [type,id,fn] = path.match(serverFnPath);
+                const args = params;
+                const {Model, serverFn} = cms.Types[type];
+                const obj = yield Model.findById(id).exec();
+                const result = yield* serverFn[fn].bind(obj)(...args);
+                ws.send({result: isNaN(result) ? result : result + '', uuid});
             }
         });
     });

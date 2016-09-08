@@ -65,18 +65,44 @@ function service($http, $timeout, cms, $uibModal) {
                     });
             }
             $scope.fields = Type.form;
+
+            if (Type.tabs) {
+                $scope.fields = _.map(Type.tabs, (tab, i) => {
+                    const _tab = {title: tab.title, fields: []};
+                    if (i === 0) {
+                        _tab.active = true;
+                        _tab.isTab = true;
+                    }
+                    _.merge(tab, {fields: []});
+                    for (const field of Type.form) {
+                        const inFirstTab = () => {
+                            let result = true;
+                            Type.tabs.forEach((tab, i) => {
+                                if (i !== 0) {
+                                    if (tab.fields.indexOf(field.key) !== -1 || field.tab === tab.title) result = false;
+                                }
+                            })
+                            return result;
+                        }
+                        if (field.tab === tab.title || tab.fields.indexOf(field.key) !== -1 || (i === 0 && inFirstTab())) {
+                            _tab.fields.push(field);
+                        }
+                    }
+                    return _tab;
+                })
+            }
+
             $scope.type = type;
 
-            const post = () => $http.post(`api/v1/${type}/${ref}`, JsonFn.stringify($scope.model));
             $scope.submit = function () {
-                post().then(() => {
+                cms.updateElement($scope.type, $scope.model, () => {
                     $uibModalInstance.close();
                     console.log('update element successful');
                 }, () => $uibModalInstance.dismiss('cancel'));
             };
 
             $scope.apply = function () {
-                post().then();
+                cms.updateElement($scope.type, $scope.model);
             };
 
             $scope.cancel = function () {

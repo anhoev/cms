@@ -183,23 +183,25 @@ function cms($http, Upload) {
 
     function updateElement(type, model, resolve, fail) {
         sendWs({
-                path: `post/api/v1/${type}`,
-                model
-            }, ({result:model}) => {
-                if (resolve) resolve(model);
-            }
-        );
+            path: `post/api/v1/${type}`,
+            model
+        }, ({result:model}) => {
+            if (resolve) resolve(model);
+        });
     }
 
     function listColumns(form) {
         if (form[0].isTab) {
             const _fields = [];
             form.forEach(({fields}) => {
-                _fields.push(...fields.map(field => field.key));
+                _fields.push(...fields.map(field => ({
+                    value: field.key,
+                    label: field.templateOptions.label || field.key
+                })));
             })
             return _fields;
         }
-        return form.map(field => field.key);
+        return form.map(field => ({value: field.key, label: field.templateOptions.label || field.key}));
     }
 
     function findField(form, property, deep = false) {
@@ -265,13 +267,13 @@ function cms($http, Upload) {
 
     function exportAll(filename, types) {
         $http.post(`/cms-export`, {filename, types}).then(function (res) {
-            console.log('Export successful');
+            confirm('Export successful');
         });
     }
 
-    function importAll(types) {
-        $http.post(`/cms-import`, {types}).then(function (res) {
-            console.log('Import successful');
+    function importAll(types, url) {
+        $http.post(`/cms-import`, {types, url}).then(function (res) {
+            confirm('Import successful');
         });
     }
 
@@ -287,7 +289,7 @@ function cms($http, Upload) {
     function deleteElements(type, cb) {
         $http.delete(`/cms-types/${type}`).then(function (res) {
             if (cb) cb();
-            console.log('delete successful');
+            confirm('delete successful');
         });
     }
 
@@ -388,7 +390,7 @@ function cms($http, Upload) {
                     });
                     columns = _.filter(columns, col => {
                         if (_.isEmpty(config.showFields)) return true;
-                        return config.showFields.indexOf(col) !== -1;
+                        return config.showFields.indexOf(col.value) !== -1;
                     })
                 } catch (e) {
                 }
@@ -396,7 +398,7 @@ function cms($http, Upload) {
             return {
                 children: _children,
                 columns,
-                text: k,
+                text: Type.label || k,
                 type: k,
                 path: _path
             }

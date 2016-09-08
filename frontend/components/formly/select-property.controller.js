@@ -1,6 +1,7 @@
 controller.$inject = ['$scope', 'cms'];
 
 function controller($scope, cms) {
+    debugger;
     let {path, model} = $scope.formState;
     path = _.dropRight(path.split('\.')).join('.');
 

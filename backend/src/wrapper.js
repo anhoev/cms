@@ -24,7 +24,8 @@ module.exports = (cms) => {
                 type: String, form: {type: 'select-type'}
             },
             model: {
-                type: cms.mongoose.Schema.Types.Mixed, form: {
+                type: cms.mongoose.Schema.Types.Mixed,
+                form: {
                     type: 'select-whole', templateManipulators: {
                         postWrapper: [
                             function (template, options, scope) {

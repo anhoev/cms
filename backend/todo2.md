@@ -1,5 +1,3 @@
-# Use angular 1 to resolve
-
 # upgrade
 * use require for directive
 * use import instead of require
@@ -15,8 +13,13 @@
 
 * `sort, filter`
 
-* websocket
-
 * support for arrow function for json-fn
 
-* copy ,paste, selection 
+* copy ,paste, selection
+ 
+* wrapper for querying
+
+* lean for list/ws
+
+* delete fns
+

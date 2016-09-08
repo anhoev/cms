@@ -56,14 +56,14 @@ module.exports = cms => {
             // todo: tabs
 
             if (Array.isArray(field)) {
-                const fields = _.map(field, nestedField => convertObj(nestedField, '', k));
+                const fields = _.map(field, nestedField => convertObj(nestedField, '', field.label || k));
 
                 if (field.length === 1 && (!field[0].type && !Object.keys(field[0]).length || field[0].type)) {
-                    return {key: k, type: 'array', templateOptions: {btnText: `Add ${k}`, field: fields[0]}};
+                    return {key: k, type: 'array', templateOptions: {btnText: `Add ${field.label || k}`, field: fields[0]}};
                 }
-                return {key: k, type: 'repeatSection', templateOptions: {btnText: `Add ${k}`, fields}};
+                return {key: k, type: 'repeatSection', templateOptions: {btnText: `Add ${field.label || k}`, fields}};
             } else {
-                return convertObj(field, k);
+                return convertObj(field, k, field.label);
             }
 
 
@@ -133,13 +133,13 @@ module.exports = cms => {
                 return null;
             }
 
-            let fields = field.form.type === 'tableSection' ? _.map(field.type[0], (nestedField, k) => convertObj(nestedField, k, k)) :
-                _.map(field.type, (nestedField, k) => convertObj(nestedField, k, label || key));
+            let fields = field.form && field.form.type === 'tableSection' ? _.map(field.type[0], (nestedField, k) => convertObj(nestedField, k, nestedField.label || k)) :
+                _.map(field.type, (nestedField, k) => convertObj(nestedField, k, field.label || label || key));
 
             return merge({
                 key,
                 type: 'repeatSection',
-                templateOptions: {label: label || key, btnText: `Add ${key}`, fields}
+                templateOptions: {label: label || key, btnText: `Add ${field.label || key}`, fields}
             }, field.form);
         }
 

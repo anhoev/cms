@@ -88,7 +88,7 @@ function service($http, $timeout, cms, $uibModal) {
                 resolve: {url: () => url}
             });
             modal2.result.then((types) => {
-                cms.importAll(types);
+                cms.importAll(types, url);
             })
         });
     }

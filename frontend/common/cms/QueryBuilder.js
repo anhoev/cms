@@ -1,6 +1,7 @@
 class QueryBuilder {
     constructor() {
         this._part = false;
+        this._query = [];
     }
 
     part(part) {
@@ -24,12 +25,17 @@ class QueryBuilder {
     }
 
     query(_query) {
-        if (_query) this._query = _query;
+        if (_query) this._query.push(_query);
         return this;
     }
 
     search(_search) {
         if (_search) this._search = _search;
+        return this;
+    }
+
+    populate(_populate) {
+        if (_populate) this._populate = _populate;
         return this;
     }
 
@@ -49,11 +55,11 @@ class QueryBuilder {
 
         let query;
         if (this._search && this._query) {
-            query = {$and: [{$text: {$search: this._search}}, this._query]}
+            query = {$and: [{$text: {$search: this._search}}, ...this._query]}
         } else if (this._search) {
             query = {$text: {$search: this._search}};
-        } else if (this._query) {
-            query = this._query;
+        } else if (this._query.length > 0) {
+            query = {$and: [...this._query]};
         }
 
         const result = {};
@@ -63,6 +69,7 @@ class QueryBuilder {
         if (query) result.query = query;
         if (this._sort) result.limit = this._sort;
         if (this._part) result.limit = this._part;
+        if (this._populate) result.populate = this._populate;
 
         return result;
     }

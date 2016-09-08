@@ -52,9 +52,13 @@ const app = new Proxy(_app, {
                                 const callback = function (msg) {
                                     try {
                                         let json = JsonFn.parse(msg);
-                                        co(cb.bind(this, json)).then();
+                                        co(cb.bind(this, json)).then(() => {}, e => {
+                                            console.warn(e);
+                                        });
                                     } catch (e) {
-                                        co(cb.bind(this, msg)).then();
+                                        co(cb.bind(this, msg)).then(() => {}, e => {
+                                            console.warn(e);
+                                        });
                                     }
                                 };
 
@@ -222,6 +226,7 @@ module.exports = cms;
 
 function listen() {
     cms.use(require('./form'));
+    cms.use(require('./query'));
     cms.use(require('./angular_resolve'));
     cms.use(require('./types'));
     cms.use(require('./types.builder'));
@@ -262,9 +267,12 @@ function compiler(path) {
         return jade.compileFile(path);
     }
 
-    return function () {
-        return this.content;
-    }.bind({content: fs.readFileSync(path, 'utf8')})
+    try {
+        return function () {
+            return this.content;
+        }.bind({content: fs.readFileSync(path, 'utf8')})
+    } catch (e) {
+    }
 }
 
 /**

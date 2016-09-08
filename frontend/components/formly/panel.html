@@ -1,13 +1,16 @@
+<div class="clearfix"></div>
 <div ng-if="!to.noPanel"
      ng-show="!(model[options.key].null && to.null)"
      class="cms-panel" ng-init="state = {_show :true}"
      style="position: relative;">
+
     <button type="button" class="btn btn-xs btn-white" ng-if="to.null"
-            style="position: absolute;right: 0px;margin-top: 15px;z-index: 1;"
+            style="position: relative;right: 0px;margin-top: 15px;z-index: 1;"
             ng-click="model[options.key].null = true;">
         <i class="fa fa-trash-o"></i>
     </button>
-    <fieldset style="padding: 0 10px 10px 10px;
+
+    <fieldset style="padding: 0 10px 10px 10px;position: relative;top:0px;
     border: 1px solid #eee;border-radius:4px;background-color: rgba(128, 128, 128, 0.03)">
         <legend style="color: #337ab7;font-weight: 200;border: 0;margin-left: 10px;width: initial;padding: 0 5px;"
                 ng-if="to.label"

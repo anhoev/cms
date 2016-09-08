@@ -92,28 +92,22 @@ module.exports = (cms) => {
                 orientation: _orientation
             },
             wrap: {
-                styles: makeStyles(),
+                orientation: _orientation,
+                types: _types,
                 layout: {
                     type: mongoose.Schema.Types.Mixed,
                     form: {type: 'recursive', templateOptions: {path: 'layout'}}
                 },
-                types: _types,
-                orientation: _orientation
+                styles: makeStyles(),
             },
             gridBS: {
+                orientation: _orientation,
+                types: _types,
                 styles: makeStyles(),
                 cols: [{
                     choice: String,
-                    col: {type: [Number], form: makeMultiSelect(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)},
-                    row: {
-                        col: [{
-                            class: String,
-                            width: {type: Number, form: makeSelect(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)}
-                        }]
-                    }
+                    col: {type: [Number], form: makeMultiSelect(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)}
                 }],
-                types: _types,
-                orientation: _orientation
             },
             absolute: {
                 layer: [{
@@ -130,7 +124,7 @@ module.exports = (cms) => {
             bind: [{
                 scope: {
                     key: {type: String, form: {type: 'select-child-property'}},
-                    child: {type: {ref: String, Type: String}, form: {type: 'select-element'}}
+                    child: {type: new mongoose.Schema({ref: String, Type: String}), form: {type: 'select-element'}}
                 },
                 model: {
                     key: {type: String, form: {type: 'select-child-property'}},

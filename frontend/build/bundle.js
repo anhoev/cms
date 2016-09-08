@@ -62,17 +62,21 @@
 	
 	var _pickBy2 = _interopRequireDefault(_pickBy);
 	
-	var _jsonFn = __webpack_require__(7);
+	var _moment2 = __webpack_require__(7);
+	
+	var _moment3 = _interopRequireDefault(_moment2);
+	
+	var _jsonFn = __webpack_require__(8);
 	
 	var _jsonFn2 = _interopRequireDefault(_jsonFn);
 	
-	__webpack_require__(8);
+	__webpack_require__(9);
 	
-	var _components = __webpack_require__(9);
+	var _components = __webpack_require__(10);
 	
 	var _components2 = _interopRequireDefault(_components);
 	
-	var _common = __webpack_require__(90);
+	var _common = __webpack_require__(91);
 	
 	var _common2 = _interopRequireDefault(_common);
 	
@@ -81,6 +85,8 @@
 	_.unionWith = _unionWith2.default;
 	
 	_.pickBy = _pickBy2.default;
+	
+	window.moment = _moment3.default;
 	
 	window.JsonFn = _jsonFn2.default;
 	_jsonFn2.default.stringify = function (obj) {
@@ -189,73 +195,31 @@
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(72);
+	module.exports = (__webpack_require__(2))(71);
 
 /***/ },
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(153);
+	module.exports = (__webpack_require__(2))(152);
 
 /***/ },
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(228);
+	module.exports = (__webpack_require__(2))(332);
 
 /***/ },
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(232);
+	module.exports = (__webpack_require__(2))(227);
 
 /***/ },
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _angular = __webpack_require__(1);
-	
-	var _angular2 = _interopRequireDefault(_angular);
-	
-	var _module = __webpack_require__(10);
-	
-	var _module2 = _interopRequireDefault(_module);
-	
-	var _module3 = __webpack_require__(101);
-	
-	var _module4 = _interopRequireDefault(_module3);
-	
-	var _module5 = __webpack_require__(104);
-	
-	var _module6 = _interopRequireDefault(_module5);
-	
-	var _module7 = __webpack_require__(117);
-	
-	var _module8 = _interopRequireDefault(_module7);
-	
-	var _module9 = __webpack_require__(119);
-	
-	var _module10 = _interopRequireDefault(_module9);
-	
-	var _module11 = __webpack_require__(121);
-	
-	var _module12 = _interopRequireDefault(_module11);
-	
-	var _module13 = __webpack_require__(129);
-	
-	var _module14 = _interopRequireDefault(_module13);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var components = _angular2.default.module('components', [_module4.default, _module6.default, _module8.default, _module10.default, _module12.default, _module14.default]);
-	
-	exports.default = components.name;
+	module.exports = (__webpack_require__(2))(232);
 
 /***/ },
 /* 10 */
@@ -271,21 +235,69 @@
 	
 	var _angular2 = _interopRequireDefault(_angular);
 	
-	__webpack_require__(11);
+	var _module = __webpack_require__(11);
 	
-	var _editableFormly = __webpack_require__(12);
+	var _module2 = _interopRequireDefault(_module);
+	
+	var _module3 = __webpack_require__(102);
+	
+	var _module4 = _interopRequireDefault(_module3);
+	
+	var _module5 = __webpack_require__(105);
+	
+	var _module6 = _interopRequireDefault(_module5);
+	
+	var _module7 = __webpack_require__(118);
+	
+	var _module8 = _interopRequireDefault(_module7);
+	
+	var _module9 = __webpack_require__(120);
+	
+	var _module10 = _interopRequireDefault(_module9);
+	
+	var _module11 = __webpack_require__(122);
+	
+	var _module12 = _interopRequireDefault(_module11);
+	
+	var _module13 = __webpack_require__(130);
+	
+	var _module14 = _interopRequireDefault(_module13);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var components = _angular2.default.module('components', [_module4.default, _module6.default, _module8.default, _module10.default, _module12.default, _module14.default]);
+	
+	exports.default = components.name;
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _angular = __webpack_require__(1);
+	
+	var _angular2 = _interopRequireDefault(_angular);
+	
+	__webpack_require__(12);
+	
+	var _editableFormly = __webpack_require__(13);
 	
 	var _editableFormly2 = _interopRequireDefault(_editableFormly);
 	
-	var _module2 = __webpack_require__(13);
+	var _module2 = __webpack_require__(14);
 	
 	var _module3 = _interopRequireDefault(_module2);
 	
-	var _tpl = __webpack_require__(89);
+	var _tpl = __webpack_require__(90);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
-	var _common = __webpack_require__(90);
+	var _common = __webpack_require__(91);
 	
 	var _common2 = _interopRequireDefault(_common);
 	
@@ -397,13 +409,14 @@
 	function cmsEditableTransclude(cms, $timeout) {
 	
 	    function link(scope, element, attrs, elementController) {
+	        var vm = scope.vm;
+	
 	        // resolve type and ref
 	
-	        var _elementController$ge2 = elementController.getElement();
+	        var _ref = vm.element ? vm.element : elementController.getElement();
 	
-	        var type = _elementController$ge2.type;
-	        var ref = _elementController$ge2.ref;
-	        var vm = scope.vm;
+	        var type = _ref.type;
+	        var ref = _ref.ref;
 	
 	
 	        vm.showJson = function () {
@@ -430,10 +443,11 @@
 	        scope: {},
 	        bindToController: {
 	            property: '@cmsEditableTransclude',
-	            withEditBtn: '@withEditBtn'
+	            withEditBtn: '@withEditBtn',
+	            element: '=element'
 	        },
 	        transclude: true,
-	        template: '\n<span class="cms">\n    <span   ng-if="vm.withEditBtn !== \'true\'"\n            popover-placement="bottom"\n            popover-is-open="vm.isOpen"\n            uib-popover-template="\'editable-formly.html\'"\n            popover-append-to-body="true"\n            style="cursor: pointer">\n        <ng-transclude></ng-transclude>\n        <span ng-show="vm.isValueUndefined" class="cms-empty-value">\n            empty\n        </span> \n    </span>\n    <span ng-if="vm.withEditBtn === \'true\'" style="position: relative">\n        <button ng-style="{opacity:vm.show? 1: 0.1}"\n                class="btn btn-white btn-xs"\n                popover-placement="bottom"\n                popover-is-open="vm.isOpen"\n                uib-popover-template="\'editable-formly.html\'"\n                popover-append-to-body="true"\n                style="position: absolute;z-index: 1000;top:-24px"\n                ng-mouseover="vm.show = true" \n                ng-mouseout="vm.hide();">\n                   Edit\n        </button>\n        <ng-transclude \n            ng-mouseover="vm.show = true" \n            ng-mouseout="vm.hide();"\n            ></ng-transclude>\n        <span ng-show="vm.isValueUndefined" class="cms-empty-value">\n            empty\n        </span> \n    </span>   \n</span>\n',
+	        template: '\n<span class="cms">\n    <span   ng-if="vm.withEditBtn !== \'true\'"\n            popover-placement="bottom"\n            popover-is-open="vm.isOpen"\n            uib-popover-template="\'editable-formly.html\'"\n            popover-append-to-body="true"\n            style="cursor: pointer">\n        <ng-transclude></ng-transclude>\n        <span ng-show="vm.isValueUndefined && !vm.element" class="cms-empty-value">\n            empty\n        </span> \n    </span>\n    <span ng-if="vm.withEditBtn === \'true\'" style="position: relative">\n        <button ng-style="{opacity:vm.show? 1: 0.1}"\n                class="btn btn-white btn-xs"\n                popover-placement="bottom"\n                popover-is-open="vm.isOpen"\n                uib-popover-template="\'editable-formly.html\'"\n                popover-append-to-body="true"\n                style="position: absolute;z-index: 1000;top:-24px"\n                ng-mouseover="vm.show = true" \n                ng-mouseout="vm.hide();">\n                   Edit\n        </button>\n        <ng-transclude \n            ng-mouseover="vm.show = true" \n            ng-mouseout="vm.hide();"\n            ></ng-transclude>\n        <span ng-show="vm.isValueUndefined && !vm.element" class="cms-empty-value">\n            empty\n        </span> \n    </span>   \n</span>\n',
 	        controllerAs: 'vm',
 	        controller: function controller() {},
 	        link: link
@@ -465,19 +479,19 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(31);
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms\">\n    <form ng-submit=\"vm.onSubmit()\" novalidate class=\"form-horizontal cms-field-form\">\n        <div style=\"overflow: auto;max-height: 500px;padding-right: 20px;\">\n            <formly-form model=\"model\" fields=\"vm.fields\" form=\"vm.form\" options=\"vm.options\">\n            </formly-form>\n        </div>\n        <button type=\"submit\" class=\"btn btn-primary submit-button\" ng-disabled=\"vm.form.$invalid\">Submit</button>\n        <button type=\"button\" class=\"btn btn-primary\" ng-click=\"vm.isOpen = false\">Cancel</button>\n    </form>\n    <br ng-if=\"adminList === 'true'\">\n</div>"
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -490,15 +504,15 @@
 	
 	var _angular2 = _interopRequireDefault(_angular);
 	
-	__webpack_require__(14);
+	__webpack_require__(15);
 	
-	var _config = __webpack_require__(15);
+	var _config = __webpack_require__(16);
 	
 	var _config2 = _interopRequireDefault(_config);
 	
-	__webpack_require__(48);
+	var _apiCheck2 = __webpack_require__(49);
 	
-	__webpack_require__(49);
+	var _apiCheck3 = _interopRequireDefault(_apiCheck2);
 	
 	__webpack_require__(50);
 	
@@ -510,23 +524,23 @@
 	
 	__webpack_require__(54);
 	
-	var _tinycolor2 = __webpack_require__(58);
+	__webpack_require__(55);
+	
+	__webpack_require__(56);
+	
+	var _tinycolor2 = __webpack_require__(60);
 	
 	var _tinycolor3 = _interopRequireDefault(_tinycolor2);
 	
-	__webpack_require__(59);
-	
-	__webpack_require__(60);
-	
 	__webpack_require__(61);
 	
-	var _codemirror = __webpack_require__(62);
-	
-	var _codemirror2 = _interopRequireDefault(_codemirror);
+	__webpack_require__(62);
 	
 	__webpack_require__(63);
 	
-	__webpack_require__(64);
+	var _codemirror = __webpack_require__(64);
+	
+	var _codemirror2 = _interopRequireDefault(_codemirror);
 	
 	__webpack_require__(65);
 	
@@ -556,11 +570,11 @@
 	
 	__webpack_require__(78);
 	
-	var _tern2 = __webpack_require__(79);
+	__webpack_require__(79);
+	
+	var _tern2 = __webpack_require__(80);
 	
 	var _tern3 = _interopRequireDefault(_tern2);
-	
-	__webpack_require__(80);
 	
 	__webpack_require__(81);
 	
@@ -578,7 +592,12 @@
 	
 	__webpack_require__(88);
 	
+	__webpack_require__(89);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	window.apiCheck = _apiCheck3.default;
+	apiCheck.globalConfig.disabled = true;
 	
 	window.tinycolor = _tinycolor3.default;
 	
@@ -592,13 +611,13 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(57);
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -607,111 +626,111 @@
 	    value: true
 	});
 	
-	var _panel = __webpack_require__(16);
+	var _panel = __webpack_require__(17);
 	
 	var _panel2 = _interopRequireDefault(_panel);
 	
-	var _repeatSection = __webpack_require__(17);
+	var _repeatSection = __webpack_require__(18);
 	
 	var _repeatSection2 = _interopRequireDefault(_repeatSection);
 	
-	var _repeatSection3 = __webpack_require__(18);
+	var _repeatSection3 = __webpack_require__(19);
 	
 	var _repeatSection4 = _interopRequireDefault(_repeatSection3);
 	
-	var _treeTemplate = __webpack_require__(19);
+	var _treeTemplate = __webpack_require__(20);
 	
 	var _treeTemplate2 = _interopRequireDefault(_treeTemplate);
 	
-	var _tree = __webpack_require__(20);
+	var _tree = __webpack_require__(21);
 	
 	var _tree2 = _interopRequireDefault(_tree);
 	
-	var _refSelect = __webpack_require__(21);
+	var _refSelect = __webpack_require__(22);
 	
 	var _refSelect2 = _interopRequireDefault(_refSelect);
 	
-	var _ref = __webpack_require__(22);
+	var _ref = __webpack_require__(23);
 	
 	var _ref2 = _interopRequireDefault(_ref);
 	
-	var _code = __webpack_require__(23);
+	var _code = __webpack_require__(24);
 	
 	var _code2 = _interopRequireDefault(_code);
 	
-	var _code3 = __webpack_require__(24);
+	var _code3 = __webpack_require__(25);
 	
 	var _code4 = _interopRequireDefault(_code3);
 	
-	var _array = __webpack_require__(30);
+	var _array = __webpack_require__(31);
 	
 	var _array2 = _interopRequireDefault(_array);
 	
-	var _arrayTemplate = __webpack_require__(31);
+	var _arrayTemplate = __webpack_require__(32);
 	
 	var _arrayTemplate2 = _interopRequireDefault(_arrayTemplate);
 	
-	var _table = __webpack_require__(32);
+	var _table = __webpack_require__(33);
 	
 	var _table2 = _interopRequireDefault(_table);
 	
-	var _tableTemplate = __webpack_require__(33);
+	var _tableTemplate = __webpack_require__(34);
 	
 	var _tableTemplate2 = _interopRequireDefault(_tableTemplate);
 	
-	var _selectType = __webpack_require__(34);
+	var _selectType = __webpack_require__(35);
 	
 	var _selectType2 = _interopRequireDefault(_selectType);
 	
-	var _selectElement = __webpack_require__(35);
+	var _selectElement = __webpack_require__(36);
 	
 	var _selectElement2 = _interopRequireDefault(_selectElement);
 	
-	var _selectProperty = __webpack_require__(36);
+	var _selectProperty = __webpack_require__(37);
 	
 	var _selectProperty2 = _interopRequireDefault(_selectProperty);
 	
-	var _selectChildProperty = __webpack_require__(37);
+	var _selectChildProperty = __webpack_require__(38);
 	
 	var _selectChildProperty2 = _interopRequireDefault(_selectChildProperty);
 	
-	var _selectFn = __webpack_require__(38);
+	var _selectFn = __webpack_require__(39);
 	
 	var _selectFn2 = _interopRequireDefault(_selectFn);
 	
-	var _select = __webpack_require__(39);
+	var _select = __webpack_require__(40);
 	
 	var _select2 = _interopRequireDefault(_select);
 	
-	var _selectWhole = __webpack_require__(40);
+	var _selectWhole = __webpack_require__(41);
 	
 	var _selectWhole2 = _interopRequireDefault(_selectWhole);
 	
-	var _multiSelect = __webpack_require__(41);
+	var _multiSelect = __webpack_require__(42);
 	
 	var _multiSelect2 = _interopRequireDefault(_multiSelect);
 	
-	var _bsGridSelect = __webpack_require__(42);
+	var _bsGridSelect = __webpack_require__(43);
 	
 	var _bsGridSelect2 = _interopRequireDefault(_bsGridSelect);
 	
-	var _bsGridSelect3 = __webpack_require__(43);
+	var _bsGridSelect3 = __webpack_require__(44);
 	
 	var _bsGridSelect4 = _interopRequireDefault(_bsGridSelect3);
 	
-	var _checkbox = __webpack_require__(44);
+	var _checkbox = __webpack_require__(45);
 	
 	var _checkbox2 = _interopRequireDefault(_checkbox);
 	
-	var _saveContainersController = __webpack_require__(45);
+	var _saveContainersController = __webpack_require__(46);
 	
 	var _saveContainersController2 = _interopRequireDefault(_saveContainersController);
 	
-	var _recursive = __webpack_require__(46);
+	var _recursive = __webpack_require__(47);
 	
 	var _recursive2 = _interopRequireDefault(_recursive);
 	
-	var _recursive3 = __webpack_require__(47);
+	var _recursive3 = __webpack_require__(48);
 	
 	var _recursive4 = _interopRequireDefault(_recursive3);
 	
@@ -723,11 +742,20 @@
 	    $rootScopeProvider.digestTtl(20);
 	
 	    var config = formlyConfigProvider;
+	
+	    config.disableWarnings = true;
+	
 	    config.removeWrapperByName('bootstrapLabel');
 	
 	    config.setWrapper({
 	        name: 'bootstrapLabel',
-	        template: '\n        <div>\n          <label for="{{id}}" class="control-label ' + size.label + '"\n                 uib-tooltip-html=\'to.tooltip\'>\n            {{to.label}} {{to.required ? \'*\' : \'\'}}\n          </label>\n          <div class="' + size.input + '"><formly-transclude></formly-transclude></div>\n        </div>\n        '
+	        template: '\n        <div>\n          <label for="{{id}}" class="control-label {{!to.class ? \'' + size.label + '\' : \'\'}}"\n                 uib-tooltip-html=\'to.tooltip\'>\n            {{to.label}} {{to.required ? \'*\' : \'\'}}\n          </label>\n          <div class="{{!to.class ? \'' + size.input + '\' : \'\'}}"><formly-transclude></formly-transclude></div>\n        </div>\n        '
+	    });
+	
+	    config.removeWrapperByName('bootstrapHasError');
+	    config.setWrapper({
+	        name: 'bootstrapHasError',
+	        template: '\n        <div ng-if="!to.class" class="clearfix"></div>\n        <div ng-if="!to.class" ng-class="[\'form-group\',\'\']" ng-class="{\'has-error\': showError}" >\n          <formly-transclude></formly-transclude>\n        </div>\n        \n        <div ng-if="to.class" ng-class="[to.class]" ng-class="{\'has-error\': showError}" style="margin-bottom: 15px;">\n          <formly-transclude></formly-transclude>\n        </div>\n        '
 	    });
 	
 	    // Replace formlyBootstrap input field type to implement read-only forms
@@ -838,13 +866,13 @@
 	            var type = $scope.options.templateOptions.Type;
 	
 	            cms.loadElements(type, function () {
-	                $scope.to.options = _.map(Types[type].list, function (e) {
+	                $scope.to.options = [{ name: 'None', value: null }].concat(_.map(Types[type].list, function (e) {
 	                    var value = cms.getTitle(type, e._id);
 	                    return {
 	                        value: value,
-	                        name: value
+	                        name: $scope.to.labelProp ? e[$scope.to.labelProp] : value
 	                    };
-	                });
+	                }));
 	            });
 	        },
 	        overwriteOk: true,
@@ -935,19 +963,19 @@
 	exports.default = config;
 
 /***/ },
-/* 16 */
-/***/ function(module, exports) {
-
-	module.exports = "<div ng-if=\"!to.noPanel\"\n     ng-show=\"!(model[options.key].null && to.null)\"\n     class=\"cms-panel\" ng-init=\"state = {_show :true}\"\n     style=\"position: relative;\">\n    <button type=\"button\" class=\"btn btn-xs btn-white\" ng-if=\"to.null\"\n            style=\"position: absolute;right: 0px;margin-top: 15px;z-index: 1;\"\n            ng-click=\"model[options.key].null = true;\">\n        <i class=\"fa fa-trash-o\"></i>\n    </button>\n    <fieldset style=\"padding: 0 10px 10px 10px;\n    border: 1px solid #eee;border-radius:4px;background-color: rgba(128, 128, 128, 0.03)\">\n        <legend style=\"color: #337ab7;font-weight: 200;border: 0;margin-left: 10px;width: initial;padding: 0 5px;\"\n                ng-if=\"to.label\"\n                ng-style=\"{color:to.choice?'#8338b7':'#337ab7'}\">\n            <span ng-show=\"to.choice\"\n                  uib-dropdown on-toggle=\"toggled(open)\">\n                  <span uib-dropdown-toggle\n                        uib-tooltip='{{to.tooltip}}'\n                        style=\"cursor: pointer\">\n                      {{options.templateOptions.label}}</span>\n                  <ul uib-dropdown-menu aria-labelledby=\"simple-dropdown\">\n                      <li ng-repeat=\"v in options.fieldGroup track by $index\"\n                          ng-show=\"v.key !== 'choice'\">\n                          <a ng-click=\"options.key && options.key !== ''? (model[options.key].choice = v.key): (model.choice = v.key);\">\n                              {{v.key}}</a>\n                      </li>\n                  </ul>\n\n            </span>\n            <span ng-if=\"!to.choice\"\n                  uib-tooltip='{{to.tooltip}}'>\n                {{options.templateOptions.label}}\n            </span>\n            <button type=\"button\" ng-click=\"state._show = !state._show\"\n                    class=\"btn btn-white btn-xs\"\n                    style=\"border: none;background-color: transparent;\"\n                    ng-bind=\"state._show? '-': '+'\">\n            </button>\n        </legend>\n        <div ng-show=\"state._show\">\n            <formly-transclude></formly-transclude>\n        </div>\n    </fieldset>\n    <br>\n</div>\n<div ng-if=\"to.noPanel\">\n    <formly-transclude></formly-transclude>\n</div>\n<div ng-show=\"(model[options.key].null && to.null)\">\n    <div class=\"form-group\">\n        <div class=\"col-sm-offset-2 col-sm-10\">\n            <button type=\"button\" class=\"btn btn-white btn-xs\"\n                    ng-click=\"model[options.key].null = false;\" style=\"z-index: 1;\"> add {{to.label}}\n            </button>\n        </div>\n    </div>\n</div>\n"
-
-/***/ },
 /* 17 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\n    <div dnd-list=\"model[options.key]\"\n         class=\"cms-containers\" style=\"min-height: 0px\">\n        <div class=\"repeatsection\"\n             style=\"position: relative\"\n             ng-repeat=\"element in model[options.key]\"\n             dnd-draggable=\"element\"\n             dnd-moved=\"model[options.key].splice($index, 1);\"\n             dnd-effect-allowed=\"move\"\n             ng-init=\"_fields = copyFields(to.fields);_options = createFormOptions($index)\">\n            <button type=\"button\" class=\"btn btn-xs btn-white\"\n                    style=\"position: absolute;right: 0px;z-index: 10;\"\n                    ng-style=\"{'margin-top': marginTop}\"\n                    ng-click=\"model[options.key].splice($index, 1)\">\n                <i class=\"fa fa-trash-o\"></i>\n            </button>\n            <formly-form fields=\"_fields\"\n                         model=\"element\"\n                         options=\"_options\"\n                         form=\"form\">\n            </formly-form>\n        </div>\n    </div>\n\n    <div class=\"form-group\">\n        <div class=\"col-sm-offset-2 col-sm-10\">\n            <div ng-if=\"!choice\">\n                <button type=\"button\" class=\"btn btn-white btn-xs\"\n                        ng-click=\"addNew()\">{{to.btnText}}\n                </button>\n            </div>\n            <div ng-if=\"choice\">\n                <div class=\"btn-group-xs\" uib-dropdown>\n                    <button type=\"button\" class=\"btn btn-white\" uib-dropdown-toggle>\n                        {{to.btnText}} <span class=\"caret\"></span>\n                    </button>\n                    <ul class=\"scrollable-menu\" uib-dropdown-menu role=\"menu\" aria-labelledby=\"btn-append-to-body\"\n                        style=\"z-index: 10000;\">\n                        <li style=\"padding: 0px 20px;\" ng-show=\"choice.length > 7\">\n                            <input type=\"text\" ng-model=\"_choice\" ng-click=\"$event.stopPropagation();\">\n                        </li>\n                        <li role=\"menuitem\" ng-repeat=\"c in choice | filter: _choice track by $index\">\n                            <a ng-click=\"addNewWithChoice(c); _choice = ''\">{{c}}</a>\n                        </li>\n                    </ul>\n                </div>\n            </div>\n        </div>\n    </div>\n\n\n</div>\n"
+	module.exports = "<div class=\"clearfix\"></div>\n<div ng-if=\"!to.noPanel\"\n     ng-show=\"!(model[options.key].null && to.null)\"\n     class=\"cms-panel\" ng-init=\"state = {_show :true}\"\n     style=\"position: relative;\">\n\n    <button type=\"button\" class=\"btn btn-xs btn-white\" ng-if=\"to.null\"\n            style=\"position: relative;right: 0px;margin-top: 15px;z-index: 1;\"\n            ng-click=\"model[options.key].null = true;\">\n        <i class=\"fa fa-trash-o\"></i>\n    </button>\n\n    <fieldset style=\"padding: 0 10px 10px 10px;position: relative;top:0px;\n    border: 1px solid #eee;border-radius:4px;background-color: rgba(128, 128, 128, 0.03)\">\n        <legend style=\"color: #337ab7;font-weight: 200;border: 0;margin-left: 10px;width: initial;padding: 0 5px;\"\n                ng-if=\"to.label\"\n                ng-style=\"{color:to.choice?'#8338b7':'#337ab7'}\">\n            <span ng-show=\"to.choice\"\n                  uib-dropdown on-toggle=\"toggled(open)\">\n                  <span uib-dropdown-toggle\n                        uib-tooltip='{{to.tooltip}}'\n                        style=\"cursor: pointer\">\n                      {{options.templateOptions.label}}</span>\n                  <ul uib-dropdown-menu aria-labelledby=\"simple-dropdown\">\n                      <li ng-repeat=\"v in options.fieldGroup track by $index\"\n                          ng-show=\"v.key !== 'choice'\">\n                          <a ng-click=\"options.key && options.key !== ''? (model[options.key].choice = v.key): (model.choice = v.key);\">\n                              {{v.key}}</a>\n                      </li>\n                  </ul>\n\n            </span>\n            <span ng-if=\"!to.choice\"\n                  uib-tooltip='{{to.tooltip}}'>\n                {{options.templateOptions.label}}\n            </span>\n            <button type=\"button\" ng-click=\"state._show = !state._show\"\n                    class=\"btn btn-white btn-xs\"\n                    style=\"border: none;background-color: transparent;\"\n                    ng-bind=\"state._show? '-': '+'\">\n            </button>\n        </legend>\n        <div ng-show=\"state._show\">\n            <formly-transclude></formly-transclude>\n        </div>\n    </fieldset>\n    <br>\n</div>\n<div ng-if=\"to.noPanel\">\n    <formly-transclude></formly-transclude>\n</div>\n<div ng-show=\"(model[options.key].null && to.null)\">\n    <div class=\"form-group\">\n        <div class=\"col-sm-offset-2 col-sm-10\">\n            <button type=\"button\" class=\"btn btn-white btn-xs\"\n                    ng-click=\"model[options.key].null = false;\" style=\"z-index: 1;\"> add {{to.label}}\n            </button>\n        </div>\n    </div>\n</div>\n"
 
 /***/ },
 /* 18 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"clearfix\"></div>\n<div>\n    <div dnd-list=\"model[options.key]\"\n         class=\"cms-containers\" style=\"min-height: 0px\">\n        <div class=\"repeatsection\"\n             style=\"position: relative\"\n             ng-repeat=\"element in model[options.key]\"\n             dnd-draggable=\"element\"\n             dnd-moved=\"model[options.key].splice($index, 1);\"\n             dnd-effect-allowed=\"move\"\n             ng-init=\"_fields = copyFields(to.fields)[0];_options = createFormOptions($index)\">\n\n\n\n            <dnd-nodrag style=\"display: block\">\n                <div style=\"position: absolute;right: 0px;z-index: 10;\" ng-style=\"{'margin-top': marginTop}\">\n                    <button type=\"button\" class=\"btn btn-xs btn-white\"\n                            ng-click=\"model[options.key].splice($index, 1)\">\n                        <i class=\"fa fa-trash-o\"></i>\n                    </button>\n                    <button type=\"button\" dnd-handle class=\"btn btn-xs btn-white\" style=\"cursor: move;\">:::</button>\n                </div>\n\n                <formly-field options=\"_fields\"\n                              form-options=\"{}\"\n                              form-state=\"_options.formState\"\n                              model=\"element\"\n                              form=\"form\">\n                </formly-field>\n            </dnd-nodrag>\n        </div>\n    </div>\n\n    <div class=\"form-group\">\n        <div class=\"col-sm-offset-2 col-sm-10\">\n            <div ng-if=\"!choice\">\n                <button type=\"button\" class=\"btn btn-white btn-xs\"\n                        ng-click=\"addNew()\">{{to.btnText}}\n                </button>\n            </div>\n            <div ng-if=\"choice\">\n                <div class=\"btn-group-xs\" uib-dropdown>\n                    <button type=\"button\" class=\"btn btn-white\" uib-dropdown-toggle>\n                        {{to.btnText}} <span class=\"caret\"></span>\n                    </button>\n                    <ul class=\"scrollable-menu\" uib-dropdown-menu role=\"menu\" aria-labelledby=\"btn-append-to-body\"\n                        style=\"z-index: 10000;\">\n                        <li style=\"padding: 0px 20px;\" ng-show=\"choice.length > 7\">\n                            <input type=\"text\" ng-model=\"_choice\" ng-click=\"$event.stopPropagation();\">\n                        </li>\n                        <li role=\"menuitem\" ng-repeat=\"c in choice | filter: _choice track by $index\">\n                            <a ng-click=\"addNewWithChoice(c); _choice = ''\">{{c}}</a>\n                        </li>\n                    </ul>\n                </div>\n            </div>\n        </div>\n    </div>\n\n\n</div>\n"
+
+/***/ },
+/* 19 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -992,13 +1020,13 @@
 	exports.default = controller;
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"form-group\" ng-init=\"_showTree = false\">\n    <label class=\"control-label {{size.label}}\"\n           ng-show=\"options.templateOptions.label\"\n           uib-tooltip='{{to.tooltip}}'>\n        {{options.templateOptions.label}}\n    </label>\n    <div class=\"{{size.input}}\">\n        <div style=\"position: absolute;right: 12px;\">\n            <button type=\"button\" class=\"btn btn-xs btn-success\"\n                    ng-click=\"_showTree = !_showTree\"\n                    ng-bind=\"_showTree?'hide tree':'show tree'\"\n            >show tree\n            </button>\n            <button type=\"button\" class=\"btn btn-xs btn-danger\"\n                    ng-click=\"clear()\">clear\n            </button>\n        </div>\n\n        <div style=\"overflow-wrap: break-word;padding-top: 7px;\"\n             ng-show=\"!_showTree\" >\n            <button class=\"btn btn-xs btn-outline btn-default\"\n                    type=\"button\"\n                    style=\"margin-left: 4px;\"\n                    ng-repeat=\"v in model[options.key]\">\n                {{v}}\n            </button>\n        </div>\n        <div ng-show=\"_showTree\"\n             js-tree=\"treeConfig\"\n             style=\"margin-top: 7px;\"\n             ng-model=\"tree\"\n             tree=\"treeInstance\"\n             tree-events=\"check_node:check;uncheck_node:check\">\n        </div>\n\n    </div>\n</div>\n<br>"
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1069,13 +1097,13 @@
 	exports.default = controller;
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 	module.exports = "<ui-select ng-if=\"!to.multiple\" data-ng-model=\"model[options.key]\" theme=\"bootstrap\" append-to-body=\"true\">\n    <ui-select-match placeholder=\"{{to.placeholder}}\">\n        {{$select.selected[to.labelProp]}}&nbsp;&nbsp;&nbsp;&nbsp;\n    </ui-select-match>\n    <ui-select-choices data-repeat=\"model in models | filterBy: [to.labelProp]: $select.search\">\n        <div ng-bind-html=\"model[to.labelProp] | highlight: $select.search\"></div>\n    </ui-select-choices>\n</ui-select>\n\n<ui-select ng-if=\"to.multiple\" multiple data-ng-model=\"model[options.key]\" theme=\"bootstrap\" append-to-body=\"true\">\n    <ui-select-match placeholder=\"{{to.placeholder}}\">\n        {{$item[to.labelProp]}}\n    </ui-select-match>\n    <ui-select-choices data-repeat=\"model in models | filterBy: [to.labelProp]: $select.search\">\n        <div ng-bind-html=\"model[to.labelProp] | highlight: $select.search\"></div>\n    </ui-select-choices>\n</ui-select>"
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1119,13 +1147,13 @@
 	exports.default = controller;
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"form-group\">\n    <label class=\"control-label {{size.label}}\" uib-tooltip='{{to.tooltip}}'>\n        {{to.label}}\n    </label>\n    <div class=\"{{size.input}}\">\n\n        <button type=\"button\"\n                class=\"btn btn-white btn-xs\"\n                style=\"margin-top: 7px;\"\n                ng-click=\"showCode(); selectTab();\">\n            {{!show? 'show code': 'hide code'}}\n        </button>\n        <span class=\"label label-danger\" ng-show=\"hasError\">The code has error</span>\n    </div>\n\n</div>\n<ui-codemirror ng-show=\"show\"\n                     ng-model=\"_model\"\n                     ui-codemirror-opts=\"editorOptions\"\n                     ui-codemirror=\"{ onLoad : codemirrorLoaded }\"\n                     ui-refresh='refresh'>\n</ui-codemirror>\n<br>"
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -1134,21 +1162,21 @@
 	    value: true
 	});
 	
-	var _jshint = __webpack_require__(25);
+	var _jshint = __webpack_require__(26);
 	
-	var _ecma = __webpack_require__(26);
+	var _ecma = __webpack_require__(27);
 	
 	var _ecma2 = _interopRequireDefault(_ecma);
 	
-	var _ecma3 = __webpack_require__(27);
+	var _ecma3 = __webpack_require__(28);
 	
 	var _ecma4 = _interopRequireDefault(_ecma3);
 	
-	var _cmsDef = __webpack_require__(28);
+	var _cmsDef = __webpack_require__(29);
 	
 	var _cmsDef2 = _interopRequireDefault(_cmsDef);
 	
-	__webpack_require__(29);
+	__webpack_require__(30);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -1257,37 +1285,37 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(4);
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(27);
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(28);
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(29);
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(30);
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1327,13 +1355,13 @@
 	exports.default = controller;
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports) {
 
 	module.exports = "<div style=\"min-height: 20px;position: relative;\"\n     ng-repeat=\"element in model[options.key] track by $index\"\n     ng-init=\"itemOptions = copyItemOptions(to.field);_formState = createFormState($index)\">\n    <button type=\"button\" class=\"btn btn-xs btn-white\"\n            style=\"position: absolute;right: 0px;z-index: 1;\"\n            ng-click=\"model[options.key].splice($index, 1)\">\n        <i class=\"fa fa-trash-o\"></i>\n    </button>\n    <formly-field options=\"itemOptions\"\n                  model=\"model[options.key]\"\n                  form=\"form\"\n                  form-state=\"_formState\"\n                  index=\"$index\">\n    </formly-field>\n</div>\n<div class=\"form-group\">\n    <div class=\"col-sm-offset-2 col-sm-10\">\n        <button type=\"button\" class=\"btn btn-white btn-xs\"\n                ng-click=\"addNew()\" style=\"z-index: 1;\">{{to.btnText}}\n        </button>\n    </div>\n</div>"
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1375,13 +1403,13 @@
 	exports.default = controller;
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports) {
 
 	module.exports = "<table class=\"table cms-admin-table cms-table-section\" >\n    <thead>\n    <tr>\n        <th ng-repeat=\"col in to.fields track by $index\" >{{col.templateOptions.label}}</th>\n        <th>X</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr ng-repeat=\"element in model[options.key] track by $index\"\n        ng-init=\"_index = $index;_formState = createFormState($index)\">\n        <td ng-repeat=\"field in to.fields\"\n            ng-init=\"_field = copyItemOptions(field)\">\n            <formly-field options=\"_field\"\n                          model=\"model[options.key][_index]\"\n                          form=\"form\"\n                          form-state=\"_formState\">\n            </formly-field>\n        </td>\n        <td>\n            <button type=\"button\" class=\"btn btn-xs btn-white\"\n                    ng-click=\"model[options.key].splice(_index, 1)\">\n                <i class=\"fa fa-trash-o\"></i>\n            </button>\n        </td>\n    </tr>\n    </tbody>\n</table>\n\n<button type=\"button\" class=\"btn btn-white btn-xs\"\n        ng-click=\"addNew()\" style=\"z-index: 1;\">{{to.btnText}}\n</button>"
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1400,7 +1428,7 @@
 	exports.default = controller;
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1437,7 +1465,7 @@
 	exports.default = controller;
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1448,6 +1476,7 @@
 	controller.$inject = ['$scope', 'cms'];
 	
 	function controller($scope, cms) {
+	    debugger;
 	    var _$scope$formState = $scope.formState;
 	    var path = _$scope$formState.path;
 	    var model = _$scope$formState.model;
@@ -1463,7 +1492,7 @@
 	exports.default = controller;
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1494,7 +1523,7 @@
 	exports.default = controller;
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1524,25 +1553,25 @@
 	exports.default = controller;
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports) {
 
 	module.exports = "<ui-select ng-if=\"!to.multiple\" data-ng-model=\"model[options.key]\" theme=\"bootstrap\" append-to-body=\"true\">\n    <ui-select-match placeholder=\"{{to.placeholder}}\">\n        {{$select.selected.name}}\n    </ui-select-match>\n    <ui-select-choices data-repeat=\"item.value as item in to.options | filterBy: ['name']: $select.search\">\n        <div ng-bind-html=\"item.name | highlight: $select.search\"></div>\n    </ui-select-choices>\n</ui-select>\n\n<ui-select ng-if=\"to.multiple\" multiple data-ng-model=\"model[options.key]\" theme=\"bootstrap\" append-to-body=\"true\">\n    <ui-select-match placeholder=\"{{to.placeholder}}\">\n        {{$item.name}}\n    </ui-select-match>\n    <ui-select-choices data-repeat=\"item.value as item in to.options | filterBy: ['name']: $select.search\">\n        <div ng-bind-html=\"item.name | highlight: $select.search\"></div>\n    </ui-select-choices>\n</ui-select>\n\n"
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports) {
 
 	module.exports = "<ui-select data-ng-model=\"model[options.key]\" theme=\"bootstrap\" on-select=\"onSelect()\" append-to-body=\"true\">\n    <ui-select-match placeholder=\"{{to.placeholder}}\">\n        {{getLabel? getLabel($select.selected): $select.selected[to.labelProp]}}\n    </ui-select-match>\n    <ui-select-choices data-repeat=\"item in to.options | filterBy: [to.labelProp]: $select.search\">\n        <div ng-bind-html=\"getLabel? getLabel(item): item[to.labelProp] | highlight: $select.search\"></div>\n    </ui-select-choices>\n</ui-select>\n\n"
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports) {
 
 	module.exports = "<ui-select multiple data-ng-model=\"model[options.key]\" theme=\"bootstrap\" append-to-body=\"true\">\n    <ui-select-match placeholder=\"{{to.placeholder}}\">\n        {{$item.name}}\n    </ui-select-match>\n    <ui-select-choices data-repeat=\"item.value as item in to.options | filterBy: ['name']: $select.search\">\n        <div ng-bind-html=\"item.name | highlight: $select.search\"></div>\n    </ui-select-choices>\n</ui-select>"
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1562,19 +1591,19 @@
 	exports.default = controller;
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"ui-select-container ui-select-multiple ui-select-bootstrap dropdown form-control\">\n    <span>\n        <button type=\"button\" class=\"ui-select-match-item btn btn-default btn-xs\"\n                style=\"min-width: 30px;\"\n                ng-click=\"model[options.key].splice($index,1)\"\n                ng-repeat=\"item in model[options.key] track by $index\">\n            {{item}}\n        </button>\n    </span>\n    <div class=\"btn-group\" uib-dropdown>\n        <input class=\"ui-select-search input-xs\" uib-dropdown-toggle>\n        <ul uib-dropdown-menu role=\"menu\" aria-labelledby=\"single-button\">\n            <li role=\"menuitem\" ng-repeat=\"option in to.options track by $index\">\n                <a ng-click=\"add(option.value)\">{{option.name}}</a>\n            </li>\n        </ul>\n    </div>\n</div>"
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"checkbox\">\n\t<label>\n\t\t<input type=\"checkbox\"\n           class=\"formly-field-checkbox\"\n\t\t       ng-model=\"model[options.key]\">\n\t\t{{to.label}}\n\t\t{{to.required ? '*' : ''}}\n\t</label>\n</div>\n"
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1604,13 +1633,13 @@
 	exports.default = controller;
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports) {
 
 	module.exports = "<formly-form fields=\"_fields\"\n             model=\"_model\"\n             options=\"{formState:_formState}\"\n             form=\"form\">\n</formly-form>"
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1642,52 +1671,58 @@
 	exports.default = controller;
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(58);
 
 /***/ },
-/* 49 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = (__webpack_require__(2))(60);
-
-/***/ },
 /* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(33);
+	module.exports = (__webpack_require__(2))(59);
 
 /***/ },
 /* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(34);
+	module.exports = (__webpack_require__(2))(60);
 
 /***/ },
 /* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(53);
+	module.exports = (__webpack_require__(2))(33);
 
 /***/ },
 /* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(54);
+	module.exports = (__webpack_require__(2))(34);
 
 /***/ },
 /* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
+	module.exports = (__webpack_require__(2))(53);
+
+/***/ },
+/* 55 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = (__webpack_require__(2))(54);
+
+/***/ },
+/* 56 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(55);
+	var content = __webpack_require__(57);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(57)(content, {});
+	var update = __webpack_require__(59)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -1704,10 +1739,10 @@
 	}
 
 /***/ },
-/* 55 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(56)();
+	exports = module.exports = __webpack_require__(58)();
 	// imports
 	
 	
@@ -1718,19 +1753,19 @@
 
 
 /***/ },
-/* 56 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(36);
 
 /***/ },
-/* 57 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(52);
 
 /***/ },
-/* 58 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;// TinyColor v1.3.0
@@ -2902,193 +2937,187 @@
 
 
 /***/ },
-/* 59 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(61);
 
 /***/ },
-/* 60 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(62);
 
 /***/ },
-/* 61 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(64);
 
 /***/ },
-/* 62 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(67);
 
 /***/ },
-/* 63 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(66);
 
 /***/ },
-/* 64 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(68);
 
 /***/ },
-/* 65 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(69);
 
 /***/ },
-/* 66 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = (__webpack_require__(2))(71);
-
-/***/ },
-/* 67 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = (__webpack_require__(2))(139);
-
-/***/ },
 /* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(140);
+	module.exports = (__webpack_require__(2))(138);
 
 /***/ },
 /* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(142);
+	module.exports = (__webpack_require__(2))(139);
 
 /***/ },
 /* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(144);
+	module.exports = (__webpack_require__(2))(142);
 
 /***/ },
 /* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(145);
+	module.exports = (__webpack_require__(2))(144);
 
 /***/ },
 /* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(147);
+	module.exports = (__webpack_require__(2))(145);
 
 /***/ },
 /* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(148);
+	module.exports = (__webpack_require__(2))(147);
 
 /***/ },
 /* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(149);
+	module.exports = (__webpack_require__(2))(148);
 
 /***/ },
 /* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(151);
+	module.exports = (__webpack_require__(2))(149);
 
 /***/ },
 /* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(152);
+	module.exports = (__webpack_require__(2))(151);
 
 /***/ },
 /* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(215);
+	module.exports = (__webpack_require__(2))(214);
 
 /***/ },
 /* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(216);
+	module.exports = (__webpack_require__(2))(215);
 
 /***/ },
 /* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(224);
+	module.exports = (__webpack_require__(2))(216);
 
 /***/ },
 /* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(217);
+	module.exports = (__webpack_require__(2))(224);
 
 /***/ },
 /* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(219);
+	module.exports = (__webpack_require__(2))(217);
 
 /***/ },
 /* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(220);
+	module.exports = (__webpack_require__(2))(219);
 
 /***/ },
 /* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(221);
+	module.exports = (__webpack_require__(2))(220);
 
 /***/ },
 /* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(222);
+	module.exports = (__webpack_require__(2))(221);
 
 /***/ },
 /* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(223);
+	module.exports = (__webpack_require__(2))(222);
 
 /***/ },
 /* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(225);
+	module.exports = (__webpack_require__(2))(223);
 
 /***/ },
 /* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(227);
+	module.exports = (__webpack_require__(2))(225);
 
 /***/ },
 /* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(229);
+	module.exports = (__webpack_require__(2))(228);
 
 /***/ },
 /* 89 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = "<div ng-if=\"vm.showJson()\">\n    <button style=\"width: 60px\"\n            popover-placement=\"bottom\"\n            popover-is-open=\"vm.isOpen\"\n            uib-popover-template=\"'editable-formly.html'\"\n            class=\"btn btn-white btn-xs\">\n        edit\n    </button>\n</div>\n<span popover-placement=\"bottom\"\n      popover-is-open=\"vm.isOpen\"\n      uib-popover-template=\"'editable-formly.html'\"\n      popover-append-to-body=\"true\"\n      style=\"cursor: pointer\"\n      ng-class=\"{'cms-empty-value': vm.isValueUndefined}\"\n      ng-if=\"!vm.showJson()\">\n    {{!vm.isValueUndefined? vm.value: 'empty'}}\n</span>"
+	module.exports = (__webpack_require__(2))(229);
 
 /***/ },
 /* 90 */
+/***/ function(module, exports) {
+
+	module.exports = "<div ng-if=\"vm.showJson()\">\n    <button style=\"width: 60px\"\n            popover-placement=\"bottom\"\n            popover-is-open=\"vm.isOpen\"\n            popover-append-to-body=\"true\"\n            uib-popover-template=\"'editable-formly.html'\"\n            class=\"btn btn-white btn-xs\">\n        edit\n    </button>\n</div>\n<span popover-placement=\"bottom\"\n      popover-is-open=\"vm.isOpen\"\n      uib-popover-template=\"'editable-formly.html'\"\n      popover-append-to-body=\"true\"\n      style=\"cursor: pointer\"\n      ng-class=\"{'cms-empty-value': vm.isValueUndefined}\"\n      ng-if=\"!vm.showJson()\">\n    {{!vm.isValueUndefined? vm.value: 'empty'}}\n</span>"
+
+/***/ },
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3101,7 +3130,7 @@
 	
 	var _angular2 = _interopRequireDefault(_angular);
 	
-	var _cms = __webpack_require__(91);
+	var _cms = __webpack_require__(92);
 	
 	var _cms2 = _interopRequireDefault(_cms);
 	
@@ -3112,7 +3141,7 @@
 	exports.default = commonModule.name;
 
 /***/ },
-/* 91 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {"use strict";
@@ -3127,27 +3156,27 @@
 	
 	var _angular2 = _interopRequireDefault(_angular);
 	
-	__webpack_require__(92);
+	__webpack_require__(93);
 	
-	var _Type = __webpack_require__(93);
+	var _Type = __webpack_require__(94);
 	
 	var _Type2 = _interopRequireDefault(_Type);
 	
-	var _QueryBuilder = __webpack_require__(94);
+	var _QueryBuilder = __webpack_require__(95);
 	
 	var _QueryBuilder2 = _interopRequireDefault(_QueryBuilder);
 	
-	__webpack_require__(95);
+	__webpack_require__(96);
 	
-	var _uuid2 = __webpack_require__(96);
+	var _uuid2 = __webpack_require__(97);
 	
 	var _uuid3 = _interopRequireDefault(_uuid2);
 	
-	__webpack_require__(98);
-	
 	__webpack_require__(99);
 	
-	var _traverse = __webpack_require__(100);
+	__webpack_require__(100);
+	
+	var _traverse = __webpack_require__(101);
 	
 	var _traverse2 = _interopRequireDefault(_traverse);
 	
@@ -3359,7 +3388,10 @@
 	                    var fields = _ref4.fields;
 	
 	                    _fields.push.apply(_fields, _toConsumableArray(fields.map(function (field) {
-	                        return field.key;
+	                        return {
+	                            value: field.key,
+	                            label: field.templateOptions.label || field.key
+	                        };
 	                    })));
 	                });
 	                return {
@@ -3370,7 +3402,7 @@
 	            if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
 	        }
 	        return form.map(function (field) {
-	            return field.key;
+	            return { value: field.key, label: field.templateOptions.label || field.key };
 	        });
 	    }
 	
@@ -3447,13 +3479,13 @@
 	
 	    function exportAll(filename, types) {
 	        $http.post('/cms-export', { filename: filename, types: types }).then(function (res) {
-	            console.log('Export successful');
+	            confirm('Export successful');
 	        });
 	    }
 	
-	    function importAll(types) {
-	        $http.post('/cms-import', { types: types }).then(function (res) {
-	            console.log('Import successful');
+	    function importAll(types, url) {
+	        $http.post('/cms-import', { types: types, url: url }).then(function (res) {
+	            confirm('Import successful');
 	        });
 	    }
 	
@@ -3469,7 +3501,7 @@
 	    function deleteElements(type, cb) {
 	        $http.delete('/cms-types/' + type).then(function (res) {
 	            if (cb) cb();
-	            console.log('delete successful');
+	            confirm('delete successful');
 	        });
 	    }
 	
@@ -3584,14 +3616,14 @@
 	                    });
 	                    columns = _.filter(columns, function (col) {
 	                        if (_.isEmpty(config.showFields)) return true;
-	                        return config.showFields.indexOf(col) !== -1;
+	                        return config.showFields.indexOf(col.value) !== -1;
 	                    });
 	                } catch (e) {}
 	            }
 	            return {
 	                children: _children,
 	                columns: columns,
-	                text: k,
+	                text: Type.label || k,
 	                type: k,
 	                path: _path
 	            };
@@ -3703,13 +3735,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 92 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(341);
+	module.exports = (__webpack_require__(2))(439);
 
 /***/ },
-/* 93 */
+/* 94 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3754,7 +3786,7 @@
 	exports.default = TypeClass;
 
 /***/ },
-/* 94 */
+/* 95 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3765,6 +3797,8 @@
 	    value: true
 	});
 	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var QueryBuilder = function () {
@@ -3772,6 +3806,7 @@
 	        _classCallCheck(this, QueryBuilder);
 	
 	        this._part = false;
+	        this._query = [];
 	    }
 	
 	    _createClass(QueryBuilder, [{
@@ -3801,13 +3836,19 @@
 	    }, {
 	        key: 'query',
 	        value: function query(_query) {
-	            if (_query) this._query = _query;
+	            if (_query) this._query.push(_query);
 	            return this;
 	        }
 	    }, {
 	        key: 'search',
 	        value: function search(_search) {
 	            if (_search) this._search = _search;
+	            return this;
+	        }
+	    }, {
+	        key: 'populate',
+	        value: function populate(_populate) {
+	            if (_populate) this._populate = _populate;
 	            return this;
 	        }
 	    }, {
@@ -3829,11 +3870,11 @@
 	
 	            var query = undefined;
 	            if (this._search && this._query) {
-	                query = { $and: [{ $text: { $search: this._search } }, this._query] };
+	                query = { $and: [{ $text: { $search: this._search } }].concat(_toConsumableArray(this._query)) };
 	            } else if (this._search) {
 	                query = { $text: { $search: this._search } };
-	            } else if (this._query) {
-	                query = this._query;
+	            } else if (this._query.length > 0) {
+	                query = { $and: [].concat(_toConsumableArray(this._query)) };
 	            }
 	
 	            var result = {};
@@ -3843,6 +3884,7 @@
 	            if (query) result.query = query;
 	            if (this._sort) result.limit = this._sort;
 	            if (this._part) result.limit = this._part;
+	            if (this._populate) result.populate = this._populate;
 	
 	            return result;
 	        }
@@ -3854,13 +3896,13 @@
 	exports.default = QueryBuilder;
 
 /***/ },
-/* 95 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(233);
 
 /***/ },
-/* 96 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//     uuid.js
@@ -3871,7 +3913,7 @@
 	// Unique ID creation requires a high quality random # generator.  We feature
 	// detect to determine the best RNG source, normalizing to a function that
 	// returns 128-bits of randomness, since that's what's usually required
-	var _rng = __webpack_require__(97);
+	var _rng = __webpack_require__(98);
 	
 	// Maps for number <-> hex string conversion
 	var _byteToHex = [];
@@ -4049,7 +4091,7 @@
 
 
 /***/ },
-/* 97 */
+/* 98 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -4087,25 +4129,25 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 98 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(325);
 
 /***/ },
-/* 99 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(329);
 
 /***/ },
-/* 100 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(330);
 
 /***/ },
-/* 101 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -4118,9 +4160,9 @@
 	
 	var _angular2 = _interopRequireDefault(_angular);
 	
-	__webpack_require__(102);
+	__webpack_require__(103);
 	
-	var _tpl = __webpack_require__(103);
+	var _tpl = __webpack_require__(104);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -4134,7 +4176,7 @@
 	    controller.$inject = [];
 	    function controller() {
 	        var vm = this;
-	        vm.types = _.map(Types, function (v, k) {
+	        vm.types = _.map(cms.types, function (v, k) {
 	            return { type: k };
 	        });
 	
@@ -4146,7 +4188,7 @@
 	        */
 	        vm.selectType = function (type) {
 	            cms.loadElements(type, function () {
-	                vm.list = cms.data.types[type].list;
+	                vm.list = cms.types[type].list;
 	                vm._type = type;
 	            });
 	        };
@@ -4186,19 +4228,19 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 102 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(230);
 
 /***/ },
-/* 103 */
+/* 104 */
 /***/ function(module, exports) {
 
 	module.exports = "<ul role=\"menu\" class=\"dropdown-menu\" ng-init=\"vm._showType= true\">\n    <li ng-repeat=\"type in vm.types\"\n        dnd-draggable=\"type\"\n        dnd-type=\"type.type\"\n        dnd-dragstart=\"vm.start(type.type)\"\n        dnd-effect-allowed=\"move\"\n        dnd-dragend=\"vm.end()\"\n        ng-show=\"vm._showType\">\n        <a ng-click=\"vm._showType = !vm._showType;\n                    vm.selectType(type.type);\n                    $event.stopPropagation();\">\n            {{type.type}}\n        </a>\n    </li>\n    <li ng-show=\"!vm._showType\"\n        style=\"padding-left: 5px;padding-right: 20px;\">\n        <div class=\"col-xs-10\">\n            <input type=\"text\" class=\"input-xs\" ng-model=\"vm._filter\">\n        </div>\n        <div class=\"col-xs-2\">\n            <button type=\"button\" class=\"btn btn-xs btn-white\"\n                    ng-click=\"vm._showType = !vm._showType;$event.stopPropagation();\">\n                <i class=\"fa fa-times\"></i>\n            </button>\n        </div>\n    </li>\n    <li ng-repeat=\"element in vm.list\"\n        ng-init=\"_element = vm.convert(element)\"\n        dnd-draggable=\"_element\"\n        dnd-type=\"vm._type\"\n        dnd-effect-allowed=\"move\"\n        dnd-dragstart=\"vm.start(vm._type)\"\n        dnd-dragend=\"vm.end()\"\n        ng-show=\"!vm._showType\">\n        <a ng-click=\"\">{{vm.getTitle(element)}}</a>\n    </li>\n</ul>\n"
 
 /***/ },
-/* 104 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4211,45 +4253,45 @@
 	
 	var _angular2 = _interopRequireDefault(_angular);
 	
-	var _common = __webpack_require__(90);
+	var _common = __webpack_require__(91);
 	
 	var _common2 = _interopRequireDefault(_common);
 	
-	__webpack_require__(102);
+	__webpack_require__(103);
 	
-	var _module2 = __webpack_require__(10);
+	var _module2 = __webpack_require__(11);
 	
 	var _module3 = _interopRequireDefault(_module2);
 	
-	var _module4 = __webpack_require__(105);
+	var _module4 = __webpack_require__(106);
 	
 	var _module5 = _interopRequireDefault(_module4);
 	
-	__webpack_require__(11);
+	__webpack_require__(12);
 	
-	var _element = __webpack_require__(107);
+	var _element = __webpack_require__(108);
 	
 	var _element2 = _interopRequireDefault(_element);
 	
-	var _editor = __webpack_require__(108);
+	var _editor = __webpack_require__(109);
 	
 	var _editor2 = _interopRequireDefault(_editor);
 	
-	var _cmsWrapper = __webpack_require__(110);
+	var _cmsWrapper = __webpack_require__(111);
 	
 	var _cmsWrapper2 = _interopRequireDefault(_cmsWrapper);
 	
-	__webpack_require__(111);
+	__webpack_require__(112);
 	
-	var _fragment = __webpack_require__(112);
+	var _fragment = __webpack_require__(113);
 	
 	var _fragment2 = _interopRequireDefault(_fragment);
 	
-	var _container = __webpack_require__(113);
+	var _container = __webpack_require__(114);
 	
 	var _container2 = _interopRequireDefault(_container);
 	
-	var _containerEdit = __webpack_require__(115);
+	var _containerEdit = __webpack_require__(116);
 	
 	var _containerEdit2 = _interopRequireDefault(_containerEdit);
 	
@@ -4260,7 +4302,7 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 105 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -4269,11 +4311,11 @@
 	    value: true
 	});
 	
-	var _module2 = __webpack_require__(13);
+	var _module2 = __webpack_require__(14);
 	
 	var _module3 = _interopRequireDefault(_module2);
 	
-	var _tpl = __webpack_require__(106);
+	var _tpl = __webpack_require__(107);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -4342,13 +4384,63 @@
 	                });
 	            }
 	            $scope.fields = Type.form;
+	
+	            if (Type.tabs) {
+	                $scope.fields = _.map(Type.tabs, function (tab, i) {
+	                    var _tab = { title: tab.title, fields: [] };
+	                    if (i === 0) {
+	                        _tab.active = true;
+	                        _tab.isTab = true;
+	                    }
+	                    _.merge(tab, { fields: [] });
+	                    var _iteratorNormalCompletion = true;
+	                    var _didIteratorError = false;
+	                    var _iteratorError = undefined;
+	
+	                    try {
+	                        var _loop = function _loop() {
+	                            var field = _step.value;
+	
+	                            var inFirstTab = function inFirstTab() {
+	                                var result = true;
+	                                Type.tabs.forEach(function (tab, i) {
+	                                    if (i !== 0) {
+	                                        if (tab.fields.indexOf(field.key) !== -1 || field.tab === tab.title) result = false;
+	                                    }
+	                                });
+	                                return result;
+	                            };
+	                            if (field.tab === tab.title || tab.fields.indexOf(field.key) !== -1 || i === 0 && inFirstTab()) {
+	                                _tab.fields.push(field);
+	                            }
+	                        };
+	
+	                        for (var _iterator = Type.form[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                            _loop();
+	                        }
+	                    } catch (err) {
+	                        _didIteratorError = true;
+	                        _iteratorError = err;
+	                    } finally {
+	                        try {
+	                            if (!_iteratorNormalCompletion && _iterator.return) {
+	                                _iterator.return();
+	                            }
+	                        } finally {
+	                            if (_didIteratorError) {
+	                                throw _iteratorError;
+	                            }
+	                        }
+	                    }
+	
+	                    return _tab;
+	                });
+	            }
+	
 	            $scope.type = type;
 	
-	            var post = function post() {
-	                return $http.post('api/v1/' + type + '/' + ref, JsonFn.stringify($scope.model));
-	            };
 	            $scope.submit = function () {
-	                post().then(function () {
+	                cms.updateElement($scope.type, $scope.model, function () {
 	                    $uibModalInstance.close();
 	                    console.log('update element successful');
 	                }, function () {
@@ -4357,7 +4449,7 @@
 	            };
 	
 	            $scope.apply = function () {
-	                post().then();
+	                cms.updateElement($scope.type, $scope.model);
 	            };
 	
 	            $scope.cancel = function () {
@@ -4420,13 +4512,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 106 */
+/* 107 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms-wrapper cms\"\n     ng-init=\"_showId = false;\">\n\n    <div style=\"position: absolute;right: 10px;\">\n        <button class=\"btn btn-xs btn-white\"\n                ng-click=\"_showId=!_showId;\"\n                ng-bind=\"_showId?'hide id':'show id'\">\n        </button>\n        <button type=\"button\" class=\"btn btn-xs btn-white\" ng-bind=\"vm.fullScreenText\"\n                ng-click=\"vm.changeScreenSize();\"></button>\n    </div>\n\n    <h3 style=\"font-weight: 300;\">Edit {{vm.cmsType}} {{_showId?'('+vm.cmsModel._id+')':''}}:</h3>\n\n    <form ng-submit=\"vm.onSubmit()\"\n          novalidate\n          class=\"cms-form form-horizontal\">\n\n        <uib-tabset ng-if=\"vm.isTab\">\n            <uib-tab ng-repeat=\"tab in vm.cmsFields\"\n                     heading=\"{{tab.title}}\"\n                     active=\"tab.active\">\n                <br>\n                <formly-form model=\"vm.cmsModel\" fields=\"tab.fields\"\n                             form=\"vm.form\" options=\"vm.options\">\n                </formly-form>\n            </uib-tab>\n        </uib-tabset>\n\n        <div>\n            <br>\n            <formly-form model=\"vm.cmsModel\" fields=\"vm.cmsFields\"\n                         form=\"vm.form\" options=\"vm.options\" ng-if=\"!vm.isTab\">\n            </formly-form>\n        </div>\n\n        <div class=\"form-group\">\n            <div class=\"col-sm-offset-2 col-sm-10\">\n                <button type=\"submit\" class=\"btn btn-primary submit-button\" ng-disabled=\"vm.form.$invalid\">Submit\n                </button>\n                <button type=\"button\" class=\"btn btn-primary\" ng-click=\"vm.onApply()\">Apply</button>\n                <button type=\"button\" class=\"btn btn-primary\" ng-click=\"vm.onAdd()\">Save and Add</button>\n                <button type=\"button\" class=\"btn btn-primary\" ng-click=\"vm.onCancel()\">Cancel</button>\n\n            </div>\n        </div>\n    </form>\n</div>"
 
 /***/ },
-/* 107 */
+/* 108 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4471,6 +4563,7 @@
 	                return;
 	            }
 	            vm.element.ref = model._id;
+	            vm.element.containers = vm.element.containers || {};
 	            if (!ref) cms.updateContainerPage();
 	            Type = Types[type];
 	            render();
@@ -4636,7 +4729,7 @@
 	exports.default = elementDirective;
 
 /***/ },
-/* 108 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4645,7 +4738,7 @@
 	    value: true
 	});
 	
-	var _editor = __webpack_require__(109);
+	var _editor = __webpack_require__(110);
 	
 	var _editor2 = _interopRequireDefault(_editor);
 	
@@ -4765,13 +4858,13 @@
 	exports.default = directive;
 
 /***/ },
-/* 109 */
+/* 110 */
 /***/ function(module, exports) {
 
 	module.exports = "<div context-menu=\"menu\"\n     ng-style=\"{display:vm.cmsMenu === 'true'?'inline-block':'block'}\">\n    <div ng-if=\"vm.cmsMenu !== 'true'\" class=\"cms cms-element-wrapper\" ng-style=\"vm.editorIcon\">\n        <div class=\"cms-element-controll-icon label label-primary\" style=\"font-size: 13px\"\n             ng-mouseover=\"vm.showControl()\" ng-show=\"vm.getControlVisible()\">\n            <i class=\"fa fa-circle-o-notch\"></i>\n        </div>\n\n        <div class=\"cms-element-controll\"\n             ng-mouseover=\"vm.__showControl = true\"\n             ng-mouseleave=\"vm.__showControl = false\"\n             ng-show=\"vm._showControl || vm.__showControl\">\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.edit()\">\n                <i class=\"fa fa-pencil-square-o\"></i>\n            </button>\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.removeByDatabase()\">\n                <i class=\"fa fa-trash\"></i>\n            </button>\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.remove()\">\n                <i class=\"fa fa-trash-o\"></i>\n            </button>\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.copy()\">\n                <i class=\"fa fa-files-o\"></i>\n            </button>\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.cmsRefresh()\">\n                <i class=\"fa fa-refresh\"></i>\n            </button>\n        </div>\n\n    </div>\n    <ng-transclude></ng-transclude>\n</div>"
 
 /***/ },
-/* 110 */
+/* 111 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4891,13 +4984,13 @@
 	exports.default = directive;
 
 /***/ },
-/* 111 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(231);
 
 /***/ },
-/* 112 */
+/* 113 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4949,7 +5042,7 @@
 	exports.default = directive;
 
 /***/ },
-/* 113 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4958,7 +5051,7 @@
 	    value: true
 	});
 	
-	var _container = __webpack_require__(114);
+	var _container = __webpack_require__(115);
 	
 	var _container2 = _interopRequireDefault(_container);
 	
@@ -5018,13 +5111,13 @@
 	exports.default = directive;
 
 /***/ },
-/* 114 */
+/* 115 */
 /***/ function(module, exports) {
 
 	module.exports = "<i class=\"fa fa-circle-o-notch cms-element-controll-icon\"\n   ng-mouseover=\"vm.showControl()\"\n   ng-show=\"!vm._showControl && (vm.editState.editMode === 1)\"></i>\n<div class=\"cms-element-controll\"\n     ng-mouseover=\"vm.__showControl = true\"\n     ng-mouseleave=\"vm.__showControl = false\"\n     ng-show=\"vm._showControl || vm.__showControl\">\n    <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"\">\n        <i class=\"fa fa-plus\"></i>\n    </button>\n</div>\n<div class=\"{{vm.cmsInline === 'true'?'cms-containers-inline':'cms-containers'}}\"\n     dnd-list=\"vm.elements\"\n     dnd-disable-if=\"vm.elements.length > 0 && vm.elements[0].binding\"\n     dnd-allowed-types=\"vm.allowedTypes\"\n     dnd-horizontal-list=\"{{vm.cmsInline}}\"\n     ng-class=\"{'cms-panel-highlight':vm.highlight()}\">\n    <div ng-repeat=\"element in vm.elements\"\n         dnd-disable-if=\"element.binding || !vm.matchEditMode(element.type)\"\n         dnd-draggable=\"element\"\n         dnd-type=\"element.type\"\n         dnd-moved=\"vm.elements.splice($index, 1);\"\n         dnd-effect-allowed=\"move\"\n         dnd-dragstart=\"vm.start(element.type)\"\n         dnd-dragend=\"vm.end();\"\n         cms-element=\"element\"\n         cms-path=\"{{vm.path}}.elements[{{$index}}]\"\n         class=\"{{vm.cmsInline === 'true'?'cms-element':''}}\"\n    ></div>\n</div>\n"
 
 /***/ },
-/* 115 */
+/* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -5033,11 +5126,11 @@
 	    value: true
 	});
 	
-	var _containerEdit = __webpack_require__(116);
+	var _containerEdit = __webpack_require__(117);
 	
 	var _containerEdit2 = _interopRequireDefault(_containerEdit);
 	
-	var _traverse = __webpack_require__(100);
+	var _traverse = __webpack_require__(101);
 	
 	var _traverse2 = _interopRequireDefault(_traverse);
 	
@@ -5120,13 +5213,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 116 */
+/* 117 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms-container-panel panel panel-default ui-widget-content\"\n     ng-show=\"vm.editState.showContainerEdit\"\n     style=\"position: fixed; top: 70px; right: 50px;width: 300px;height: 600px;z-index:1000\">\n    <div class=\"panel-heading\" style=\"padding: 0px 0px 0px 10px;height: 26px;cursor: move\">\n        <div class=\"panel-title\">\n            <h5>Edit panel</h5>\n        </div>\n    </div>\n    <div class=\"panel-body\">\n        <div js-tree=\"vm.treeConfig\" ng-model=\"vm.tree\"\n             tree-events=\"changed:vm.selectNode\" tree=\"vm.treeInstance\"></div>\n    </div>\n</div>"
 
 /***/ },
-/* 117 */
+/* 118 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5141,11 +5234,7 @@
 	
 	var _angular2 = _interopRequireDefault(_angular);
 	
-	__webpack_require__(11);
-	
-	__webpack_require__(50);
-	
-	__webpack_require__(51);
+	__webpack_require__(12);
 	
 	__webpack_require__(52);
 	
@@ -5153,7 +5242,11 @@
 	
 	__webpack_require__(54);
 	
-	var _tpl = __webpack_require__(118);
+	__webpack_require__(55);
+	
+	__webpack_require__(56);
+	
+	var _tpl = __webpack_require__(119);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -5278,13 +5371,13 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 118 */
+/* 119 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms-wrapper animated fadeInRight cms-sidebar cms\">\n    <button type=\"button\" class=\"btn btn-sm btn-white cms-close-position\"\n            ng-click=\"cancel()\">\n        <i class=\"fa fa-times\"></i>\n    </button>\n\n    <div class=\"col-xs-6 col-sm-4 pull-right cms-controll-panel-right\">\n        <div ng-show=\"node\">\n            <h4>Information: </h4>\n            <h5 style=\"word-break: break-all;\">Name: {{node.text}}</h5>\n            <h5 style=\"word-break: break-all;\">Type: {{node.type}}</h5>\n            <h5 style=\"word-break: break-all;\">Path: {{node.path}}</h5>\n            <br>\n\n            <div class=\"btn-group\">\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        ng-click=\"open()\">\n                    Open page\n                </button>\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        ng-click=\"deletePage()\">\n                    Delete\n                </button>\n            </div>\n            <form role=\"form\" ng-submit=\"makeTemplate(templateName);templateName = '';\">\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        type=\"submit\" style=\"position: absolute;right: 15px;\"\n                        ng-disabled=\"!templateName\">\n                    Make template page\n                </button>\n                <input ng-model=\"templateName\" type=\"text\" class=\"form-control input-xs\" placeholder=\"template name\">\n            </form>\n            <form role=\"form\" ng-submit=\"createPage(template.selected, pageName);pageName = '';\">\n                <ui-select class=\"cms-select\" ng-model=\"template.selected\" theme=\"bootstrap\" ng-disabled=\"disabled\"\n                           style=\"min-width: 60px;\">\n                    <ui-select-match placeholder=\"Select a template page\">{{$select.selected}}</ui-select-match>\n                    <ui-select-choices repeat=\"_template in templates\">\n                        {{_template}}\n                    </ui-select-choices>\n                </ui-select>\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        type=\"submit\" style=\"position: absolute;right: 15px;\"\n                        ng-disabled=\"!pageName || !template.selected\">\n                    Create new page\n                </button>\n                <input ng-model=\"pageName\" type=\"text\" class=\"form-control input-xs\" placeholder=\"page name\">\n            </form>\n\n            <form role=\"form\" ng-submit=\"renamePage(newPageName);newPageName = '';\">\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        type=\"submit\" style=\"position: absolute;right: 15px;\"\n                        ng-disabled=\"!newPageName\">\n                    Rename\n                </button>\n                <input ng-model=\"newPageName\" type=\"text\" class=\"form-control input-xs\" placeholder=\"page name\">\n            </form>\n\n            <form role=\"form\" ng-submit=\"onFileSelect(files);\">\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        type=\"submit\" style=\"position: absolute;right: 15px;\">\n                    Up\n                </button>\n                <input type=\"file\" ngf-select ng-model=\"files\"\n                       ngf-multiple=\"true\" name=\"file\" class=\"form-control input-xs\"\n                       placeholder=\"file upload\">\n            </form>\n\n        </div>\n    </div>\n\n    <h2>Sitemaps:</h2>\n\n    <div js-tree=\"treeConfig\" ng-model=\"tree\"\n         tree-events=\"changed:selectNode\"></div>\n</div>\n"
 
 /***/ },
-/* 119 */
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5297,7 +5390,7 @@
 	
 	var _angular2 = _interopRequireDefault(_angular);
 	
-	var _tpl = __webpack_require__(120);
+	var _tpl = __webpack_require__(121);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -5336,13 +5429,13 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 120 */
+/* 121 */
 /***/ function(module, exports) {
 
 	module.exports = "<div style=\"margin-top: 7px;cursor: pointer;\">\n    <ui-select data-ng-model=\"vm.editState.editMode\" theme=\"bootstrap\" on-select=\"vm.onSelect($item)\">\n        <ui-select-match placeholder=\"\">\n            {{$select.selected.label}}&nbsp;&nbsp;&nbsp;\n        </ui-select-match>\n        <ui-select-choices data-repeat=\"item.value as item in vm.modes | filterBy: ['label']: $select.search\">\n            <div ng-bind-html=\"item.label | highlight: $select.search\"></div>\n        </ui-select-choices>\n    </ui-select>\n</div>\n"
 
 /***/ },
-/* 121 */
+/* 122 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5355,11 +5448,7 @@
 	
 	var _angular2 = _interopRequireDefault(_angular);
 	
-	__webpack_require__(11);
-	
-	__webpack_require__(50);
-	
-	__webpack_require__(51);
+	__webpack_require__(12);
 	
 	__webpack_require__(52);
 	
@@ -5367,37 +5456,43 @@
 	
 	__webpack_require__(54);
 	
-	var _module2 = __webpack_require__(104);
+	__webpack_require__(55);
+	
+	__webpack_require__(56);
+	
+	var _module2 = __webpack_require__(105);
 	
 	var _module3 = _interopRequireDefault(_module2);
 	
-	var _module4 = __webpack_require__(105);
+	var _module4 = __webpack_require__(106);
 	
 	var _module5 = _interopRequireDefault(_module4);
 	
-	var _cmsList = __webpack_require__(122);
+	var _cmsList = __webpack_require__(123);
 	
 	var _cmsList2 = _interopRequireDefault(_cmsList);
 	
-	var _importService2 = __webpack_require__(124);
+	var _importService2 = __webpack_require__(125);
 	
 	var _importService3 = _interopRequireDefault(_importService2);
 	
-	var _exportService2 = __webpack_require__(126);
+	var _exportService2 = __webpack_require__(127);
 	
 	var _exportService3 = _interopRequireDefault(_exportService2);
 	
-	var _tpl = __webpack_require__(128);
+	var _tpl = __webpack_require__(129);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
-	var _QueryBuilder = __webpack_require__(94);
+	var _QueryBuilder = __webpack_require__(95);
 	
 	var _QueryBuilder2 = _interopRequireDefault(_QueryBuilder);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	var _module = _angular2.default.module('components.cmsAdmin', ['ui.bootstrap', 'ngJsTree', 'ui.select', _module3.default, _module5.default]).factory('importService', _importService3.default).factory('exportService', _exportService3.default).directive('cmsAdmin', directive).directive('cmsList', _cmsList2.default);
 	
@@ -5437,45 +5532,100 @@
 	                    var onlyChangePage = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
 	                    var changeAdminList = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 	
-	                    if (!$scope.node) return;
-	
-	                    $scope.list.length = 0;
-	                    $scope.element = {};
 	                    $timeout(function () {
-	                        if (changeAdminList) {
-	                            $scope.tree = cms.getAdminList();
-	                            $scope.treeConfig.version++;
+	                        if (!$scope.node) return;
+	
+	                        $scope.list.length = 0;
+	                        $scope.loading = true;
+	
+	                        $scope.element = {};
+	                        $timeout(function () {
+	                            if (changeAdminList) {
+	                                $scope.tree = cms.getAdminList();
+	                                $scope.treeConfig.version++;
+	                            }
+	                        });
+	
+	                        var paramsBuilder = new _QueryBuilder2.default().part(false).limit($scope.page.limit).page($scope.page.currentPage).query($scope.node.query);
+	                        _.each($scope.queries, function (q) {
+	                            if (q.model) {
+	                                var val = q.model[q.path.split('\.').pop()];
+	                                if (val) {
+	                                    if (q.fn) {
+	                                        var result = q.fn(val, _.dropRight(q.path.split('\.'), 1).join('\.'), q.path.split('\.').pop());
+	                                        if (result.populate) {
+	                                            paramsBuilder.populate(result.populate);
+	                                        } else if (result.$where) {
+	                                            paramsBuilder.query(result);
+	                                        } else {
+	                                            paramsBuilder.query(_defineProperty({}, q.path, result));
+	                                        }
+	                                    } else if (val.name !== 'None') {
+	                                        paramsBuilder.query(_defineProperty({}, q.path, val));
+	                                    }
+	                                }
+	                            }
+	                        });
+	                        if (!_.isEmpty($scope.search.text)) {
+	                            paramsBuilder.search($scope.search.text);
 	                        }
+	
+	                        console.time("loadElements");
+	                        cms.loadElements($scope.node.type, function (list) {
+	                            var _$scope$list;
+	
+	                            $scope.loading = false;
+	                            console.timeEnd("loadElements");
+	                            (_$scope$list = $scope.list).push.apply(_$scope$list, _toConsumableArray(list));
+	                        }, paramsBuilder);
+	
+	                        // number of pages;
+	                        if (!onlyChangePage) cms.countElements($scope.node.type, function (count) {
+	                            $scope.page.size = count;
+	                        }, paramsBuilder);
 	                    });
-	
-	                    var paramsBuilder = new _QueryBuilder2.default().part(false).limit($scope.page.limit).page($scope.page.currentPage).query($scope.node.query);
-	                    if (!_.isEmpty($scope.search.text)) {
-	                        paramsBuilder.search($scope.search.text);
-	                    }
-	
-	                    console.time("loadElements");
-	                    cms.loadElements($scope.node.type, function (list) {
-	                        var _$scope$list;
-	
-	                        console.timeEnd("loadElements");
-	                        var Type = cms.data.types[$scope.node.type];
-	                        (_$scope$list = $scope.list).push.apply(_$scope$list, _toConsumableArray(list));
-	                    }, paramsBuilder);
-	
-	                    // number of pages;
-	                    if (!onlyChangePage) cms.countElements($scope.node.type, function (count) {
-	                        $scope.page.size = count;
-	                    }, paramsBuilder);
 	                };
+	
+	                $scope.watchs = [];
 	
 	                // onclick
 	                $scope.selectNode = function (e, select) {
 	                    var _node = JsonFn.clone(select && select.node ? select.node.original : null);
 	                    $scope.node = _.get($scope.tree, _node.path);
-	
 	                    var config = getConfig();
+	
+	                    $scope.elementClass = cms.types[$scope.node.type].info.elementClass;
+	
 	                    $scope.showAs.type = 'table';
 	                    if (config && config.showAs) $scope.showAs.type = config.showAs;
+	
+	                    $scope.watchs.forEach(function (listen) {
+	                        return listen();
+	                    });
+	                    $scope.watchs.length = 0;
+	
+	                    $scope.queries = null;
+	
+	                    if (config && config.query) {
+	
+	                        $scope.queries = JsonFn.clone(config.query.filter(function (q) {
+	                            return q.choice === 'builtIn';
+	                        }).map(function (q) {
+	                            return q.builtIn;
+	                        }).map(function (k) {
+	                            return _.find(cms.types[$scope.node.type].queries, { path: k });
+	                        }), true);
+	
+	                        $scope.queries.forEach(function (q, index) {
+	                            if (!q.form) q.form = [_angular2.default.copy(_.get(cms.types[$scope.node.type].form, q.pathInForm))];
+	                            _.merge(q.form[0], { templateOptions: { class: 'col-xs-2' } }, { defaultValue: q.default });
+	                            var listen = $scope.$watch('queries[' + index + '].model', function (m1, m2) {
+	                                if (typeof m2 === 'undefined') return;
+	                                $scope.refresh();
+	                            }, true);
+	                            $scope.watchs.push(listen);
+	                        });
+	                    }
 	
 	                    $scope.refresh();
 	                };
@@ -5550,6 +5700,15 @@
 	                };
 	
 	                $scope.getTitle = cms.getTitle;
+	
+	                $scope.selectElement = function (_id) {
+	                    $timeout(function () {
+	                        $scope.element._id = null;
+	                        $timeout(function () {
+	                            $scope.element._id = _id;
+	                        });
+	                    });
+	                };
 	            }
 	
 	            $uibModal.open({
@@ -5577,7 +5736,7 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 122 */
+/* 123 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5586,7 +5745,7 @@
 	    value: true
 	});
 	
-	var _cmsList = __webpack_require__(123);
+	var _cmsList = __webpack_require__(124);
 	
 	var _cmsList2 = _interopRequireDefault(_cmsList);
 	
@@ -5614,13 +5773,13 @@
 	exports.default = directive;
 
 /***/ },
-/* 123 */
+/* 124 */
 /***/ function(module, exports) {
 
 	module.exports = ""
 
 /***/ },
-/* 124 */
+/* 125 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5629,7 +5788,7 @@
 	    value: true
 	});
 	
-	var _importService = __webpack_require__(125);
+	var _importService = __webpack_require__(126);
 	
 	var _importService2 = _interopRequireDefault(_importService);
 	
@@ -5735,7 +5894,7 @@
 	                    } }
 	            });
 	            modal2.result.then(function (types) {
-	                cms.importAll(types);
+	                cms.importAll(types, _url);
 	            });
 	        });
 	    }
@@ -5748,13 +5907,13 @@
 	exports.default = service;
 
 /***/ },
-/* 125 */
+/* 126 */
 /***/ function(module, exports) {
 
 	module.exports = "<div style=\"padding: 20px\">\n    <div class=\"panel panel-default\">\n        <div class=\"panel-body\">\n            <div js-tree=\"treeConfig\" ng-model=\"tree\"\n                 tree=\"treeInstance\"\n                 tree-events=\"changed:selectNode\"></div>\n        </div>\n    </div>\n    <br><br>\n    <button type=\"button\" class=\"btn btn-primary submit-button\" ng-click=\"choose()\">Choose</button>\n    <button type=\"button\" class=\"btn btn-primary\" ng-click=\"cancel()\">Cancel</button>\n</div>\n"
 
 /***/ },
-/* 126 */
+/* 127 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5763,7 +5922,7 @@
 	    value: true
 	});
 	
-	var _exportService = __webpack_require__(127);
+	var _exportService = __webpack_require__(128);
 	
 	var _exportService2 = _interopRequireDefault(_exportService);
 	
@@ -5811,19 +5970,19 @@
 	exports.default = service;
 
 /***/ },
-/* 127 */
+/* 128 */
 /***/ function(module, exports) {
 
 	module.exports = "<div style=\"padding: 20px\">\n    <form role=\"form\" class=\"form-horizontal\">\n        <div class=\"form-group\">\n            <label class=\"col-sm-12\">Filename:</label>\n            <div class=\"col-sm-12\"><input type=\"text\" ng-model=\"filename\"></div>\n        </div>\n        <div class=\"form-group\">\n            <label class=\"col-sm-12\">Select Types:</label>\n            <div class=\"col-sm-12\">\n                <ui-select data-ng-model=\"data.types\" multiple theme=\"bootstrap\">\n                    <ui-select-match placeholder=\"Choose company\">{{$item.name}}</ui-select-match>\n                    <ui-select-choices\n                            data-repeat=\"item.value as item in types | filterBy: ['name']: $select.search\">\n                        <div ng-bind-html=\"item.name | highlight: $select.search\"></div>\n                    </ui-select-choices>\n                </ui-select>\n            </div>\n        </div>\n    </form>\n    <br><br>\n    <button type=\"button\" class=\"btn btn-primary submit-button\" ng-click=\"choose()\">Choose</button>\n    <button type=\"button\" class=\"btn btn-primary\" ng-click=\"cancel()\">Cancel</button>\n</div>\n"
 
 /***/ },
-/* 128 */
+/* 129 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"cms-wrapper animated fadeInRight cms-sidebar cms\">\n    <button type=\"button\" class=\"btn btn-sm btn-white cms-close-position\"\n            ng-click=\"cancel()\">\n        <i class=\"fa fa-times\"></i>\n    </button>\n\n    <br>\n    <div class=\"row\">\n        <div class=\"col-xs-3 cms-panel\">\n            <div class=\"panel panel-primary\">\n                <div class=\"panel-heading\">Types</div>\n                <div class=\"panel-body\">\n                    <div js-tree=\"treeConfig\" ng-model=\"tree\"\n                         tree-events=\"changed:selectNode\" tree=\"treeInstance\"></div>\n                </div>\n            </div>\n        </div>\n        <div class=\"col-xs-9 cms-panel\">\n            <div class=\"panel panel-primary\">\n                <div class=\"panel-heading\">\n                    <div class=\"cms-admin-right-panel\">\n                        <label style=\"color: white\"> Show : </label>\n\n                        <ui-select style=\"min-width: 50px;margin-left: 10px;margin-right: 10px;\"\n                                   class=\"cms-select\" data-ng-model=\"page.limit\" theme=\"bootstrap\"\n                                   on-select=\"refresh()\">\n                            <ui-select-match placeholder=\"\">{{$select.selected}}&nbsp;&nbsp;</ui-select-match>\n                            <ui-select-choices data-repeat=\"item in [10,25,50,100,200]\">{{item}}</ui-select-choices>\n                        </ui-select>\n\n                        <ui-select style=\"min-width: 60px;margin-left: 10px;margin-right: 10px;\"\n                                   class=\"cms-select\" data-ng-model=\"showAs.type\" theme=\"bootstrap\"\n                                   on-select=\"refresh()\">\n                            <ui-select-match placeholder=\"\">\n                                {{$select.selected.label}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</ui-select-match>\n                            <ui-select-choices\n                                    data-repeat=\"item.value as item in [{value:'list',label:'List'},{value:'table',label:'Table'},{value:'element',label:'Element'}]\">\n                                {{item.label}}\n                            </ui-select-choices>\n                        </ui-select>\n\n                        <button class=\"btn btn-white btn-xs\" style=\"margin-right: 10px;\"\n                                ng-click=\"deleteAll()\">\n                            Delete all\n                        </button>\n\n                        <button class=\"btn btn-white btn-xs\" style=\"margin-right: 10px;\" ng-click=\"import()\">\n                            Import\n                        </button>\n\n                        <button class=\"btn btn-white btn-xs\" style=\"margin-right: 10px;\" ng-click=\"export()\">\n                            Export\n                        </button>\n\n                        <button class=\"btn btn-white btn-xs\" style=\"margin-right: 10px;\"\n                                ng-click=\"setting()\">\n                            Setting\n                        </button>\n\n                        <button class=\"btn btn-white btn-xs\" ng-click=\"add()\">\n                            Add\n                        </button>\n\n                    </div>\n\n                    <input type=\"text\" class=\"form-control input-xs\"\n                           style=\"margin-left: 10px;width: 100px;display: inline-block;\"\n                           ng-model=\"search.text\" ng-model-options=\"{debounce: 300}\" placeholder=\"search ...\">\n\n                </div>\n                <div class=\"panel-body\" ng-if=\"node\">\n\n                    <div style=\"width: 100%;overflow-x: auto\" ng-if=\"showAs.type === 'table'\">\n                        <table class=\"table cms-admin-table\">\n                            <thead>\n                            <tr>\n                                <th ng-repeat=\"col in node.columns track by $index\" ng-bind=\"col\"></th>\n                                <th>Edit</th>\n                            </tr>\n                            </thead>\n                            <tbody>\n                            <tr ng-repeat=\"element in list track by $index\">\n                                <td ng-repeat=\"col in node.columns track by $index\">\n                                <span cms-direct-editable=\"model.{{col}}\"\n                                      cms-value=\"element[col]\"\n                                      cms-ref=\"{{element._id}}\"\n                                      cms-type=\"{{node.type}}\"></span>\n                                </td>\n                                <td>\n                                    <div cms-editor=\"{ref: element._id, type: node.type}\"\n                                         cms-remove=\"remove(element)\"></div>\n                                </td>\n                            </tr>\n                            </tbody>\n                        </table>\n                    </div>\n\n                    <div class=\"cms-panel-list-content\" ng-if=\"showAs.type === 'list'\">\n                        <div ng-repeat=\"element in list track by $index\"\n                             cms-element=\"{ref: element._id, type: node.type, containers: {}}\"\n                             dnd-moved=\"remove(element)\"\n                             inline=\"false\"></div>\n                    </div>\n\n                    <div class=\"\" ng-if=\"showAs.type === 'element'\">\n                        <button class=\"btn cms-btn btn-primary btn-outline btn-xs\" style=\"margin-right: 10px;\" ng-repeat=\"e in list track by $index\"\n                            ng-click=\"element._id = e._id; apply()\">\n                            {{getTitle(node.type, e._id)}}\n                        </button>\n                        <br><br>\n\n                        <div ng-if=\"element._id\"\n                             cms-element=\"{ref: element._id, type: node.type, containers: {}}\"\n                             inline=\"false\"></div>\n                    </div>\n\n                    <uib-pagination ng-show=\"page.size > 1\" total-items=\"page.size\" ng-model=\"page.currentPage\"\n                                    class=\"pagination-sm\"\n                                    items-per-page=\"page.limit\"\n                                    ng-change=\"refresh(true)\"></uib-pagination>\n\n                </div>\n            </div>\n        </div>\n    </div>\n\n</div>\n"
+	module.exports = "<div class=\"cms-wrapper animated fadeInRight cms-sidebar cms\">\n    <button type=\"button\" class=\"btn btn-sm btn-white cms-close-position\"\n            ng-click=\"cancel()\">\n        <i class=\"fa fa-times\"></i>\n    </button>\n\n    <br>\n    <div class=\"row\">\n        <div class=\"col-xs-3 cms-panel\">\n            <div class=\"panel panel-primary\">\n                <div class=\"panel-heading\">Types</div>\n                <div class=\"panel-body\">\n                    <div js-tree=\"treeConfig\" ng-model=\"tree\"\n                         tree-events=\"changed:selectNode\" tree=\"treeInstance\"></div>\n                </div>\n            </div>\n        </div>\n        <div class=\"col-xs-9 cms-panel\">\n            <div class=\"panel panel-primary\">\n                <div class=\"panel-heading\">\n                    <div class=\"cms-admin-right-panel\">\n                        <label style=\"color: white\"> Show : </label>\n\n                        <ui-select style=\"min-width: 50px;margin-left: 10px;margin-right: 10px;\"\n                                   class=\"cms-select\" data-ng-model=\"page.limit\" theme=\"bootstrap\"\n                                   on-select=\"refresh()\">\n                            <ui-select-match placeholder=\"\">{{$select.selected}}&nbsp;&nbsp;</ui-select-match>\n                            <ui-select-choices data-repeat=\"item in [10,25,50,100,200]\">{{item}}</ui-select-choices>\n                        </ui-select>\n\n                        <ui-select style=\"min-width: 60px;margin-left: 10px;margin-right: 10px;\"\n                                   class=\"cms-select\" data-ng-model=\"showAs.type\" theme=\"bootstrap\"\n                                   on-select=\"refresh()\">\n                            <ui-select-match placeholder=\"\">\n                                {{$select.selected.label}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</ui-select-match>\n                            <ui-select-choices\n                                    data-repeat=\"item.value as item in [{value:'list',label:'List'},{value:'table',label:'Table'},{value:'element',label:'Element'}]\">\n                                {{item.label}}\n                            </ui-select-choices>\n                        </ui-select>\n\n                        <button class=\"btn btn-white btn-xs\" style=\"margin-right: 10px;\"\n                                ng-click=\"deleteAll()\">\n                            Delete all\n                        </button>\n\n                        <button class=\"btn btn-white btn-xs\" style=\"margin-right: 10px;\" ng-click=\"import()\">\n                            Import\n                        </button>\n\n                        <button class=\"btn btn-white btn-xs\" style=\"margin-right: 10px;\" ng-click=\"export()\">\n                            Export\n                        </button>\n\n                        <button class=\"btn btn-white btn-xs\" style=\"margin-right: 10px;\"\n                                ng-click=\"setting()\">\n                            Setting\n                        </button>\n\n                        <button class=\"btn btn-white btn-xs\" ng-click=\"add()\">\n                            Add\n                        </button>\n\n                    </div>\n\n                    <input type=\"text\" class=\"form-control input-xs\"\n                           style=\"margin-left: 10px;width: 100px;display: inline-block;\"\n                           ng-model=\"search.text\" ng-model-options=\"{debounce: 300}\" placeholder=\"search ...\">\n\n                    <div ng-if=\"queries && queries.length > 0\">\n                        <hr style=\"margin-top: 10px;margin-bottom: 5px;\">\n\n                        <div class=\"cms-admin-heading-form\" style=\"height: 60px;\">\n                            <formly-form ng-repeat=\"query in queries\" model=\"query.model\" fields=\"query.form\"\n                                         form=\"form\"\n                                         options=\"options\">\n                            </formly-form>\n                        </div>\n                    </div>\n\n                </div>\n                <div class=\"panel-body\" ng-if=\"node\">\n\n                    <div style=\"width: 100%;overflow-x: auto\" ng-if=\"showAs.type === 'table'\">\n                        <table class=\"table cms-admin-table\">\n                            <thead>\n                            <tr>\n                                <th ng-repeat=\"col in node.columns track by $index\" ng-bind=\"col.label\"></th>\n                                <th>Edit</th>\n                            </tr>\n                            </thead>\n                            <tbody>\n                            <tr ng-repeat=\"element in list track by $index\">\n                                <td ng-repeat=\"col in node.columns track by $index\">\n                                <span cms-direct-editable=\"model.{{col.value}}\"\n                                      cms-value=\"element[col.value]\"\n                                      cms-ref=\"{{element._id}}\"\n                                      cms-type=\"{{node.type}}\"></span>\n                                </td>\n                                <td>\n                                    <div cms-editor=\"{ref: element._id, type: node.type}\"\n                                         cms-remove=\"remove(element)\"></div>\n                                </td>\n                            </tr>\n                            </tbody>\n                        </table>\n                    </div>\n\n                    <div ng-if=\"loading\">\n                        <img src=\"/build/images/ajax-loader.gif\">\n                    </div>\n\n                    <div class=\"cms-panel-list-content\" ng-if=\"showAs.type === 'list'\">\n                        <div ng-repeat=\"element in list track by $index\"\n                             ng-class=\"elementClass\"\n                             cms-element=\"{ref: element._id, type: node.type, containers: {}}\"\n                             dnd-moved=\"remove(element)\"\n                             inline=\"false\"></div>\n                    </div>\n\n                    <div class=\"\" ng-if=\"showAs.type === 'element'\">\n                        <button class=\"btn cms-btn btn-primary btn-outline btn-xs\" style=\"margin-right: 10px;\"\n                                ng-repeat=\"e in list track by $index\"\n                                ng-click=\"selectElement(e._id);\">\n                            {{getTitle(node.type, e._id)}}\n                        </button>\n                        <br><br>\n\n                        <div ng-if=\"element._id\"\n                             cms-element=\"{ref: element._id, type: node.type, containers: {}}\"\n                             inline=\"false\"></div>\n                    </div>\n\n                    <div class=\"clearfix\"></div>\n                    <uib-pagination ng-show=\"page.size > 1\" total-items=\"page.size\" ng-model=\"page.currentPage\"\n                                    class=\"pagination-sm\"\n                                    items-per-page=\"page.limit\"\n                                    ng-change=\"refresh(true)\"></uib-pagination>\n\n                </div>\n            </div>\n        </div>\n    </div>\n\n</div>\n"
 
 /***/ },
-/* 129 */
+/* 130 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5836,27 +5995,27 @@
 	
 	var _angular2 = _interopRequireDefault(_angular);
 	
-	var _common = __webpack_require__(90);
+	var _common = __webpack_require__(91);
 	
 	var _common2 = _interopRequireDefault(_common);
 	
-	var _cmsNav = __webpack_require__(130);
+	var _cmsNav = __webpack_require__(131);
 	
 	var _cmsNav2 = _interopRequireDefault(_cmsNav);
 	
-	var _module2 = __webpack_require__(121);
+	var _module2 = __webpack_require__(122);
 	
 	var _module3 = _interopRequireDefault(_module2);
 	
-	var _module4 = __webpack_require__(101);
+	var _module4 = __webpack_require__(102);
 	
 	var _module5 = _interopRequireDefault(_module4);
 	
-	var _module6 = __webpack_require__(117);
+	var _module6 = __webpack_require__(118);
 	
 	var _module7 = _interopRequireDefault(_module6);
 	
-	var _module8 = __webpack_require__(119);
+	var _module8 = __webpack_require__(120);
 	
 	var _module9 = _interopRequireDefault(_module8);
 	
@@ -5867,7 +6026,7 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 130 */
+/* 131 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -5876,7 +6035,7 @@
 	    value: true
 	});
 	
-	var _cmsNav = __webpack_require__(131);
+	var _cmsNav = __webpack_require__(132);
 	
 	var _cmsNav2 = _interopRequireDefault(_cmsNav);
 	
@@ -5926,7 +6085,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 131 */
+/* 132 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms\">\n    <nav role=\"navigation\" class=\"navbar navbar-fixed-top navbar-default cms-menu\">\n        <div class=\"container\">\n            <div class=\"navbar-header\">\n                <button type=\"button\" data-toggle=\"collapse\" data-target=\"#dropdown_menu\" aria-expanded=\"false\"\n                        aria-controls=\"navbar\" class=\"navbar-toggle collapsed\"><span\n                        class=\"sr-only\">Toggle navigation</span><span class=\"icon-bar\"></span><span\n                        class=\"icon-bar\"></span><span\n                        class=\"icon-bar\"></span></button>\n                <a href=\"#\" class=\"navbar-brand\">Cms Mon</a></div>\n            <div id=\"dropdown_menu\" class=\"collapse navbar-collapse\">\n                <ul class=\"nav navbar-nav\">\n                    <li class=\"dropdown cms-types-dropdown\">\n                        <a href=\"#\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\"\n                                            class=\"dropdown-toggle\">Types<span class=\"caret\"></span></a>\n                        <ul role=\"menu\" cms-types=\"\" class=\"dropdown-menu\"></ul>\n                    </li>\n                    <li><a cms-admin>Admin</a></li>\n                    <li><a href=\"#\" cms-sitemap>Sitemap</a></li>\n                </ul>\n                <ul class=\"nav navbar-nav navbar-right\">\n                    <li>\n                        <div cms-edit-state></div>\n                    </li>\n                    <li><button class=\"btn btn-default navbar-btn\"\n                                style=\"margin-left: 10px\"\n                                ng-click=\"vm.toggleContainer()\">Container</button></li>\n                </ul>\n            </div>\n        </div>\n    </nav>\n</div>"

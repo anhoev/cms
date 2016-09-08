@@ -7,6 +7,9 @@ _.unionWith = unionWith;
 import pickBy from 'lodash/pickBy';
 _.pickBy = pickBy;
 
+import _moment from 'moment';
+window.moment = _moment;
+
 import _JsonFn from 'json-fn';
 window.JsonFn = _JsonFn;
 _JsonFn.stringify = function (obj) {

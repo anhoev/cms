@@ -280,12 +280,11 @@ module.exports = cms => {
         res.send();
     })
 
-    cms.app.post('/cms-import/', function*({body: {types}}, res) {
+    cms.app.post('/cms-import/', function*({body: {types, url}}, res) {
         const errorList = [];
         if (!types) types = Object.keys(cms.Types);
 
-        const content = JsonFn.parse(fs.readFileSync(`${cms.data.basePath}/.export/cms.dump.json`, 'utf8'));
-        const Types = {};
+        const content = JsonFn.parse(fs.readFileSync(`${cms.data.basePath}/${url}`, 'utf8'));
         // all
         for (let type in content) {
             if (_.includes(types, type)) {
@@ -360,6 +359,7 @@ module.exports = cms => {
         // resolve
         const {types, _html} = yield* resolve($, content.containers);
 
+        if (cms.data.online.base) $('head').append(`<base href="${cms.data.online.base}">`)
         if (adminMode) {
             $('body').prepend(`
                 <script id="cms-data" type="application/json">

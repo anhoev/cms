@@ -1,8 +1,14 @@
 import angular from 'angular';
 import 'angular-filter';
 import config from './config';
+
+import _apiCheck from 'api-check';
+window.apiCheck = _apiCheck;
+apiCheck.globalConfig.disabled = true;
+
 import 'angular-formly';
 import 'angular-formly-templates-bootstrap';
+
 import 'jstree';
 import 'jstree-bootstrap-theme/dist/themes/proton/style.min.css'
 import 'ng-js-tree';
@@ -20,7 +26,7 @@ import 'codemirror/addon/edit/closebrackets';
 import 'codemirror/addon/hint/show-hint.css';
 import 'codemirror/addon/hint/show-hint';
 import 'codemirror/mode/javascript/javascript';
-import 'codemirror/lib/codemirror.css';
+
 import 'codemirror/addon/display/fullscreen.css';
 import 'codemirror/addon/display/fullscreen.js';
 import 'codemirror/addon/lint/lint.css';
@@ -42,7 +48,6 @@ import 'tern/plugin/doc_comment'
 import 'codemirror/addon/tern/tern.css';
 import 'codemirror/addon/tern/tern.js';
 import 'angular-ui-codemirror';
-
 
 const module = angular
     .module('components.formly', ['formly', 'formlyBootstrap',
