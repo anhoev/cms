@@ -281,13 +281,4 @@ module.exports = (cms) => {
             {title: 'Side Drawer', fields: ['menuItem']}
         ]
     });
-
-    cms.registerWrapper('cmsSync', {
-        formatter: `
-            <h4>Sync</h4>
-        `,
-        mTemplate: `
-        <StackLayout cmsSync *ngIf="cms.alreadyLoaded"></StackLayout>
-        `
-    });
 }

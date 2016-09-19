@@ -8,6 +8,7 @@ module.exports = {
         'lib': [
             'jquery',
             'angular',
+            'angular-i18n/de-de',
             'lodash',
             'lodash/unionWith',
             'lodash/pickBy',
@@ -20,7 +21,9 @@ module.exports = {
             './frontend/components/formly/ecma6.json',
             './frontend/components/formly/ecma5.json',
             './frontend/components/formly/cms-def.json',
-            'jquery-ui/effect',
+            'jquery-ui/ui/effect',
+            'jquery-ui/ui/widgets/draggable',
+            'jquery-ui/ui/widgets/resizable',
             'angular-ui-bootstrap',
             'jstree',
             'jstree-bootstrap-theme/dist/themes/proton/style.min.css',
@@ -63,10 +66,9 @@ module.exports = {
             'angular-bootstrap-contextmenu',
             'bootstrap/dist/js/bootstrap',
             'angular-websocket',
-            'jquery-ui/draggable',
-            'jquery-ui/resizable',
             'traverse',
-            'moment'
+            'moment',
+            'printthis'
         ]
     },
     output: {

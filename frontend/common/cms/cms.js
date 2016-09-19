@@ -5,8 +5,8 @@ import TypeClass from './Type';
 import QueryBuilder from "./QueryBuilder";
 import 'angular-websocket';
 import Uuid from 'uuid';
-import 'jquery-ui/draggable';
-import 'jquery-ui/resizable';
+import 'jquery-ui/ui/widgets/draggable';
+import 'jquery-ui/ui/widgets/resizable';
 import traverse from 'traverse';
 
 window.Enum = {
@@ -73,6 +73,15 @@ function cms($http, Upload) {
 
     function createElement(type, content, cb) {
         return getType(type, null, cb, content);
+    }
+
+    function removeElement(type, _id, cb, onerror) {
+        $http.delete(`api/v1/${type}/${_id}`).then(() => {
+            _.remove(Types[type].list, {_id: _id});
+            if (cb) cb();
+        }, () => {
+            if (onerror) onerror();
+        });
     }
 
     function updateContainerPage() {
@@ -429,6 +438,7 @@ function cms($http, Upload) {
         getType,
         createElement,
         updateElement,
+        removeElement,
         findField,
         data,
         get types() {

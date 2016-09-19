@@ -1,5 +1,9 @@
 import angular from 'angular';
+import 'angular-i18n/de-de';
 import 'jquery';
+import printthis from 'printthis';
+window.printthis = printthis;
+$.fn.printthis = printthis;
 import 'lodash';
 import unionWith from 'lodash/unionWith';
 _.unionWith = unionWith;

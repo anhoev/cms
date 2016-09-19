@@ -18,6 +18,13 @@ gulp.task('frontend.app', function() {
         .pipe(gulp.dest('.'));
 });
 
+gulp.task('bs', function () {
+    return gulp.src('./frontend/styles/bootstrap.scss')
+        .pipe(sass().on('error', sass.logError))
+        .pipe(minifyCss({compatibility: 'ie8'}))
+        .pipe(gulp.dest('./frontend/build'));
+});
+
 gulp.task('cms-sass', function () {
     return gulp.src('./frontend/styles/cms.scss')
         .pipe(sass().on('error', sass.logError))

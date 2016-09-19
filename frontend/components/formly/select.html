@@ -1,5 +1,5 @@
 <ui-select ng-if="!to.multiple" data-ng-model="model[options.key]" theme="bootstrap" append-to-body="true">
-    <ui-select-match placeholder="{{to.placeholder}}">
+    <ui-select-match allow-clear="true" placeholder="{{to.placeholder}}">
         {{$select.selected.name}}
     </ui-select-match>
     <ui-select-choices data-repeat="item.value as item in to.options | filterBy: ['name']: $select.search">

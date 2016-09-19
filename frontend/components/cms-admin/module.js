@@ -70,20 +70,23 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
                         let paramsBuilder = new QueryBuilder().part(false).limit($scope.page.limit).page($scope.page.currentPage).query($scope.node.query);
                         _.each($scope.queries, q => {
                             if (q.model) {
-                                const val = q.model[q.path.split('\.').pop()];
-                                if (val) {
-                                    if (q.fn) {
-                                        const result = q.fn(val, _.dropRight(q.path.split('\.'), 1).join('\.'), q.path.split('\.').pop());
-                                        if (result.populate) {
-                                            paramsBuilder.populate(result.populate);
-                                        } else if (result.$where) {
-                                            paramsBuilder.query(result);
-                                        } else {
-                                            paramsBuilder.query({[q.path]: result});
-                                        }
-                                    } else if (val.name !== 'None') {
-                                        paramsBuilder.query({[q.path]: val});
+                                const val = _.get(q.model, q.form[0].key);
+                                if (val && val.hasOwnProperty('_id') && !val._id) return;
+                                if (!val) return;
+
+                                if (q.form[0].key === 0 && _.endsWith(q.path, '.field')) q.path = q.path.replace('.field', '');
+
+                                if (q.fn) {
+                                    const result = q.fn(val, _.dropRight(q.path.split('\.'), 1).join('\.'), q.path.split('\.').pop());
+                                    if (result.populate) {
+                                        paramsBuilder.populate(result.populate);
+                                    } else if (result.$where) {
+                                        paramsBuilder.query(result);
+                                    } else {
+                                        paramsBuilder.query({[q.path]: result});
                                     }
+                                } else if (val.name !== 'None') {
+                                    paramsBuilder.query({[q.path]: val._id || val});
                                 }
                             }
                         })
@@ -102,7 +105,7 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
                         if (!onlyChangePage) cms.countElements($scope.node.type, (count) => {
                             $scope.page.size = count;
                         }, paramsBuilder);
-                     })
+                    })
 
 
                 }
@@ -129,11 +132,11 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
 
                     if (config && config.query) {
 
-                        $scope.queries = JsonFn.clone(config.query.filter(q => q.choice === 'builtIn').map(q => q.builtIn).map(k => _.find(cms.types[$scope.node.type].queries, {path: k})), true);
+                        $scope.queries = JsonFn.clone(config.query.filter(q => q.choice === 'builtIn').map(q => q.builtIn).map(k => _.find(cms.types[$scope.node.type].queries, {path: k}) || _.find(cms.types[$scope.node.type].paths, {path: k})), true);
 
                         $scope.queries.forEach((q, index) => {
-                            if (!q.form) q.form = [angular.copy(_.get(cms.types[$scope.node.type].form, q.pathInForm))];
-                            _.merge(q.form[0], {templateOptions: {class: 'col-xs-2'}}, {defaultValue: q.default});
+                            q.form = !q.form ? [angular.copy(_.get(cms.types[$scope.node.type].form, q.pathInForm))] : [q.form];
+                            _.merge(q.form[0], {templateOptions: {class: 'col-xs-3'}});
                             var listen = $scope.$watch(`queries[${index}].model`, function (m1, m2) {
                                 if (typeof m2 === 'undefined') return;
                                 $scope.refresh();

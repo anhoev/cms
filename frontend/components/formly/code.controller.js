@@ -3,7 +3,7 @@ window.JSHINT = JSHINT;
 import es6 from './ecma6.json';
 import es5 from './ecma5.json';
 import cmsdef from './cms-def.json';
-import 'jquery-ui/effect';
+import 'jquery-ui/ui/effect';
 
 controller.$inject = ['$scope', '$http', 'size'];
 function controller($scope, $http, size) {

@@ -7,7 +7,14 @@ module.exports = (cms) => {
     const Config = cms.registerSchema({
         type: {type: String, form: {type: 'select-type'}},
         dynamicQuery: [{
-            field: [String]
+            field: [makeCustomSelect(String, function (template, options, scope) {
+                scope.$watch('model.type', () => {
+                    let {path, model, fields} = scope.formState;
+                    const {type} = model;
+                    if (type) scope.to.options = _.map(Types[type].paths, v => ({name: v.path, value: v.path}));
+                })
+                return template;
+            })]
         }],
         showFields: makeCustomSelect([String], function (template, options, scope) {
             scope.$watch('model.type', (type) => {
@@ -24,7 +31,14 @@ module.exports = (cms) => {
         showAs: {type: String, form: makeSelect('list', 'table', 'element')},
         query: [{
             choice: String,
-            builtIn: String,
+            builtIn: makeCustomSelect(String, function (template, options, scope) {
+                scope.$watch('model.type', () => {
+                    let {path, model, fields} = scope.formState;
+                    const {type} = model;
+                    if (type) scope.to.options = _.map(Types[type].paths, v => ({name: v.path, value: v.path}));
+                })
+                return template;
+            }),
             dynamic: {type: String, form: {type: 'code'}}
         }]
     }, {

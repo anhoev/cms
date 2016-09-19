@@ -72,7 +72,7 @@ module.exports = cms => {
                     } else if (form.type === 'array') {
                         this.after(function (_node) {
                             delete _node.templateOptions.field.key;
-                            _node.templateOptions.field.templateOptions.label = _node.key;
+                            _node.templateOptions.field.templateOptions.label = label || _node.key;
                             this.update(_node, true);
                         })
                     }
@@ -119,6 +119,7 @@ module.exports = cms => {
             // make query
             if (this.key && this.key !== 'null' && this.key !== 'choice') {
                 const query = merge({}, options ? options.query : {});
+                if (query.form) merge(query.form, {key:this.key});
                 const _path = this.path.filter(p => p !== 'schema' && p !== 'paths' && p !== 'caster').join('.');
                 const Path = _.find(Paths, ({path, pathInForm}) => path === _path);
                 if (!Path) return;
@@ -148,7 +149,6 @@ module.exports = cms => {
         function convertSingleField(field, {key, label}) {
             const defaultOptions = {form: {key: key, templateOptions: {label: label ? label : key}}};
             if (field.instance === 'ObjectID') {
-                if (!cms.Types[field.options.ref]) debugger;
                 return merge(defaultOptions.form, {
                     type: 'refSelect',
                     templateOptions: {Type: field.options.ref, labelProp: cms.Types[field.options.ref].info.title}
@@ -202,7 +202,11 @@ module.exports = cms => {
                 return merge(defaultOptions.form, {
                     key,
                     type: 'array',
-                    templateOptions: {btnText: `Add ${label || key}`, field: field.caster}
+                    templateOptions: {
+                        label: label || key,
+                        btnText: `Add ${label || key}`,
+                        field: field.caster
+                    }
                 }, field.options.form);
             }
         }

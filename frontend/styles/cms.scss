@@ -13,7 +13,7 @@ $brand-primary: #428bca !default; // #337ab7
 .cms {
   // Reset and dependencies
   @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/normalize";
-  @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/print";
+  // @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/print";
 
   // Core CSS
   @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/scaffolding";
