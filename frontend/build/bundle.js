@@ -1427,7 +1427,7 @@
 /* 36 */
 /***/ function(module, exports) {
 
-	module.exports = "<table class=\"table cms-admin-table cms-table-section\" >\n    <thead>\n    <tr>\n        <th ng-repeat=\"col in to.fields track by $index\" >{{col.templateOptions.label}}</th>\n        <th>X</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr ng-repeat=\"element in model[options.key] track by $index\"\n        ng-init=\"_index = $index;_formState = createFormState($index)\">\n        <td ng-repeat=\"field in to.fields\"\n            ng-init=\"_field = copyItemOptions(field)\">\n            <formly-field options=\"_field\"\n                          model=\"model[options.key][_index]\"\n                          form=\"form\"\n                          form-state=\"_formState\">\n            </formly-field>\n        </td>\n        <td>\n            <button type=\"button\" class=\"btn btn-xs btn-white\"\n                    ng-click=\"model[options.key].splice(_index, 1)\">\n                <i class=\"fa fa-trash-o\"></i>\n            </button>\n        </td>\n    </tr>\n    </tbody>\n</table>\n\n<button type=\"button\" class=\"btn btn-white btn-xs\"\n        ng-click=\"addNew()\" style=\"z-index: 1;\">{{to.btnText}}\n</button>"
+	module.exports = "<table class=\"table cms-admin-table cms-table-section\">\n    <thead>\n    <tr>\n        <th ng-repeat=\"col in to.fields track by $index\"\n            ng-style=\"{width:to.widths ? to.widths.split(' ')[$index] + '%':'initial'}\">{{col.templateOptions.label}}\n        </th>\n        <th>X</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr ng-repeat=\"element in model[options.key] track by $index\"\n        ng-init=\"_index = $index;_formState = createFormState($index)\">\n        <td ng-repeat=\"field in to.fields\"\n            ng-init=\"_field = copyItemOptions(field)\">\n            <formly-field options=\"_field\"\n                          model=\"model[options.key][_index]\"\n                          form=\"form\"\n                          form-state=\"_formState\">\n            </formly-field>\n        </td>\n        <td>\n            <button type=\"button\" class=\"btn btn-xs btn-white\"\n                    ng-click=\"model[options.key].splice(_index, 1)\">\n                <i class=\"fa fa-trash-o\"></i>\n            </button>\n        </td>\n    </tr>\n    </tbody>\n</table>\n\n<button type=\"button\" class=\"btn btn-white btn-xs\"\n        ng-click=\"addNew()\" style=\"z-index: 1;\">{{to.btnText}}\n</button>"
 
 /***/ },
 /* 37 */
@@ -3271,10 +3271,10 @@
 	    function getType(type, ref, cb, content) {
 	        var Type = data.types[type];
 	        if (!Type || !Type.template || !ref || !_.find(Type.list, { _id: ref })) {
-	            var query = ref ? Type && _.find(Type.list, { _id: ref }) ? 'element=false' : 'element=' + ref : '';
+	            var query = ref ? Type && _.find(Type.list, { _id: ref }) ? 'element=false' : 'element=' + ref : 'element=false';
 	            if (!Type) Type = data.types[type] = { list: [] };
 	            if (!Type.template) query += '&template=true';
-	            if (content) query = '';
+	            if (content && content._id) query = '';
 	            $http.post('/cms-types/' + type + '?' + query, JsonFn.stringify(content)).then(function (res) {
 	                var result = JsonFn.clone(res.data, true);
 	                if (!ref || !_.find(Type.list, { _id: ref })) {
@@ -3786,6 +3786,7 @@
 	    window.socket = cms.socket = $websocket(new_uri, { reconnectIfNotNormalClose: true });
 	
 	    socket.onMessage(function (event) {
+	        if (!event.data.uuid) return;
 	        var _data = JsonFn.parse(event.data, true);
 	        cms.data.socketQueue[_data.uuid](_data);
 	    });

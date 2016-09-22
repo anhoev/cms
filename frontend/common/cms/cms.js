@@ -47,10 +47,10 @@ function cms($http, Upload) {
     function getType(type, ref, cb, content) {
         let Type = data.types[type];
         if (!Type || !Type.template || !ref || !_.find(Type.list, {_id: ref})) {
-            let query = ref ? (Type && _.find(Type.list, {_id: ref}) ? 'element=false' : `element=${ref}`) : '';
+            let query = ref ? (Type && _.find(Type.list, {_id: ref}) ? 'element=false' : `element=${ref}`) : 'element=false';
             if (!Type) Type = data.types[type] = {list: []};
             if (!Type.template) query += '&template=true';
-            if (content) query = '';
+            if (content && content._id) query = '';
             $http.post(`/cms-types/${type}?${query}`, JsonFn.stringify(content)).then(res => {
                 const result = JsonFn.clone(res.data, true);
                 if (!ref || !_.find(Type.list, {_id: ref})) {
@@ -505,6 +505,7 @@ function run(cms, $http, $websocket) {
     window.socket = cms.socket = $websocket(new_uri, {reconnectIfNotNormalClose: true});
 
     socket.onMessage((event) => {
+        if (!event.data.uuid) return;
         const _data = JsonFn.parse(event.data, true);
         cms.data.socketQueue[_data.uuid](_data)
     });

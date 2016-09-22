@@ -129,7 +129,7 @@ module.exports = cms => {
                     _.forEach(query.populate.split(' '), select => {
                         node.options;
                         const q = _.find(cms.Types[node.options.ref].webType.queries, {path: select});
-                        q.form = [_.get(cms.Types[node.options.ref].Form, q.pathInForm)];
+                        q.form = _.get(cms.Types[node.options.ref].Form, q.pathInForm);
                         const fn = (val, p1, p2) => {
                             return {$where: `return this.${p1}.${p2} === '${val}'`};
                         };

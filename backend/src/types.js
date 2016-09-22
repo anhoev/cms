@@ -39,9 +39,9 @@ module.exports = (cms) => {
         const {type} = req.params;
         const {Model, Formatter, FormatterUrl, Form, info, fn, serverFnForClient} = cms.Types[type];
 
-        let obj = noElement ? new Model() : (ref ? yield Model.findOne({_id: ref}) : yield Model.create(content));
+        let obj = noElement ? new Model(content) : (ref ? yield Model.findOne({_id: ref}) : yield Model.create(content));
         let result = {info, fn, serverFn: serverFnForClient};
-        if (!noElement) result.data = obj;
+        result.data = obj;
 
         if (withTemplate) {
             result.form = Form;
@@ -266,9 +266,11 @@ module.exports = (cms) => {
     // websocket
 
     app.ws(`/`, function (ws, req) {
+
         ws.on('error', function (e) {
             console.warn(e);
         })
+
         ws.on('message', function*({path, params = {}, uuid, model}) {
             const base = '([^\/]*)\/api\/v1\/([^\/]*)';
             const modelQueryTester = new RegExp(`${base}$`);

@@ -19,7 +19,7 @@ const fs = require('fs');
 const cache = new NodeCache({useClones: false, stdTTL: 20 * 60});
 const ngcompile = require('../lib/ng.compile');
 const Path = require('path');
-require('express-ws')(_app);
+const ews = require('express-ws')(_app);
 var deasync = require('deasync');
 const co = require('co');
 
@@ -170,6 +170,7 @@ const cms = {
     },
     utils: {},
     express,
+    ews,
     app,
     mongoose,
     routers: {},

@@ -1,7 +1,9 @@
-<table class="table cms-admin-table cms-table-section" >
+<table class="table cms-admin-table cms-table-section">
     <thead>
     <tr>
-        <th ng-repeat="col in to.fields track by $index" >{{col.templateOptions.label}}</th>
+        <th ng-repeat="col in to.fields track by $index"
+            ng-style="{width:to.widths ? to.widths.split(' ')[$index] + '%':'initial'}">{{col.templateOptions.label}}
+        </th>
         <th>X</th>
     </tr>
     </thead>
