@@ -3786,8 +3786,8 @@
 	    window.socket = cms.socket = $websocket(new_uri, { reconnectIfNotNormalClose: true });
 	
 	    socket.onMessage(function (event) {
-	        if (!event.data.uuid) return;
 	        var _data = JsonFn.parse(event.data, true);
+	        if (!_data.uuid) return;
 	        cms.data.socketQueue[_data.uuid](_data);
 	    });
 	}

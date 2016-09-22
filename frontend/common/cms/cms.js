@@ -505,8 +505,8 @@ function run(cms, $http, $websocket) {
     window.socket = cms.socket = $websocket(new_uri, {reconnectIfNotNormalClose: true});
 
     socket.onMessage((event) => {
-        if (!event.data.uuid) return;
         const _data = JsonFn.parse(event.data, true);
+        if (!_data.uuid) return;
         cms.data.socketQueue[_data.uuid](_data)
     });
 }
