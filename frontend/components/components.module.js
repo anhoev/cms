@@ -1,5 +1,3 @@
-import angular from 'angular';
-
 import cmsEditable from './cms-editable/module';
 import cmsTypes from './cms-types/module';
 import cmsMain from './cms-main/module';

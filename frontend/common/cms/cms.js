@@ -1,5 +1,4 @@
 "use strict";
-import angular from 'angular';
 import 'ng-file-upload';
 import TypeClass from './Type';
 import QueryBuilder from "./QueryBuilder";

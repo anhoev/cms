@@ -88,6 +88,8 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	window.angular = _angular2.default;
+	
 	window.printthis = _printthis2.default;
 	$.fn.printthis = _printthis2.default;
 	
@@ -175,6 +177,10 @@
 	
 	
 	_angular2.default.module('app', [_common2.default, _components2.default]).controller('appCtrl', function () {});
+	
+	_angular2.default.element(document).ready(function () {
+	    _angular2.default.bootstrap(document, ['app']);
+	});
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
@@ -253,10 +259,6 @@
 	    value: true
 	});
 	
-	var _angular = __webpack_require__(3);
-	
-	var _angular2 = _interopRequireDefault(_angular);
-	
 	var _module = __webpack_require__(13);
 	
 	var _module2 = _interopRequireDefault(_module);
@@ -287,7 +289,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var components = _angular2.default.module('components', [_module4.default, _module6.default, _module8.default, _module10.default, _module12.default, _module14.default]);
+	var components = angular.module('components', [_module4.default, _module6.default, _module8.default, _module10.default, _module12.default, _module14.default]);
 	
 	exports.default = components.name;
 
@@ -300,10 +302,6 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	
-	var _angular = __webpack_require__(3);
-	
-	var _angular2 = _interopRequireDefault(_angular);
 	
 	__webpack_require__(14);
 	
@@ -325,7 +323,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var _module = _angular2.default.module('components.cmsEditable', [_module3.default, 'ui.bootstrap', _common2.default]).directive('cmsEditable', directive).directive('cmsEditableTransclude', cmsEditableTransclude).directive('cmsDirectEditable', cmsDirectEditableDirective).run(run);
+	var _module = angular.module('components.cmsEditable', [_module3.default, 'ui.bootstrap', _common2.default]).directive('cmsEditable', directive).directive('cmsEditableTransclude', cmsEditableTransclude).directive('cmsDirectEditable', cmsDirectEditableDirective).run(run);
 	
 	run.$inject = ['$templateCache'];
 	function run($templateCache) {
@@ -521,10 +519,6 @@
 	    value: true
 	});
 	
-	var _angular = __webpack_require__(3);
-	
-	var _angular2 = _interopRequireDefault(_angular);
-	
 	__webpack_require__(17);
 	
 	var _config = __webpack_require__(18);
@@ -627,7 +621,7 @@
 	window.tern = _tern3.default;
 	
 	
-	var _module = _angular2.default.module('components.formly', ['formly', 'formlyBootstrap', 'ngJsTree', 'ui.select', 'ngSanitize', 'angular.filter', 'ui.codemirror', 'color.picker', 'dndLists']).config(_config2.default).constant('size', { label: 'col-sm-2', input: 'col-sm-10' });
+	var _module = angular.module('components.formly', ['formly', 'formlyBootstrap', 'ngJsTree', 'ui.select', 'ngSanitize', 'angular.filter', 'ui.codemirror', 'color.picker', 'dndLists']).config(_config2.default).constant('size', { label: 'col-sm-2', input: 'col-sm-10' });
 	
 	exports.default = _module.name;
 
@@ -3176,17 +3170,13 @@
 	  value: true
 	});
 	
-	var _angular = __webpack_require__(3);
-	
-	var _angular2 = _interopRequireDefault(_angular);
-	
 	var _cms = __webpack_require__(94);
 	
 	var _cms2 = _interopRequireDefault(_cms);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var commonModule = _angular2.default.module('common', [_cms2.default]);
+	var commonModule = angular.module('common', [_cms2.default]);
 	
 	exports.default = commonModule.name;
 
@@ -3201,10 +3191,6 @@
 	});
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-	
-	var _angular = __webpack_require__(3);
-	
-	var _angular2 = _interopRequireDefault(_angular);
 	
 	__webpack_require__(95);
 	
@@ -3241,7 +3227,7 @@
 	    EditMode: { ALL: 'ALL', VIEWELEMENT: 'VIEWELEMENT', DATAELEMENT: 'DATAELEMENT', CONTAINER: 'CONTAINER' }
 	};
 	
-	var modelModule = _angular2.default.module('common.data', ['ngFileUpload', 'ngWebSocket']).factory('cms', cms).run(run);
+	var modelModule = angular.module('common.data', ['ngFileUpload', 'ngWebSocket']).factory('cms', cms).run(run);
 	
 	cms.$inject = ['$http', 'Upload'];
 	function cms($http, Upload) {
@@ -4217,10 +4203,6 @@
 	    value: true
 	});
 	
-	var _angular = __webpack_require__(3);
-	
-	var _angular2 = _interopRequireDefault(_angular);
-	
 	__webpack_require__(105);
 	
 	var _tpl = __webpack_require__(106);
@@ -4229,7 +4211,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var _module = _angular2.default.module('components.cmsTypes', ['dndLists']).directive('cmsTypes', directive);
+	var _module = angular.module('components.cmsTypes', ['dndLists']).directive('cmsTypes', directive);
 	
 	directive.$inject = ['cms', '$http'];
 	
@@ -4310,10 +4292,6 @@
 	    value: true
 	});
 	
-	var _angular = __webpack_require__(3);
-	
-	var _angular2 = _interopRequireDefault(_angular);
-	
 	var _common = __webpack_require__(93);
 	
 	var _common2 = _interopRequireDefault(_common);
@@ -4358,7 +4336,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var _module = _angular2.default.module('components.cmsMain', ['dndLists', 'ui.bootstrap', _common2.default, _module3.default, _module5.default, 'ui.bootstrap.contextMenu']).directive('cmsContainer', _container2.default).directive('cmsElement', _element2.default).directive('cmsEditor', _editor2.default).directive('cmsWrapper', _cmsWrapper2.default).directive('cmsFragment', _fragment2.default).directive('cmsContainerEdit', _containerEdit2.default);
+	var _module = angular.module('components.cmsMain', ['dndLists', 'ui.bootstrap', _common2.default, _module3.default, _module5.default, 'ui.bootstrap.contextMenu']).directive('cmsContainer', _container2.default).directive('cmsElement', _element2.default).directive('cmsEditor', _editor2.default).directive('cmsWrapper', _cmsWrapper2.default).directive('cmsFragment', _fragment2.default).directive('cmsContainerEdit', _containerEdit2.default);
 	
 	exports.default = _module.name;
 
@@ -5291,10 +5269,6 @@
 	
 	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 	
-	var _angular = __webpack_require__(3);
-	
-	var _angular2 = _interopRequireDefault(_angular);
-	
 	__webpack_require__(14);
 	
 	__webpack_require__(54);
@@ -5313,7 +5287,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var _module = _angular2.default.module('components.cmsSitemap', ['ui.bootstrap', 'ngJsTree', 'ui.select']).directive('cmsSitemap', directive);
+	var _module = angular.module('components.cmsSitemap', ['ui.bootstrap', 'ngJsTree', 'ui.select']).directive('cmsSitemap', directive);
 	
 	directive.$inject = ['$http', '$uibModal', '$timeout', 'cms'];
 	
@@ -5446,17 +5420,13 @@
 	    value: true
 	});
 	
-	var _angular = __webpack_require__(3);
-	
-	var _angular2 = _interopRequireDefault(_angular);
-	
 	var _tpl = __webpack_require__(123);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var _module = _angular2.default.module('components.cmsEditState', ['ui.select']).directive('cmsEditState', directive);
+	var _module = angular.module('components.cmsEditState', ['ui.select']).directive('cmsEditState', directive);
 	
 	directive.$inject = ['cms'];
 	
@@ -5504,10 +5474,6 @@
 	    value: true
 	});
 	
-	var _angular = __webpack_require__(3);
-	
-	var _angular2 = _interopRequireDefault(_angular);
-	
 	__webpack_require__(14);
 	
 	__webpack_require__(54);
@@ -5554,7 +5520,7 @@
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
-	var _module = _angular2.default.module('components.cmsAdmin', ['ui.bootstrap', 'ngJsTree', 'ui.select', _module3.default, _module5.default]).factory('importService', _importService3.default).factory('exportService', _exportService3.default).directive('cmsAdmin', directive).directive('cmsList', _cmsList2.default);
+	var _module = angular.module('components.cmsAdmin', ['ui.bootstrap', 'ngJsTree', 'ui.select', _module3.default, _module5.default]).factory('importService', _importService3.default).factory('exportService', _exportService3.default).directive('cmsAdmin', directive).directive('cmsList', _cmsList2.default);
 	
 	directive.$inject = ['cms', '$uibModal', '$timeout', 'formService', 'importService', 'exportService'];
 	
@@ -5680,7 +5646,7 @@
 	                        }), true);
 	
 	                        $scope.queries.forEach(function (q, index) {
-	                            q.form = !q.form ? [_angular2.default.copy(_.get(cms.types[$scope.node.type].form, q.pathInForm))] : [q.form];
+	                            q.form = !q.form ? [angular.copy(_.get(cms.types[$scope.node.type].form, q.pathInForm))] : [q.form];
 	                            _.merge(q.form[0], { templateOptions: { class: 'col-xs-3' } });
 	                            var listen = $scope.$watch('queries[' + index + '].model', function (m1, m2) {
 	                                if (typeof m2 === 'undefined') return;
@@ -6054,10 +6020,6 @@
 	    value: true
 	});
 	
-	var _angular = __webpack_require__(3);
-	
-	var _angular2 = _interopRequireDefault(_angular);
-	
 	var _common = __webpack_require__(93);
 	
 	var _common2 = _interopRequireDefault(_common);
@@ -6084,7 +6046,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var _module = _angular2.default.module('components.cmsNav', [_common2.default, _module3.default, _module5.default, _module7.default, _module9.default]).directive('cmsNav', _cmsNav2.default);
+	var _module = angular.module('components.cmsNav', [_common2.default, _module3.default, _module5.default, _module7.default, _module9.default]).directive('cmsNav', _cmsNav2.default);
 	
 	exports.default = _module.name;
 

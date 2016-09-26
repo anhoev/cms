@@ -1,4 +1,5 @@
 import angular from 'angular';
+window.angular = angular;
 import 'angular-i18n/de-de';
 import 'jquery';
 import printthis from 'printthis';
@@ -103,4 +104,8 @@ angular.module('app', [
     ])
     .controller('appCtrl', function () {
     });
+
+angular.element(document).ready(function() {
+    angular.bootstrap(document, ['app']);
+});
 

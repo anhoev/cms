@@ -1,4 +1,3 @@
-import angular from 'angular';
 import 'angular-drag-and-drop-lists';
 
 const module = angular

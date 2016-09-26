@@ -1,5 +1,3 @@
-import angular from 'angular';
-
 import 'angular-ui-bootstrap';
 import formlyTemplate from './editable-formly.html';
 import formly from '../formly/module';

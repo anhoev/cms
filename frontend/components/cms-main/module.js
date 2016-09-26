@@ -1,4 +1,3 @@
-import angular from "angular";
 import common from "../../common/common.module";
 import "angular-drag-and-drop-lists";
 import cmsEditable from "../cms-editable/module";

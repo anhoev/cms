@@ -1,4 +1,3 @@
-import angular from 'angular';
 import 'angular-filter';
 import config from './config';
 

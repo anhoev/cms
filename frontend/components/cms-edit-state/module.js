@@ -1,5 +1,3 @@
-import angular from 'angular';
-
 const module = angular
     .module('components.cmsEditState', ['ui.select'])
     .directive('cmsEditState', directive);

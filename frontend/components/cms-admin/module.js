@@ -1,4 +1,3 @@
-import angular from 'angular';
 import 'angular-ui-bootstrap';
 import 'jstree';
 import 'jstree-bootstrap-theme/dist/themes/proton/style.min.css'

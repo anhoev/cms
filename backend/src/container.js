@@ -316,7 +316,7 @@ module.exports = cms => {
     function injectCmsToHtml($) {
         //const menu = cms.compile(Path.resolve(__dirname, 'menu.html'));
         // $('body').append(menu);
-        $('html').attr('data-ng-app', 'app');
+        // $('html').attr('data-ng-app', 'app');
         $('body').prepend(`
             <script src="build/lib.bundle.js"></script>
             <script src="build/bundle.js"></script>

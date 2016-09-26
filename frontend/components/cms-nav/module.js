@@ -1,4 +1,3 @@
-import angular from "angular";
 import common from "../../common/common.module";
 import cmsNav from "./cms-nav.directive";
 import cmsAdmin from "../cms-admin/module";
