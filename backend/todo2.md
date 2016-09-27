@@ -23,3 +23,4 @@
 
 * delete fns
 
+* isolate bootstrap css

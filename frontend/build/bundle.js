@@ -175,7 +175,6 @@
 	import 'bootstrap/dist/css/bootstrap-theme.css';
 	*/
 	
-	
 	_angular2.default.module('app', [_common2.default, _components2.default]).controller('appCtrl', function () {});
 	
 	_angular2.default.element(document).ready(function () {
@@ -825,15 +824,23 @@
 	
 	    config.setType({
 	        name: 'image',
-	        template: '\n            <div class="row" style="padding-top:7px;">\n                <div class="col-sm-4">\n                    <input type="text" class="form-control input-xs" ng-model="model[options.key]" placeholder="URL">\n                </div>\n                <div class="col-sm-6">\n                    <button class="btn btn-white cms-btn-bottom btn-xs" type="button" ng-click="onFileUpload(file)"  style="position: absolute;right: 15px;">\n                        Up\n                    </button>\n                    <input type="file" ngf-select ng-model="file"\n                           name="file" class="form-control input-xs"\n                           placeholder="file upload">\n                </div>\n                <div class="col-sm-2">\n                    <div class="checkbox" style="padding-top: 0px;">\n                        <label>\n                            <input type="checkbox"\n                               class="formly-field-checkbox"\n                               ng-model="genName">\n                            Gen name\n                        </label>\n                    </div>\n                </div>\n            </div>\n            \n            <img ng-if="model[options.key]" ng-src="{{model[options.key]}}" width="30px" height="30px">\n        ',
-	        controller: function controller($scope, cms) {
+	        template: '\n            <div class="row" style="padding-top:7px;">\n                <div class="col-sm-7" style="padding-left: 0px;padding-right: 0px;">\n                    <div class="col-sm-6">\n                        <input type="text" class="form-control input-xs" ng-model="model[options.key]" placeholder="URL">\n                    </div>\n                    <div class="col-sm-6">\n                        <div class = "input-group">\n                            <input ng-model="filename" class="form-control input-xs"\n                                   placeholder="filename">\n                            <span class = "input-group-btn">\n                            <button class="btn btn-white btn-sm" type="button" ng-click="download(filename)"  style="margin: 0px;">\n                                Save\n                            </button>\n                        </span>\n                        </div>\n                    </div>\n                </div>\n                <div class="col-sm-5">\n                    <div class = "input-group">\n                        <input type="file" ngf-select ng-model="file"\n                               name="file" class="form-control input-xs"\n                               placeholder="file upload">\n                        <span class = "input-group-btn">\n                            <button class="btn btn-white btn-sm" type="button" ng-click="onFileUpload(file)"  style="margin: 0px;">\n                                Up\n                            </button>\n                        </span>\n                    </div>\n                    \n                    \n                </div>\n            </div>\n            \n            <img ng-if="model[options.key]" ng-src="{{model[options.key]}}" width="40px" height="40px">\n        ',
+	        controller: function controller($scope, cms, $http) {
 	            $scope.genName = true;
 	            $scope.onFileUpload = function (file) {
 	                //files: an array of files selected, each file has name, size, and type.
 	                cms.uploadFile(file, '.image', function () {
 	                    $scope.model[$scope.options.key] = '.image/' + file.name;
+	                    if ($scope.w) $scope.model[$scope.options.key] = $scope.model[$scope.options.key] + '?w=' + $scope.w;
 	                    $scope.file = null;
 	                    console.log('upload successful');
+	                });
+	            };
+	
+	            $scope.download = function (filename) {
+	                $http.post('api/saveimage', { url: $scope.model[$scope.options.key], filename: filename }).then(function () {
+	                    $scope.model[$scope.options.key] = '.image/' + filename;
+	                    if ($scope.w) $scope.model[$scope.options.key] = $scope.model[$scope.options.key] + '?w=' + $scope.w;
 	                });
 	            };
 	        },

@@ -312,6 +312,15 @@ module.exports = cms => {
         }
     })
 
+    cms.app.post('/api/saveimage', function ({body: {url, filename}}, res) {
+        if (url) {
+            cms.download(url, `${cms.data.basePath}/.image/${filename}`, function(){
+                console.log('save image successful');
+                res.send();
+            });
+        }
+    })
+
 
     function injectCmsToHtml($) {
         //const menu = cms.compile(Path.resolve(__dirname, 'menu.html'));
