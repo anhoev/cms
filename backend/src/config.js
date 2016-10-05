@@ -40,7 +40,28 @@ module.exports = (cms) => {
                 return template;
             }),
             dynamic: {type: String, form: {type: 'code'}}
-        }]
+        }],
+        sort: [{
+            choice: String,
+            builtIn: {
+                path: makeCustomSelect(String, function (template, options, scope) {
+                    scope.$watch('model.type', () => {
+                        let {path, model, fields} = scope.formState;
+                        const {type} = model;
+                        if (type) scope.to.options = _.map(Types[type].paths, v => ({name: v.path, value: v.path}));
+                    })
+                    return template;
+                }),
+                defaultValue: {
+                    type: Number,
+                    form: {
+                        type: 'select',
+                        templateOptions: {options: [{name: 'Up', value: 1}, {name: 'Down', value: 0}]}
+                    }
+                }
+            },
+            dynamic: {type: String, form: {type: 'code'}}
+        }],
     }, {
         name: 'Config',
         formatter: `<h4>Config</h4>`,

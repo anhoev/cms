@@ -13,9 +13,9 @@ module.exports = {
             'lodash/unionWith',
             'lodash/pickBy',
             'json-fn',
-            'bootstrap-sass',
+            /*'bootstrap-sass',
             'bootstrap/dist/css/bootstrap.css',
-            'bootstrap/dist/css/bootstrap-theme.css',
+            'bootstrap/dist/css/bootstrap-theme.css',*/
             'ng-file-upload',
             'jshint',
             './frontend/components/formly/ecma6.json',
@@ -114,9 +114,9 @@ module.exports = {
             // output.library option above
             name: '[name]_lib'
         }),
-        /*new webpack.optimize.UglifyJsPlugin({
-         compress: { warnings: false }
-         }),*/
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {warnings: false}
+        }),
         new webpack.ProvidePlugin({
             $: 'jquery',
             jQuery: 'jquery',
