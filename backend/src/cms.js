@@ -24,8 +24,8 @@ var deasync = require('deasync');
 const co = require('co');
 const request = require('request');
 
-var download = function(uri, filename, callback){
-    request.head(uri, function(err, res, body){
+var download = function (uri, filename, callback) {
+    request.head(uri, function (err, res, body) {
         console.log('content-type:', res.headers['content-type']);
         console.log('content-length:', res.headers['content-length']);
 
@@ -41,7 +41,7 @@ const app = new Proxy(_app, {
                     const cb = arguments[1];
                     const callback = function (req, res) {
                         /*Q.onerror = onerror.bind(onerror, req, res);
-                        Q.spawn(cb.bind(this, ...arguments));*/
+                         Q.spawn(cb.bind(this, ...arguments));*/
                         co(cb.bind(this, ...arguments)).then(() => {
                         }, onerror.bind(onerror, req, res));
                     };
@@ -62,11 +62,13 @@ const app = new Proxy(_app, {
                                 const callback = function (msg) {
                                     try {
                                         let json = JsonFn.parse(msg);
-                                        co(cb.bind(this, json)).then(() => {}, e => {
+                                        co(cb.bind(this, json)).then(() => {
+                                        }, e => {
                                             console.warn(e);
                                         });
                                     } catch (e) {
-                                        co(cb.bind(this, msg)).then(() => {}, e => {
+                                        co(cb.bind(this, msg)).then(() => {
+                                        }, e => {
                                             console.warn(e);
                                         });
                                     }
@@ -99,7 +101,13 @@ const app = new Proxy(_app, {
     }
 });
 
-app.use(session({secret: 'best cms system', resave: false, saveUninitialized: true}));
+app.use(session({
+    secret: 'best cms system',
+    resave: false, saveUninitialized: true,
+    cookie: {maxAge: 2628000000},
+    expires: 30 * 24 * 60 * 60 * 1000
+}));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(require('method-override')());
@@ -208,7 +216,7 @@ const cms = {
         _.assign(this.data.online.menu, menu);
     },
     async,
-    getModel : function (type) {
+    getModel: function (type) {
         return this.Types[type].Model;
     }
 }

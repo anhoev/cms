@@ -289,11 +289,11 @@ module.exports = (cms) => {
                 } else if (method === 'post') {
                     if (Object.keys(cms.Types).indexOf(type) !== -1) {
                         var Model = cms.Types[type].Model;
-                        const _model = yield Model.findByIdAndUpdate(model._id, _.pickBy(model, (v, k) => k !== '__v', true), {
+                        yield Model.findByIdAndUpdate(model._id, _.pickBy(model, (v, k) => k !== '__v', true), {
                             upsert: true,
                             setDefaultsOnInsert: true
                         }).exec();
-                        ws.send({result: _model, uuid});
+                        ws.send({result: (yield Model.findById(model._id)), uuid});
                     }
                 }
             }

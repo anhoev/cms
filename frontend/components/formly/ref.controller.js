@@ -8,12 +8,14 @@ function controller($scope, cms) {
     cms.loadElements(type, () => {
         $scope.models.push(...Types[type].list);
 
-        if (typeof $scope.model[$scope.options.key] === 'string') {
-            $scope.model[$scope.options.key] = _.find($scope.models, {_id: $scope.model[$scope.options.key]});
-        } else if (Array.isArray($scope.model[$scope.options.key]) && typeof $scope.model[$scope.options.key][0] === 'string') {
-            const _ids = JsonFn.clone($scope.model[$scope.options.key]);
-            $scope.model[$scope.options.key] = _.filter($scope.models, ({_id}) => _ids.indexOf(_id) !== -1);
-        }
+        $scope.$watch(`model['${$scope.options.key}']`,() => {
+            if (typeof $scope.model[$scope.options.key] === 'string') {
+                $scope.model[$scope.options.key] = _.find($scope.models, {_id: $scope.model[$scope.options.key]});
+            } else if (Array.isArray($scope.model[$scope.options.key]) && typeof $scope.model[$scope.options.key][0] === 'string') {
+                const _ids = JsonFn.clone($scope.model[$scope.options.key]);
+                $scope.model[$scope.options.key] = _.filter($scope.models, ({_id}) => _ids.indexOf(_id) !== -1);
+            }
+        })
     })
 
 }

@@ -52,6 +52,11 @@ function cms($http, Upload) {
             if (content && content._id) query = '';
             $http.post(`/cms-types/${type}?${query}`, JsonFn.stringify(content)).then(res => {
                 const result = JsonFn.clone(res.data, true);
+
+                if (_.find(Type.list, {_id: ref})) {
+                    _.remove(Type.list, {_id: ref});
+                }
+
                 if (!ref || !_.find(Type.list, {_id: ref})) {
                     ref = result.data ? result.data._id : null;
                     Type.list.push(result.data);
@@ -194,6 +199,11 @@ function cms($http, Upload) {
             path: `post/api/v1/${type}`,
             model
         }, ({result:model}) => {
+
+            if (_.find(Types[type].list, {_id: model._id})) {
+                _.remove(Types[type].list, {_id: model._id});
+            }
+
             if (resolve) resolve(model);
         });
     }

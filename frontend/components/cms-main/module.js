@@ -10,6 +10,7 @@ import "angular-bootstrap-contextmenu";
 import fragmentDirective from "./fragment.directive";
 import containerDirective from "./container.directive";
 import containerEditDirective from "./container-edit.directive";
+import cmsFormPathDirective from "./cms-form-path.directive";
 
 const module = angular
     .module('components.cmsMain', ['dndLists', 'ui.bootstrap', common, cmsEditable, cmsElementEdit, 'ui.bootstrap.contextMenu'])
@@ -18,6 +19,7 @@ const module = angular
     .directive('cmsEditor', editorDirective)
     .directive('cmsWrapper', cmsWrapper)
     .directive('cmsFragment', fragmentDirective)
+    .directive('cmsFormPath', cmsFormPathDirective)
     .directive('cmsContainerEdit', containerEditDirective);
 
 export default module.name;

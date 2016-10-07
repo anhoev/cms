@@ -38,7 +38,8 @@ function directive() {
             onCancel: '&',
             onSubmit: '&',
             onAdd: '&',
-            onApply: '&'
+            onApply: '&',
+            onDelete: '&'
         },
         template,
         controllerAs: 'vm',
@@ -48,7 +49,7 @@ function directive() {
 
 service.$inject = ['$http', '$timeout', 'cms', '$uibModal'];
 function service($http, $timeout, cms, $uibModal) {
-    function edit(ref, type, cb) {
+    function manipulate(ref, type, _model, cb) {
 
         const Type = Types[type];
 
@@ -56,14 +57,18 @@ function service($http, $timeout, cms, $uibModal) {
             $scope.$on('saveContainers', (e, obj) => scope.$emit('saveContainersFw', obj));
             $scope.$on('restoreContainers', (e, obj) => scope.$emit('restoreContainersFw', obj));
 
-            $scope.model = _.find(Type.list, {_id: ref});
-            if (!$scope.model) {
-                $http.get(`api/v1/${type}/${ref}`)
-                    .then((res)=> {
-                        Type.list.push(res.data);
-                        $scope.model = _.find(Type.list, {_id: ref});
-                    });
+            $scope.model = {};
+
+            if (ref) {
+                cms.getType(type, ref, (model) => {
+                    _.assign($scope.model, model);
+                })
+            } else if (_model) {
+                cms.createElement(type, _model, model => {
+                    _.assign($scope.model, model);
+                })
             }
+
             $scope.fields = Type.form;
 
             if (Type.tabs) {
@@ -95,8 +100,8 @@ function service($http, $timeout, cms, $uibModal) {
             $scope.type = type;
 
             $scope.submit = function () {
-                cms.updateElement($scope.type, $scope.model, () => {
-                    $uibModalInstance.close();
+                cms.updateElement($scope.type, $scope.model, (_model) => {
+                    $uibModalInstance.close(_model);
                     console.log('update element successful');
                 }, () => $uibModalInstance.dismiss('cancel'));
             };
@@ -107,6 +112,12 @@ function service($http, $timeout, cms, $uibModal) {
 
             $scope.cancel = function () {
                 $uibModalInstance.dismiss('cancel');
+            };
+
+            $scope.delete = function () {
+                cms.removeElement($scope.type, $scope.model._id, () => {
+                    $uibModalInstance.close();
+                })
             };
 
             $scope.add = function () {
@@ -120,21 +131,21 @@ function service($http, $timeout, cms, $uibModal) {
 
         }
 
-        cms.getType(type, ref, () => {
-            let mouseEnter = false;
 
-            $('body').on('scroll mousewheel touchmove', function (e) {
-                if (!mouseEnter) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return false;
-                }
-            });
+        let mouseEnter = false;
 
-            const modalInstance = $uibModal.open({
-                animation: false,
-                size: 'lg',
-                template: `
+        $('body').on('scroll mousewheel touchmove', function (e) {
+            if (!mouseEnter) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        });
+
+        const modalInstance = $uibModal.open({
+            animation: false,
+            size: 'lg',
+            template: `
                 <div cms-element-edit
                      cms-type="type"
                      cms-model="model"
@@ -142,35 +153,45 @@ function service($http, $timeout, cms, $uibModal) {
                      on-cancel="cancel()"
                      on-submit="submit()"
                      on-add="add()"
-                     on-apply="apply()">
+                     on-apply="apply()"
+                     on-delete="delete()">
                 </div>
                 `,
-                controller: modalCtrl,
-                windowClass: 'cms-window-placeholder'
-            });
+            controller: modalCtrl,
+            windowClass: 'cms-window-placeholder'
+        });
 
-            $timeout(() => {
-                $('.cms-window-placeholder').find('.modal-content').mouseover(() => {
-                    mouseEnter = true;
-                }).mouseout(() => {
-                    mouseEnter = false;
-                });
-            }, 100);
-
-            modalInstance.result.then(() => {
-                if (cb) $timeout(cb, 100);
-            })['finally'](function () {
-                $timeout(()=> {
-                    $('body').off('scroll mousewheel touchmove');
-                    $('.cms-window-placeholder').find('.modal-content').off();
-                }, 100);
+        $timeout(() => {
+            $('.cms-window-placeholder').find('.modal-content').mouseover(() => {
+                mouseEnter = true;
+            }).mouseout(() => {
+                mouseEnter = false;
             });
-        })
+        }, 100);
+
+        modalInstance.result.then((model) => {
+            if (cb) $timeout(cb(model));
+        })['finally'](function () {
+            $timeout(()=> {
+                $('body').off('scroll mousewheel touchmove');
+                $('.cms-window-placeholder').find('.modal-content').off();
+            });
+        });
+
 
     }
 
+    function edit(ref, type, cb) {
+        manipulate(ref, type, null, cb);
+    }
+
+    function add(model, type, cb) {
+        manipulate(null, type, model, cb);
+    }
+
     return {
-        edit
+        edit,
+        add
     }
 }
 
