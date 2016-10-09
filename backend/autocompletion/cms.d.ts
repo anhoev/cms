@@ -30,7 +30,11 @@ export interface Option {
     admin;
     restifyOptions;
     info: {
-
+        elementClass: String,
+        editorIcon: {
+            top: String,
+            right: String
+        }
     };
     autopopulate: Boolean,
     alwaysLoad: Boolean,
