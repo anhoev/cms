@@ -97,7 +97,7 @@ module.exports = (cms) => {
         });
 
 
-        //schema.index({'$**': 'text'});
+        // schema.index({'$**': 'text'});
 
         if (initSchema) initSchema(schema);
         const Model = cms.mongoose.model(name, schema);

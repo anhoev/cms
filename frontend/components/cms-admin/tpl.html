@@ -39,23 +39,18 @@
                             </ui-select-choices>
                         </ui-select>
 
-                        <button class="btn btn-white btn-xs" style="margin-right: 10px;"
-                                ng-click="deleteAll()">
-                            Delete all
-                        </button>
+                        <div class="btn-group btn-group-xs" style="margin-top: -12px;margin-right: 10px;">
+                            <button type="button" class="btn btn-white" ng-click="setting()">Setting</button>
+                            <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" style="z-index: 10000 !important;">
+                                <li><a href ng-click="deleteAll()">Delete all</a></li>
+                                <li><a href ng-click="import()">Import</a></li>
+                                <li><a href ng-click="export()">Export</a></li>
 
-                        <button class="btn btn-white btn-xs" style="margin-right: 10px;" ng-click="import()">
-                            Import
-                        </button>
-
-                        <button class="btn btn-white btn-xs" style="margin-right: 10px;" ng-click="export()">
-                            Export
-                        </button>
-
-                        <button class="btn btn-white btn-xs" style="margin-right: 10px;"
-                                ng-click="setting()">
-                            Setting
-                        </button>
+                            </ul>
+                        </div>
 
                         <button class="btn btn-white btn-xs" ng-click="add()">
                             Add

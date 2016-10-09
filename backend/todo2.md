@@ -24,3 +24,8 @@
 * delete fns
 
 * isolate bootstrap css
+
+* refresh btn to admin
+
+* selection for admin
+
