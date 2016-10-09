@@ -125,7 +125,7 @@ $brand-primary: #428bca !default; // #337ab7
 
 @import "../../node_modules/ui-select/dist/select.css";
 
-@import "../../node_modules/lobipanel/lib/jquery-ui.min.css";
+// @import "../../node_modules/lobipanel/lib/jquery-ui.min.css";
 
 // fix for ui-select
 .cms .ui-select-container.form-control {
@@ -699,4 +699,13 @@ input::-webkit-inner-spin-button {
 
 .text-danger-2 {
   color: crimson !important;
+}
+
+.text-violet {
+  margin-right: 5px;
+  background-color: #E1ECF4;
+  color: #8835b7;
+  font-size: small;
+  font-weight: 500;
+  padding: 2px;
 }

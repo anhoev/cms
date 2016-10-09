@@ -98,6 +98,10 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
                             $scope.loading = false;
                             console.timeEnd("loadElements");
                             $scope.list.push(...list);
+
+                            if ($scope.showAs.type === 'element') {
+                                $scope.selectElement($scope.list[0]._id);
+                            }
                         }, paramsBuilder);
 
                         // number of pages;

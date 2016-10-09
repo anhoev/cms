@@ -121,7 +121,7 @@
                     <div class="" ng-if="showAs.type === 'element'">
                         <button class="btn cms-btn btn-primary btn-outline btn-xs" style="margin-right: 10px;"
                                 ng-repeat="e in list track by $index"
-                                ng-click="selectElement(e._id);">
+                                ng-click="selectElement(e._id);" ng-show="list.length > 1">
                             {{getTitle(node.type, e._id)}}
                         </button>
                         <br><br>

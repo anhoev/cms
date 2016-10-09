@@ -56,41 +56,6 @@ module.exports = (cms) => {
         res.send(JsonFn.stringify(result));
     })
 
-    /**
-     <pre>
-     Use to register a new schema
-     Cms system will automatic create form, rest backend,
-     run filter, mongoose model for the schema and return a model back
-     </pre>
-     * @example
-     <pre><code>
-     const Person = cms.registerSchema({
-    name: {
-        type: String,
-        default: 'new name',
-        form: {
-            type: 'input',
-            templateOptions: {
-                label: 'NAME'
-            }
-        }
-    },
-    girlFriend: {
-        type: mongoose.Schema.Types.ObjectId, ref: 'Girl',
-        form: {templateOptions: {labelProp: 'name', placeholder: 'Add girl friend'}}
-    },
-    children: {name: String, old: String},
-    hasNested: Boolean
- }, {name: 'Person', formatter: 'person.jade', title: 'name, initSchema: s => s.plugin(autopopulate)});
-     </code></pre>
-     * @param {mongoose.Schema} schema
-     * @param options
-     * @param {String} options.name name of model
-     * @param {String} options.formatter path to formatter file like model.jade
-     * @param {String} options.title title of model
-     * @param {Function} [options.initSchema] use to install plugins
-     * @returns {Model} Model
-     */
     function registerSchema(schema, options) {
         const {
             name, label, formatter, formatterUrl, initSchema, title, fn = {},
