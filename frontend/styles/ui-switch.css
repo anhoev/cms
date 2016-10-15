@@ -1,0 +1,15 @@
+.switch {
+    width: 33px !important;
+    height: 20px !important;;
+    margin-right: 15px;
+}
+
+.switch small {
+    margin-top: -1px !important;
+    width: 20px !important;
+    height: 20px !important;
+}
+
+.switch.checked small {
+    left: 13px !important;
+}

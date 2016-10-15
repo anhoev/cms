@@ -70,7 +70,7 @@ function config(formlyConfigProvider, size, $rootScopeProvider) {
         name: 'input',
         template: `
         <div>
-          <input ng-if="!formState.readOnly" class="form-control" ng-model="model[options.key]">
+          <input ng-if="!formState.readOnly" class="form-control" ng-model="model[options.key]" >
           <p ng-if="formState.readOnly" class="form-control-static">{{model[options.key]}}</p>
         </div>
         `,
@@ -80,12 +80,25 @@ function config(formlyConfigProvider, size, $rootScopeProvider) {
 
     config.setWrapper({
         name: 'checkboxWrapper',
-        template: '<div class="form-group"><div class="col-sm-offset-2 col-sm-10"><formly-transclude></formly-transclude></div></div>'
+        template: `
+        <div ng-if="!to.class" class="form-group"><div class="col-sm-offset-2 col-sm-10"><formly-transclude></formly-transclude></div></div>
+        <div ng-if="to.class" class="form-group"><div ng-class="[to.class]"><formly-transclude></formly-transclude></div></div>
+        `
     });
 
     config.setType({
         name: 'checkbox',
-        template: checkboxTemplate,
+        template: `
+        <div class="checkbox">
+            <label style="padding-left: 0px;">
+                <switch ng-model="model[options.key]" class="green "></switch>
+            </label>
+            <span style="position: absolute">
+                {{to.label}}
+                {{to.required ? '*' : ''}}
+            </span>
+        </div>
+`,
         wrapper: ['checkboxWrapper'],
         overwriteOk: true
     });
@@ -104,7 +117,8 @@ function config(formlyConfigProvider, size, $rootScopeProvider) {
     config.setType({
         name: 'tree',
         template: treeTemplate,
-        controller: treeController
+        controller: treeController,
+        wrapper: ['bootstrapLabel', 'bootstrapHasError']
     });
 
     config.setType({
@@ -218,7 +232,7 @@ function config(formlyConfigProvider, size, $rootScopeProvider) {
     config.setType({
         name: 'select',
         template: selectTemplate,
-        controller: function () {
+        controller: function ($scope) {
         },
         overwriteOk: true,
         wrapper: ['bootstrapLabel', 'bootstrapHasError']
@@ -229,15 +243,16 @@ function config(formlyConfigProvider, size, $rootScopeProvider) {
         template: selectTemplate,
         controller: function ($scope, cms) {
             const type = $scope.options.templateOptions.Type;
-
+            $scope.to.options = [];
             cms.loadElements(type, () => {
-                $scope.to.options = [{name: 'None', value: null}].concat(_.map(Types[type].list, e => {
+                $scope.to.options.push(..._.map(Types[type].list, e => {
                     const value = cms.getTitle(type, e._id);
                     return ({
                         value: value,
                         name: $scope.to.labelProp ? e[$scope.to.labelProp] : value
                     });
                 }));
+
             })
         },
         overwriteOk: true,

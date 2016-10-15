@@ -1,22 +1,23 @@
 <div style="padding: 20px">
-    <form role="form" class="form-horizontal">
-        <div class="form-group">
-            <label class="col-sm-12">Filename:</label>
-            <div class="col-sm-12"><input type="text" ng-model="filename"></div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form role="form" class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-12">Filename:</label>
+                    <div class="col-sm-12"><input type="text" ng-model="filename" class="form-control"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-12">Select Types:</label>
+                    <div class="cms-neutral">
+                        <formly-form model="data" fields="fields" form="form" options="options"></formly-form>
+                    </div>
+                </div>
+            </form>
         </div>
-        <div class="form-group">
-            <label class="col-sm-12">Select Types:</label>
-            <div class="col-sm-12">
-                <ui-select data-ng-model="data.types" multiple theme="bootstrap">
-                    <ui-select-match placeholder="Choose company">{{$item.name}}</ui-select-match>
-                    <ui-select-choices
-                            data-repeat="item.value as item in types | filterBy: ['name']: $select.search">
-                        <div ng-bind-html="item.name | highlight: $select.search"></div>
-                    </ui-select-choices>
-                </ui-select>
-            </div>
-        </div>
-    </form>
+    </div>
+
+
     <br><br>
     <button type="button" class="btn btn-primary submit-button" ng-click="choose()">Choose</button>
     <button type="button" class="btn btn-primary" ng-click="cancel()">Cancel</button>

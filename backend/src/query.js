@@ -1,7 +1,7 @@
 'use strict';
 const _ = require('lodash');
-const _merge = require('extend');
 const traverse = require('traverse');
+const _merge = require('extend');
 function merge() {
     return _merge(true, ...arguments);
 }
@@ -127,7 +127,6 @@ module.exports = cms => {
                 query.pathInForm = Path.pathInForm;
                 if (query.populate) {
                     _.forEach(query.populate.split(' '), select => {
-                        node.options;
                         const q = _.find(cms.Types[node.options.ref].webType.queries, {path: select});
                         q.form = _.get(cms.Types[node.options.ref].Form, q.pathInForm);
                         const fn = (val, p1, p2) => {

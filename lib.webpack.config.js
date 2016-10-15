@@ -14,8 +14,8 @@ module.exports = {
             'lodash/pickBy',
             'json-fn',
             /*'bootstrap-sass',
-            'bootstrap/dist/css/bootstrap.css',
-            'bootstrap/dist/css/bootstrap-theme.css',*/
+             'bootstrap/dist/css/bootstrap.css',
+             'bootstrap/dist/css/bootstrap-theme.css',*/
             'ng-file-upload',
             'jshint',
             './frontend/components/formly/ecma6.json',
@@ -25,6 +25,8 @@ module.exports = {
             'jquery-ui/ui/widgets/draggable',
             'jquery-ui/ui/widgets/resizable',
             'angular-ui-bootstrap',
+            'angular-ui-switch',
+            'angular-ui-switch/angular-ui-switch.min.css',
             'jstree',
             'jstree-bootstrap-theme/dist/themes/proton/style.min.css',
             'ng-js-tree',
@@ -68,7 +70,13 @@ module.exports = {
             'angular-websocket',
             'traverse',
             'moment',
-            'printthis'
+            'printthis',
+
+            'selectize/dist/css/selectize.css',
+            'selectize',
+            //'angular-selectize2/dist/angular-selectize',
+
+            'angular-translate'
         ]
     },
     output: {

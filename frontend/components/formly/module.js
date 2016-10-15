@@ -4,6 +4,8 @@ import config from './config';
 import _apiCheck from 'api-check';
 window.apiCheck = _apiCheck;
 apiCheck.globalConfig.disabled = true;
+import 'angular-ui-switch';
+import 'angular-ui-switch/angular-ui-switch.css';
 
 import 'angular-formly';
 import 'angular-formly-templates-bootstrap';
@@ -13,6 +15,12 @@ import 'jstree-bootstrap-theme/dist/themes/proton/style.min.css'
 import 'ng-js-tree';
 import 'ui-select';
 import 'ui-select/dist/select.min.css';
+
+import 'selectize/dist/css/selectize.css';
+import _Selectize from 'selectize/dist/js/standalone/selectize.js';
+window.Selectize = _Selectize;
+import './selectize';
+
 import _tinycolor from 'tinycolor2';
 window.tinycolor = _tinycolor;
 import 'angularjs-color-picker';
@@ -51,7 +59,7 @@ import 'angular-ui-codemirror';
 const module = angular
     .module('components.formly', ['formly', 'formlyBootstrap',
         'ngJsTree', 'ui.select', 'ngSanitize', 'angular.filter',
-        'ui.codemirror', 'color.picker', 'dndLists'])
+        'ui.codemirror', 'color.picker', 'dndLists', 'uiSwitch', 'selectize'])
     .config(config)
     .constant('size', {label: 'col-sm-2', input: 'col-sm-10'});
 

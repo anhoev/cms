@@ -39,6 +39,10 @@ class QueryBuilder {
         return this;
     }
 
+    lean() {
+        this._lean = true;
+    }
+
     build() {
         this._skip = (this._page - 1) * this._limit;
 
@@ -70,6 +74,7 @@ class QueryBuilder {
         if (this._sort) result.limit = this._sort;
         if (this._part) result.limit = this._part;
         if (this._populate) result.populate = this._populate;
+        if (this._lean) result.lean = true;
 
         return result;
     }

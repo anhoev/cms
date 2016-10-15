@@ -8,6 +8,8 @@ function service($http, $timeout, cms, $uibModal) {
             }
             $scope.types = Object.keys(cms.types).map(k => ({name: k, value: k}));
 
+            const types = Object.keys(cms.types).map(k => ({text: k, value: k}));
+
             $scope.choose = function () {
                 $uibModalInstance.close({filename: $scope.filename, types: $scope.data.types});
             };
@@ -15,6 +17,18 @@ function service($http, $timeout, cms, $uibModal) {
             $scope.cancel = function () {
                 $uibModalInstance.dismiss('cancel');
             };
+
+            $scope.options = {};
+
+            $scope.fields = [{
+                key: 'types',
+                type: 'tree',
+                templateOptions: {
+                    label: '',
+                    class: 'col-xs-12',
+                    options: types
+                }
+            }]
         }
 
         var modalInstance = $uibModal.open({

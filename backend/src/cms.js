@@ -61,7 +61,7 @@ const app = new Proxy(_app, {
                             if (cb && cb.constructor && cb.constructor.name === 'GeneratorFunction') {
                                 const callback = function (msg) {
                                     try {
-                                        let json = JsonFn.parse(msg);
+                                        let json = JsonFn.parse(msg, true);
                                         co(cb.bind(this, json)).then(() => {
                                         }, e => {
                                             console.warn(e);
@@ -82,10 +82,15 @@ const app = new Proxy(_app, {
 
                         const _send = ws.send;
                         ws.send = function (result) {
+                            console.time("send");
                             if (typeof result === 'string') {
-                                _send.bind(ws)(result);
+                                _send.bind(ws)(result, {}, function () {
+                                    console.timeEnd("send");
+                                });
                             } else {
-                                _send.bind(ws)(JsonFn.stringify(result));
+                                _send.bind(ws)(JsonFn.stringify(result), {}, function () {
+                                    console.timeEnd("send");
+                                });
                             }
                         }
                         _fn.bind(this)(ws, req);

@@ -62,7 +62,7 @@ module.exports = (cms) => {
             serverFn = {}, tabs, isViewElement = true, mTemplate, admin = {query: []},
             alwaysLoad = false, restifyOptions,
             info = {},
-            controller
+            controller, lean
         } = options;
         cms.filters.schema.forEach((fn) => fn(schema, name));
         if (!(schema instanceof cms.mongoose.Schema)) {
@@ -83,6 +83,8 @@ module.exports = (cms) => {
                             this.block();
                             _textIndex += node[cms.Types[_type.options.ref].info.title] + ' ';
                         } else if (type === 'Number') {
+                            _textIndex += node + ' ';
+                        } else if (type === 'String') {
                             _textIndex += node + ' ';
                         }
                     } else {
@@ -154,6 +156,7 @@ module.exports = (cms) => {
                 return this._serverFnForClient;
             },
             mTemplate,
+            lean,
             get webType() {
                 if (!this.Form) {
                     _.assign(this, cms.utils.initType(schema, tabs, name));
@@ -174,7 +177,8 @@ module.exports = (cms) => {
                         return v.options && v.options.label ? v.options.label : k;
                     }),
                     store: this.store,
-                    controller: this.controller
+                    controller: this.controller,
+                    lean: this.lean
                 }
             },
             getWebTypeWithData: function*() {
@@ -244,11 +248,13 @@ module.exports = (cms) => {
                 const [,method,type] = path.match(modelQueryTester);
                 if (method === 'get') {
                     if (Object.keys(cms.Types).indexOf(type) !== -1) {
-                        let q = cms.Types[type].Model.find(params.query);
+                        let q = cms.getModel(type).find(params.query);
                         if (params.populate) {
                             q = q.populate(params.populate);
                         }
-                        const result = yield q.sort(params.sort).skip(params.skip).limit(params.limit);
+                        q = q.sort(params.sort).skip(params.skip).limit(params.limit);
+                        if (params.lean) q = q.lean();
+                        const result = yield q;
                         ws.send({result, uuid});
                     }
                 } else if (method === 'post') {
@@ -258,7 +264,8 @@ module.exports = (cms) => {
                             upsert: true,
                             setDefaultsOnInsert: true
                         }).exec();
-                        ws.send({result: (yield Model.findById(model._id)), uuid});
+                        var result = yield Model.findById(model._id);
+                        ws.send({result, uuid});
                     }
                 }
             }

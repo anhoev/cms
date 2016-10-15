@@ -9,7 +9,7 @@ function directive(cms) {
             model: '=',
             type: '@',
             path: '@cmsFormPath',
-            class: '@?'
+            class: '@?cmsClass'
         },
         template: `
         <formly-form model="vm.model" fields="vm.fields" form="vm.form" options="vm.options"></formly-form>

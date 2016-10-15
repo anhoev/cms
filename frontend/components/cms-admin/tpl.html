@@ -19,7 +19,7 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <div class="cms-admin-right-panel">
-                        <label style="color: white"> Show : </label>
+                        <label style="color: white"> {{'Show' | translate}} : </label>
 
                         <ui-select style="min-width: 50px;margin-left: 10px;margin-right: 10px;"
                                    class="cms-select" data-ng-model="page.limit" theme="bootstrap"
@@ -40,12 +40,12 @@
                         </ui-select>
 
                         <div class="btn-group btn-group-xs" style="margin-top: -12px;margin-right: 10px;">
-                            <button type="button" class="btn btn-white" ng-click="setting()">Setting</button>
+                            <button type="button" class="btn btn-white" ng-click="setting()">{{'Setting' | translate}}</button>
                             <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" style="z-index: 10000 !important;">
-                                <li><a href ng-click="deleteAll()">Delete all</a></li>
+                                <li><a href ng-click="deleteAll()">{{'DeleteAll' | translate}}</a></li>
                                 <li><a href ng-click="import()">Import</a></li>
                                 <li><a href ng-click="export()">Export</a></li>
 
@@ -53,7 +53,7 @@
                         </div>
 
                         <button class="btn btn-white btn-xs" ng-click="add()">
-                            Add
+                            {{'Add' | translate}}
                         </button>
 
                     </div>
@@ -130,7 +130,9 @@
                     <uib-pagination ng-show="page.size > 1" total-items="page.size" ng-model="page.currentPage"
                                     class="pagination-sm"
                                     items-per-page="page.limit"
-                                    ng-change="refresh(true)"></uib-pagination>
+                                    ng-change="refresh(true)"
+                                    max-size="10"
+                                    boundary-link-numbers="true"></uib-pagination>
 
                 </div>
             </div>

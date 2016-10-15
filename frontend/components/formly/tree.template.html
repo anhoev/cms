@@ -1,38 +1,4 @@
-<div class="form-group" ng-init="_showTree = false">
-    <label class="control-label {{size.label}}"
-           ng-show="options.templateOptions.label"
-           uib-tooltip='{{to.tooltip}}'>
-        {{options.templateOptions.label}}
-    </label>
-    <div class="{{size.input}}">
-        <div style="position: absolute;right: 12px;">
-            <button type="button" class="btn btn-xs btn-success"
-                    ng-click="_showTree = !_showTree"
-                    ng-bind="_showTree?'hide tree':'show tree'"
-            >show tree
-            </button>
-            <button type="button" class="btn btn-xs btn-danger"
-                    ng-click="clear()">clear
-            </button>
-        </div>
-
-        <div style="overflow-wrap: break-word;padding-top: 7px;"
-             ng-show="!_showTree" >
-            <button class="btn btn-xs btn-outline btn-default"
-                    type="button"
-                    style="margin-left: 4px;"
-                    ng-repeat="v in model[options.key]">
-                {{v}}
-            </button>
-        </div>
-        <div ng-show="_showTree"
-             js-tree="treeConfig"
-             style="margin-top: 7px;"
-             ng-model="tree"
-             tree="treeInstance"
-             tree-events="check_node:check;uncheck_node:check">
-        </div>
-
-    </div>
-</div>
-<br>
+<div js-tree="treeConfig"
+     ng-model="tree"
+     tree="data.treeInstance"
+     tree-events="check_node:check;uncheck_node:check;"></div>

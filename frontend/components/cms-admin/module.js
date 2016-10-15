@@ -67,6 +67,7 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
                         })
 
                         let paramsBuilder = new QueryBuilder().part(false).limit($scope.page.limit).page($scope.page.currentPage).query($scope.node.query);
+                        if (cms.types[$scope.node.type].lean) paramsBuilder.lean();
                         _.each($scope.queries, q => {
                             if (q.model) {
                                 const val = _.get(q.model, q.form[0].key);
@@ -93,10 +94,9 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
                             paramsBuilder.search($scope.search.text);
                         }
 
-                        console.time("loadElements");
+
                         cms.loadElements($scope.node.type, (list) => {
                             $scope.loading = false;
-                            console.timeEnd("loadElements");
                             $scope.list.push(...list);
 
                             if ($scope.showAs.type === 'element') {

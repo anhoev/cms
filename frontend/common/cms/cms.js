@@ -7,6 +7,7 @@ import Uuid from 'uuid';
 import 'jquery-ui/ui/widgets/draggable';
 import 'jquery-ui/ui/widgets/resizable';
 import traverse from 'traverse';
+import 'angular-translate';
 
 window.Enum = {
     Load: {NOT: 'NOT', LOADING: 'LOADING', LOADED: 'LOADED', PART_LOADED: 'PART_LOADED'},
@@ -14,12 +15,35 @@ window.Enum = {
 }
 
 const modelModule = angular
-    .module('common.data', ['ngFileUpload', 'ngWebSocket'])
+    .module('common.data', ['ngFileUpload', 'ngWebSocket', 'pascalprecht.translate'])
+    .config(config)
     .factory('cms', cms)
     .run(run);
 
+
+config.$inject = ['$translateProvider'];
+function config($translateProvider) {
+    $translateProvider.translations('en', {
+        Add: 'Add',
+        Setting: 'Setting',
+        DeleteAll: 'Delete all',
+        Show: 'Show'
+    });
+
+    $translateProvider.translations('de', {
+        Add: 'Hinzufügen',
+        Setting: 'Einstellung',
+        DeleteAll: 'alles Löschen',
+        Show: 'Anzeigen'
+    });
+
+    $translateProvider.preferredLanguage('de');
+}
+
 cms.$inject = ['$http', 'Upload'];
 function cms($http, Upload) {
+
+
     const data = {
         socketQueue: {}
     };
@@ -43,13 +67,13 @@ function cms($http, Upload) {
 
     changeEditMode(Enum.EditMode.DATAELEMENT);
 
-    function getType(type, ref, cb, content) {
+    function getType(type, ref, cb, content, onfly = true) {
         let Type = data.types[type];
         if (!Type || !Type.template || !ref || !_.find(Type.list, {_id: ref})) {
             let query = ref ? (Type && _.find(Type.list, {_id: ref}) ? 'element=false' : `element=${ref}`) : 'element=false';
             if (!Type) Type = data.types[type] = {list: []};
             if (!Type.template) query += '&template=true';
-            if (content && content._id) query = '';
+            if ((content && content._id) || !onfly) query = '';
             $http.post(`/cms-types/${type}?${query}`, JsonFn.stringify(content)).then(res => {
                 const result = JsonFn.clone(res.data, true);
 
@@ -75,8 +99,8 @@ function cms($http, Upload) {
         }
     }
 
-    function createElement(type, content, cb) {
-        return getType(type, null, cb, content);
+    function createElement(type, content, cb, onfly = true) {
+        return getType(type, null, cb, content, onfly);
     }
 
     function removeElement(type, _id, cb, onerror) {
@@ -118,11 +142,12 @@ function cms($http, Upload) {
             if (cb) cb(data.types[type].list);
             return;
         }
-
+        console.time("loadElements");
         sendWs({
                 path: `get/api/v1/${type}`,
                 params: paramsBuilder ? paramsBuilder.buildJson() : {}
             }, ({result:_list}) => {
+                console.timeEnd("loadElements");
                 if (!paramsBuilder) {
                     data.types[type].list = _list;
                     data.types[type]._load = Enum.Load.LOADED;
@@ -202,6 +227,7 @@ function cms($http, Upload) {
 
             if (_.find(Types[type].list, {_id: model._id})) {
                 _.remove(Types[type].list, {_id: model._id});
+                Types[type].list.push(model);
             }
 
             if (resolve) resolve(model);
