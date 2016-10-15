@@ -9,6 +9,9 @@ import 'jquery-ui/ui/widgets/resizable';
 import traverse from 'traverse';
 import 'angular-translate';
 
+import _io from 'socket.io-client';
+window.io = _io;
+
 window.Enum = {
     Load: {NOT: 'NOT', LOADING: 'LOADING', LOADED: 'LOADED', PART_LOADED: 'PART_LOADED'},
     EditMode: {ALL: 'ALL', VIEWELEMENT: 'VIEWELEMENT', DATAELEMENT: 'DATAELEMENT', CONTAINER: 'CONTAINER'}
@@ -522,25 +525,27 @@ function run(cms, $http, $websocket) {
 
     $('body').addClass('cms-admin-mode');
 
-    let new_uri;
+    let new_uri = '';
     const {wsAddress} = cms.data.online;
     if (wsAddress) {
         new_uri = wsAddress;
     } else {
         let loc = window.location;
-        if (loc.protocol === "https:") {
-            new_uri = "wss:";
-        } else {
-            new_uri = "ws:";
-        }
-        new_uri += "//" + loc.host;
-        new_uri += loc.pathname;
+        /*if (loc.protocol === "https:") {
+         new_uri = "wss:";
+         } else {
+         new_uri = "ws:";
+         }*/
+        new_uri += "http://" + loc.host;
+        //new_uri += loc.pathname;
     }
 
-    window.socket = cms.socket = $websocket(new_uri, {reconnectIfNotNormalClose: true});
+    var socket = io.connect(new_uri);
 
-    socket.onMessage((event) => {
-        const _data = JsonFn.parse(event.data, true);
+    window.socket = cms.socket = socket;
+
+    socket.on('message', (event) => {
+        const _data = JsonFn.parse(event, true);
         if (!_data.uuid) return;
         cms.data.socketQueue[_data.uuid](_data)
     });

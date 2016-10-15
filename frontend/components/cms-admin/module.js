@@ -29,7 +29,9 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
 
         vm.openSitemap = function () {
             function modalCtrl($scope, $uibModalInstance) {
-                $scope.list = [];
+                $scope.data = {
+                    list: []
+                }
                 $scope.cancel = function () {
                     $uibModalInstance.dismiss('cancel');
                 };
@@ -51,20 +53,23 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
                 $scope.get = _.get;
 
                 $scope.refresh = (onlyChangePage = false, changeAdminList = false) => {
-                    $timeout(() => {
+
+                    //$timeout(function () {
                         if (!$scope.node) return;
 
-                        $scope.list.length = 0;
-                        $scope.loading = true;
+                        $scope.data.list = [];
+
+                        $scope.data.loading = true;
 
                         $scope.element = {};
-                        $timeout(() => {
-                            if (changeAdminList) {
+
+                        if (changeAdminList) {
+                            $timeout(() => {
                                 $scope.tree = cms.getAdminList();
                                 $scope.treeConfig.version++;
-                            }
+                            })
 
-                        })
+                        }
 
                         let paramsBuilder = new QueryBuilder().part(false).limit($scope.page.limit).page($scope.page.currentPage).query($scope.node.query);
                         if (cms.types[$scope.node.type].lean) paramsBuilder.lean();
@@ -94,21 +99,28 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
                             paramsBuilder.search($scope.search.text);
                         }
 
-
+                        console.time('test');
                         cms.loadElements($scope.node.type, (list) => {
-                            $scope.loading = false;
-                            $scope.list.push(...list);
+                            console.timeEnd('test');
+                            $scope.data.loading = false;
+                            //$timeout(function () {
 
-                            if ($scope.showAs.type === 'element') {
-                                $scope.selectElement($scope.list[0]._id);
-                            }
+                                $scope.data.list.push(...list);
+                                if ($scope.showAs.type === 'element') {
+                                    $scope.selectElement($scope.data.list[0]._id);
+                                }
+                                $scope.$digest();
+                            //})
+
                         }, paramsBuilder);
 
                         // number of pages;
                         if (!onlyChangePage) cms.countElements($scope.node.type, (count) => {
-                            $scope.page.size = count;
+                            $timeout(function () {
+                                $scope.page.size = count;
+                            })
                         }, paramsBuilder);
-                    })
+                    //});
 
 
                 }
@@ -154,7 +166,7 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
 
 
                 $scope.remove = function (e) {
-                    _.remove($scope.list, e);
+                    _.remove($scope.data.list, e);
                 }
                 $scope.add = function () {
                     cms.createElement($scope.node.type, {}, model => {
@@ -201,11 +213,6 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
                     limit: 25,
                     currentPage: 1
                 };
-
-                $scope.setItemsPerPage = function (num) {
-                    $scope.itemsPerPage = num;
-                    $scope.currentPage = 1; //reset to first page
-                }
 
                 // show as
                 $scope.showAs = {

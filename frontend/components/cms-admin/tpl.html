@@ -40,7 +40,8 @@
                         </ui-select>
 
                         <div class="btn-group btn-group-xs" style="margin-top: -12px;margin-right: 10px;">
-                            <button type="button" class="btn btn-white" ng-click="setting()">{{'Setting' | translate}}</button>
+                            <button type="button" class="btn btn-white" ng-click="setting()">{{'Setting' | translate}}
+                            </button>
                             <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
                             </button>
@@ -85,7 +86,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="element in list track by $index">
+                            <tr ng-repeat="element in data.list track by $index">
                                 <td ng-repeat="col in node.columns track by $index">
                                 <span cms-direct-editable="model.{{col.value}}"
                                       cms-value="element[col.value]"
@@ -101,12 +102,12 @@
                         </table>
                     </div>
 
-                    <div ng-if="loading">
+                    <div ng-show="data.loading">
                         <img src="/build/images/ajax-loader.gif">
                     </div>
 
                     <div class="cms-panel-list-content" ng-if="showAs.type === 'list'">
-                        <div ng-repeat="element in list track by $index"
+                        <div ng-repeat="element in data.list track by $index"
                              ng-class="elementClass"
                              cms-element="{ref: element._id, type: node.type, containers: {}}"
                              dnd-moved="remove(element)"
@@ -115,8 +116,8 @@
 
                     <div class="" ng-if="showAs.type === 'element'">
                         <button class="btn cms-btn btn-primary btn-outline btn-xs" style="margin-right: 10px;"
-                                ng-repeat="e in list track by $index"
-                                ng-click="selectElement(e._id);" ng-show="list.length > 1">
+                                ng-repeat="e in data.list track by $index"
+                                ng-click="selectElement(e._id);" ng-show="data.list.length > 1">
                             {{getTitle(node.type, e._id)}}
                         </button>
                         <br><br>
@@ -127,13 +128,16 @@
                     </div>
 
                     <div class="clearfix"></div>
-                    <uib-pagination ng-show="page.size > 1" total-items="page.size" ng-model="page.currentPage"
-                                    class="pagination-sm"
-                                    items-per-page="page.limit"
-                                    ng-change="refresh(true)"
-                                    max-size="10"
-                                    boundary-link-numbers="true"></uib-pagination>
 
+                    <ul uib-pagination
+                        ng-show="page.size > 1"
+                        total-items="page.size"
+                        ng-model="page.currentPage"
+                        class="pagination-sm"
+                        items-per-page="page.limit"
+                        ng-change="refresh(true)"
+                        max-size="10"
+                        boundary-link-numbers="true"></ul>
                 </div>
             </div>
         </div>

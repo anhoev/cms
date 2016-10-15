@@ -256,27 +256,27 @@
 	
 	var _module2 = _interopRequireDefault(_module);
 	
-	var _module3 = __webpack_require__(111);
+	var _module3 = __webpack_require__(158);
 	
 	var _module4 = _interopRequireDefault(_module3);
 	
-	var _module5 = __webpack_require__(114);
+	var _module5 = __webpack_require__(161);
 	
 	var _module6 = _interopRequireDefault(_module5);
 	
-	var _module7 = __webpack_require__(128);
+	var _module7 = __webpack_require__(175);
 	
 	var _module8 = _interopRequireDefault(_module7);
 	
-	var _module9 = __webpack_require__(130);
+	var _module9 = __webpack_require__(177);
 	
 	var _module10 = _interopRequireDefault(_module9);
 	
-	var _module11 = __webpack_require__(132);
+	var _module11 = __webpack_require__(179);
 	
 	var _module12 = _interopRequireDefault(_module11);
 	
-	var _module13 = __webpack_require__(140);
+	var _module13 = __webpack_require__(187);
 	
 	var _module14 = _interopRequireDefault(_module13);
 	
@@ -1462,13 +1462,13 @@
 /* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(337);
+	module.exports = (__webpack_require__(2))(338);
 
 /***/ },
 /* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(353);
+	module.exports = (__webpack_require__(2))(354);
 
 /***/ },
 /* 31 */
@@ -7373,11 +7373,17 @@
 	
 	__webpack_require__(110);
 	
+	var _socket = __webpack_require__(111);
+	
+	var _socket2 = _interopRequireDefault(_socket);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
+	window.io = _socket2.default;
 	
 	window.Enum = {
 	    Load: { NOT: 'NOT', LOADING: 'LOADING', LOADED: 'LOADED', PART_LOADED: 'PART_LOADED' },
@@ -7946,26 +7952,28 @@
 	
 	    $('body').addClass('cms-admin-mode');
 	
-	    var new_uri = void 0;
+	    var new_uri = '';
 	    var wsAddress = cms.data.online.wsAddress;
 	
 	    if (wsAddress) {
 	        new_uri = wsAddress;
 	    } else {
 	        var loc = window.location;
-	        if (loc.protocol === "https:") {
-	            new_uri = "wss:";
-	        } else {
-	            new_uri = "ws:";
-	        }
-	        new_uri += "//" + loc.host;
-	        new_uri += loc.pathname;
+	        /*if (loc.protocol === "https:") {
+	         new_uri = "wss:";
+	         } else {
+	         new_uri = "ws:";
+	         }*/
+	        new_uri += "http://" + loc.host;
+	        //new_uri += loc.pathname;
 	    }
 	
-	    window.socket = cms.socket = $websocket(new_uri, { reconnectIfNotNormalClose: true });
+	    var socket = io.connect(new_uri);
 	
-	    socket.onMessage(function (event) {
-	        var _data = JsonFn.parse(event.data, true);
+	    window.socket = cms.socket = socket;
+	
+	    socket.on('message', function (event) {
+	        var _data = JsonFn.parse(event, true);
 	        if (!_data.uuid) return;
 	        cms.data.socketQueue[_data.uuid](_data);
 	    });
@@ -7978,7 +7986,7 @@
 /* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(335);
+	module.exports = (__webpack_require__(2))(336);
 
 /***/ },
 /* 103 */
@@ -8280,3666 +8288,7447 @@
 /* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	 * angular-translate - v2.12.1 - 2016-09-15
-	 * 
-	 * Copyright (c) 2016 The angular-translate team, Pascal Precht; Licensed MIT
-	 */
-	(function (root, factory) {
-	  if (true) {
-	    // AMD. Register as an anonymous module unless amdModuleId is set
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-	      return (factory());
-	    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	  } else if (typeof exports === 'object') {
-	    // Node. Does not work with strict CommonJS, but
-	    // only CommonJS-like environments that support module.exports,
-	    // like Node.
-	    module.exports = factory();
-	  } else {
-	    factory();
-	  }
-	}(this, function () {
-	
-	/**
-	 * @ngdoc overview
-	 * @name pascalprecht.translate
-	 *
-	 * @description
-	 * The main module which holds everything together.
-	 */
-	runTranslate.$inject = ['$translate'];
-	$translate.$inject = ['$STORAGE_KEY', '$windowProvider', '$translateSanitizationProvider', 'pascalprechtTranslateOverrider'];
-	$translateDefaultInterpolation.$inject = ['$interpolate', '$translateSanitization'];
-	translateDirective.$inject = ['$translate', '$interpolate', '$compile', '$parse', '$rootScope'];
-	translateAttrDirective.$inject = ['$translate', '$rootScope'];
-	translateCloakDirective.$inject = ['$translate', '$rootScope'];
-	translateFilterFactory.$inject = ['$parse', '$translate'];
-	$translationCache.$inject = ['$cacheFactory'];
-	angular.module('pascalprecht.translate', ['ng'])
-	  .run(runTranslate);
-	
-	function runTranslate($translate) {
-	
-	  'use strict';
-	
-	  var key = $translate.storageKey(),
-	    storage = $translate.storage();
-	
-	  var fallbackFromIncorrectStorageValue = function () {
-	    var preferred = $translate.preferredLanguage();
-	    if (angular.isString(preferred)) {
-	      $translate.use(preferred);
-	      // $translate.use() will also remember the language.
-	      // So, we don't need to call storage.put() here.
-	    } else {
-	      storage.put(key, $translate.use());
-	    }
-	  };
-	
-	  fallbackFromIncorrectStorageValue.displayName = 'fallbackFromIncorrectStorageValue';
-	
-	  if (storage) {
-	    if (!storage.get(key)) {
-	      fallbackFromIncorrectStorageValue();
-	    } else {
-	      $translate.use(storage.get(key))['catch'](fallbackFromIncorrectStorageValue);
-	    }
-	  } else if (angular.isString($translate.preferredLanguage())) {
-	    $translate.use($translate.preferredLanguage());
-	  }
-	}
-	
-	runTranslate.displayName = 'runTranslate';
-	
-	/**
-	 * @ngdoc object
-	 * @name pascalprecht.translate.$translateSanitizationProvider
-	 *
-	 * @description
-	 *
-	 * Configurations for $translateSanitization
-	 */
-	angular.module('pascalprecht.translate').provider('$translateSanitization', $translateSanitizationProvider);
-	
-	function $translateSanitizationProvider () {
-	
-	  'use strict';
-	
-	  var $sanitize,
-	      $sce,
-	      currentStrategy = null, // TODO change to either 'sanitize', 'escape' or ['sanitize', 'escapeParameters'] in 3.0.
-	      hasConfiguredStrategy = false,
-	      hasShownNoStrategyConfiguredWarning = false,
-	      strategies;
-	
-	  /**
-	   * Definition of a sanitization strategy function
-	   * @callback StrategyFunction
-	   * @param {string|object} value - value to be sanitized (either a string or an interpolated value map)
-	   * @param {string} mode - either 'text' for a string (translation) or 'params' for the interpolated params
-	   * @return {string|object}
-	   */
-	
-	  /**
-	   * @ngdoc property
-	   * @name strategies
-	   * @propertyOf pascalprecht.translate.$translateSanitizationProvider
-	   *
-	   * @description
-	   * Following strategies are built-in:
-	   * <dl>
-	   *   <dt>sanitize</dt>
-	   *   <dd>Sanitizes HTML in the translation text using $sanitize</dd>
-	   *   <dt>escape</dt>
-	   *   <dd>Escapes HTML in the translation</dd>
-	   *   <dt>sanitizeParameters</dt>
-	   *   <dd>Sanitizes HTML in the values of the interpolation parameters using $sanitize</dd>
-	   *   <dt>escapeParameters</dt>
-	   *   <dd>Escapes HTML in the values of the interpolation parameters</dd>
-	   *   <dt>escaped</dt>
-	   *   <dd>Support legacy strategy name 'escaped' for backwards compatibility (will be removed in 3.0)</dd>
-	   * </dl>
-	   *
-	   */
-	
-	  strategies = {
-	    sanitize: function (value, mode/*, context*/) {
-	      if (mode === 'text') {
-	        value = htmlSanitizeValue(value);
-	      }
-	      return value;
-	    },
-	    escape: function (value, mode/*, context*/) {
-	      if (mode === 'text') {
-	        value = htmlEscapeValue(value);
-	      }
-	      return value;
-	    },
-	    sanitizeParameters: function (value, mode/*, context*/) {
-	      if (mode === 'params') {
-	        value = mapInterpolationParameters(value, htmlSanitizeValue);
-	      }
-	      return value;
-	    },
-	    escapeParameters: function (value, mode/*, context*/) {
-	      if (mode === 'params') {
-	        value = mapInterpolationParameters(value, htmlEscapeValue);
-	      }
-	      return value;
-	    },
-	    sce: function (value, mode, context) {
-	      if (mode === 'text') {
-	        value = htmlTrustValue(value);
-	      } else if (mode === 'params') {
-	        if (context !== 'filter') {
-	          // do html escape in filter context #1101
-	          value = mapInterpolationParameters(value, htmlEscapeValue);
-	        }
-	      }
-	      return value;
-	    },
-	    sceParameters: function (value, mode/*, context*/) {
-	      if (mode === 'params') {
-	        value = mapInterpolationParameters(value, htmlTrustValue);
-	      }
-	      return value;
-	    }
-	  };
-	  // Support legacy strategy name 'escaped' for backwards compatibility.
-	  // TODO should be removed in 3.0
-	  strategies.escaped = strategies.escapeParameters;
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateSanitizationProvider#addStrategy
-	   * @methodOf pascalprecht.translate.$translateSanitizationProvider
-	   *
-	   * @description
-	   * Adds a sanitization strategy to the list of known strategies.
-	   *
-	   * @param {string} strategyName - unique key for a strategy
-	   * @param {StrategyFunction} strategyFunction - strategy function
-	   * @returns {object} this
-	   */
-	  this.addStrategy = function (strategyName, strategyFunction) {
-	    strategies[strategyName] = strategyFunction;
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateSanitizationProvider#removeStrategy
-	   * @methodOf pascalprecht.translate.$translateSanitizationProvider
-	   *
-	   * @description
-	   * Removes a sanitization strategy from the list of known strategies.
-	   *
-	   * @param {string} strategyName - unique key for a strategy
-	   * @returns {object} this
-	   */
-	  this.removeStrategy = function (strategyName) {
-	    delete strategies[strategyName];
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateSanitizationProvider#useStrategy
-	   * @methodOf pascalprecht.translate.$translateSanitizationProvider
-	   *
-	   * @description
-	   * Selects a sanitization strategy. When an array is provided the strategies will be executed in order.
-	   *
-	   * @param {string|StrategyFunction|array} strategy The sanitization strategy / strategies which should be used. Either a name of an existing strategy, a custom strategy function, or an array consisting of multiple names and / or custom functions.
-	   * @returns {object} this
-	   */
-	  this.useStrategy = function (strategy) {
-	    hasConfiguredStrategy = true;
-	    currentStrategy = strategy;
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc object
-	   * @name pascalprecht.translate.$translateSanitization
-	   * @requires $injector
-	   * @requires $log
-	   *
-	   * @description
-	   * Sanitizes interpolation parameters and translated texts.
-	   *
-	   */
-	  this.$get = ['$injector', '$log', function ($injector, $log) {
-	
-	    var cachedStrategyMap = {};
-	
-	    var applyStrategies = function (value, mode, context, selectedStrategies) {
-	      angular.forEach(selectedStrategies, function (selectedStrategy) {
-	        if (angular.isFunction(selectedStrategy)) {
-	          value = selectedStrategy(value, mode, context);
-	        } else if (angular.isFunction(strategies[selectedStrategy])) {
-	          value = strategies[selectedStrategy](value, mode, context);
-	        } else if (angular.isString(strategies[selectedStrategy])) {
-	          if (!cachedStrategyMap[strategies[selectedStrategy]]) {
-	            try {
-	              cachedStrategyMap[strategies[selectedStrategy]] = $injector.get(strategies[selectedStrategy]);
-	            } catch (e) {
-	              cachedStrategyMap[strategies[selectedStrategy]] = function() {};
-	              throw new Error('pascalprecht.translate.$translateSanitization: Unknown sanitization strategy: \'' + selectedStrategy + '\'');
-	            }
-	          }
-	          value = cachedStrategyMap[strategies[selectedStrategy]](value, mode, context);
-	        } else {
-	          throw new Error('pascalprecht.translate.$translateSanitization: Unknown sanitization strategy: \'' + selectedStrategy + '\'');
-	        }
-	      });
-	      return value;
-	    };
-	
-	    // TODO: should be removed in 3.0
-	    var showNoStrategyConfiguredWarning = function () {
-	      if (!hasConfiguredStrategy && !hasShownNoStrategyConfiguredWarning) {
-	        $log.warn('pascalprecht.translate.$translateSanitization: No sanitization strategy has been configured. This can have serious security implications. See http://angular-translate.github.io/docs/#/guide/19_security for details.');
-	        hasShownNoStrategyConfiguredWarning = true;
-	      }
-	    };
-	
-	    if ($injector.has('$sanitize')) {
-	      $sanitize = $injector.get('$sanitize');
-	    }
-	    if ($injector.has('$sce')) {
-	      $sce = $injector.get('$sce');
-	    }
-	
-	    return {
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translateSanitization#useStrategy
-	       * @methodOf pascalprecht.translate.$translateSanitization
-	       *
-	       * @description
-	       * Selects a sanitization strategy. When an array is provided the strategies will be executed in order.
-	       *
-	       * @param {string|StrategyFunction|array} strategy The sanitization strategy / strategies which should be used. Either a name of an existing strategy, a custom strategy function, or an array consisting of multiple names and / or custom functions.
-	       */
-	      useStrategy: (function (self) {
-	        return function (strategy) {
-	          self.useStrategy(strategy);
-	        };
-	      })(this),
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translateSanitization#sanitize
-	       * @methodOf pascalprecht.translate.$translateSanitization
-	       *
-	       * @description
-	       * Sanitizes a value.
-	       *
-	       * @param {string|object} value The value which should be sanitized.
-	       * @param {string} mode The current sanitization mode, either 'params' or 'text'.
-	       * @param {string|StrategyFunction|array} [strategy] Optional custom strategy which should be used instead of the currently selected strategy.
-	       * @param {string} [context] The context of this call: filter, service. Default is service
-	       * @returns {string|object} sanitized value
-	       */
-	      sanitize: function (value, mode, strategy, context) {
-	        if (!currentStrategy) {
-	          showNoStrategyConfiguredWarning();
-	        }
-	
-	        if (!strategy && strategy !== null) {
-	          strategy = currentStrategy;
-	        }
-	
-	        if (!strategy) {
-	          return value;
-	        }
-	
-	        if (!context) {
-	          context = 'service';
-	        }
-	
-	        var selectedStrategies = angular.isArray(strategy) ? strategy : [strategy];
-	        return applyStrategies(value, mode, context, selectedStrategies);
-	      }
-	    };
-	  }];
-	
-	  var htmlEscapeValue = function (value) {
-	    var element = angular.element('<div></div>');
-	    element.text(value); // not chainable, see #1044
-	    return element.html();
-	  };
-	
-	  var htmlSanitizeValue = function (value) {
-	    if (!$sanitize) {
-	      throw new Error('pascalprecht.translate.$translateSanitization: Error cannot find $sanitize service. Either include the ngSanitize module (https://docs.angularjs.org/api/ngSanitize) or use a sanitization strategy which does not depend on $sanitize, such as \'escape\'.');
-	    }
-	    return $sanitize(value);
-	  };
-	
-	  var htmlTrustValue = function (value) {
-	    if (!$sce) {
-	      throw new Error('pascalprecht.translate.$translateSanitization: Error cannot find $sce service.');
-	    }
-	    return $sce.trustAsHtml(value);
-	  };
-	
-	  var mapInterpolationParameters = function (value, iteratee, stack) {
-	    if (angular.isDate(value)) {
-	      return value;
-	    } else if (angular.isObject(value)) {
-	      var result = angular.isArray(value) ? [] : {};
-	
-	      if (!stack) {
-	        stack = [];
-	      } else {
-	        if (stack.indexOf(value) > -1) {
-	          throw new Error('pascalprecht.translate.$translateSanitization: Error cannot interpolate parameter due recursive object');
-	        }
-	      }
-	
-	      stack.push(value);
-	      angular.forEach(value, function (propertyValue, propertyKey) {
-	
-	        /* Skipping function properties. */
-	        if (angular.isFunction(propertyValue)) {
-	          return;
-	        }
-	
-	        result[propertyKey] = mapInterpolationParameters(propertyValue, iteratee, stack);
-	      });
-	      stack.splice(-1, 1); // remove last
-	
-	      return result;
-	    } else if (angular.isNumber(value)) {
-	      return value;
-	    } else {
-	      return iteratee(value);
-	    }
-	  };
-	}
-	
-	/**
-	 * @ngdoc object
-	 * @name pascalprecht.translate.$translateProvider
-	 * @description
-	 *
-	 * $translateProvider allows developers to register translation-tables, asynchronous loaders
-	 * and similar to configure translation behavior directly inside of a module.
-	 *
-	 */
-	angular.module('pascalprecht.translate')
-	.constant('pascalprechtTranslateOverrider', {})
-	.provider('$translate', $translate);
-	
-	function $translate($STORAGE_KEY, $windowProvider, $translateSanitizationProvider, pascalprechtTranslateOverrider) {
-	
-	  'use strict';
-	
-	  var $translationTable = {},
-	      $preferredLanguage,
-	      $availableLanguageKeys = [],
-	      $languageKeyAliases,
-	      $fallbackLanguage,
-	      $fallbackWasString,
-	      $uses,
-	      $nextLang,
-	      $storageFactory,
-	      $storageKey = $STORAGE_KEY,
-	      $storagePrefix,
-	      $missingTranslationHandlerFactory,
-	      $interpolationFactory,
-	      $interpolatorFactories = [],
-	      $loaderFactory,
-	      $cloakClassName = 'translate-cloak',
-	      $loaderOptions,
-	      $notFoundIndicatorLeft,
-	      $notFoundIndicatorRight,
-	      $postCompilingEnabled = false,
-	      $forceAsyncReloadEnabled = false,
-	      $nestedObjectDelimeter = '.',
-	      $isReady = false,
-	      $keepContent = false,
-	      loaderCache,
-	      directivePriority = 0,
-	      statefulFilter = true,
-	      postProcessFn,
-	      uniformLanguageTagResolver = 'default',
-	      languageTagResolver = {
-	        'default': function (tag) {
-	          return (tag || '').split('-').join('_');
-	        },
-	        java: function (tag) {
-	          var temp = (tag || '').split('-').join('_');
-	          var parts = temp.split('_');
-	          return parts.length > 1 ? (parts[0].toLowerCase() + '_' + parts[1].toUpperCase()) : temp;
-	        },
-	        bcp47: function (tag) {
-	          var temp = (tag || '').split('_').join('-');
-	          var parts = temp.split('-');
-	          return parts.length > 1 ? (parts[0].toLowerCase() + '-' + parts[1].toUpperCase()) : temp;
-	        },
-	        'iso639-1': function (tag) {
-	          var temp = (tag || '').split('_').join('-');
-	          var parts = temp.split('-');
-	          return parts[0].toLowerCase();
-	        }
-	      };
-	
-	  var version = '2.12.1';
-	
-	  // tries to determine the browsers language
-	  var getFirstBrowserLanguage = function () {
-	
-	    // internal purpose only
-	    if (angular.isFunction(pascalprechtTranslateOverrider.getLocale)) {
-	      return pascalprechtTranslateOverrider.getLocale();
-	    }
-	
-	    var nav = $windowProvider.$get().navigator,
-	        browserLanguagePropertyKeys = ['language', 'browserLanguage', 'systemLanguage', 'userLanguage'],
-	        i,
-	        language;
-	
-	    // support for HTML 5.1 "navigator.languages"
-	    if (angular.isArray(nav.languages)) {
-	      for (i = 0; i < nav.languages.length; i++) {
-	        language = nav.languages[i];
-	        if (language && language.length) {
-	          return language;
-	        }
-	      }
-	    }
-	
-	    // support for other well known properties in browsers
-	    for (i = 0; i < browserLanguagePropertyKeys.length; i++) {
-	      language = nav[browserLanguagePropertyKeys[i]];
-	      if (language && language.length) {
-	        return language;
-	      }
-	    }
-	
-	    return null;
-	  };
-	  getFirstBrowserLanguage.displayName = 'angular-translate/service: getFirstBrowserLanguage';
-	
-	  // tries to determine the browsers locale
-	  var getLocale = function () {
-	    var locale = getFirstBrowserLanguage() || '';
-	    if (languageTagResolver[uniformLanguageTagResolver]) {
-	      locale = languageTagResolver[uniformLanguageTagResolver](locale);
-	    }
-	    return locale;
-	  };
-	  getLocale.displayName = 'angular-translate/service: getLocale';
-	
-	  /**
-	   * @name indexOf
-	   * @private
-	   *
-	   * @description
-	   * indexOf polyfill. Kinda sorta.
-	   *
-	   * @param {array} array Array to search in.
-	   * @param {string} searchElement Element to search for.
-	   *
-	   * @returns {int} Index of search element.
-	   */
-	  var indexOf = function(array, searchElement) {
-	    for (var i = 0, len = array.length; i < len; i++) {
-	      if (array[i] === searchElement) {
-	        return i;
-	      }
-	    }
-	    return -1;
-	  };
-	
-	  /**
-	   * @name trim
-	   * @private
-	   *
-	   * @description
-	   * trim polyfill
-	   *
-	   * @returns {string} The string stripped of whitespace from both ends
-	   */
-	  var trim = function() {
-	    return this.toString().replace(/^\s+|\s+$/g, '');
-	  };
-	
-	  var negotiateLocale = function (preferred) {
-	    if(!preferred) {
-	      return;
-	    }
-	
-	    var avail = [],
-	        locale = angular.lowercase(preferred),
-	        i = 0,
-	        n = $availableLanguageKeys.length;
-	
-	    for (; i < n; i++) {
-	      avail.push(angular.lowercase($availableLanguageKeys[i]));
-	    }
-	
-	    // Check for an exact match in our list of available keys
-	    if (indexOf(avail, locale) > -1) {
-	      return preferred;
-	    }
-	
-	    if ($languageKeyAliases) {
-	      var alias;
-	      for (var langKeyAlias in $languageKeyAliases) {
-	        if ($languageKeyAliases.hasOwnProperty(langKeyAlias)) {
-	          var hasWildcardKey = false;
-	          var hasExactKey = Object.prototype.hasOwnProperty.call($languageKeyAliases, langKeyAlias) &&
-	            angular.lowercase(langKeyAlias) === angular.lowercase(preferred);
-	
-	          if (langKeyAlias.slice(-1) === '*') {
-	            hasWildcardKey = langKeyAlias.slice(0, -1) === preferred.slice(0, langKeyAlias.length - 1);
-	          }
-	          if (hasExactKey || hasWildcardKey) {
-	            alias = $languageKeyAliases[langKeyAlias];
-	            if (indexOf(avail, angular.lowercase(alias)) > -1) {
-	              return alias;
-	            }
-	          }
-	        }
-	      }
-	    }
-	
-	    // Check for a language code without region
-	    var parts = preferred.split('_');
-	
-	    if (parts.length > 1 && indexOf(avail, angular.lowercase(parts[0])) > -1) {
-	      return parts[0];
-	    }
-	
-	    // If everything fails, return undefined.
-	    return;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#translations
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Registers a new translation table for specific language key.
-	   *
-	   * To register a translation table for specific language, pass a defined language
-	   * key as first parameter.
-	   *
-	   * <pre>
-	   *  // register translation table for language: 'de_DE'
-	   *  $translateProvider.translations('de_DE', {
-	   *    'GREETING': 'Hallo Welt!'
-	   *  });
-	   *
-	   *  // register another one
-	   *  $translateProvider.translations('en_US', {
-	   *    'GREETING': 'Hello world!'
-	   *  });
-	   * </pre>
-	   *
-	   * When registering multiple translation tables for for the same language key,
-	   * the actual translation table gets extended. This allows you to define module
-	   * specific translation which only get added, once a specific module is loaded in
-	   * your app.
-	   *
-	   * Invoking this method with no arguments returns the translation table which was
-	   * registered with no language key. Invoking it with a language key returns the
-	   * related translation table.
-	   *
-	   * @param {string} langKey A language key.
-	   * @param {object} translationTable A plain old JavaScript object that represents a translation table.
-	   *
-	   */
-	  var translations = function (langKey, translationTable) {
-	
-	    if (!langKey && !translationTable) {
-	      return $translationTable;
-	    }
-	
-	    if (langKey && !translationTable) {
-	      if (angular.isString(langKey)) {
-	        return $translationTable[langKey];
-	      }
-	    } else {
-	      if (!angular.isObject($translationTable[langKey])) {
-	        $translationTable[langKey] = {};
-	      }
-	      angular.extend($translationTable[langKey], flatObject(translationTable));
-	    }
-	    return this;
-	  };
-	
-	  this.translations = translations;
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#cloakClassName
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   *
-	   * Let's you change the class name for `translate-cloak` directive.
-	   * Default class name is `translate-cloak`.
-	   *
-	   * @param {string} name translate-cloak class name
-	   */
-	  this.cloakClassName = function (name) {
-	    if (!name) {
-	      return $cloakClassName;
-	    }
-	    $cloakClassName = name;
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#nestedObjectDelimeter
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   *
-	   * Let's you change the delimiter for namespaced translations.
-	   * Default delimiter is `.`.
-	   *
-	   * @param {string} delimiter namespace separator
-	   */
-	  this.nestedObjectDelimeter = function (delimiter) {
-	    if (!delimiter) {
-	      return $nestedObjectDelimeter;
-	    }
-	    $nestedObjectDelimeter = delimiter;
-	    return this;
-	  };
-	
-	  /**
-	   * @name flatObject
-	   * @private
-	   *
-	   * @description
-	   * Flats an object. This function is used to flatten given translation data with
-	   * namespaces, so they are later accessible via dot notation.
-	   */
-	  var flatObject = function (data, path, result, prevKey) {
-	    var key, keyWithPath, keyWithShortPath, val;
-	
-	    if (!path) {
-	      path = [];
-	    }
-	    if (!result) {
-	      result = {};
-	    }
-	    for (key in data) {
-	      if (!Object.prototype.hasOwnProperty.call(data, key)) {
-	        continue;
-	      }
-	      val = data[key];
-	      if (angular.isObject(val)) {
-	        flatObject(val, path.concat(key), result, key);
-	      } else {
-	        keyWithPath = path.length ? ('' + path.join($nestedObjectDelimeter) + $nestedObjectDelimeter + key) : key;
-	        if(path.length && key === prevKey){
-	          // Create shortcut path (foo.bar == foo.bar.bar)
-	          keyWithShortPath = '' + path.join($nestedObjectDelimeter);
-	          // Link it to original path
-	          result[keyWithShortPath] = '@:' + keyWithPath;
-	        }
-	        result[keyWithPath] = val;
-	      }
-	    }
-	    return result;
-	  };
-	  flatObject.displayName = 'flatObject';
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#addInterpolation
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Adds interpolation services to angular-translate, so it can manage them.
-	   *
-	   * @param {object} factory Interpolation service factory
-	   */
-	  this.addInterpolation = function (factory) {
-	    $interpolatorFactories.push(factory);
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#useMessageFormatInterpolation
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Tells angular-translate to use interpolation functionality of messageformat.js.
-	   * This is useful when having high level pluralization and gender selection.
-	   */
-	  this.useMessageFormatInterpolation = function () {
-	    return this.useInterpolation('$translateMessageFormatInterpolation');
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#useInterpolation
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Tells angular-translate which interpolation style to use as default, application-wide.
-	   * Simply pass a factory/service name. The interpolation service has to implement
-	   * the correct interface.
-	   *
-	   * @param {string} factory Interpolation service name.
-	   */
-	  this.useInterpolation = function (factory) {
-	    $interpolationFactory = factory;
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#useSanitizeStrategy
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Simply sets a sanitation strategy type.
-	   *
-	   * @param {string} value Strategy type.
-	   */
-	  this.useSanitizeValueStrategy = function (value) {
-	    $translateSanitizationProvider.useStrategy(value);
-	    return this;
-	  };
-	
-	 /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#preferredLanguage
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Tells the module which of the registered translation tables to use for translation
-	   * at initial startup by passing a language key. Similar to `$translateProvider#use`
-	   * only that it says which language to **prefer**.
-	   *
-	   * @param {string} langKey A language key.
-	   */
-	  this.preferredLanguage = function(langKey) {
-	    if (langKey) {
-	      setupPreferredLanguage(langKey);
-	      return this;
-	    }
-	    return $preferredLanguage;
-	  };
-	  var setupPreferredLanguage = function (langKey) {
-	    if (langKey) {
-	      $preferredLanguage = langKey;
-	    }
-	    return $preferredLanguage;
-	  };
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#translationNotFoundIndicator
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Sets an indicator which is used when a translation isn't found. E.g. when
-	   * setting the indicator as 'X' and one tries to translate a translation id
-	   * called `NOT_FOUND`, this will result in `X NOT_FOUND X`.
-	   *
-	   * Internally this methods sets a left indicator and a right indicator using
-	   * `$translateProvider.translationNotFoundIndicatorLeft()` and
-	   * `$translateProvider.translationNotFoundIndicatorRight()`.
-	   *
-	   * **Note**: These methods automatically add a whitespace between the indicators
-	   * and the translation id.
-	   *
-	   * @param {string} indicator An indicator, could be any string.
-	   */
-	  this.translationNotFoundIndicator = function (indicator) {
-	    this.translationNotFoundIndicatorLeft(indicator);
-	    this.translationNotFoundIndicatorRight(indicator);
-	    return this;
-	  };
-	
-	  /**
-	   * ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#translationNotFoundIndicatorLeft
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Sets an indicator which is used when a translation isn't found left to the
-	   * translation id.
-	   *
-	   * @param {string} indicator An indicator.
-	   */
-	  this.translationNotFoundIndicatorLeft = function (indicator) {
-	    if (!indicator) {
-	      return $notFoundIndicatorLeft;
-	    }
-	    $notFoundIndicatorLeft = indicator;
-	    return this;
-	  };
-	
-	  /**
-	   * ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#translationNotFoundIndicatorLeft
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Sets an indicator which is used when a translation isn't found right to the
-	   * translation id.
-	   *
-	   * @param {string} indicator An indicator.
-	   */
-	  this.translationNotFoundIndicatorRight = function (indicator) {
-	    if (!indicator) {
-	      return $notFoundIndicatorRight;
-	    }
-	    $notFoundIndicatorRight = indicator;
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#fallbackLanguage
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Tells the module which of the registered translation tables to use when missing translations
-	   * at initial startup by passing a language key. Similar to `$translateProvider#use`
-	   * only that it says which language to **fallback**.
-	   *
-	   * @param {string||array} langKey A language key.
-	   *
-	   */
-	  this.fallbackLanguage = function (langKey) {
-	    fallbackStack(langKey);
-	    return this;
-	  };
-	
-	  var fallbackStack = function (langKey) {
-	    if (langKey) {
-	      if (angular.isString(langKey)) {
-	        $fallbackWasString = true;
-	        $fallbackLanguage = [ langKey ];
-	      } else if (angular.isArray(langKey)) {
-	        $fallbackWasString = false;
-	        $fallbackLanguage = langKey;
-	      }
-	      if (angular.isString($preferredLanguage)  && indexOf($fallbackLanguage, $preferredLanguage) < 0) {
-	        $fallbackLanguage.push($preferredLanguage);
-	      }
-	
-	      return this;
-	    } else {
-	      if ($fallbackWasString) {
-	        return $fallbackLanguage[0];
-	      } else {
-	        return $fallbackLanguage;
-	      }
-	    }
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#use
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Set which translation table to use for translation by given language key. When
-	   * trying to 'use' a language which isn't provided, it'll throw an error.
-	   *
-	   * You actually don't have to use this method since `$translateProvider#preferredLanguage`
-	   * does the job too.
-	   *
-	   * @param {string} langKey A language key.
-	   */
-	  this.use = function (langKey) {
-	    if (langKey) {
-	      if (!$translationTable[langKey] && (!$loaderFactory)) {
-	        // only throw an error, when not loading translation data asynchronously
-	        throw new Error('$translateProvider couldn\'t find translationTable for langKey: \'' + langKey + '\'');
-	      }
-	      $uses = langKey;
-	      return this;
-	    }
-	    return $uses;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#resolveClientLocale
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * This returns the current browser/client's language key. The result is processed with the configured uniform tag resolver.
-	   *
-	   * @returns {string} the current client/browser language key
-	   */
-	  this.resolveClientLocale = function () {
-	    return getLocale();
-	  };
-	
-	 /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#storageKey
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Tells the module which key must represent the choosed language by a user in the storage.
-	   *
-	   * @param {string} key A key for the storage.
-	   */
-	  var storageKey = function(key) {
-	    if (!key) {
-	      if ($storagePrefix) {
-	        return $storagePrefix + $storageKey;
-	      }
-	      return $storageKey;
-	    }
-	    $storageKey = key;
-	    return this;
-	  };
-	
-	  this.storageKey = storageKey;
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#useUrlLoader
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Tells angular-translate to use `$translateUrlLoader` extension service as loader.
-	   *
-	   * @param {string} url Url
-	   * @param {Object=} options Optional configuration object
-	   */
-	  this.useUrlLoader = function (url, options) {
-	    return this.useLoader('$translateUrlLoader', angular.extend({ url: url }, options));
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#useStaticFilesLoader
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Tells angular-translate to use `$translateStaticFilesLoader` extension service as loader.
-	   *
-	   * @param {Object=} options Optional configuration object
-	   */
-	  this.useStaticFilesLoader = function (options) {
-	    return this.useLoader('$translateStaticFilesLoader', options);
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#useLoader
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Tells angular-translate to use any other service as loader.
-	   *
-	   * @param {string} loaderFactory Factory name to use
-	   * @param {Object=} options Optional configuration object
-	   */
-	  this.useLoader = function (loaderFactory, options) {
-	    $loaderFactory = loaderFactory;
-	    $loaderOptions = options || {};
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#useLocalStorage
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Tells angular-translate to use `$translateLocalStorage` service as storage layer.
-	   *
-	   */
-	  this.useLocalStorage = function () {
-	    return this.useStorage('$translateLocalStorage');
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#useCookieStorage
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Tells angular-translate to use `$translateCookieStorage` service as storage layer.
-	   */
-	  this.useCookieStorage = function () {
-	    return this.useStorage('$translateCookieStorage');
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#useStorage
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Tells angular-translate to use custom service as storage layer.
-	   */
-	  this.useStorage = function (storageFactory) {
-	    $storageFactory = storageFactory;
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#storagePrefix
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Sets prefix for storage key.
-	   *
-	   * @param {string} prefix Storage key prefix
-	   */
-	  this.storagePrefix = function (prefix) {
-	    if (!prefix) {
-	      return prefix;
-	    }
-	    $storagePrefix = prefix;
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#useMissingTranslationHandlerLog
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Tells angular-translate to use built-in log handler when trying to translate
-	   * a translation Id which doesn't exist.
-	   *
-	   * This is actually a shortcut method for `useMissingTranslationHandler()`.
-	   *
-	   */
-	  this.useMissingTranslationHandlerLog = function () {
-	    return this.useMissingTranslationHandler('$translateMissingTranslationHandlerLog');
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#useMissingTranslationHandler
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Expects a factory name which later gets instantiated with `$injector`.
-	   * This method can be used to tell angular-translate to use a custom
-	   * missingTranslationHandler. Just build a factory which returns a function
-	   * and expects a translation id as argument.
-	   *
-	   * Example:
-	   * <pre>
-	   *  app.config(function ($translateProvider) {
-	   *    $translateProvider.useMissingTranslationHandler('customHandler');
-	   *  });
-	   *
-	   *  app.factory('customHandler', function (dep1, dep2) {
-	   *    return function (translationId) {
-	   *      // something with translationId and dep1 and dep2
-	   *    };
-	   *  });
-	   * </pre>
-	   *
-	   * @param {string} factory Factory name
-	   */
-	  this.useMissingTranslationHandler = function (factory) {
-	    $missingTranslationHandlerFactory = factory;
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#usePostCompiling
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * If post compiling is enabled, all translated values will be processed
-	   * again with AngularJS' $compile.
-	   *
-	   * Example:
-	   * <pre>
-	   *  app.config(function ($translateProvider) {
-	   *    $translateProvider.usePostCompiling(true);
-	   *  });
-	   * </pre>
-	   *
-	   * @param {string} factory Factory name
-	   */
-	  this.usePostCompiling = function (value) {
-	    $postCompilingEnabled = !(!value);
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#forceAsyncReload
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * If force async reload is enabled, async loader will always be called
-	   * even if $translationTable already contains the language key, adding
-	   * possible new entries to the $translationTable.
-	   *
-	   * Example:
-	   * <pre>
-	   *  app.config(function ($translateProvider) {
-	   *    $translateProvider.forceAsyncReload(true);
-	   *  });
-	   * </pre>
-	   *
-	   * @param {boolean} value - valid values are true or false
-	   */
-	  this.forceAsyncReload = function (value) {
-	    $forceAsyncReloadEnabled = !(!value);
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#uniformLanguageTag
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Tells angular-translate which language tag should be used as a result when determining
-	   * the current browser language.
-	   *
-	   * This setting must be set before invoking {@link pascalprecht.translate.$translateProvider#methods_determinePreferredLanguage determinePreferredLanguage()}.
-	   *
-	   * <pre>
-	   * $translateProvider
-	   *   .uniformLanguageTag('bcp47')
-	   *   .determinePreferredLanguage()
-	   * </pre>
-	   *
-	   * The resolver currently supports:
-	   * * default
-	   *     (traditionally: hyphens will be converted into underscores, i.e. en-US => en_US)
-	   *     en-US => en_US
-	   *     en_US => en_US
-	   *     en-us => en_us
-	   * * java
-	   *     like default, but the second part will be always in uppercase
-	   *     en-US => en_US
-	   *     en_US => en_US
-	   *     en-us => en_US
-	   * * BCP 47 (RFC 4646 & 4647)
-	   *     en-US => en-US
-	   *     en_US => en-US
-	   *     en-us => en-US
-	   *
-	   * See also:
-	   * * http://en.wikipedia.org/wiki/IETF_language_tag
-	   * * http://www.w3.org/International/core/langtags/
-	   * * http://tools.ietf.org/html/bcp47
-	   *
-	   * @param {string|object} options - options (or standard)
-	   * @param {string} options.standard - valid values are 'default', 'bcp47', 'java'
-	   */
-	  this.uniformLanguageTag = function (options) {
-	
-	    if (!options) {
-	      options = {};
-	    } else if (angular.isString(options)) {
-	      options = {
-	        standard: options
-	      };
-	    }
-	
-	    uniformLanguageTagResolver = options.standard;
-	
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#determinePreferredLanguage
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Tells angular-translate to try to determine on its own which language key
-	   * to set as preferred language. When `fn` is given, angular-translate uses it
-	   * to determine a language key, otherwise it uses the built-in `getLocale()`
-	   * method.
-	   *
-	   * The `getLocale()` returns a language key in the format `[lang]_[country]` or
-	   * `[lang]` depending on what the browser provides.
-	   *
-	   * Use this method at your own risk, since not all browsers return a valid
-	   * locale (see {@link pascalprecht.translate.$translateProvider#methods_uniformLanguageTag uniformLanguageTag()}).
-	   *
-	   * @param {Function=} fn Function to determine a browser's locale
-	   */
-	  this.determinePreferredLanguage = function (fn) {
-	
-	    var locale = (fn && angular.isFunction(fn)) ? fn() : getLocale();
-	
-	    if (!$availableLanguageKeys.length) {
-	      $preferredLanguage = locale;
-	    } else {
-	      $preferredLanguage = negotiateLocale(locale) || locale;
-	    }
-	
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#registerAvailableLanguageKeys
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Registers a set of language keys the app will work with. Use this method in
-	   * combination with
-	   * {@link pascalprecht.translate.$translateProvider#determinePreferredLanguage determinePreferredLanguage}.
-	   * When available languages keys are registered, angular-translate
-	   * tries to find the best fitting language key depending on the browsers locale,
-	   * considering your language key convention.
-	   *
-	   * @param {object} languageKeys Array of language keys the your app will use
-	   * @param {object=} aliases Alias map.
-	   */
-	  this.registerAvailableLanguageKeys = function (languageKeys, aliases) {
-	    if (languageKeys) {
-	      $availableLanguageKeys = languageKeys;
-	      if (aliases) {
-	        $languageKeyAliases = aliases;
-	      }
-	      return this;
-	    }
-	    return $availableLanguageKeys;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#useLoaderCache
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Registers a cache for internal $http based loaders.
-	   * {@link pascalprecht.translate.$translationCache $translationCache}.
-	   * When false the cache will be disabled (default). When true or undefined
-	   * the cache will be a default (see $cacheFactory). When an object it will
-	   * be treat as a cache object itself: the usage is $http({cache: cache})
-	   *
-	   * @param {object} cache boolean, string or cache-object
-	   */
-	  this.useLoaderCache = function (cache) {
-	    if (cache === false) {
-	      // disable cache
-	      loaderCache = undefined;
-	    } else if (cache === true) {
-	      // enable cache using AJS defaults
-	      loaderCache = true;
-	    } else if (typeof(cache) === 'undefined') {
-	      // enable cache using default
-	      loaderCache = '$translationCache';
-	    } else if (cache) {
-	      // enable cache using given one (see $cacheFactory)
-	      loaderCache = cache;
-	    }
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#directivePriority
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Sets the default priority of the translate directive. The standard value is `0`.
-	   * Calling this function without an argument will return the current value.
-	   *
-	   * @param {number} priority for the translate-directive
-	   */
-	  this.directivePriority = function (priority) {
-	    if (priority === undefined) {
-	      // getter
-	      return directivePriority;
-	    } else {
-	      // setter with chaining
-	      directivePriority = priority;
-	      return this;
-	    }
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#statefulFilter
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * Since AngularJS 1.3, filters which are not stateless (depending at the scope)
-	   * have to explicit define this behavior.
-	   * Sets whether the translate filter should be stateful or stateless. The standard value is `true`
-	   * meaning being stateful.
-	   * Calling this function without an argument will return the current value.
-	   *
-	   * @param {boolean} state - defines the state of the filter
-	   */
-	  this.statefulFilter = function (state) {
-	    if (state === undefined) {
-	      // getter
-	      return statefulFilter;
-	    } else {
-	      // setter with chaining
-	      statefulFilter = state;
-	      return this;
-	    }
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#postProcess
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * The post processor will be intercept right after the translation result. It can modify the result.
-	   *
-	   * @param {object} fn Function or service name (string) to be called after the translation value has been set / resolved. The function itself will enrich every value being processed and then continue the normal resolver process
-	   */
-	  this.postProcess = function (fn) {
-	    if (fn) {
-	      postProcessFn = fn;
-	    } else {
-	      postProcessFn = undefined;
-	    }
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateProvider#keepContent
-	   * @methodOf pascalprecht.translate.$translateProvider
-	   *
-	   * @description
-	   * If keepContent is set to true than translate directive will always use innerHTML
-	   * as a default translation
-	   *
-	   * Example:
-	   * <pre>
-	   *  app.config(function ($translateProvider) {
-	   *    $translateProvider.keepContent(true);
-	   *  });
-	   * </pre>
-	   *
-	   * @param {boolean} value - valid values are true or false
-	   */
-	  this.keepContent = function (value) {
-	    $keepContent = !(!value);
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc object
-	   * @name pascalprecht.translate.$translate
-	   * @requires $interpolate
-	   * @requires $log
-	   * @requires $rootScope
-	   * @requires $q
-	   *
-	   * @description
-	   * The `$translate` service is the actual core of angular-translate. It expects a translation id
-	   * and optional interpolate parameters to translate contents.
-	   *
-	   * <pre>
-	   *  $translate('HEADLINE_TEXT').then(function (translation) {
-	   *    $scope.translatedText = translation;
-	   *  });
-	   * </pre>
-	   *
-	   * @param {string|array} translationId A token which represents a translation id
-	   *                                     This can be optionally an array of translation ids which
-	   *                                     results that the function returns an object where each key
-	   *                                     is the translation id and the value the translation.
-	   * @param {object=} interpolateParams An object hash for dynamic values
-	   * @param {string} interpolationId The id of the interpolation to use
-	   * @param {string} defaultTranslationText the optional default translation text that is written as
-	   *                                        as default text in case it is not found in any configured language
-	   * @param {string} forceLanguage A language to be used instead of the current language
-	   * @returns {object} promise
-	   */
-	  this.$get = [
-	    '$log',
-	    '$injector',
-	    '$rootScope',
-	    '$q',
-	    function ($log, $injector, $rootScope, $q) {
-	
-	      var Storage,
-	          defaultInterpolator = $injector.get($interpolationFactory || '$translateDefaultInterpolation'),
-	          pendingLoader = false,
-	          interpolatorHashMap = {},
-	          langPromises = {},
-	          fallbackIndex,
-	          startFallbackIteration;
-	
-	      var $translate = function (translationId, interpolateParams, interpolationId, defaultTranslationText, forceLanguage) {
-	        if (!$uses && $preferredLanguage) {
-	          $uses = $preferredLanguage;
-	        }
-	        var uses = (forceLanguage && forceLanguage !== $uses) ? // we don't want to re-negotiate $uses
-	              (negotiateLocale(forceLanguage) || forceLanguage) : $uses;
-	
-	        // Check forceLanguage is present
-	        if (forceLanguage) {
-	          loadTranslationsIfMissing(forceLanguage);
-	        }
-	
-	        // Duck detection: If the first argument is an array, a bunch of translations was requested.
-	        // The result is an object.
-	        if (angular.isArray(translationId)) {
-	          // Inspired by Q.allSettled by Kris Kowal
-	          // https://github.com/kriskowal/q/blob/b0fa72980717dc202ffc3cbf03b936e10ebbb9d7/q.js#L1553-1563
-	          // This transforms all promises regardless resolved or rejected
-	          var translateAll = function (translationIds) {
-	            var results = {}; // storing the actual results
-	            var promises = []; // promises to wait for
-	            // Wraps the promise a) being always resolved and b) storing the link id->value
-	            var translate = function (translationId) {
-	              var deferred = $q.defer();
-	              var regardless = function (value) {
-	                results[translationId] = value;
-	                deferred.resolve([translationId, value]);
-	              };
-	              // we don't care whether the promise was resolved or rejected; just store the values
-	              $translate(translationId, interpolateParams, interpolationId, defaultTranslationText, forceLanguage).then(regardless, regardless);
-	              return deferred.promise;
-	            };
-	            for (var i = 0, c = translationIds.length; i < c; i++) {
-	              promises.push(translate(translationIds[i]));
-	            }
-	            // wait for all (including storing to results)
-	            return $q.all(promises).then(function () {
-	              // return the results
-	              return results;
-	            });
-	          };
-	          return translateAll(translationId);
-	        }
-	
-	        var deferred = $q.defer();
-	
-	        // trim off any whitespace
-	        if (translationId) {
-	          translationId = trim.apply(translationId);
-	        }
-	
-	        var promiseToWaitFor = (function () {
-	          var promise = $preferredLanguage ?
-	            langPromises[$preferredLanguage] :
-	            langPromises[uses];
-	
-	          fallbackIndex = 0;
-	
-	          if ($storageFactory && !promise) {
-	            // looks like there's no pending promise for $preferredLanguage or
-	            // $uses. Maybe there's one pending for a language that comes from
-	            // storage.
-	            var langKey = Storage.get($storageKey);
-	            promise = langPromises[langKey];
-	
-	            if ($fallbackLanguage && $fallbackLanguage.length) {
-	                var index = indexOf($fallbackLanguage, langKey);
-	                // maybe the language from storage is also defined as fallback language
-	                // we increase the fallback language index to not search in that language
-	                // as fallback, since it's probably the first used language
-	                // in that case the index starts after the first element
-	                fallbackIndex = (index === 0) ? 1 : 0;
-	
-	                // but we can make sure to ALWAYS fallback to preferred language at least
-	                if (indexOf($fallbackLanguage, $preferredLanguage) < 0) {
-	                  $fallbackLanguage.push($preferredLanguage);
-	                }
-	            }
-	          }
-	          return promise;
-	        }());
-	
-	        if (!promiseToWaitFor) {
-	          // no promise to wait for? okay. Then there's no loader registered
-	          // nor is a one pending for language that comes from storage.
-	          // We can just translate.
-	          determineTranslation(translationId, interpolateParams, interpolationId, defaultTranslationText, uses).then(deferred.resolve, deferred.reject);
-	        } else {
-	          var promiseResolved = function () {
-	            // $uses may have changed while waiting
-	            if (!forceLanguage) {
-	              uses = $uses;
-	            }
-	            determineTranslation(translationId, interpolateParams, interpolationId, defaultTranslationText, uses).then(deferred.resolve, deferred.reject);
-	          };
-	          promiseResolved.displayName = 'promiseResolved';
-	
-	          promiseToWaitFor['finally'](promiseResolved);
-	        }
-	        return deferred.promise;
-	      };
-	
-	      /**
-	       * @name applyNotFoundIndicators
-	       * @private
-	       *
-	       * @description
-	       * Applies not fount indicators to given translation id, if needed.
-	       * This function gets only executed, if a translation id doesn't exist,
-	       * which is why a translation id is expected as argument.
-	       *
-	       * @param {string} translationId Translation id.
-	       * @returns {string} Same as given translation id but applied with not found
-	       * indicators.
-	       */
-	      var applyNotFoundIndicators = function (translationId) {
-	        // applying notFoundIndicators
-	        if ($notFoundIndicatorLeft) {
-	          translationId = [$notFoundIndicatorLeft, translationId].join(' ');
-	        }
-	        if ($notFoundIndicatorRight) {
-	          translationId = [translationId, $notFoundIndicatorRight].join(' ');
-	        }
-	        return translationId;
-	      };
-	
-	      /**
-	       * @name useLanguage
-	       * @private
-	       *
-	       * @description
-	       * Makes actual use of a language by setting a given language key as used
-	       * language and informs registered interpolators to also use the given
-	       * key as locale.
-	       *
-	       * @param {string} key Locale key.
-	       */
-	      var useLanguage = function (key) {
-	        $uses = key;
-	
-	        // make sure to store new language key before triggering success event
-	        if ($storageFactory) {
-	          Storage.put($translate.storageKey(), $uses);
-	        }
-	
-	        $rootScope.$emit('$translateChangeSuccess', {language: key});
-	
-	        // inform default interpolator
-	        defaultInterpolator.setLocale($uses);
-	
-	        var eachInterpolator = function (interpolator, id) {
-	          interpolatorHashMap[id].setLocale($uses);
-	        };
-	        eachInterpolator.displayName = 'eachInterpolatorLocaleSetter';
-	
-	        // inform all others too!
-	        angular.forEach(interpolatorHashMap, eachInterpolator);
-	        $rootScope.$emit('$translateChangeEnd', {language: key});
-	      };
-	
-	      /**
-	       * @name loadAsync
-	       * @private
-	       *
-	       * @description
-	       * Kicks of registered async loader using `$injector` and applies existing
-	       * loader options. When resolved, it updates translation tables accordingly
-	       * or rejects with given language key.
-	       *
-	       * @param {string} key Language key.
-	       * @return {Promise} A promise.
-	       */
-	      var loadAsync = function (key) {
-	        if (!key) {
-	          throw 'No language key specified for loading.';
-	        }
-	
-	        var deferred = $q.defer();
-	
-	        $rootScope.$emit('$translateLoadingStart', {language: key});
-	        pendingLoader = true;
-	
-	        var cache = loaderCache;
-	        if (typeof(cache) === 'string') {
-	          // getting on-demand instance of loader
-	          cache = $injector.get(cache);
-	        }
-	
-	        var loaderOptions = angular.extend({}, $loaderOptions, {
-	          key: key,
-	          $http: angular.extend({}, {
-	            cache: cache
-	          }, $loaderOptions.$http)
-	        });
-	
-	        var onLoaderSuccess = function (data) {
-	          var translationTable = {};
-	          $rootScope.$emit('$translateLoadingSuccess', {language: key});
-	
-	          if (angular.isArray(data)) {
-	            angular.forEach(data, function (table) {
-	              angular.extend(translationTable, flatObject(table));
-	            });
-	          } else {
-	            angular.extend(translationTable, flatObject(data));
-	          }
-	          pendingLoader = false;
-	          deferred.resolve({
-	            key: key,
-	            table: translationTable
-	          });
-	          $rootScope.$emit('$translateLoadingEnd', {language: key});
-	        };
-	        onLoaderSuccess.displayName = 'onLoaderSuccess';
-	
-	        var onLoaderError = function (key) {
-	          $rootScope.$emit('$translateLoadingError', {language: key});
-	          deferred.reject(key);
-	          $rootScope.$emit('$translateLoadingEnd', {language: key});
-	        };
-	        onLoaderError.displayName = 'onLoaderError';
-	
-	        $injector.get($loaderFactory)(loaderOptions)
-	          .then(onLoaderSuccess, onLoaderError);
-	
-	        return deferred.promise;
-	      };
-	
-	      if ($storageFactory) {
-	        Storage = $injector.get($storageFactory);
-	
-	        if (!Storage.get || !Storage.put) {
-	          throw new Error('Couldn\'t use storage \'' + $storageFactory + '\', missing get() or put() method!');
-	        }
-	      }
-	
-	      // if we have additional interpolations that were added via
-	      // $translateProvider.addInterpolation(), we have to map'em
-	      if ($interpolatorFactories.length) {
-	        var eachInterpolationFactory = function (interpolatorFactory) {
-	          var interpolator = $injector.get(interpolatorFactory);
-	          // setting initial locale for each interpolation service
-	          interpolator.setLocale($preferredLanguage || $uses);
-	          // make'em recognizable through id
-	          interpolatorHashMap[interpolator.getInterpolationIdentifier()] = interpolator;
-	        };
-	        eachInterpolationFactory.displayName = 'interpolationFactoryAdder';
-	
-	        angular.forEach($interpolatorFactories, eachInterpolationFactory);
-	      }
-	
-	      /**
-	       * @name getTranslationTable
-	       * @private
-	       *
-	       * @description
-	       * Returns a promise that resolves to the translation table
-	       * or is rejected if an error occurred.
-	       *
-	       * @param langKey
-	       * @returns {Q.promise}
-	       */
-	      var getTranslationTable = function (langKey) {
-	        var deferred = $q.defer();
-	        if (Object.prototype.hasOwnProperty.call($translationTable, langKey)) {
-	          deferred.resolve($translationTable[langKey]);
-	        } else if (langPromises[langKey]) {
-	          var onResolve = function (data) {
-	            translations(data.key, data.table);
-	            deferred.resolve(data.table);
-	          };
-	          onResolve.displayName = 'translationTableResolver';
-	          langPromises[langKey].then(onResolve, deferred.reject);
-	        } else {
-	          deferred.reject();
-	        }
-	        return deferred.promise;
-	      };
-	
-	      /**
-	       * @name getFallbackTranslation
-	       * @private
-	       *
-	       * @description
-	       * Returns a promise that will resolve to the translation
-	       * or be rejected if no translation was found for the language.
-	       * This function is currently only used for fallback language translation.
-	       *
-	       * @param langKey The language to translate to.
-	       * @param translationId
-	       * @param interpolateParams
-	       * @param Interpolator
-	       * @returns {Q.promise}
-	       */
-	      var getFallbackTranslation = function (langKey, translationId, interpolateParams, Interpolator) {
-	        var deferred = $q.defer();
-	
-	        var onResolve = function (translationTable) {
-	          if (Object.prototype.hasOwnProperty.call(translationTable, translationId)) {
-	            Interpolator.setLocale(langKey);
-	            var translation = translationTable[translationId];
-	            if (translation.substr(0, 2) === '@:') {
-	              getFallbackTranslation(langKey, translation.substr(2), interpolateParams, Interpolator)
-	                .then(deferred.resolve, deferred.reject);
-	            } else {
-	              var interpolatedValue = Interpolator.interpolate(translationTable[translationId], interpolateParams, 'service');
-	              interpolatedValue = applyPostProcessing(translationId, translationTable[translationId], interpolatedValue, interpolateParams, langKey);
-	
-	              deferred.resolve(interpolatedValue);
-	
-	            }
-	            Interpolator.setLocale($uses);
-	          } else {
-	            deferred.reject();
-	          }
-	        };
-	        onResolve.displayName = 'fallbackTranslationResolver';
-	
-	        getTranslationTable(langKey).then(onResolve, deferred.reject);
-	
-	        return deferred.promise;
-	      };
-	
-	      /**
-	       * @name getFallbackTranslationInstant
-	       * @private
-	       *
-	       * @description
-	       * Returns a translation
-	       * This function is currently only used for fallback language translation.
-	       *
-	       * @param langKey The language to translate to.
-	       * @param translationId
-	       * @param interpolateParams
-	       * @param Interpolator
-	       * @returns {string} translation
-	       */
-	      var getFallbackTranslationInstant = function (langKey, translationId, interpolateParams, Interpolator) {
-	        var result, translationTable = $translationTable[langKey];
-	
-	        if (translationTable && Object.prototype.hasOwnProperty.call(translationTable, translationId)) {
-	          Interpolator.setLocale(langKey);
-	          result = Interpolator.interpolate(translationTable[translationId], interpolateParams, 'filter');
-	          result = applyPostProcessing(translationId, translationTable[translationId], result, interpolateParams, langKey);
-	          if (result.substr(0, 2) === '@:') {
-	            return getFallbackTranslationInstant(langKey, result.substr(2), interpolateParams, Interpolator);
-	          }
-	          Interpolator.setLocale($uses);
-	        }
-	
-	        return result;
-	      };
-	
-	
-	      /**
-	       * @name translateByHandler
-	       * @private
-	       *
-	       * Translate by missing translation handler.
-	       *
-	       * @param translationId
-	       * @param interpolateParams
-	       * @param defaultTranslationText
-	       * @returns translation created by $missingTranslationHandler or translationId is $missingTranslationHandler is
-	       * absent
-	       */
-	      var translateByHandler = function (translationId, interpolateParams, defaultTranslationText) {
-	        // If we have a handler factory - we might also call it here to determine if it provides
-	        // a default text for a translationid that can't be found anywhere in our tables
-	        if ($missingTranslationHandlerFactory) {
-	          var resultString = $injector.get($missingTranslationHandlerFactory)(translationId, $uses, interpolateParams, defaultTranslationText);
-	          if (resultString !== undefined) {
-	            return resultString;
-	          } else {
-	            return translationId;
-	          }
-	        } else {
-	          return translationId;
-	        }
-	      };
-	
-	      /**
-	       * @name resolveForFallbackLanguage
-	       * @private
-	       *
-	       * Recursive helper function for fallbackTranslation that will sequentially look
-	       * for a translation in the fallbackLanguages starting with fallbackLanguageIndex.
-	       *
-	       * @param fallbackLanguageIndex
-	       * @param translationId
-	       * @param interpolateParams
-	       * @param Interpolator
-	       * @returns {Q.promise} Promise that will resolve to the translation.
-	       */
-	      var resolveForFallbackLanguage = function (fallbackLanguageIndex, translationId, interpolateParams, Interpolator, defaultTranslationText) {
-	        var deferred = $q.defer();
-	
-	        if (fallbackLanguageIndex < $fallbackLanguage.length) {
-	          var langKey = $fallbackLanguage[fallbackLanguageIndex];
-	          getFallbackTranslation(langKey, translationId, interpolateParams, Interpolator).then(
-	            function (data) {
-	                deferred.resolve(data);
-	            },
-	            function () {
-	              // Look in the next fallback language for a translation.
-	              // It delays the resolving by passing another promise to resolve.
-	              return resolveForFallbackLanguage(fallbackLanguageIndex + 1, translationId, interpolateParams, Interpolator, defaultTranslationText).then(deferred.resolve, deferred.reject);
-	            }
-	          );
-	        } else {
-	          // No translation found in any fallback language
-	          // if a default translation text is set in the directive, then return this as a result
-	          if (defaultTranslationText) {
-	            deferred.resolve(defaultTranslationText);
-	          } else {
-	            // if no default translation is set and an error handler is defined, send it to the handler
-	            // and then return the result
-	            if ($missingTranslationHandlerFactory) {
-	              deferred.resolve(translateByHandler(translationId, interpolateParams));
-	            } else {
-	              deferred.reject(translateByHandler(translationId, interpolateParams));
-	            }
-	
-	          }
-	        }
-	        return deferred.promise;
-	      };
-	
-	      /**
-	       * @name resolveForFallbackLanguageInstant
-	       * @private
-	       *
-	       * Recursive helper function for fallbackTranslation that will sequentially look
-	       * for a translation in the fallbackLanguages starting with fallbackLanguageIndex.
-	       *
-	       * @param fallbackLanguageIndex
-	       * @param translationId
-	       * @param interpolateParams
-	       * @param Interpolator
-	       * @returns {string} translation
-	       */
-	      var resolveForFallbackLanguageInstant = function (fallbackLanguageIndex, translationId, interpolateParams, Interpolator) {
-	        var result;
-	
-	        if (fallbackLanguageIndex < $fallbackLanguage.length) {
-	          var langKey = $fallbackLanguage[fallbackLanguageIndex];
-	          result = getFallbackTranslationInstant(langKey, translationId, interpolateParams, Interpolator);
-	          if (!result) {
-	            result = resolveForFallbackLanguageInstant(fallbackLanguageIndex + 1, translationId, interpolateParams, Interpolator);
-	          }
-	        }
-	        return result;
-	      };
-	
-	      /**
-	       * Translates with the usage of the fallback languages.
-	       *
-	       * @param translationId
-	       * @param interpolateParams
-	       * @param Interpolator
-	       * @returns {Q.promise} Promise, that resolves to the translation.
-	       */
-	      var fallbackTranslation = function (translationId, interpolateParams, Interpolator, defaultTranslationText) {
-	        // Start with the fallbackLanguage with index 0
-	        return resolveForFallbackLanguage((startFallbackIteration>0 ? startFallbackIteration : fallbackIndex), translationId, interpolateParams, Interpolator, defaultTranslationText);
-	      };
-	
-	      /**
-	       * Translates with the usage of the fallback languages.
-	       *
-	       * @param translationId
-	       * @param interpolateParams
-	       * @param Interpolator
-	       * @returns {String} translation
-	       */
-	      var fallbackTranslationInstant = function (translationId, interpolateParams, Interpolator) {
-	        // Start with the fallbackLanguage with index 0
-	        return resolveForFallbackLanguageInstant((startFallbackIteration>0 ? startFallbackIteration : fallbackIndex), translationId, interpolateParams, Interpolator);
-	      };
-	
-	      var determineTranslation = function (translationId, interpolateParams, interpolationId, defaultTranslationText, uses) {
-	
-	        var deferred = $q.defer();
-	
-	        var table = uses ? $translationTable[uses] : $translationTable,
-	            Interpolator = (interpolationId) ? interpolatorHashMap[interpolationId] : defaultInterpolator;
-	
-	        // if the translation id exists, we can just interpolate it
-	        if (table && Object.prototype.hasOwnProperty.call(table, translationId)) {
-	          var translation = table[translationId];
-	
-	          // If using link, rerun $translate with linked translationId and return it
-	          if (translation.substr(0, 2) === '@:') {
-	
-	            $translate(translation.substr(2), interpolateParams, interpolationId, defaultTranslationText, uses)
-	              .then(deferred.resolve, deferred.reject);
-	          } else {
-	            //
-	            var resolvedTranslation = Interpolator.interpolate(translation, interpolateParams, 'service');
-	            resolvedTranslation = applyPostProcessing(translationId, translation, resolvedTranslation, interpolateParams, uses);
-	            deferred.resolve(resolvedTranslation);
-	          }
-	        } else {
-	          var missingTranslationHandlerTranslation;
-	          // for logging purposes only (as in $translateMissingTranslationHandlerLog), value is not returned to promise
-	          if ($missingTranslationHandlerFactory && !pendingLoader) {
-	            missingTranslationHandlerTranslation = translateByHandler(translationId, interpolateParams, defaultTranslationText);
-	          }
-	
-	          // since we couldn't translate the inital requested translation id,
-	          // we try it now with one or more fallback languages, if fallback language(s) is
-	          // configured.
-	          if (uses && $fallbackLanguage && $fallbackLanguage.length) {
-	            fallbackTranslation(translationId, interpolateParams, Interpolator, defaultTranslationText)
-	                .then(function (translation) {
-	                  deferred.resolve(translation);
-	                }, function (_translationId) {
-	                  deferred.reject(applyNotFoundIndicators(_translationId));
-	                });
-	          } else if ($missingTranslationHandlerFactory && !pendingLoader && missingTranslationHandlerTranslation) {
-	            // looks like the requested translation id doesn't exists.
-	            // Now, if there is a registered handler for missing translations and no
-	            // asyncLoader is pending, we execute the handler
-	            if (defaultTranslationText) {
-	              deferred.resolve(defaultTranslationText);
-	              } else {
-	                deferred.resolve(missingTranslationHandlerTranslation);
-	              }
-	          } else {
-	            if (defaultTranslationText) {
-	              deferred.resolve(defaultTranslationText);
-	            } else {
-	              deferred.reject(applyNotFoundIndicators(translationId));
-	            }
-	          }
-	        }
-	        return deferred.promise;
-	      };
-	
-	      var determineTranslationInstant = function (translationId, interpolateParams, interpolationId, uses) {
-	
-	        var result, table = uses ? $translationTable[uses] : $translationTable,
-	            Interpolator = defaultInterpolator;
-	
-	        // if the interpolation id exists use custom interpolator
-	        if (interpolatorHashMap && Object.prototype.hasOwnProperty.call(interpolatorHashMap, interpolationId)) {
-	          Interpolator = interpolatorHashMap[interpolationId];
-	        }
-	
-	        // if the translation id exists, we can just interpolate it
-	        if (table && Object.prototype.hasOwnProperty.call(table, translationId)) {
-	          var translation = table[translationId];
-	
-	          // If using link, rerun $translate with linked translationId and return it
-	          if (translation.substr(0, 2) === '@:') {
-	            result = determineTranslationInstant(translation.substr(2), interpolateParams, interpolationId, uses);
-	          } else {
-	            result = Interpolator.interpolate(translation, interpolateParams, 'filter');
-	            result = applyPostProcessing(translationId, translation, result, interpolateParams, uses);
-	          }
-	        } else {
-	          var missingTranslationHandlerTranslation;
-	          // for logging purposes only (as in $translateMissingTranslationHandlerLog), value is not returned to promise
-	          if ($missingTranslationHandlerFactory && !pendingLoader) {
-	            missingTranslationHandlerTranslation = translateByHandler(translationId, interpolateParams);
-	          }
-	
-	          // since we couldn't translate the inital requested translation id,
-	          // we try it now with one or more fallback languages, if fallback language(s) is
-	          // configured.
-	          if (uses && $fallbackLanguage && $fallbackLanguage.length) {
-	            fallbackIndex = 0;
-	            result = fallbackTranslationInstant(translationId, interpolateParams, Interpolator);
-	          } else if ($missingTranslationHandlerFactory && !pendingLoader && missingTranslationHandlerTranslation) {
-	            // looks like the requested translation id doesn't exists.
-	            // Now, if there is a registered handler for missing translations and no
-	            // asyncLoader is pending, we execute the handler
-	            result = missingTranslationHandlerTranslation;
-	          } else {
-	            result = applyNotFoundIndicators(translationId);
-	          }
-	        }
-	
-	        return result;
-	      };
-	
-	      var clearNextLangAndPromise = function(key) {
-	        if ($nextLang === key) {
-	          $nextLang = undefined;
-	        }
-	        langPromises[key] = undefined;
-	      };
-	
-	      var applyPostProcessing = function (translationId, translation, resolvedTranslation, interpolateParams, uses) {
-	        var fn = postProcessFn;
-	
-	        if (fn) {
-	
-	          if (typeof(fn) === 'string') {
-	            // getting on-demand instance
-	            fn = $injector.get(fn);
-	          }
-	          if (fn) {
-	            return fn(translationId, translation, resolvedTranslation, interpolateParams, uses);
-	          }
-	        }
-	
-	        return resolvedTranslation;
-	      };
-	
-	      var loadTranslationsIfMissing = function (key) {
-	        if (!$translationTable[key] && $loaderFactory && !langPromises[key]) {
-	          langPromises[key] = loadAsync(key).then(function (translation) {
-	            translations(translation.key, translation.table);
-	            return translation;
-	          });
-	        }
-	      };
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#preferredLanguage
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * Returns the language key for the preferred language.
-	       *
-	       * @param {string} langKey language String or Array to be used as preferredLanguage (changing at runtime)
-	       *
-	       * @return {string} preferred language key
-	       */
-	      $translate.preferredLanguage = function (langKey) {
-	        if(langKey) {
-	          setupPreferredLanguage(langKey);
-	        }
-	        return $preferredLanguage;
-	      };
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#cloakClassName
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * Returns the configured class name for `translate-cloak` directive.
-	       *
-	       * @return {string} cloakClassName
-	       */
-	      $translate.cloakClassName = function () {
-	        return $cloakClassName;
-	      };
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#nestedObjectDelimeter
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * Returns the configured delimiter for nested namespaces.
-	       *
-	       * @return {string} nestedObjectDelimeter
-	       */
-	      $translate.nestedObjectDelimeter = function () {
-	        return $nestedObjectDelimeter;
-	      };
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#fallbackLanguage
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * Returns the language key for the fallback languages or sets a new fallback stack.
-	       *
-	       * @param {string=} langKey language String or Array of fallback languages to be used (to change stack at runtime)
-	       *
-	       * @return {string||array} fallback language key
-	       */
-	      $translate.fallbackLanguage = function (langKey) {
-	        if (langKey !== undefined && langKey !== null) {
-	          fallbackStack(langKey);
-	
-	          // as we might have an async loader initiated and a new translation language might have been defined
-	          // we need to add the promise to the stack also. So - iterate.
-	          if ($loaderFactory) {
-	            if ($fallbackLanguage && $fallbackLanguage.length) {
-	              for (var i = 0, len = $fallbackLanguage.length; i < len; i++) {
-	                if (!langPromises[$fallbackLanguage[i]]) {
-	                  langPromises[$fallbackLanguage[i]] = loadAsync($fallbackLanguage[i]);
-	                }
-	              }
-	            }
-	          }
-	          $translate.use($translate.use());
-	        }
-	        if ($fallbackWasString) {
-	          return $fallbackLanguage[0];
-	        } else {
-	          return $fallbackLanguage;
-	        }
-	
-	      };
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#useFallbackLanguage
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * Sets the first key of the fallback language stack to be used for translation.
-	       * Therefore all languages in the fallback array BEFORE this key will be skipped!
-	       *
-	       * @param {string=} langKey Contains the langKey the iteration shall start with. Set to false if you want to
-	       * get back to the whole stack
-	       */
-	      $translate.useFallbackLanguage = function (langKey) {
-	        if (langKey !== undefined && langKey !== null) {
-	          if (!langKey) {
-	            startFallbackIteration = 0;
-	          } else {
-	            var langKeyPosition = indexOf($fallbackLanguage, langKey);
-	            if (langKeyPosition > -1) {
-	              startFallbackIteration = langKeyPosition;
-	            }
-	          }
-	
-	        }
-	
-	      };
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#proposedLanguage
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * Returns the language key of language that is currently loaded asynchronously.
-	       *
-	       * @return {string} language key
-	       */
-	      $translate.proposedLanguage = function () {
-	        return $nextLang;
-	      };
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#storage
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * Returns registered storage.
-	       *
-	       * @return {object} Storage
-	       */
-	      $translate.storage = function () {
-	        return Storage;
-	      };
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#negotiateLocale
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * Returns a language key based on available languages and language aliases. If a
-	       * language key cannot be resolved, returns undefined.
-	       *
-	       * If no or a falsy key is given, returns undefined.
-	       *
-	       * @param {string} [key] Language key
-	       * @return {string|undefined} Language key or undefined if no language key is found.
-	       */
-	      $translate.negotiateLocale = negotiateLocale;
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#use
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * Tells angular-translate which language to use by given language key. This method is
-	       * used to change language at runtime. It also takes care of storing the language
-	       * key in a configured store to let your app remember the choosed language.
-	       *
-	       * When trying to 'use' a language which isn't available it tries to load it
-	       * asynchronously with registered loaders.
-	       *
-	       * Returns promise object with loaded language file data or string of the currently used language.
-	       *
-	       * If no or a falsy key is given it returns the currently used language key.
-	       * The returned string will be ```undefined``` if setting up $translate hasn't finished.
-	       * @example
-	       * $translate.use("en_US").then(function(data){
-	       *   $scope.text = $translate("HELLO");
-	       * });
-	       *
-	       * @param {string} [key] Language key
-	       * @return {object|string} Promise with loaded language data or the language key if a falsy param was given.
-	       */
-	      $translate.use = function (key) {
-	        if (!key) {
-	          return $uses;
-	        }
-	
-	        var deferred = $q.defer();
-	
-	        $rootScope.$emit('$translateChangeStart', {language: key});
-	
-	        // Try to get the aliased language key
-	        var aliasedKey = negotiateLocale(key);
-	        // Ensure only registered language keys will be loaded
-	        if ($availableLanguageKeys.length > 0 && !aliasedKey) {
-	          return $q.reject(key);
-	        }
-	
-	        if (aliasedKey) {
-	          key = aliasedKey;
-	        }
-	
-	        // if there isn't a translation table for the language we've requested,
-	        // we load it asynchronously
-	        $nextLang = key;
-	        if (($forceAsyncReloadEnabled || !$translationTable[key]) && $loaderFactory && !langPromises[key]) {
-	          langPromises[key] = loadAsync(key).then(function (translation) {
-	            translations(translation.key, translation.table);
-	            deferred.resolve(translation.key);
-	            if ($nextLang === key) {
-	              useLanguage(translation.key);
-	            }
-	            return translation;
-	          }, function (key) {
-	            $rootScope.$emit('$translateChangeError', {language: key});
-	            deferred.reject(key);
-	            $rootScope.$emit('$translateChangeEnd', {language: key});
-	            return $q.reject(key);
-	          });
-	          langPromises[key]['finally'](function () {
-	            clearNextLangAndPromise(key);
-	          });
-	        } else if (langPromises[key]) {
-	          // we are already loading this asynchronously
-	          // resolve our new deferred when the old langPromise is resolved
-	          langPromises[key].then(function (translation) {
-	            if ($nextLang === translation.key) {
-	              useLanguage(translation.key);
-	            }
-	            deferred.resolve(translation.key);
-	            return translation;
-	          }, function (key) {
-	            // find first available fallback language if that request has failed
-	            if (!$uses && $fallbackLanguage && $fallbackLanguage.length > 0 && $fallbackLanguage[0] !== key) {
-	              return $translate.use($fallbackLanguage[0]).then(deferred.resolve, deferred.reject);
-	            } else {
-	              return deferred.reject(key);
-	            }
-	          });
-	        } else {
-	          deferred.resolve(key);
-	          useLanguage(key);
-	        }
-	
-	        return deferred.promise;
-	      };
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#resolveClientLocale
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * This returns the current browser/client's language key. The result is processed with the configured uniform tag resolver.
-	       *
-	       * @returns {string} the current client/browser language key
-	       */
-	      $translate.resolveClientLocale = function () {
-	        return getLocale();
-	      };
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#storageKey
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * Returns the key for the storage.
-	       *
-	       * @return {string} storage key
-	       */
-	      $translate.storageKey = function () {
-	        return storageKey();
-	      };
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#isPostCompilingEnabled
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * Returns whether post compiling is enabled or not
-	       *
-	       * @return {bool} storage key
-	       */
-	      $translate.isPostCompilingEnabled = function () {
-	        return $postCompilingEnabled;
-	      };
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#isForceAsyncReloadEnabled
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * Returns whether force async reload is enabled or not
-	       *
-	       * @return {boolean} forceAsyncReload value
-	       */
-	      $translate.isForceAsyncReloadEnabled = function () {
-	        return $forceAsyncReloadEnabled;
-	      };
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#isKeepContent
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * Returns whether keepContent or not
-	       *
-	       * @return {boolean} keepContent value
-	       */
-	      $translate.isKeepContent = function () {
-	        return $keepContent;
-	      };
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#refresh
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * Refreshes a translation table pointed by the given langKey. If langKey is not specified,
-	       * the module will drop all existent translation tables and load new version of those which
-	       * are currently in use.
-	       *
-	       * Refresh means that the module will drop target translation table and try to load it again.
-	       *
-	       * In case there are no loaders registered the refresh() method will throw an Error.
-	       *
-	       * If the module is able to refresh translation tables refresh() method will broadcast
-	       * $translateRefreshStart and $translateRefreshEnd events.
-	       *
-	       * @example
-	       * // this will drop all currently existent translation tables and reload those which are
-	       * // currently in use
-	       * $translate.refresh();
-	       * // this will refresh a translation table for the en_US language
-	       * $translate.refresh('en_US');
-	       *
-	       * @param {string} langKey A language key of the table, which has to be refreshed
-	       *
-	       * @return {promise} Promise, which will be resolved in case a translation tables refreshing
-	       * process is finished successfully, and reject if not.
-	       */
-	      $translate.refresh = function (langKey) {
-	        if (!$loaderFactory) {
-	          throw new Error('Couldn\'t refresh translation table, no loader registered!');
-	        }
-	
-	        var deferred = $q.defer();
-	
-	        function resolve() {
-	          deferred.resolve();
-	          $rootScope.$emit('$translateRefreshEnd', {language: langKey});
-	        }
-	
-	        function reject() {
-	          deferred.reject();
-	          $rootScope.$emit('$translateRefreshEnd', {language: langKey});
-	        }
-	
-	        $rootScope.$emit('$translateRefreshStart', {language: langKey});
-	
-	        if (!langKey) {
-	          // if there's no language key specified we refresh ALL THE THINGS!
-	          var tables = [], loadingKeys = {};
-	
-	          // reload registered fallback languages
-	          if ($fallbackLanguage && $fallbackLanguage.length) {
-	            for (var i = 0, len = $fallbackLanguage.length; i < len; i++) {
-	              tables.push(loadAsync($fallbackLanguage[i]));
-	              loadingKeys[$fallbackLanguage[i]] = true;
-	            }
-	          }
-	
-	          // reload currently used language
-	          if ($uses && !loadingKeys[$uses]) {
-	            tables.push(loadAsync($uses));
-	          }
-	
-	          var allTranslationsLoaded = function (tableData) {
-	            $translationTable = {};
-	            angular.forEach(tableData, function (data) {
-	              translations(data.key, data.table);
-	            });
-	            if ($uses) {
-	              useLanguage($uses);
-	            }
-	            resolve();
-	          };
-	          allTranslationsLoaded.displayName = 'refreshPostProcessor';
-	
-	          $q.all(tables).then(allTranslationsLoaded, reject);
-	
-	        } else if ($translationTable[langKey]) {
-	
-	          var oneTranslationsLoaded = function (data) {
-	            translations(data.key, data.table);
-	            if (langKey === $uses) {
-	              useLanguage($uses);
-	            }
-	            resolve();
-	            return data;
-	          };
-	          oneTranslationsLoaded.displayName = 'refreshPostProcessor';
-	
-	          loadAsync(langKey).then(oneTranslationsLoaded, reject);
-	
-	        } else {
-	          reject();
-	        }
-	        return deferred.promise;
-	      };
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#instant
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * Returns a translation instantly from the internal state of loaded translation. All rules
-	       * regarding the current language, the preferred language of even fallback languages will be
-	       * used except any promise handling. If a language was not found, an asynchronous loading
-	       * will be invoked in the background.
-	       *
-	       * @param {string|array} translationId A token which represents a translation id
-	       *                                     This can be optionally an array of translation ids which
-	       *                                     results that the function's promise returns an object where
-	       *                                     each key is the translation id and the value the translation.
-	       * @param {object} interpolateParams Params
-	       * @param {string} interpolationId The id of the interpolation to use
-	       * @param {string} forceLanguage A language to be used instead of the current language
-	       *
-	       * @return {string|object} translation
-	       */
-	      $translate.instant = function (translationId, interpolateParams, interpolationId, forceLanguage) {
-	
-	        // we don't want to re-negotiate $uses
-	        var uses = (forceLanguage && forceLanguage !== $uses) ? // we don't want to re-negotiate $uses
-	              (negotiateLocale(forceLanguage) || forceLanguage) : $uses;
-	
-	        // Detect undefined and null values to shorten the execution and prevent exceptions
-	        if (translationId === null || angular.isUndefined(translationId)) {
-	          return translationId;
-	        }
-	
-	        // Check forceLanguage is present
-	        if (forceLanguage) {
-	          loadTranslationsIfMissing(forceLanguage);
-	        }
-	
-	        // Duck detection: If the first argument is an array, a bunch of translations was requested.
-	        // The result is an object.
-	        if (angular.isArray(translationId)) {
-	          var results = {};
-	          for (var i = 0, c = translationId.length; i < c; i++) {
-	            results[translationId[i]] = $translate.instant(translationId[i], interpolateParams, interpolationId, forceLanguage);
-	          }
-	          return results;
-	        }
-	
-	        // We discarded unacceptable values. So we just need to verify if translationId is empty String
-	        if (angular.isString(translationId) && translationId.length < 1) {
-	          return translationId;
-	        }
-	
-	        // trim off any whitespace
-	        if (translationId) {
-	          translationId = trim.apply(translationId);
-	        }
-	
-	        var result, possibleLangKeys = [];
-	        if ($preferredLanguage) {
-	          possibleLangKeys.push($preferredLanguage);
-	        }
-	        if (uses) {
-	          possibleLangKeys.push(uses);
-	        }
-	        if ($fallbackLanguage && $fallbackLanguage.length) {
-	          possibleLangKeys = possibleLangKeys.concat($fallbackLanguage);
-	        }
-	        for (var j = 0, d = possibleLangKeys.length; j < d; j++) {
-	          var possibleLangKey = possibleLangKeys[j];
-	          if ($translationTable[possibleLangKey]) {
-	            if (typeof $translationTable[possibleLangKey][translationId] !== 'undefined') {
-	              result = determineTranslationInstant(translationId, interpolateParams, interpolationId, uses);
-	            }
-	          }
-	          if (typeof result !== 'undefined') {
-	            break;
-	          }
-	        }
-	
-	        if (!result && result !== '') {
-	          if ($notFoundIndicatorLeft || $notFoundIndicatorRight) {
-	            result = applyNotFoundIndicators(translationId);
-	          } else {
-	            // Return translation of default interpolator if not found anything.
-	            result = defaultInterpolator.interpolate(translationId, interpolateParams, 'filter');
-	            if ($missingTranslationHandlerFactory && !pendingLoader) {
-	              result = translateByHandler(translationId, interpolateParams);
-	            }
-	          }
-	        }
-	
-	        return result;
-	      };
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#versionInfo
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * Returns the current version information for the angular-translate library
-	       *
-	       * @return {string} angular-translate version
-	       */
-	      $translate.versionInfo = function () {
-	        return version;
-	      };
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#loaderCache
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * Returns the defined loaderCache.
-	       *
-	       * @return {boolean|string|object} current value of loaderCache
-	       */
-	      $translate.loaderCache = function () {
-	        return loaderCache;
-	      };
-	
-	      // internal purpose only
-	      $translate.directivePriority = function () {
-	        return directivePriority;
-	      };
-	
-	      // internal purpose only
-	      $translate.statefulFilter = function () {
-	        return statefulFilter;
-	      };
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#isReady
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * Returns whether the service is "ready" to translate (i.e. loading 1st language).
-	       *
-	       * See also {@link pascalprecht.translate.$translate#methods_onReady onReady()}.
-	       *
-	       * @return {boolean} current value of ready
-	       */
-	      $translate.isReady = function () {
-	        return $isReady;
-	      };
-	
-	      var $onReadyDeferred = $q.defer();
-	      $onReadyDeferred.promise.then(function () {
-	        $isReady = true;
-	      });
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#onReady
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * Returns whether the service is "ready" to translate (i.e. loading 1st language).
-	       *
-	       * See also {@link pascalprecht.translate.$translate#methods_isReady isReady()}.
-	       *
-	       * @param {Function=} fn Function to invoke when service is ready
-	       * @return {object} Promise resolved when service is ready
-	       */
-	      $translate.onReady = function (fn) {
-	        var deferred = $q.defer();
-	        if (angular.isFunction(fn)) {
-	          deferred.promise.then(fn);
-	        }
-	        if ($isReady) {
-	          deferred.resolve();
-	        } else {
-	          $onReadyDeferred.promise.then(deferred.resolve);
-	        }
-	        return deferred.promise;
-	      };
-	
-	      /**
-	       * @ngdoc function
-	       * @name pascalprecht.translate.$translate#getAvailableLanguageKeys
-	       * @methodOf pascalprecht.translate.$translate
-	       *
-	       * @description
-	       * This function simply returns the registered language keys being defined before in the config phase
-	       * With this, an application can use the array to provide a language selection dropdown or similar
-	       * without any additional effort
-	       *
-	       * @returns {object} returns the list of possibly registered language keys and mapping or null if not defined
-	       */
-	      $translate.getAvailableLanguageKeys = function () {
-	        if ($availableLanguageKeys.length > 0) {
-	          return $availableLanguageKeys;
-	        }
-	        return null;
-	      };
-	
-	      // Whenever $translateReady is being fired, this will ensure the state of $isReady
-	      var globalOnReadyListener = $rootScope.$on('$translateReady', function () {
-	        $onReadyDeferred.resolve();
-	        globalOnReadyListener(); // one time only
-	        globalOnReadyListener = null;
-	      });
-	      var globalOnChangeListener = $rootScope.$on('$translateChangeEnd', function () {
-	        $onReadyDeferred.resolve();
-	        globalOnChangeListener(); // one time only
-	        globalOnChangeListener = null;
-	      });
-	
-	      if ($loaderFactory) {
-	
-	        // If at least one async loader is defined and there are no
-	        // (default) translations available we should try to load them.
-	        if (angular.equals($translationTable, {})) {
-	          if ($translate.use()) {
-	            $translate.use($translate.use());
-	          }
-	        }
-	
-	        // Also, if there are any fallback language registered, we start
-	        // loading them asynchronously as soon as we can.
-	        if ($fallbackLanguage && $fallbackLanguage.length) {
-	          var processAsyncResult = function (translation) {
-	            translations(translation.key, translation.table);
-	            $rootScope.$emit('$translateChangeEnd', { language: translation.key });
-	            return translation;
-	          };
-	          for (var i = 0, len = $fallbackLanguage.length; i < len; i++) {
-	            var fallbackLanguageId = $fallbackLanguage[i];
-	            if ($forceAsyncReloadEnabled || !$translationTable[fallbackLanguageId]) {
-	              langPromises[fallbackLanguageId] = loadAsync(fallbackLanguageId).then(processAsyncResult);
-	            }
-	          }
-	        }
-	      } else {
-	        $rootScope.$emit('$translateReady', { language: $translate.use() });
-	      }
-	
-	      return $translate;
-	    }
-	  ];
-	}
-	
-	$translate.displayName = 'displayName';
-	
-	/**
-	 * @ngdoc object
-	 * @name pascalprecht.translate.$translateDefaultInterpolation
-	 * @requires $interpolate
-	 *
-	 * @description
-	 * Uses angular's `$interpolate` services to interpolate strings against some values.
-	 *
-	 * Be aware to configure a proper sanitization strategy.
-	 *
-	 * See also:
-	 * * {@link pascalprecht.translate.$translateSanitization}
-	 *
-	 * @return {object} $translateDefaultInterpolation Interpolator service
-	 */
-	angular.module('pascalprecht.translate').factory('$translateDefaultInterpolation', $translateDefaultInterpolation);
-	
-	function $translateDefaultInterpolation ($interpolate, $translateSanitization) {
-	
-	  'use strict';
-	
-	  var $translateInterpolator = {},
-	      $locale,
-	      $identifier = 'default';
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateDefaultInterpolation#setLocale
-	   * @methodOf pascalprecht.translate.$translateDefaultInterpolation
-	   *
-	   * @description
-	   * Sets current locale (this is currently not use in this interpolation).
-	   *
-	   * @param {string} locale Language key or locale.
-	   */
-	  $translateInterpolator.setLocale = function (locale) {
-	    $locale = locale;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateDefaultInterpolation#getInterpolationIdentifier
-	   * @methodOf pascalprecht.translate.$translateDefaultInterpolation
-	   *
-	   * @description
-	   * Returns an identifier for this interpolation service.
-	   *
-	   * @returns {string} $identifier
-	   */
-	  $translateInterpolator.getInterpolationIdentifier = function () {
-	    return $identifier;
-	  };
-	
-	  /**
-	   * @deprecated will be removed in 3.0
-	   * @see {@link pascalprecht.translate.$translateSanitization}
-	   */
-	  $translateInterpolator.useSanitizeValueStrategy = function (value) {
-	    $translateSanitization.useStrategy(value);
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name pascalprecht.translate.$translateDefaultInterpolation#interpolate
-	   * @methodOf pascalprecht.translate.$translateDefaultInterpolation
-	   *
-	   * @description
-	   * Interpolates given value agains given interpolate params using angulars
-	   * `$interpolate` service.
-	   *
-	   * Since AngularJS 1.5, `value` must not be a string but can be anything input.
-	   *
-	   * @returns {string} interpolated string.
-	   */
-	  $translateInterpolator.interpolate = function (value, interpolationParams, context) {
-	    interpolationParams = interpolationParams || {};
-	    interpolationParams = $translateSanitization.sanitize(interpolationParams, 'params', undefined, context);
-	
-	    var interpolatedText;
-	    if (angular.isNumber(value)) {
-	      // numbers are safe
-	      interpolatedText = '' + value;
-	    } else if (angular.isString(value)) {
-	      // strings must be interpolated (that's the job here)
-	      interpolatedText = $interpolate(value)(interpolationParams);
-	      interpolatedText = $translateSanitization.sanitize(interpolatedText, 'text', undefined, context);
-	    } else {
-	      // neither a number or a string, cant interpolate => empty string
-	      interpolatedText = '';
-	    }
-	
-	    return interpolatedText;
-	  };
-	
-	  return $translateInterpolator;
-	}
-	
-	$translateDefaultInterpolation.displayName = '$translateDefaultInterpolation';
-	
-	angular.module('pascalprecht.translate').constant('$STORAGE_KEY', 'NG_TRANSLATE_LANG_KEY');
-	
-	angular.module('pascalprecht.translate')
-	/**
-	 * @ngdoc directive
-	 * @name pascalprecht.translate.directive:translate
-	 * @requires $interpolate, 
-	 * @requires $compile, 
-	 * @requires $parse, 
-	 * @requires $rootScope
-	 * @restrict AE
-	 *
-	 * @description
-	 * Translates given translation id either through attribute or DOM content.
-	 * Internally it uses $translate service to translate the translation id. It possible to
-	 * pass an optional `translate-values` object literal as string into translation id.
-	 *
-	 * @param {string=} translate Translation id which could be either string or interpolated string.
-	 * @param {string=} translate-values Values to pass into translation id. Can be passed as object literal string or interpolated object.
-	 * @param {string=} translate-attr-ATTR translate Translation id and put it into ATTR attribute.
-	 * @param {string=} translate-default will be used unless translation was successful
-	 * @param {boolean=} translate-compile (default true if present) defines locally activation of {@link pascalprecht.translate.$translateProvider#methods_usePostCompiling}
-	 * @param {boolean=} translate-keep-content (default true if present) defines that in case a KEY could not be translated, that the existing content is left in the innerHTML}
-	 *
-	 * @example
-	   <example module="ngView">
-	    <file name="index.html">
-	      <div ng-controller="TranslateCtrl">
-	
-	        <pre translate="TRANSLATION_ID"></pre>
-	        <pre translate>TRANSLATION_ID</pre>
-	        <pre translate translate-attr-title="TRANSLATION_ID"></pre>
-	        <pre translate="{{translationId}}"></pre>
-	        <pre translate>{{translationId}}</pre>
-	        <pre translate="WITH_VALUES" translate-values="{value: 5}"></pre>
-	        <pre translate translate-values="{value: 5}">WITH_VALUES</pre>
-	        <pre translate="WITH_VALUES" translate-values="{{values}}"></pre>
-	        <pre translate translate-values="{{values}}">WITH_VALUES</pre>
-	        <pre translate translate-attr-title="WITH_VALUES" translate-values="{{values}}"></pre>
-	        <pre translate="WITH_CAMEL_CASE_KEY" translate-value-camel-case-key="Hi"></pre>
-	
-	      </div>
-	    </file>
-	    <file name="script.js">
-	      angular.module('ngView', ['pascalprecht.translate'])
-	
-	      .config(function ($translateProvider) {
-	
-	        $translateProvider.translations('en',{
-	          'TRANSLATION_ID': 'Hello there!',
-	          'WITH_VALUES': 'The following value is dynamic: {{value}}',
-	          'WITH_CAMEL_CASE_KEY': 'The interpolation key is camel cased: {{camelCaseKey}}'
-	        }).preferredLanguage('en');
-	
-	      });
-	
-	      angular.module('ngView').controller('TranslateCtrl', function ($scope) {
-	        $scope.translationId = 'TRANSLATION_ID';
-	
-	        $scope.values = {
-	          value: 78
-	        };
-	      });
-	    </file>
-	    <file name="scenario.js">
-	      it('should translate', function () {
-	        inject(function ($rootScope, $compile) {
-	          $rootScope.translationId = 'TRANSLATION_ID';
-	
-	          element = $compile('<p translate="TRANSLATION_ID"></p>')($rootScope);
-	          $rootScope.$digest();
-	          expect(element.text()).toBe('Hello there!');
-	
-	          element = $compile('<p translate="{{translationId}}"></p>')($rootScope);
-	          $rootScope.$digest();
-	          expect(element.text()).toBe('Hello there!');
-	
-	          element = $compile('<p translate>TRANSLATION_ID</p>')($rootScope);
-	          $rootScope.$digest();
-	          expect(element.text()).toBe('Hello there!');
-	
-	          element = $compile('<p translate>{{translationId}}</p>')($rootScope);
-	          $rootScope.$digest();
-	          expect(element.text()).toBe('Hello there!');
-	
-	          element = $compile('<p translate translate-attr-title="TRANSLATION_ID"></p>')($rootScope);
-	          $rootScope.$digest();
-	          expect(element.attr('title')).toBe('Hello there!');
-	
-	          element = $compile('<p translate="WITH_CAMEL_CASE_KEY" translate-value-camel-case-key="Hello"></p>')($rootScope);
-	          $rootScope.$digest();
-	          expect(element.text()).toBe('The interpolation key is camel cased: Hello');
-	        });
-	      });
-	    </file>
-	   </example>
-	 */
-	.directive('translate', translateDirective);
-	function translateDirective($translate, $interpolate, $compile, $parse, $rootScope) {
-	
-	  'use strict';
-	
-	  /**
-	   * @name trim
-	   * @private
-	   *
-	   * @description
-	   * trim polyfill
-	   *
-	   * @returns {string} The string stripped of whitespace from both ends
-	   */
-	  var trim = function() {
-	    return this.toString().replace(/^\s+|\s+$/g, '');
-	  };
-	
-	  return {
-	    restrict: 'AE',
-	    scope: true,
-	    priority: $translate.directivePriority(),
-	    compile: function (tElement, tAttr) {
-	
-	      var translateValuesExist = (tAttr.translateValues) ?
-	        tAttr.translateValues : undefined;
-	
-	      var translateInterpolation = (tAttr.translateInterpolation) ?
-	        tAttr.translateInterpolation : undefined;
-	
-	      var translateValueExist = tElement[0].outerHTML.match(/translate-value-+/i);
-	
-	      var interpolateRegExp = '^(.*)(' + $interpolate.startSymbol() + '.*' + $interpolate.endSymbol() + ')(.*)',
-	          watcherRegExp = '^(.*)' + $interpolate.startSymbol() + '(.*)' + $interpolate.endSymbol() + '(.*)';
-	
-	      return function linkFn(scope, iElement, iAttr) {
-	
-	        scope.interpolateParams = {};
-	        scope.preText = '';
-	        scope.postText = '';
-	        scope.translateNamespace = getTranslateNamespace(scope);
-	        var translationIds = {};
-	
-	        var initInterpolationParams = function (interpolateParams, iAttr, tAttr) {
-	          // initial setup
-	          if (iAttr.translateValues) {
-	            angular.extend(interpolateParams, $parse(iAttr.translateValues)(scope.$parent));
-	          }
-	          // initially fetch all attributes if existing and fill the params
-	          if (translateValueExist) {
-	            for (var attr in tAttr) {
-	              if (Object.prototype.hasOwnProperty.call(iAttr, attr) && attr.substr(0, 14) === 'translateValue' && attr !== 'translateValues') {
-	                var attributeName = angular.lowercase(attr.substr(14, 1)) + attr.substr(15);
-	                interpolateParams[attributeName] = tAttr[attr];
-	              }
-	            }
-	          }
-	        };
-	
-	        // Ensures any change of the attribute "translate" containing the id will
-	        // be re-stored to the scope's "translationId".
-	        // If the attribute has no content, the element's text value (white spaces trimmed off) will be used.
-	        var observeElementTranslation = function (translationId) {
-	
-	          // Remove any old watcher
-	          if (angular.isFunction(observeElementTranslation._unwatchOld)) {
-	            observeElementTranslation._unwatchOld();
-	            observeElementTranslation._unwatchOld = undefined;
-	          }
-	
-	          if (angular.equals(translationId , '') || !angular.isDefined(translationId)) {
-	            var iElementText = trim.apply(iElement.text());
-	
-	            // Resolve translation id by inner html if required
-	            var interpolateMatches = iElementText.match(interpolateRegExp);
-	            // Interpolate translation id if required
-	            if (angular.isArray(interpolateMatches)) {
-	              scope.preText = interpolateMatches[1];
-	              scope.postText = interpolateMatches[3];
-	              translationIds.translate = $interpolate(interpolateMatches[2])(scope.$parent);
-	              var watcherMatches = iElementText.match(watcherRegExp);
-	              if (angular.isArray(watcherMatches) && watcherMatches[2] && watcherMatches[2].length) {
-	                observeElementTranslation._unwatchOld = scope.$watch(watcherMatches[2], function (newValue) {
-	                  translationIds.translate = newValue;
-	                  updateTranslations();
-	                });
-	              }
-	            } else {
-	              // do not assigne the translation id if it is empty.
-	              translationIds.translate = !iElementText ? undefined : iElementText;
-	            }
-	          } else {
-	            translationIds.translate = translationId;
-	          }
-	          updateTranslations();
-	        };
-	
-	        var observeAttributeTranslation = function (translateAttr) {
-	          iAttr.$observe(translateAttr, function (translationId) {
-	            translationIds[translateAttr] = translationId;
-	            updateTranslations();
-	          });
-	        };
-	
-	        // initial setup with values
-	        initInterpolationParams(scope.interpolateParams, iAttr, tAttr);
-	
-	        var firstAttributeChangedEvent = true;
-	        iAttr.$observe('translate', function (translationId) {
-	          if (typeof translationId === 'undefined') {
-	            // case of element "<translate>xyz</translate>"
-	            observeElementTranslation('');
-	          } else {
-	            // case of regular attribute
-	            if (translationId !== '' || !firstAttributeChangedEvent) {
-	              translationIds.translate = translationId;
-	              updateTranslations();
-	            }
-	          }
-	          firstAttributeChangedEvent = false;
-	        });
-	
-	        for (var translateAttr in iAttr) {
-	          if (iAttr.hasOwnProperty(translateAttr) && translateAttr.substr(0, 13) === 'translateAttr' && translateAttr.length > 13) {
-	            observeAttributeTranslation(translateAttr);
-	          }
-	        }
-	
-	        iAttr.$observe('translateDefault', function (value) {
-	          scope.defaultText = value;
-	          updateTranslations();
-	        });
-	
-	        if (translateValuesExist) {
-	          iAttr.$observe('translateValues', function (interpolateParams) {
-	            if (interpolateParams) {
-	              scope.$parent.$watch(function () {
-	                angular.extend(scope.interpolateParams, $parse(interpolateParams)(scope.$parent));
-	              });
-	            }
-	          });
-	        }
-	
-	        if (translateValueExist) {
-	          var observeValueAttribute = function (attrName) {
-	            iAttr.$observe(attrName, function (value) {
-	              var attributeName = angular.lowercase(attrName.substr(14, 1)) + attrName.substr(15);
-	              scope.interpolateParams[attributeName] = value;
-	            });
-	          };
-	          for (var attr in iAttr) {
-	            if (Object.prototype.hasOwnProperty.call(iAttr, attr) && attr.substr(0, 14) === 'translateValue' && attr !== 'translateValues') {
-	              observeValueAttribute(attr);
-	            }
-	          }
-	        }
-	
-	        // Master update function
-	        var updateTranslations = function () {
-	          for (var key in translationIds) {
-	            if (translationIds.hasOwnProperty(key) && translationIds[key] !== undefined) {
-	              updateTranslation(key, translationIds[key], scope, scope.interpolateParams, scope.defaultText, scope.translateNamespace);
-	            }
-	          }
-	        };
-	
-	        // Put translation processing function outside loop
-	        var updateTranslation = function(translateAttr, translationId, scope, interpolateParams, defaultTranslationText, translateNamespace) {
-	          if (translationId) {
-	            // if translation id starts with '.' and translateNamespace given, prepend namespace
-	            if (translateNamespace && translationId.charAt(0) === '.') {
-	              translationId = translateNamespace + translationId;
-	            }
-	
-	            $translate(translationId, interpolateParams, translateInterpolation, defaultTranslationText, scope.translateLanguage)
-	              .then(function (translation) {
-	                applyTranslation(translation, scope, true, translateAttr);
-	              }, function (translationId) {
-	                applyTranslation(translationId, scope, false, translateAttr);
-	              });
-	          } else {
-	            // as an empty string cannot be translated, we can solve this using successful=false
-	            applyTranslation(translationId, scope, false, translateAttr);
-	          }
-	        };
-	
-	        var applyTranslation = function (value, scope, successful, translateAttr) {
-	          if (!successful) {
-	            if (typeof scope.defaultText !== 'undefined') {
-	              value = scope.defaultText;
-	            }
-	          }
-	          if (translateAttr === 'translate') {
-	            // default translate into innerHTML
-	            if (successful || (!successful && !$translate.isKeepContent() && typeof iAttr.translateKeepContent === 'undefined')) {
-	              iElement.empty().append(scope.preText + value + scope.postText);
-	            }
-	            var globallyEnabled = $translate.isPostCompilingEnabled();
-	            var locallyDefined = typeof tAttr.translateCompile !== 'undefined';
-	            var locallyEnabled = locallyDefined && tAttr.translateCompile !== 'false';
-	            if ((globallyEnabled && !locallyDefined) || locallyEnabled) {
-	              $compile(iElement.contents())(scope);
-	            }
-	          } else {
-	            // translate attribute
-	            var attributeName = iAttr.$attr[translateAttr];
-	            if (attributeName.substr(0, 5) === 'data-') {
-	              // ensure html5 data prefix is stripped
-	              attributeName = attributeName.substr(5);
-	            }
-	            attributeName = attributeName.substr(15);
-	            iElement.attr(attributeName, value);
-	          }
-	        };
-	
-	        if (translateValuesExist || translateValueExist || iAttr.translateDefault) {
-	          scope.$watch('interpolateParams', updateTranslations, true);
-	        }
-	
-	        // Replaced watcher on translateLanguage with event listener
-	        scope.$on('translateLanguageChanged', updateTranslations);
-	
-	        // Ensures the text will be refreshed after the current language was changed
-	        // w/ $translate.use(...)
-	        var unbind = $rootScope.$on('$translateChangeSuccess', updateTranslations);
-	
-	        // ensure translation will be looked up at least one
-	        if (iElement.text().length) {
-	          if (iAttr.translate) {
-	            observeElementTranslation(iAttr.translate);
-	          } else {
-	            observeElementTranslation('');
-	          }
-	        } else if (iAttr.translate) {
-	          // ensure attribute will be not skipped
-	          observeElementTranslation(iAttr.translate);
-	        }
-	        updateTranslations();
-	        scope.$on('$destroy', unbind);
-	      };
-	    }
-	  };
-	}
-	
-	/**
-	 * Returns the scope's namespace.
-	 * @private
-	 * @param scope
-	 * @returns {string}
-	 */
-	function getTranslateNamespace(scope) {
-	  'use strict';
-	  if (scope.translateNamespace) {
-	    return scope.translateNamespace;
-	  }
-	  if (scope.$parent) {
-	    return getTranslateNamespace(scope.$parent);
-	  }
-	}
-	
-	translateDirective.displayName = 'translateDirective';
-	
-	angular.module('pascalprecht.translate')
-	/**
-	 * @ngdoc directive
-	 * @name pascalprecht.translate.directive:translate-attr
-	 * @restrict A
-	 *
-	 * @description
-	 * Translates attributes like translate-attr-ATTR, but with an object like ng-class.
-	 * Internally it uses `translate` service to translate translation id. It possible to
-	 * pass an optional `translate-values` object literal as string into translation id.
-	 *
-	 * @param {string=} translate-attr Object literal mapping attributes to translation ids.
-	 * @param {string=} translate-values Values to pass into the translation ids. Can be passed as object literal string.
-	 *
-	 * @example
-	   <example module="ngView">
-	    <file name="index.html">
-	      <div ng-controller="TranslateCtrl">
-	
-	        <input translate-attr="{ placeholder: translationId, title: 'WITH_VALUES' }" translate-values="{value: 5}" />
-	
-	      </div>
-	    </file>
-	    <file name="script.js">
-	      angular.module('ngView', ['pascalprecht.translate'])
-	
-	      .config(function ($translateProvider) {
-	
-	        $translateProvider.translations('en',{
-	          'TRANSLATION_ID': 'Hello there!',
-	          'WITH_VALUES': 'The following value is dynamic: {{value}}',
-	        }).preferredLanguage('en');
-	
-	      });
-	
-	      angular.module('ngView').controller('TranslateCtrl', function ($scope) {
-	        $scope.translationId = 'TRANSLATION_ID';
-	
-	        $scope.values = {
-	          value: 78
-	        };
-	      });
-	    </file>
-	    <file name="scenario.js">
-	      it('should translate', function () {
-	        inject(function ($rootScope, $compile) {
-	          $rootScope.translationId = 'TRANSLATION_ID';
-	
-	          element = $compile('<input translate-attr="{ placeholder: translationId, title: 'WITH_VALUES' }" translate-values="{ value: 5 }" />')($rootScope);
-	          $rootScope.$digest();
-	          expect(element.attr('placeholder)).toBe('Hello there!');
-	          expect(element.attr('title)).toBe('The following value is dynamic: 5');
-	        });
-	      });
-	    </file>
-	   </example>
-	 */
-	.directive('translateAttr', translateAttrDirective);
-	function translateAttrDirective($translate, $rootScope) {
-	
-	  'use strict';
-	
-	  return {
-	    restrict: 'A',
-	    priority: $translate.directivePriority(),
-	    link: function linkFn(scope, element, attr) {
-	
-	      var translateAttr,
-	          translateValues,
-	          previousAttributes = {};
-	
-	      // Main update translations function
-	      var updateTranslations = function () {
-	        angular.forEach(translateAttr, function (translationId, attributeName) {
-	          if (!translationId) {
-	            return;
-	          }
-	          previousAttributes[attributeName] = true;
-	
-	          // if translation id starts with '.' and translateNamespace given, prepend namespace
-	          if (scope.translateNamespace && translationId.charAt(0) === '.') {
-	            translationId = scope.translateNamespace + translationId;
-	          }
-	          $translate(translationId, translateValues, attr.translateInterpolation, undefined, scope.translateLanguage)
-	            .then(function (translation) {
-	              element.attr(attributeName, translation);
-	            }, function (translationId) {
-	              element.attr(attributeName, translationId);
-	            });
-	        });
-	
-	        // Removing unused attributes that were previously used
-	        angular.forEach(previousAttributes, function (flag, attributeName) {
-	          if (!translateAttr[attributeName]) {
-	            element.removeAttr(attributeName);
-	            delete previousAttributes[attributeName];
-	          }
-	        });
-	      };
-	
-	      // Watch for attribute changes
-	      watchAttribute(
-	        scope,
-	        attr.translateAttr,
-	        function (newValue) { translateAttr = newValue; },
-	        updateTranslations
-	      );
-	      // Watch for value changes
-	      watchAttribute(
-	        scope,
-	        attr.translateValues,
-	        function (newValue) { translateValues = newValue; },
-	        updateTranslations
-	      );
-	
-	      if (attr.translateValues) {
-	        scope.$watch(attr.translateValues, updateTranslations, true);
-	      }
-	
-	      // Replaced watcher on translateLanguage with event listener
-	      scope.$on('translateLanguageChanged', updateTranslations);
-	
-	      // Ensures the text will be refreshed after the current language was changed
-	      // w/ $translate.use(...)
-	      var unbind = $rootScope.$on('$translateChangeSuccess', updateTranslations);
-	
-	      updateTranslations();
-	      scope.$on('$destroy', unbind);
-	    }
-	  };
-	}
-	
-	function watchAttribute(scope, attribute, valueCallback, changeCallback) {
-	  'use strict';
-	  if (!attribute) {
-	    return;
-	  }
-	  if (attribute.substr(0, 2) === '::') {
-	    attribute = attribute.substr(2);
-	  } else {
-	    scope.$watch(attribute, function(newValue) {
-	      valueCallback(newValue);
-	      changeCallback();
-	    }, true);
-	  }
-	  valueCallback(scope.$eval(attribute));
-	}
-	
-	translateAttrDirective.displayName = 'translateAttrDirective';
-	
-	angular.module('pascalprecht.translate')
-	/**
-	 * @ngdoc directive
-	 * @name pascalprecht.translate.directive:translateCloak
-	 * @requires $rootScope
-	 * @requires $translate
-	 * @restrict A
-	 *
-	 * $description
-	 * Adds a `translate-cloak` class name to the given element where this directive
-	 * is applied initially and removes it, once a loader has finished loading.
-	 *
-	 * This directive can be used to prevent initial flickering when loading translation
-	 * data asynchronously.
-	 *
-	 * The class name is defined in
-	 * {@link pascalprecht.translate.$translateProvider#cloakClassName $translate.cloakClassName()}.
-	 *
-	 * @param {string=} translate-cloak If a translationId is provided, it will be used for showing
-	 *                                  or hiding the cloak. Basically it relies on the translation
-	 *                                  resolve.
-	 */
-	.directive('translateCloak', translateCloakDirective);
-	
-	function translateCloakDirective($translate, $rootScope) {
-	
-	  'use strict';
-	
-	  return {
-	    compile: function (tElement) {
-	      var applyCloak = function () {
-	        tElement.addClass($translate.cloakClassName());
-	      },
-	      removeCloak = function () {
-	        tElement.removeClass($translate.cloakClassName());
-	      };
-	      $translate.onReady(function () {
-	        removeCloak();
-	      });
-	      applyCloak();
-	
-	      return function linkFn(scope, iElement, iAttr) {
-	        if (iAttr.translateCloak && iAttr.translateCloak.length) {
-	          // Register a watcher for the defined translation allowing a fine tuned cloak
-	          iAttr.$observe('translateCloak', function (translationId) {
-	            $translate(translationId).then(removeCloak, applyCloak);
-	          });
-	          // Register for change events as this is being another indicicator revalidating the cloak)
-	          $rootScope.$on('$translateChangeSuccess', function () {
-	            $translate(iAttr.translateCloak).then(removeCloak, applyCloak);
-	          });
-	        }
-	      };
-	    }
-	  };
-	}
-	
-	translateCloakDirective.displayName = 'translateCloakDirective';
-	
-	angular.module('pascalprecht.translate')
-	/**
-	 * @ngdoc directive
-	 * @name pascalprecht.translate.directive:translateNamespace
-	 * @restrict A
-	 *
-	 * @description
-	 * Translates given translation id either through attribute or DOM content.
-	 * Internally it uses `translate` filter to translate translation id. It possible to
-	 * pass an optional `translate-values` object literal as string into translation id.
-	 *
-	 * @param {string=} translate namespace name which could be either string or interpolated string.
-	 *
-	 * @example
-	   <example module="ngView">
-	    <file name="index.html">
-	      <div translate-namespace="CONTENT">
-	
-	        <div>
-	            <h1 translate>.HEADERS.TITLE</h1>
-	            <h1 translate>.HEADERS.WELCOME</h1>
-	        </div>
-	
-	        <div translate-namespace=".HEADERS">
-	            <h1 translate>.TITLE</h1>
-	            <h1 translate>.WELCOME</h1>
-	        </div>
-	
-	      </div>
-	    </file>
-	    <file name="script.js">
-	      angular.module('ngView', ['pascalprecht.translate'])
-	
-	      .config(function ($translateProvider) {
-	
-	        $translateProvider.translations('en',{
-	          'TRANSLATION_ID': 'Hello there!',
-	          'CONTENT': {
-	            'HEADERS': {
-	                TITLE: 'Title'
-	            }
-	          },
-	          'CONTENT.HEADERS.WELCOME': 'Welcome'
-	        }).preferredLanguage('en');
-	
-	      });
-	
-	    </file>
-	   </example>
-	 */
-	.directive('translateNamespace', translateNamespaceDirective);
-	
-	function translateNamespaceDirective() {
-	
-	  'use strict';
-	
-	  return {
-	    restrict: 'A',
-	    scope: true,
-	    compile: function () {
-	      return {
-	        pre: function (scope, iElement, iAttrs) {
-	          scope.translateNamespace = getTranslateNamespace(scope);
-	
-	          if (scope.translateNamespace && iAttrs.translateNamespace.charAt(0) === '.') {
-	            scope.translateNamespace += iAttrs.translateNamespace;
-	          } else {
-	            scope.translateNamespace = iAttrs.translateNamespace;
-	          }
-	        }
-	      };
-	    }
-	  };
-	}
-	
-	/**
-	 * Returns the scope's namespace.
-	 * @private
-	 * @param scope
-	 * @returns {string}
-	 */
-	function getTranslateNamespace(scope) {
-	  'use strict';
-	  if (scope.translateNamespace) {
-	    return scope.translateNamespace;
-	  }
-	  if (scope.$parent) {
-	    return getTranslateNamespace(scope.$parent);
-	  }
-	}
-	
-	translateNamespaceDirective.displayName = 'translateNamespaceDirective';
-	
-	angular.module('pascalprecht.translate')
-	/**
-	 * @ngdoc directive
-	 * @name pascalprecht.translate.directive:translateLanguage
-	 * @restrict A
-	 *
-	 * @description
-	 * Forces the language to the directives in the underlying scope.
-	 *
-	 * @param {string=} translate language that will be negotiated.
-	 *
-	 * @example
-	   <example module="ngView">
-	    <file name="index.html">
-	      <div>
-	
-	        <div>
-	            <h1 translate>HELLO</h1>
-	        </div>
-	
-	        <div translate-language="de">
-	            <h1 translate>HELLO</h1>
-	        </div>
-	
-	      </div>
-	    </file>
-	    <file name="script.js">
-	      angular.module('ngView', ['pascalprecht.translate'])
-	
-	      .config(function ($translateProvider) {
-	
-	        $translateProvider
-	          .translations('en',{
-	            'HELLO': 'Hello world!'
-	          })
-	          .translations('de',{
-	            'HELLO': 'Hallo Welt!'
-	          })
-	          .preferredLanguage('en');
-	
-	      });
-	
-	    </file>
-	   </example>
-	 */
-	.directive('translateLanguage', translateLanguageDirective);
-	
-	function translateLanguageDirective() {
-	
-	  'use strict';
-	
-	  return {
-	    restrict: 'A',
-	    scope: true,
-	    compile: function () {
-	      return function linkFn(scope, iElement, iAttrs) {
-	
-	        iAttrs.$observe('translateLanguage', function (newTranslateLanguage) {
-	          scope.translateLanguage = newTranslateLanguage;
-	        });
-	
-	        scope.$watch('translateLanguage', function(){
-	          scope.$broadcast('translateLanguageChanged');
-	        });
-	      };
-	    }
-	  };
-	}
-	
-	translateLanguageDirective.displayName = 'translateLanguageDirective';
-	
-	angular.module('pascalprecht.translate')
-	/**
-	 * @ngdoc filter
-	 * @name pascalprecht.translate.filter:translate
-	 * @requires $parse
-	 * @requires pascalprecht.translate.$translate
-	 * @function
-	 *
-	 * @description
-	 * Uses `$translate` service to translate contents. Accepts interpolate parameters
-	 * to pass dynamized values though translation.
-	 *
-	 * @param {string} translationId A translation id to be translated.
-	 * @param {*=} interpolateParams Optional object literal (as hash or string) to pass values into translation.
-	 *
-	 * @returns {string} Translated text.
-	 *
-	 * @example
-	   <example module="ngView">
-	    <file name="index.html">
-	      <div ng-controller="TranslateCtrl">
-	
-	        <pre>{{ 'TRANSLATION_ID' | translate }}</pre>
-	        <pre>{{ translationId | translate }}</pre>
-	        <pre>{{ 'WITH_VALUES' | translate:'{value: 5}' }}</pre>
-	        <pre>{{ 'WITH_VALUES' | translate:values }}</pre>
-	
-	      </div>
-	    </file>
-	    <file name="script.js">
-	      angular.module('ngView', ['pascalprecht.translate'])
-	
-	      .config(function ($translateProvider) {
-	
-	        $translateProvider.translations('en', {
-	          'TRANSLATION_ID': 'Hello there!',
-	          'WITH_VALUES': 'The following value is dynamic: {{value}}'
-	        });
-	        $translateProvider.preferredLanguage('en');
-	
-	      });
-	
-	      angular.module('ngView').controller('TranslateCtrl', function ($scope) {
-	        $scope.translationId = 'TRANSLATION_ID';
-	
-	        $scope.values = {
-	          value: 78
-	        };
-	      });
-	    </file>
-	   </example>
-	 */
-	.filter('translate', translateFilterFactory);
-	
-	function translateFilterFactory($parse, $translate) {
-	
-	  'use strict';
-	
-	  var translateFilter = function (translationId, interpolateParams, interpolation, forceLanguage) {
-	    if (!angular.isObject(interpolateParams)) {
-	      interpolateParams = $parse(interpolateParams)(this);
-	    }
-	
-	    return $translate.instant(translationId, interpolateParams, interpolation, forceLanguage);
-	  };
-	
-	  if ($translate.statefulFilter()) {
-	    translateFilter.$stateful = true;
-	  }
-	
-	  return translateFilter;
-	}
-	
-	translateFilterFactory.displayName = 'translateFilterFactory';
-	
-	angular.module('pascalprecht.translate')
-	
-	/**
-	 * @ngdoc object
-	 * @name pascalprecht.translate.$translationCache
-	 * @requires $cacheFactory
-	 *
-	 * @description
-	 * The first time a translation table is used, it is loaded in the translation cache for quick retrieval. You
-	 * can load translation tables directly into the cache by consuming the
-	 * `$translationCache` service directly.
-	 *
-	 * @return {object} $cacheFactory object.
-	 */
-	  .factory('$translationCache', $translationCache);
-	
-	function $translationCache($cacheFactory) {
-	
-	  'use strict';
-	
-	  return $cacheFactory('translations');
-	}
-	
-	$translationCache.displayName = '$translationCache';
-	return 'pascalprecht.translate';
-	
-	}));
-
+	module.exports = (__webpack_require__(2))(335);
 
 /***/ },
 /* 111 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * Module dependencies.
+	 */
+	
+	var url = __webpack_require__(112);
+	var parser = __webpack_require__(117);
+	var Manager = __webpack_require__(125);
+	var debug = __webpack_require__(114)('socket.io-client');
+	
+	/**
+	 * Module exports.
+	 */
+	
+	module.exports = exports = lookup;
+	
+	/**
+	 * Managers cache.
+	 */
+	
+	var cache = exports.managers = {};
+	
+	/**
+	 * Looks up an existing `Manager` for multiplexing.
+	 * If the user summons:
+	 *
+	 *   `io('http://localhost/a');`
+	 *   `io('http://localhost/b');`
+	 *
+	 * We reuse the existing instance based on same scheme/port/host,
+	 * and we initialize sockets for each namespace.
+	 *
+	 * @api public
+	 */
+	
+	function lookup (uri, opts) {
+	  if (typeof uri === 'object') {
+	    opts = uri;
+	    uri = undefined;
+	  }
+	
+	  opts = opts || {};
+	
+	  var parsed = url(uri);
+	  var source = parsed.source;
+	  var id = parsed.id;
+	  var path = parsed.path;
+	  var sameNamespace = cache[id] && path in cache[id].nsps;
+	  var newConnection = opts.forceNew || opts['force new connection'] ||
+	                      false === opts.multiplex || sameNamespace;
+	
+	  var io;
+	
+	  if (newConnection) {
+	    debug('ignoring socket cache for %s', source);
+	    io = Manager(source, opts);
+	  } else {
+	    if (!cache[id]) {
+	      debug('new io instance for %s', source);
+	      cache[id] = Manager(source, opts);
+	    }
+	    io = cache[id];
+	  }
+	  if (parsed.query && !opts.query) {
+	    opts.query = parsed.query;
+	  } else if (opts && 'object' === typeof opts.query) {
+	    opts.query = encodeQueryString(opts.query);
+	  }
+	  return io.socket(parsed.path, opts);
+	}
+	/**
+	 *  Helper method to parse query objects to string.
+	 * @param {object} query
+	 * @returns {string}
+	 */
+	function encodeQueryString (obj) {
+	  var str = [];
+	  for (var p in obj) {
+	    if (obj.hasOwnProperty(p)) {
+	      str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+	    }
+	  }
+	  return str.join('&');
+	}
+	/**
+	 * Protocol version.
+	 *
+	 * @api public
+	 */
+	
+	exports.protocol = parser.protocol;
+	
+	/**
+	 * `connect`.
+	 *
+	 * @param {String} uri
+	 * @api public
+	 */
+	
+	exports.connect = lookup;
+	
+	/**
+	 * Expose constructors for standalone build.
+	 *
+	 * @api public
+	 */
+	
+	exports.Manager = __webpack_require__(125);
+	exports.Socket = __webpack_require__(151);
+
+
+/***/ },
+/* 112 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {
+	/**
+	 * Module dependencies.
+	 */
+	
+	var parseuri = __webpack_require__(113);
+	var debug = __webpack_require__(114)('socket.io-client:url');
+	
+	/**
+	 * Module exports.
+	 */
+	
+	module.exports = url;
+	
+	/**
+	 * URL parser.
+	 *
+	 * @param {String} url
+	 * @param {Object} An object meant to mimic window.location.
+	 *                 Defaults to window.location.
+	 * @api public
+	 */
+	
+	function url (uri, loc) {
+	  var obj = uri;
+	
+	  // default to window.location
+	  loc = loc || global.location;
+	  if (null == uri) uri = loc.protocol + '//' + loc.host;
+	
+	  // relative path support
+	  if ('string' === typeof uri) {
+	    if ('/' === uri.charAt(0)) {
+	      if ('/' === uri.charAt(1)) {
+	        uri = loc.protocol + uri;
+	      } else {
+	        uri = loc.host + uri;
+	      }
+	    }
+	
+	    if (!/^(https?|wss?):\/\//.test(uri)) {
+	      debug('protocol-less url %s', uri);
+	      if ('undefined' !== typeof loc) {
+	        uri = loc.protocol + '//' + uri;
+	      } else {
+	        uri = 'https://' + uri;
+	      }
+	    }
+	
+	    // parse
+	    debug('parse %s', uri);
+	    obj = parseuri(uri);
+	  }
+	
+	  // make sure we treat `localhost:80` and `localhost` equally
+	  if (!obj.port) {
+	    if (/^(http|ws)$/.test(obj.protocol)) {
+	      obj.port = '80';
+	    } else if (/^(http|ws)s$/.test(obj.protocol)) {
+	      obj.port = '443';
+	    }
+	  }
+	
+	  obj.path = obj.path || '/';
+	
+	  var ipv6 = obj.host.indexOf(':') !== -1;
+	  var host = ipv6 ? '[' + obj.host + ']' : obj.host;
+	
+	  // define unique id
+	  obj.id = obj.protocol + '://' + host + ':' + obj.port;
+	  // define href
+	  obj.href = obj.protocol + '://' + host + (loc && loc.port === obj.port ? '' : (':' + obj.port));
+	
+	  return obj;
+	}
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 113 */
+/***/ function(module, exports) {
+
+	/**
+	 * Parses an URI
+	 *
+	 * @author Steven Levithan <stevenlevithan.com> (MIT license)
+	 * @api private
+	 */
+	
+	var re = /^(?:(?![^:@]+:[^:@\/]*@)(http|https|ws|wss):\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?((?:[a-f0-9]{0,4}:){2,7}[a-f0-9]{0,4}|[^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
+	
+	var parts = [
+	    'source', 'protocol', 'authority', 'userInfo', 'user', 'password', 'host', 'port', 'relative', 'path', 'directory', 'file', 'query', 'anchor'
+	];
+	
+	module.exports = function parseuri(str) {
+	    var src = str,
+	        b = str.indexOf('['),
+	        e = str.indexOf(']');
+	
+	    if (b != -1 && e != -1) {
+	        str = str.substring(0, b) + str.substring(b, e).replace(/:/g, ';') + str.substring(e, str.length);
+	    }
+	
+	    var m = re.exec(str || ''),
+	        uri = {},
+	        i = 14;
+	
+	    while (i--) {
+	        uri[parts[i]] = m[i] || '';
+	    }
+	
+	    if (b != -1 && e != -1) {
+	        uri.source = src;
+	        uri.host = uri.host.substring(1, uri.host.length - 1).replace(/;/g, ':');
+	        uri.authority = uri.authority.replace('[', '').replace(']', '').replace(/;/g, ':');
+	        uri.ipv6uri = true;
+	    }
+	
+	    return uri;
+	};
+
+
+/***/ },
+/* 114 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * This is the web browser implementation of `debug()`.
+	 *
+	 * Expose `debug()` as the module.
+	 */
+	
+	exports = module.exports = __webpack_require__(115);
+	exports.log = log;
+	exports.formatArgs = formatArgs;
+	exports.save = save;
+	exports.load = load;
+	exports.useColors = useColors;
+	exports.storage = 'undefined' != typeof chrome
+	               && 'undefined' != typeof chrome.storage
+	                  ? chrome.storage.local
+	                  : localstorage();
+	
+	/**
+	 * Colors.
+	 */
+	
+	exports.colors = [
+	  'lightseagreen',
+	  'forestgreen',
+	  'goldenrod',
+	  'dodgerblue',
+	  'darkorchid',
+	  'crimson'
+	];
+	
+	/**
+	 * Currently only WebKit-based Web Inspectors, Firefox >= v31,
+	 * and the Firebug extension (any Firefox version) are known
+	 * to support "%c" CSS customizations.
+	 *
+	 * TODO: add a `localStorage` variable to explicitly enable/disable colors
+	 */
+	
+	function useColors() {
+	  // is webkit? http://stackoverflow.com/a/16459606/376773
+	  return ('WebkitAppearance' in document.documentElement.style) ||
+	    // is firebug? http://stackoverflow.com/a/398120/376773
+	    (window.console && (console.firebug || (console.exception && console.table))) ||
+	    // is firefox >= v31?
+	    // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
+	    (navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31);
+	}
+	
+	/**
+	 * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
+	 */
+	
+	exports.formatters.j = function(v) {
+	  return JSON.stringify(v);
+	};
+	
+	
+	/**
+	 * Colorize log arguments if enabled.
+	 *
+	 * @api public
+	 */
+	
+	function formatArgs() {
+	  var args = arguments;
+	  var useColors = this.useColors;
+	
+	  args[0] = (useColors ? '%c' : '')
+	    + this.namespace
+	    + (useColors ? ' %c' : ' ')
+	    + args[0]
+	    + (useColors ? '%c ' : ' ')
+	    + '+' + exports.humanize(this.diff);
+	
+	  if (!useColors) return args;
+	
+	  var c = 'color: ' + this.color;
+	  args = [args[0], c, 'color: inherit'].concat(Array.prototype.slice.call(args, 1));
+	
+	  // the final "%c" is somewhat tricky, because there could be other
+	  // arguments passed either before or after the %c, so we need to
+	  // figure out the correct index to insert the CSS into
+	  var index = 0;
+	  var lastC = 0;
+	  args[0].replace(/%[a-z%]/g, function(match) {
+	    if ('%%' === match) return;
+	    index++;
+	    if ('%c' === match) {
+	      // we only are interested in the *last* %c
+	      // (the user may have provided their own)
+	      lastC = index;
+	    }
+	  });
+	
+	  args.splice(lastC, 0, c);
+	  return args;
+	}
+	
+	/**
+	 * Invokes `console.log()` when available.
+	 * No-op when `console.log` is not a "function".
+	 *
+	 * @api public
+	 */
+	
+	function log() {
+	  // this hackery is required for IE8/9, where
+	  // the `console.log` function doesn't have 'apply'
+	  return 'object' === typeof console
+	    && console.log
+	    && Function.prototype.apply.call(console.log, console, arguments);
+	}
+	
+	/**
+	 * Save `namespaces`.
+	 *
+	 * @param {String} namespaces
+	 * @api private
+	 */
+	
+	function save(namespaces) {
+	  try {
+	    if (null == namespaces) {
+	      exports.storage.removeItem('debug');
+	    } else {
+	      exports.storage.debug = namespaces;
+	    }
+	  } catch(e) {}
+	}
+	
+	/**
+	 * Load `namespaces`.
+	 *
+	 * @return {String} returns the previously persisted debug modes
+	 * @api private
+	 */
+	
+	function load() {
+	  var r;
+	  try {
+	    r = exports.storage.debug;
+	  } catch(e) {}
+	  return r;
+	}
+	
+	/**
+	 * Enable namespaces listed in `localStorage.debug` initially.
+	 */
+	
+	exports.enable(load());
+	
+	/**
+	 * Localstorage attempts to return the localstorage.
+	 *
+	 * This is necessary because safari throws
+	 * when a user disables cookies/localstorage
+	 * and you attempt to access it.
+	 *
+	 * @return {LocalStorage}
+	 * @api private
+	 */
+	
+	function localstorage(){
+	  try {
+	    return window.localStorage;
+	  } catch (e) {}
+	}
+
+
+/***/ },
+/* 115 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * This is the common logic for both the Node.js and web browser
+	 * implementations of `debug()`.
+	 *
+	 * Expose `debug()` as the module.
+	 */
+	
+	exports = module.exports = debug;
+	exports.coerce = coerce;
+	exports.disable = disable;
+	exports.enable = enable;
+	exports.enabled = enabled;
+	exports.humanize = __webpack_require__(116);
+	
+	/**
+	 * The currently active debug mode names, and names to skip.
+	 */
+	
+	exports.names = [];
+	exports.skips = [];
+	
+	/**
+	 * Map of special "%n" handling functions, for the debug "format" argument.
+	 *
+	 * Valid key names are a single, lowercased letter, i.e. "n".
+	 */
+	
+	exports.formatters = {};
+	
+	/**
+	 * Previously assigned color.
+	 */
+	
+	var prevColor = 0;
+	
+	/**
+	 * Previous log timestamp.
+	 */
+	
+	var prevTime;
+	
+	/**
+	 * Select a color.
+	 *
+	 * @return {Number}
+	 * @api private
+	 */
+	
+	function selectColor() {
+	  return exports.colors[prevColor++ % exports.colors.length];
+	}
+	
+	/**
+	 * Create a debugger with the given `namespace`.
+	 *
+	 * @param {String} namespace
+	 * @return {Function}
+	 * @api public
+	 */
+	
+	function debug(namespace) {
+	
+	  // define the `disabled` version
+	  function disabled() {
+	  }
+	  disabled.enabled = false;
+	
+	  // define the `enabled` version
+	  function enabled() {
+	
+	    var self = enabled;
+	
+	    // set `diff` timestamp
+	    var curr = +new Date();
+	    var ms = curr - (prevTime || curr);
+	    self.diff = ms;
+	    self.prev = prevTime;
+	    self.curr = curr;
+	    prevTime = curr;
+	
+	    // add the `color` if not set
+	    if (null == self.useColors) self.useColors = exports.useColors();
+	    if (null == self.color && self.useColors) self.color = selectColor();
+	
+	    var args = Array.prototype.slice.call(arguments);
+	
+	    args[0] = exports.coerce(args[0]);
+	
+	    if ('string' !== typeof args[0]) {
+	      // anything else let's inspect with %o
+	      args = ['%o'].concat(args);
+	    }
+	
+	    // apply any `formatters` transformations
+	    var index = 0;
+	    args[0] = args[0].replace(/%([a-z%])/g, function(match, format) {
+	      // if we encounter an escaped % then don't increase the array index
+	      if (match === '%%') return match;
+	      index++;
+	      var formatter = exports.formatters[format];
+	      if ('function' === typeof formatter) {
+	        var val = args[index];
+	        match = formatter.call(self, val);
+	
+	        // now we need to remove `args[index]` since it's inlined in the `format`
+	        args.splice(index, 1);
+	        index--;
+	      }
+	      return match;
+	    });
+	
+	    if ('function' === typeof exports.formatArgs) {
+	      args = exports.formatArgs.apply(self, args);
+	    }
+	    var logFn = enabled.log || exports.log || console.log.bind(console);
+	    logFn.apply(self, args);
+	  }
+	  enabled.enabled = true;
+	
+	  var fn = exports.enabled(namespace) ? enabled : disabled;
+	
+	  fn.namespace = namespace;
+	
+	  return fn;
+	}
+	
+	/**
+	 * Enables a debug mode by namespaces. This can include modes
+	 * separated by a colon and wildcards.
+	 *
+	 * @param {String} namespaces
+	 * @api public
+	 */
+	
+	function enable(namespaces) {
+	  exports.save(namespaces);
+	
+	  var split = (namespaces || '').split(/[\s,]+/);
+	  var len = split.length;
+	
+	  for (var i = 0; i < len; i++) {
+	    if (!split[i]) continue; // ignore empty strings
+	    namespaces = split[i].replace(/\*/g, '.*?');
+	    if (namespaces[0] === '-') {
+	      exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
+	    } else {
+	      exports.names.push(new RegExp('^' + namespaces + '$'));
+	    }
+	  }
+	}
+	
+	/**
+	 * Disable debug output.
+	 *
+	 * @api public
+	 */
+	
+	function disable() {
+	  exports.enable('');
+	}
+	
+	/**
+	 * Returns true if the given mode name is enabled, false otherwise.
+	 *
+	 * @param {String} name
+	 * @return {Boolean}
+	 * @api public
+	 */
+	
+	function enabled(name) {
+	  var i, len;
+	  for (i = 0, len = exports.skips.length; i < len; i++) {
+	    if (exports.skips[i].test(name)) {
+	      return false;
+	    }
+	  }
+	  for (i = 0, len = exports.names.length; i < len; i++) {
+	    if (exports.names[i].test(name)) {
+	      return true;
+	    }
+	  }
+	  return false;
+	}
+	
+	/**
+	 * Coerce `val`.
+	 *
+	 * @param {Mixed} val
+	 * @return {Mixed}
+	 * @api private
+	 */
+	
+	function coerce(val) {
+	  if (val instanceof Error) return val.stack || val.message;
+	  return val;
+	}
+
+
+/***/ },
+/* 116 */
+/***/ function(module, exports) {
+
+	/**
+	 * Helpers.
+	 */
+	
+	var s = 1000;
+	var m = s * 60;
+	var h = m * 60;
+	var d = h * 24;
+	var y = d * 365.25;
+	
+	/**
+	 * Parse or format the given `val`.
+	 *
+	 * Options:
+	 *
+	 *  - `long` verbose formatting [false]
+	 *
+	 * @param {String|Number} val
+	 * @param {Object} options
+	 * @return {String|Number}
+	 * @api public
+	 */
+	
+	module.exports = function(val, options){
+	  options = options || {};
+	  if ('string' == typeof val) return parse(val);
+	  return options.long
+	    ? long(val)
+	    : short(val);
+	};
+	
+	/**
+	 * Parse the given `str` and return milliseconds.
+	 *
+	 * @param {String} str
+	 * @return {Number}
+	 * @api private
+	 */
+	
+	function parse(str) {
+	  str = '' + str;
+	  if (str.length > 10000) return;
+	  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(str);
+	  if (!match) return;
+	  var n = parseFloat(match[1]);
+	  var type = (match[2] || 'ms').toLowerCase();
+	  switch (type) {
+	    case 'years':
+	    case 'year':
+	    case 'yrs':
+	    case 'yr':
+	    case 'y':
+	      return n * y;
+	    case 'days':
+	    case 'day':
+	    case 'd':
+	      return n * d;
+	    case 'hours':
+	    case 'hour':
+	    case 'hrs':
+	    case 'hr':
+	    case 'h':
+	      return n * h;
+	    case 'minutes':
+	    case 'minute':
+	    case 'mins':
+	    case 'min':
+	    case 'm':
+	      return n * m;
+	    case 'seconds':
+	    case 'second':
+	    case 'secs':
+	    case 'sec':
+	    case 's':
+	      return n * s;
+	    case 'milliseconds':
+	    case 'millisecond':
+	    case 'msecs':
+	    case 'msec':
+	    case 'ms':
+	      return n;
+	  }
+	}
+	
+	/**
+	 * Short format for `ms`.
+	 *
+	 * @param {Number} ms
+	 * @return {String}
+	 * @api private
+	 */
+	
+	function short(ms) {
+	  if (ms >= d) return Math.round(ms / d) + 'd';
+	  if (ms >= h) return Math.round(ms / h) + 'h';
+	  if (ms >= m) return Math.round(ms / m) + 'm';
+	  if (ms >= s) return Math.round(ms / s) + 's';
+	  return ms + 'ms';
+	}
+	
+	/**
+	 * Long format for `ms`.
+	 *
+	 * @param {Number} ms
+	 * @return {String}
+	 * @api private
+	 */
+	
+	function long(ms) {
+	  return plural(ms, d, 'day')
+	    || plural(ms, h, 'hour')
+	    || plural(ms, m, 'minute')
+	    || plural(ms, s, 'second')
+	    || ms + ' ms';
+	}
+	
+	/**
+	 * Pluralization helper.
+	 */
+	
+	function plural(ms, n, name) {
+	  if (ms < n) return;
+	  if (ms < n * 1.5) return Math.floor(ms / n) + ' ' + name;
+	  return Math.ceil(ms / n) + ' ' + name + 's';
+	}
+
+
+/***/ },
+/* 117 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * Module dependencies.
+	 */
+	
+	var debug = __webpack_require__(114)('socket.io-parser');
+	var json = __webpack_require__(118);
+	var isArray = __webpack_require__(121);
+	var Emitter = __webpack_require__(122);
+	var binary = __webpack_require__(123);
+	var isBuf = __webpack_require__(124);
+	
+	/**
+	 * Protocol version.
+	 *
+	 * @api public
+	 */
+	
+	exports.protocol = 4;
+	
+	/**
+	 * Packet types.
+	 *
+	 * @api public
+	 */
+	
+	exports.types = [
+	  'CONNECT',
+	  'DISCONNECT',
+	  'EVENT',
+	  'ACK',
+	  'ERROR',
+	  'BINARY_EVENT',
+	  'BINARY_ACK'
+	];
+	
+	/**
+	 * Packet type `connect`.
+	 *
+	 * @api public
+	 */
+	
+	exports.CONNECT = 0;
+	
+	/**
+	 * Packet type `disconnect`.
+	 *
+	 * @api public
+	 */
+	
+	exports.DISCONNECT = 1;
+	
+	/**
+	 * Packet type `event`.
+	 *
+	 * @api public
+	 */
+	
+	exports.EVENT = 2;
+	
+	/**
+	 * Packet type `ack`.
+	 *
+	 * @api public
+	 */
+	
+	exports.ACK = 3;
+	
+	/**
+	 * Packet type `error`.
+	 *
+	 * @api public
+	 */
+	
+	exports.ERROR = 4;
+	
+	/**
+	 * Packet type 'binary event'
+	 *
+	 * @api public
+	 */
+	
+	exports.BINARY_EVENT = 5;
+	
+	/**
+	 * Packet type `binary ack`. For acks with binary arguments.
+	 *
+	 * @api public
+	 */
+	
+	exports.BINARY_ACK = 6;
+	
+	/**
+	 * Encoder constructor.
+	 *
+	 * @api public
+	 */
+	
+	exports.Encoder = Encoder;
+	
+	/**
+	 * Decoder constructor.
+	 *
+	 * @api public
+	 */
+	
+	exports.Decoder = Decoder;
+	
+	/**
+	 * A socket.io Encoder instance
+	 *
+	 * @api public
+	 */
+	
+	function Encoder() {}
+	
+	/**
+	 * Encode a packet as a single string if non-binary, or as a
+	 * buffer sequence, depending on packet type.
+	 *
+	 * @param {Object} obj - packet object
+	 * @param {Function} callback - function to handle encodings (likely engine.write)
+	 * @return Calls callback with Array of encodings
+	 * @api public
+	 */
+	
+	Encoder.prototype.encode = function(obj, callback){
+	  debug('encoding packet %j', obj);
+	
+	  if (exports.BINARY_EVENT == obj.type || exports.BINARY_ACK == obj.type) {
+	    encodeAsBinary(obj, callback);
+	  }
+	  else {
+	    var encoding = encodeAsString(obj);
+	    callback([encoding]);
+	  }
+	};
+	
+	/**
+	 * Encode packet as string.
+	 *
+	 * @param {Object} packet
+	 * @return {String} encoded
+	 * @api private
+	 */
+	
+	function encodeAsString(obj) {
+	  var str = '';
+	  var nsp = false;
+	
+	  // first is type
+	  str += obj.type;
+	
+	  // attachments if we have them
+	  if (exports.BINARY_EVENT == obj.type || exports.BINARY_ACK == obj.type) {
+	    str += obj.attachments;
+	    str += '-';
+	  }
+	
+	  // if we have a namespace other than `/`
+	  // we append it followed by a comma `,`
+	  if (obj.nsp && '/' != obj.nsp) {
+	    nsp = true;
+	    str += obj.nsp;
+	  }
+	
+	  // immediately followed by the id
+	  if (null != obj.id) {
+	    if (nsp) {
+	      str += ',';
+	      nsp = false;
+	    }
+	    str += obj.id;
+	  }
+	
+	  // json data
+	  if (null != obj.data) {
+	    if (nsp) str += ',';
+	    str += json.stringify(obj.data);
+	  }
+	
+	  debug('encoded %j as %s', obj, str);
+	  return str;
+	}
+	
+	/**
+	 * Encode packet as 'buffer sequence' by removing blobs, and
+	 * deconstructing packet into object with placeholders and
+	 * a list of buffers.
+	 *
+	 * @param {Object} packet
+	 * @return {Buffer} encoded
+	 * @api private
+	 */
+	
+	function encodeAsBinary(obj, callback) {
+	
+	  function writeEncoding(bloblessData) {
+	    var deconstruction = binary.deconstructPacket(bloblessData);
+	    var pack = encodeAsString(deconstruction.packet);
+	    var buffers = deconstruction.buffers;
+	
+	    buffers.unshift(pack); // add packet info to beginning of data list
+	    callback(buffers); // write all the buffers
+	  }
+	
+	  binary.removeBlobs(obj, writeEncoding);
+	}
+	
+	/**
+	 * A socket.io Decoder instance
+	 *
+	 * @return {Object} decoder
+	 * @api public
+	 */
+	
+	function Decoder() {
+	  this.reconstructor = null;
+	}
+	
+	/**
+	 * Mix in `Emitter` with Decoder.
+	 */
+	
+	Emitter(Decoder.prototype);
+	
+	/**
+	 * Decodes an ecoded packet string into packet JSON.
+	 *
+	 * @param {String} obj - encoded packet
+	 * @return {Object} packet
+	 * @api public
+	 */
+	
+	Decoder.prototype.add = function(obj) {
+	  var packet;
+	  if ('string' == typeof obj) {
+	    packet = decodeString(obj);
+	    if (exports.BINARY_EVENT == packet.type || exports.BINARY_ACK == packet.type) { // binary packet's json
+	      this.reconstructor = new BinaryReconstructor(packet);
+	
+	      // no attachments, labeled binary but no binary data to follow
+	      if (this.reconstructor.reconPack.attachments === 0) {
+	        this.emit('decoded', packet);
+	      }
+	    } else { // non-binary full packet
+	      this.emit('decoded', packet);
+	    }
+	  }
+	  else if (isBuf(obj) || obj.base64) { // raw binary data
+	    if (!this.reconstructor) {
+	      throw new Error('got binary data when not reconstructing a packet');
+	    } else {
+	      packet = this.reconstructor.takeBinaryData(obj);
+	      if (packet) { // received final buffer
+	        this.reconstructor = null;
+	        this.emit('decoded', packet);
+	      }
+	    }
+	  }
+	  else {
+	    throw new Error('Unknown type: ' + obj);
+	  }
+	};
+	
+	/**
+	 * Decode a packet String (JSON data)
+	 *
+	 * @param {String} str
+	 * @return {Object} packet
+	 * @api private
+	 */
+	
+	function decodeString(str) {
+	  var p = {};
+	  var i = 0;
+	
+	  // look up type
+	  p.type = Number(str.charAt(0));
+	  if (null == exports.types[p.type]) return error();
+	
+	  // look up attachments if type binary
+	  if (exports.BINARY_EVENT == p.type || exports.BINARY_ACK == p.type) {
+	    var buf = '';
+	    while (str.charAt(++i) != '-') {
+	      buf += str.charAt(i);
+	      if (i == str.length) break;
+	    }
+	    if (buf != Number(buf) || str.charAt(i) != '-') {
+	      throw new Error('Illegal attachments');
+	    }
+	    p.attachments = Number(buf);
+	  }
+	
+	  // look up namespace (if any)
+	  if ('/' == str.charAt(i + 1)) {
+	    p.nsp = '';
+	    while (++i) {
+	      var c = str.charAt(i);
+	      if (',' == c) break;
+	      p.nsp += c;
+	      if (i == str.length) break;
+	    }
+	  } else {
+	    p.nsp = '/';
+	  }
+	
+	  // look up id
+	  var next = str.charAt(i + 1);
+	  if ('' !== next && Number(next) == next) {
+	    p.id = '';
+	    while (++i) {
+	      var c = str.charAt(i);
+	      if (null == c || Number(c) != c) {
+	        --i;
+	        break;
+	      }
+	      p.id += str.charAt(i);
+	      if (i == str.length) break;
+	    }
+	    p.id = Number(p.id);
+	  }
+	
+	  // look up json data
+	  if (str.charAt(++i)) {
+	    try {
+	      p.data = json.parse(str.substr(i));
+	    } catch(e){
+	      return error();
+	    }
+	  }
+	
+	  debug('decoded %s as %j', str, p);
+	  return p;
+	}
+	
+	/**
+	 * Deallocates a parser's resources
+	 *
+	 * @api public
+	 */
+	
+	Decoder.prototype.destroy = function() {
+	  if (this.reconstructor) {
+	    this.reconstructor.finishedReconstruction();
+	  }
+	};
+	
+	/**
+	 * A manager of a binary event's 'buffer sequence'. Should
+	 * be constructed whenever a packet of type BINARY_EVENT is
+	 * decoded.
+	 *
+	 * @param {Object} packet
+	 * @return {BinaryReconstructor} initialized reconstructor
+	 * @api private
+	 */
+	
+	function BinaryReconstructor(packet) {
+	  this.reconPack = packet;
+	  this.buffers = [];
+	}
+	
+	/**
+	 * Method to be called when binary data received from connection
+	 * after a BINARY_EVENT packet.
+	 *
+	 * @param {Buffer | ArrayBuffer} binData - the raw binary data received
+	 * @return {null | Object} returns null if more binary data is expected or
+	 *   a reconstructed packet object if all buffers have been received.
+	 * @api private
+	 */
+	
+	BinaryReconstructor.prototype.takeBinaryData = function(binData) {
+	  this.buffers.push(binData);
+	  if (this.buffers.length == this.reconPack.attachments) { // done with buffer list
+	    var packet = binary.reconstructPacket(this.reconPack, this.buffers);
+	    this.finishedReconstruction();
+	    return packet;
+	  }
+	  return null;
+	};
+	
+	/**
+	 * Cleans up binary packet reconstruction variables.
+	 *
+	 * @api private
+	 */
+	
+	BinaryReconstructor.prototype.finishedReconstruction = function() {
+	  this.reconPack = null;
+	  this.buffers = [];
+	};
+	
+	function error(data){
+	  return {
+	    type: exports.ERROR,
+	    data: 'parser error'
+	  };
+	}
+
+
+/***/ },
+/* 118 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! JSON v3.3.2 | http://bestiejs.github.io/json3 | Copyright 2012-2014, Kit Cambridge | http://kit.mit-license.org */
+	;(function () {
+	  // Detect the `define` function exposed by asynchronous module loaders. The
+	  // strict `define` check is necessary for compatibility with `r.js`.
+	  var isLoader = "function" === "function" && __webpack_require__(120);
+	
+	  // A set of types used to distinguish objects from primitives.
+	  var objectTypes = {
+	    "function": true,
+	    "object": true
+	  };
+	
+	  // Detect the `exports` object exposed by CommonJS implementations.
+	  var freeExports = objectTypes[typeof exports] && exports && !exports.nodeType && exports;
+	
+	  // Use the `global` object exposed by Node (including Browserify via
+	  // `insert-module-globals`), Narwhal, and Ringo as the default context,
+	  // and the `window` object in browsers. Rhino exports a `global` function
+	  // instead.
+	  var root = objectTypes[typeof window] && window || this,
+	      freeGlobal = freeExports && objectTypes[typeof module] && module && !module.nodeType && typeof global == "object" && global;
+	
+	  if (freeGlobal && (freeGlobal["global"] === freeGlobal || freeGlobal["window"] === freeGlobal || freeGlobal["self"] === freeGlobal)) {
+	    root = freeGlobal;
+	  }
+	
+	  // Public: Initializes JSON 3 using the given `context` object, attaching the
+	  // `stringify` and `parse` functions to the specified `exports` object.
+	  function runInContext(context, exports) {
+	    context || (context = root["Object"]());
+	    exports || (exports = root["Object"]());
+	
+	    // Native constructor aliases.
+	    var Number = context["Number"] || root["Number"],
+	        String = context["String"] || root["String"],
+	        Object = context["Object"] || root["Object"],
+	        Date = context["Date"] || root["Date"],
+	        SyntaxError = context["SyntaxError"] || root["SyntaxError"],
+	        TypeError = context["TypeError"] || root["TypeError"],
+	        Math = context["Math"] || root["Math"],
+	        nativeJSON = context["JSON"] || root["JSON"];
+	
+	    // Delegate to the native `stringify` and `parse` implementations.
+	    if (typeof nativeJSON == "object" && nativeJSON) {
+	      exports.stringify = nativeJSON.stringify;
+	      exports.parse = nativeJSON.parse;
+	    }
+	
+	    // Convenience aliases.
+	    var objectProto = Object.prototype,
+	        getClass = objectProto.toString,
+	        isProperty, forEach, undef;
+	
+	    // Test the `Date#getUTC*` methods. Based on work by @Yaffle.
+	    var isExtended = new Date(-3509827334573292);
+	    try {
+	      // The `getUTCFullYear`, `Month`, and `Date` methods return nonsensical
+	      // results for certain dates in Opera >= 10.53.
+	      isExtended = isExtended.getUTCFullYear() == -109252 && isExtended.getUTCMonth() === 0 && isExtended.getUTCDate() === 1 &&
+	        // Safari < 2.0.2 stores the internal millisecond time value correctly,
+	        // but clips the values returned by the date methods to the range of
+	        // signed 32-bit integers ([-2 ** 31, 2 ** 31 - 1]).
+	        isExtended.getUTCHours() == 10 && isExtended.getUTCMinutes() == 37 && isExtended.getUTCSeconds() == 6 && isExtended.getUTCMilliseconds() == 708;
+	    } catch (exception) {}
+	
+	    // Internal: Determines whether the native `JSON.stringify` and `parse`
+	    // implementations are spec-compliant. Based on work by Ken Snyder.
+	    function has(name) {
+	      if (has[name] !== undef) {
+	        // Return cached feature test result.
+	        return has[name];
+	      }
+	      var isSupported;
+	      if (name == "bug-string-char-index") {
+	        // IE <= 7 doesn't support accessing string characters using square
+	        // bracket notation. IE 8 only supports this for primitives.
+	        isSupported = "a"[0] != "a";
+	      } else if (name == "json") {
+	        // Indicates whether both `JSON.stringify` and `JSON.parse` are
+	        // supported.
+	        isSupported = has("json-stringify") && has("json-parse");
+	      } else {
+	        var value, serialized = '{"a":[1,true,false,null,"\\u0000\\b\\n\\f\\r\\t"]}';
+	        // Test `JSON.stringify`.
+	        if (name == "json-stringify") {
+	          var stringify = exports.stringify, stringifySupported = typeof stringify == "function" && isExtended;
+	          if (stringifySupported) {
+	            // A test function object with a custom `toJSON` method.
+	            (value = function () {
+	              return 1;
+	            }).toJSON = value;
+	            try {
+	              stringifySupported =
+	                // Firefox 3.1b1 and b2 serialize string, number, and boolean
+	                // primitives as object literals.
+	                stringify(0) === "0" &&
+	                // FF 3.1b1, b2, and JSON 2 serialize wrapped primitives as object
+	                // literals.
+	                stringify(new Number()) === "0" &&
+	                stringify(new String()) == '""' &&
+	                // FF 3.1b1, 2 throw an error if the value is `null`, `undefined`, or
+	                // does not define a canonical JSON representation (this applies to
+	                // objects with `toJSON` properties as well, *unless* they are nested
+	                // within an object or array).
+	                stringify(getClass) === undef &&
+	                // IE 8 serializes `undefined` as `"undefined"`. Safari <= 5.1.7 and
+	                // FF 3.1b3 pass this test.
+	                stringify(undef) === undef &&
+	                // Safari <= 5.1.7 and FF 3.1b3 throw `Error`s and `TypeError`s,
+	                // respectively, if the value is omitted entirely.
+	                stringify() === undef &&
+	                // FF 3.1b1, 2 throw an error if the given value is not a number,
+	                // string, array, object, Boolean, or `null` literal. This applies to
+	                // objects with custom `toJSON` methods as well, unless they are nested
+	                // inside object or array literals. YUI 3.0.0b1 ignores custom `toJSON`
+	                // methods entirely.
+	                stringify(value) === "1" &&
+	                stringify([value]) == "[1]" &&
+	                // Prototype <= 1.6.1 serializes `[undefined]` as `"[]"` instead of
+	                // `"[null]"`.
+	                stringify([undef]) == "[null]" &&
+	                // YUI 3.0.0b1 fails to serialize `null` literals.
+	                stringify(null) == "null" &&
+	                // FF 3.1b1, 2 halts serialization if an array contains a function:
+	                // `[1, true, getClass, 1]` serializes as "[1,true,],". FF 3.1b3
+	                // elides non-JSON values from objects and arrays, unless they
+	                // define custom `toJSON` methods.
+	                stringify([undef, getClass, null]) == "[null,null,null]" &&
+	                // Simple serialization test. FF 3.1b1 uses Unicode escape sequences
+	                // where character escape codes are expected (e.g., `\b` => `\u0008`).
+	                stringify({ "a": [value, true, false, null, "\x00\b\n\f\r\t"] }) == serialized &&
+	                // FF 3.1b1 and b2 ignore the `filter` and `width` arguments.
+	                stringify(null, value) === "1" &&
+	                stringify([1, 2], null, 1) == "[\n 1,\n 2\n]" &&
+	                // JSON 2, Prototype <= 1.7, and older WebKit builds incorrectly
+	                // serialize extended years.
+	                stringify(new Date(-8.64e15)) == '"-271821-04-20T00:00:00.000Z"' &&
+	                // The milliseconds are optional in ES 5, but required in 5.1.
+	                stringify(new Date(8.64e15)) == '"+275760-09-13T00:00:00.000Z"' &&
+	                // Firefox <= 11.0 incorrectly serializes years prior to 0 as negative
+	                // four-digit years instead of six-digit years. Credits: @Yaffle.
+	                stringify(new Date(-621987552e5)) == '"-000001-01-01T00:00:00.000Z"' &&
+	                // Safari <= 5.1.5 and Opera >= 10.53 incorrectly serialize millisecond
+	                // values less than 1000. Credits: @Yaffle.
+	                stringify(new Date(-1)) == '"1969-12-31T23:59:59.999Z"';
+	            } catch (exception) {
+	              stringifySupported = false;
+	            }
+	          }
+	          isSupported = stringifySupported;
+	        }
+	        // Test `JSON.parse`.
+	        if (name == "json-parse") {
+	          var parse = exports.parse;
+	          if (typeof parse == "function") {
+	            try {
+	              // FF 3.1b1, b2 will throw an exception if a bare literal is provided.
+	              // Conforming implementations should also coerce the initial argument to
+	              // a string prior to parsing.
+	              if (parse("0") === 0 && !parse(false)) {
+	                // Simple parsing test.
+	                value = parse(serialized);
+	                var parseSupported = value["a"].length == 5 && value["a"][0] === 1;
+	                if (parseSupported) {
+	                  try {
+	                    // Safari <= 5.1.2 and FF 3.1b1 allow unescaped tabs in strings.
+	                    parseSupported = !parse('"\t"');
+	                  } catch (exception) {}
+	                  if (parseSupported) {
+	                    try {
+	                      // FF 4.0 and 4.0.1 allow leading `+` signs and leading
+	                      // decimal points. FF 4.0, 4.0.1, and IE 9-10 also allow
+	                      // certain octal literals.
+	                      parseSupported = parse("01") !== 1;
+	                    } catch (exception) {}
+	                  }
+	                  if (parseSupported) {
+	                    try {
+	                      // FF 4.0, 4.0.1, and Rhino 1.7R3-R4 allow trailing decimal
+	                      // points. These environments, along with FF 3.1b1 and 2,
+	                      // also allow trailing commas in JSON objects and arrays.
+	                      parseSupported = parse("1.") !== 1;
+	                    } catch (exception) {}
+	                  }
+	                }
+	              }
+	            } catch (exception) {
+	              parseSupported = false;
+	            }
+	          }
+	          isSupported = parseSupported;
+	        }
+	      }
+	      return has[name] = !!isSupported;
+	    }
+	
+	    if (!has("json")) {
+	      // Common `[[Class]]` name aliases.
+	      var functionClass = "[object Function]",
+	          dateClass = "[object Date]",
+	          numberClass = "[object Number]",
+	          stringClass = "[object String]",
+	          arrayClass = "[object Array]",
+	          booleanClass = "[object Boolean]";
+	
+	      // Detect incomplete support for accessing string characters by index.
+	      var charIndexBuggy = has("bug-string-char-index");
+	
+	      // Define additional utility methods if the `Date` methods are buggy.
+	      if (!isExtended) {
+	        var floor = Math.floor;
+	        // A mapping between the months of the year and the number of days between
+	        // January 1st and the first of the respective month.
+	        var Months = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+	        // Internal: Calculates the number of days between the Unix epoch and the
+	        // first day of the given month.
+	        var getDay = function (year, month) {
+	          return Months[month] + 365 * (year - 1970) + floor((year - 1969 + (month = +(month > 1))) / 4) - floor((year - 1901 + month) / 100) + floor((year - 1601 + month) / 400);
+	        };
+	      }
+	
+	      // Internal: Determines if a property is a direct property of the given
+	      // object. Delegates to the native `Object#hasOwnProperty` method.
+	      if (!(isProperty = objectProto.hasOwnProperty)) {
+	        isProperty = function (property) {
+	          var members = {}, constructor;
+	          if ((members.__proto__ = null, members.__proto__ = {
+	            // The *proto* property cannot be set multiple times in recent
+	            // versions of Firefox and SeaMonkey.
+	            "toString": 1
+	          }, members).toString != getClass) {
+	            // Safari <= 2.0.3 doesn't implement `Object#hasOwnProperty`, but
+	            // supports the mutable *proto* property.
+	            isProperty = function (property) {
+	              // Capture and break the object's prototype chain (see section 8.6.2
+	              // of the ES 5.1 spec). The parenthesized expression prevents an
+	              // unsafe transformation by the Closure Compiler.
+	              var original = this.__proto__, result = property in (this.__proto__ = null, this);
+	              // Restore the original prototype chain.
+	              this.__proto__ = original;
+	              return result;
+	            };
+	          } else {
+	            // Capture a reference to the top-level `Object` constructor.
+	            constructor = members.constructor;
+	            // Use the `constructor` property to simulate `Object#hasOwnProperty` in
+	            // other environments.
+	            isProperty = function (property) {
+	              var parent = (this.constructor || constructor).prototype;
+	              return property in this && !(property in parent && this[property] === parent[property]);
+	            };
+	          }
+	          members = null;
+	          return isProperty.call(this, property);
+	        };
+	      }
+	
+	      // Internal: Normalizes the `for...in` iteration algorithm across
+	      // environments. Each enumerated key is yielded to a `callback` function.
+	      forEach = function (object, callback) {
+	        var size = 0, Properties, members, property;
+	
+	        // Tests for bugs in the current environment's `for...in` algorithm. The
+	        // `valueOf` property inherits the non-enumerable flag from
+	        // `Object.prototype` in older versions of IE, Netscape, and Mozilla.
+	        (Properties = function () {
+	          this.valueOf = 0;
+	        }).prototype.valueOf = 0;
+	
+	        // Iterate over a new instance of the `Properties` class.
+	        members = new Properties();
+	        for (property in members) {
+	          // Ignore all properties inherited from `Object.prototype`.
+	          if (isProperty.call(members, property)) {
+	            size++;
+	          }
+	        }
+	        Properties = members = null;
+	
+	        // Normalize the iteration algorithm.
+	        if (!size) {
+	          // A list of non-enumerable properties inherited from `Object.prototype`.
+	          members = ["valueOf", "toString", "toLocaleString", "propertyIsEnumerable", "isPrototypeOf", "hasOwnProperty", "constructor"];
+	          // IE <= 8, Mozilla 1.0, and Netscape 6.2 ignore shadowed non-enumerable
+	          // properties.
+	          forEach = function (object, callback) {
+	            var isFunction = getClass.call(object) == functionClass, property, length;
+	            var hasProperty = !isFunction && typeof object.constructor != "function" && objectTypes[typeof object.hasOwnProperty] && object.hasOwnProperty || isProperty;
+	            for (property in object) {
+	              // Gecko <= 1.0 enumerates the `prototype` property of functions under
+	              // certain conditions; IE does not.
+	              if (!(isFunction && property == "prototype") && hasProperty.call(object, property)) {
+	                callback(property);
+	              }
+	            }
+	            // Manually invoke the callback for each non-enumerable property.
+	            for (length = members.length; property = members[--length]; hasProperty.call(object, property) && callback(property));
+	          };
+	        } else if (size == 2) {
+	          // Safari <= 2.0.4 enumerates shadowed properties twice.
+	          forEach = function (object, callback) {
+	            // Create a set of iterated properties.
+	            var members = {}, isFunction = getClass.call(object) == functionClass, property;
+	            for (property in object) {
+	              // Store each property name to prevent double enumeration. The
+	              // `prototype` property of functions is not enumerated due to cross-
+	              // environment inconsistencies.
+	              if (!(isFunction && property == "prototype") && !isProperty.call(members, property) && (members[property] = 1) && isProperty.call(object, property)) {
+	                callback(property);
+	              }
+	            }
+	          };
+	        } else {
+	          // No bugs detected; use the standard `for...in` algorithm.
+	          forEach = function (object, callback) {
+	            var isFunction = getClass.call(object) == functionClass, property, isConstructor;
+	            for (property in object) {
+	              if (!(isFunction && property == "prototype") && isProperty.call(object, property) && !(isConstructor = property === "constructor")) {
+	                callback(property);
+	              }
+	            }
+	            // Manually invoke the callback for the `constructor` property due to
+	            // cross-environment inconsistencies.
+	            if (isConstructor || isProperty.call(object, (property = "constructor"))) {
+	              callback(property);
+	            }
+	          };
+	        }
+	        return forEach(object, callback);
+	      };
+	
+	      // Public: Serializes a JavaScript `value` as a JSON string. The optional
+	      // `filter` argument may specify either a function that alters how object and
+	      // array members are serialized, or an array of strings and numbers that
+	      // indicates which properties should be serialized. The optional `width`
+	      // argument may be either a string or number that specifies the indentation
+	      // level of the output.
+	      if (!has("json-stringify")) {
+	        // Internal: A map of control characters and their escaped equivalents.
+	        var Escapes = {
+	          92: "\\\\",
+	          34: '\\"',
+	          8: "\\b",
+	          12: "\\f",
+	          10: "\\n",
+	          13: "\\r",
+	          9: "\\t"
+	        };
+	
+	        // Internal: Converts `value` into a zero-padded string such that its
+	        // length is at least equal to `width`. The `width` must be <= 6.
+	        var leadingZeroes = "000000";
+	        var toPaddedString = function (width, value) {
+	          // The `|| 0` expression is necessary to work around a bug in
+	          // Opera <= 7.54u2 where `0 == -0`, but `String(-0) !== "0"`.
+	          return (leadingZeroes + (value || 0)).slice(-width);
+	        };
+	
+	        // Internal: Double-quotes a string `value`, replacing all ASCII control
+	        // characters (characters with code unit values between 0 and 31) with
+	        // their escaped equivalents. This is an implementation of the
+	        // `Quote(value)` operation defined in ES 5.1 section 15.12.3.
+	        var unicodePrefix = "\\u00";
+	        var quote = function (value) {
+	          var result = '"', index = 0, length = value.length, useCharIndex = !charIndexBuggy || length > 10;
+	          var symbols = useCharIndex && (charIndexBuggy ? value.split("") : value);
+	          for (; index < length; index++) {
+	            var charCode = value.charCodeAt(index);
+	            // If the character is a control character, append its Unicode or
+	            // shorthand escape sequence; otherwise, append the character as-is.
+	            switch (charCode) {
+	              case 8: case 9: case 10: case 12: case 13: case 34: case 92:
+	                result += Escapes[charCode];
+	                break;
+	              default:
+	                if (charCode < 32) {
+	                  result += unicodePrefix + toPaddedString(2, charCode.toString(16));
+	                  break;
+	                }
+	                result += useCharIndex ? symbols[index] : value.charAt(index);
+	            }
+	          }
+	          return result + '"';
+	        };
+	
+	        // Internal: Recursively serializes an object. Implements the
+	        // `Str(key, holder)`, `JO(value)`, and `JA(value)` operations.
+	        var serialize = function (property, object, callback, properties, whitespace, indentation, stack) {
+	          var value, className, year, month, date, time, hours, minutes, seconds, milliseconds, results, element, index, length, prefix, result;
+	          try {
+	            // Necessary for host object support.
+	            value = object[property];
+	          } catch (exception) {}
+	          if (typeof value == "object" && value) {
+	            className = getClass.call(value);
+	            if (className == dateClass && !isProperty.call(value, "toJSON")) {
+	              if (value > -1 / 0 && value < 1 / 0) {
+	                // Dates are serialized according to the `Date#toJSON` method
+	                // specified in ES 5.1 section 15.9.5.44. See section 15.9.1.15
+	                // for the ISO 8601 date time string format.
+	                if (getDay) {
+	                  // Manually compute the year, month, date, hours, minutes,
+	                  // seconds, and milliseconds if the `getUTC*` methods are
+	                  // buggy. Adapted from @Yaffle's `date-shim` project.
+	                  date = floor(value / 864e5);
+	                  for (year = floor(date / 365.2425) + 1970 - 1; getDay(year + 1, 0) <= date; year++);
+	                  for (month = floor((date - getDay(year, 0)) / 30.42); getDay(year, month + 1) <= date; month++);
+	                  date = 1 + date - getDay(year, month);
+	                  // The `time` value specifies the time within the day (see ES
+	                  // 5.1 section 15.9.1.2). The formula `(A % B + B) % B` is used
+	                  // to compute `A modulo B`, as the `%` operator does not
+	                  // correspond to the `modulo` operation for negative numbers.
+	                  time = (value % 864e5 + 864e5) % 864e5;
+	                  // The hours, minutes, seconds, and milliseconds are obtained by
+	                  // decomposing the time within the day. See section 15.9.1.10.
+	                  hours = floor(time / 36e5) % 24;
+	                  minutes = floor(time / 6e4) % 60;
+	                  seconds = floor(time / 1e3) % 60;
+	                  milliseconds = time % 1e3;
+	                } else {
+	                  year = value.getUTCFullYear();
+	                  month = value.getUTCMonth();
+	                  date = value.getUTCDate();
+	                  hours = value.getUTCHours();
+	                  minutes = value.getUTCMinutes();
+	                  seconds = value.getUTCSeconds();
+	                  milliseconds = value.getUTCMilliseconds();
+	                }
+	                // Serialize extended years correctly.
+	                value = (year <= 0 || year >= 1e4 ? (year < 0 ? "-" : "+") + toPaddedString(6, year < 0 ? -year : year) : toPaddedString(4, year)) +
+	                  "-" + toPaddedString(2, month + 1) + "-" + toPaddedString(2, date) +
+	                  // Months, dates, hours, minutes, and seconds should have two
+	                  // digits; milliseconds should have three.
+	                  "T" + toPaddedString(2, hours) + ":" + toPaddedString(2, minutes) + ":" + toPaddedString(2, seconds) +
+	                  // Milliseconds are optional in ES 5.0, but required in 5.1.
+	                  "." + toPaddedString(3, milliseconds) + "Z";
+	              } else {
+	                value = null;
+	              }
+	            } else if (typeof value.toJSON == "function" && ((className != numberClass && className != stringClass && className != arrayClass) || isProperty.call(value, "toJSON"))) {
+	              // Prototype <= 1.6.1 adds non-standard `toJSON` methods to the
+	              // `Number`, `String`, `Date`, and `Array` prototypes. JSON 3
+	              // ignores all `toJSON` methods on these objects unless they are
+	              // defined directly on an instance.
+	              value = value.toJSON(property);
+	            }
+	          }
+	          if (callback) {
+	            // If a replacement function was provided, call it to obtain the value
+	            // for serialization.
+	            value = callback.call(object, property, value);
+	          }
+	          if (value === null) {
+	            return "null";
+	          }
+	          className = getClass.call(value);
+	          if (className == booleanClass) {
+	            // Booleans are represented literally.
+	            return "" + value;
+	          } else if (className == numberClass) {
+	            // JSON numbers must be finite. `Infinity` and `NaN` are serialized as
+	            // `"null"`.
+	            return value > -1 / 0 && value < 1 / 0 ? "" + value : "null";
+	          } else if (className == stringClass) {
+	            // Strings are double-quoted and escaped.
+	            return quote("" + value);
+	          }
+	          // Recursively serialize objects and arrays.
+	          if (typeof value == "object") {
+	            // Check for cyclic structures. This is a linear search; performance
+	            // is inversely proportional to the number of unique nested objects.
+	            for (length = stack.length; length--;) {
+	              if (stack[length] === value) {
+	                // Cyclic structures cannot be serialized by `JSON.stringify`.
+	                throw TypeError();
+	              }
+	            }
+	            // Add the object to the stack of traversed objects.
+	            stack.push(value);
+	            results = [];
+	            // Save the current indentation level and indent one additional level.
+	            prefix = indentation;
+	            indentation += whitespace;
+	            if (className == arrayClass) {
+	              // Recursively serialize array elements.
+	              for (index = 0, length = value.length; index < length; index++) {
+	                element = serialize(index, value, callback, properties, whitespace, indentation, stack);
+	                results.push(element === undef ? "null" : element);
+	              }
+	              result = results.length ? (whitespace ? "[\n" + indentation + results.join(",\n" + indentation) + "\n" + prefix + "]" : ("[" + results.join(",") + "]")) : "[]";
+	            } else {
+	              // Recursively serialize object members. Members are selected from
+	              // either a user-specified list of property names, or the object
+	              // itself.
+	              forEach(properties || value, function (property) {
+	                var element = serialize(property, value, callback, properties, whitespace, indentation, stack);
+	                if (element !== undef) {
+	                  // According to ES 5.1 section 15.12.3: "If `gap` {whitespace}
+	                  // is not the empty string, let `member` {quote(property) + ":"}
+	                  // be the concatenation of `member` and the `space` character."
+	                  // The "`space` character" refers to the literal space
+	                  // character, not the `space` {width} argument provided to
+	                  // `JSON.stringify`.
+	                  results.push(quote(property) + ":" + (whitespace ? " " : "") + element);
+	                }
+	              });
+	              result = results.length ? (whitespace ? "{\n" + indentation + results.join(",\n" + indentation) + "\n" + prefix + "}" : ("{" + results.join(",") + "}")) : "{}";
+	            }
+	            // Remove the object from the traversed object stack.
+	            stack.pop();
+	            return result;
+	          }
+	        };
+	
+	        // Public: `JSON.stringify`. See ES 5.1 section 15.12.3.
+	        exports.stringify = function (source, filter, width) {
+	          var whitespace, callback, properties, className;
+	          if (objectTypes[typeof filter] && filter) {
+	            if ((className = getClass.call(filter)) == functionClass) {
+	              callback = filter;
+	            } else if (className == arrayClass) {
+	              // Convert the property names array into a makeshift set.
+	              properties = {};
+	              for (var index = 0, length = filter.length, value; index < length; value = filter[index++], ((className = getClass.call(value)), className == stringClass || className == numberClass) && (properties[value] = 1));
+	            }
+	          }
+	          if (width) {
+	            if ((className = getClass.call(width)) == numberClass) {
+	              // Convert the `width` to an integer and create a string containing
+	              // `width` number of space characters.
+	              if ((width -= width % 1) > 0) {
+	                for (whitespace = "", width > 10 && (width = 10); whitespace.length < width; whitespace += " ");
+	              }
+	            } else if (className == stringClass) {
+	              whitespace = width.length <= 10 ? width : width.slice(0, 10);
+	            }
+	          }
+	          // Opera <= 7.54u2 discards the values associated with empty string keys
+	          // (`""`) only if they are used directly within an object member list
+	          // (e.g., `!("" in { "": 1})`).
+	          return serialize("", (value = {}, value[""] = source, value), callback, properties, whitespace, "", []);
+	        };
+	      }
+	
+	      // Public: Parses a JSON source string.
+	      if (!has("json-parse")) {
+	        var fromCharCode = String.fromCharCode;
+	
+	        // Internal: A map of escaped control characters and their unescaped
+	        // equivalents.
+	        var Unescapes = {
+	          92: "\\",
+	          34: '"',
+	          47: "/",
+	          98: "\b",
+	          116: "\t",
+	          110: "\n",
+	          102: "\f",
+	          114: "\r"
+	        };
+	
+	        // Internal: Stores the parser state.
+	        var Index, Source;
+	
+	        // Internal: Resets the parser state and throws a `SyntaxError`.
+	        var abort = function () {
+	          Index = Source = null;
+	          throw SyntaxError();
+	        };
+	
+	        // Internal: Returns the next token, or `"$"` if the parser has reached
+	        // the end of the source string. A token may be a string, number, `null`
+	        // literal, or Boolean literal.
+	        var lex = function () {
+	          var source = Source, length = source.length, value, begin, position, isSigned, charCode;
+	          while (Index < length) {
+	            charCode = source.charCodeAt(Index);
+	            switch (charCode) {
+	              case 9: case 10: case 13: case 32:
+	                // Skip whitespace tokens, including tabs, carriage returns, line
+	                // feeds, and space characters.
+	                Index++;
+	                break;
+	              case 123: case 125: case 91: case 93: case 58: case 44:
+	                // Parse a punctuator token (`{`, `}`, `[`, `]`, `:`, or `,`) at
+	                // the current position.
+	                value = charIndexBuggy ? source.charAt(Index) : source[Index];
+	                Index++;
+	                return value;
+	              case 34:
+	                // `"` delimits a JSON string; advance to the next character and
+	                // begin parsing the string. String tokens are prefixed with the
+	                // sentinel `@` character to distinguish them from punctuators and
+	                // end-of-string tokens.
+	                for (value = "@", Index++; Index < length;) {
+	                  charCode = source.charCodeAt(Index);
+	                  if (charCode < 32) {
+	                    // Unescaped ASCII control characters (those with a code unit
+	                    // less than the space character) are not permitted.
+	                    abort();
+	                  } else if (charCode == 92) {
+	                    // A reverse solidus (`\`) marks the beginning of an escaped
+	                    // control character (including `"`, `\`, and `/`) or Unicode
+	                    // escape sequence.
+	                    charCode = source.charCodeAt(++Index);
+	                    switch (charCode) {
+	                      case 92: case 34: case 47: case 98: case 116: case 110: case 102: case 114:
+	                        // Revive escaped control characters.
+	                        value += Unescapes[charCode];
+	                        Index++;
+	                        break;
+	                      case 117:
+	                        // `\u` marks the beginning of a Unicode escape sequence.
+	                        // Advance to the first character and validate the
+	                        // four-digit code point.
+	                        begin = ++Index;
+	                        for (position = Index + 4; Index < position; Index++) {
+	                          charCode = source.charCodeAt(Index);
+	                          // A valid sequence comprises four hexdigits (case-
+	                          // insensitive) that form a single hexadecimal value.
+	                          if (!(charCode >= 48 && charCode <= 57 || charCode >= 97 && charCode <= 102 || charCode >= 65 && charCode <= 70)) {
+	                            // Invalid Unicode escape sequence.
+	                            abort();
+	                          }
+	                        }
+	                        // Revive the escaped character.
+	                        value += fromCharCode("0x" + source.slice(begin, Index));
+	                        break;
+	                      default:
+	                        // Invalid escape sequence.
+	                        abort();
+	                    }
+	                  } else {
+	                    if (charCode == 34) {
+	                      // An unescaped double-quote character marks the end of the
+	                      // string.
+	                      break;
+	                    }
+	                    charCode = source.charCodeAt(Index);
+	                    begin = Index;
+	                    // Optimize for the common case where a string is valid.
+	                    while (charCode >= 32 && charCode != 92 && charCode != 34) {
+	                      charCode = source.charCodeAt(++Index);
+	                    }
+	                    // Append the string as-is.
+	                    value += source.slice(begin, Index);
+	                  }
+	                }
+	                if (source.charCodeAt(Index) == 34) {
+	                  // Advance to the next character and return the revived string.
+	                  Index++;
+	                  return value;
+	                }
+	                // Unterminated string.
+	                abort();
+	              default:
+	                // Parse numbers and literals.
+	                begin = Index;
+	                // Advance past the negative sign, if one is specified.
+	                if (charCode == 45) {
+	                  isSigned = true;
+	                  charCode = source.charCodeAt(++Index);
+	                }
+	                // Parse an integer or floating-point value.
+	                if (charCode >= 48 && charCode <= 57) {
+	                  // Leading zeroes are interpreted as octal literals.
+	                  if (charCode == 48 && ((charCode = source.charCodeAt(Index + 1)), charCode >= 48 && charCode <= 57)) {
+	                    // Illegal octal literal.
+	                    abort();
+	                  }
+	                  isSigned = false;
+	                  // Parse the integer component.
+	                  for (; Index < length && ((charCode = source.charCodeAt(Index)), charCode >= 48 && charCode <= 57); Index++);
+	                  // Floats cannot contain a leading decimal point; however, this
+	                  // case is already accounted for by the parser.
+	                  if (source.charCodeAt(Index) == 46) {
+	                    position = ++Index;
+	                    // Parse the decimal component.
+	                    for (; position < length && ((charCode = source.charCodeAt(position)), charCode >= 48 && charCode <= 57); position++);
+	                    if (position == Index) {
+	                      // Illegal trailing decimal.
+	                      abort();
+	                    }
+	                    Index = position;
+	                  }
+	                  // Parse exponents. The `e` denoting the exponent is
+	                  // case-insensitive.
+	                  charCode = source.charCodeAt(Index);
+	                  if (charCode == 101 || charCode == 69) {
+	                    charCode = source.charCodeAt(++Index);
+	                    // Skip past the sign following the exponent, if one is
+	                    // specified.
+	                    if (charCode == 43 || charCode == 45) {
+	                      Index++;
+	                    }
+	                    // Parse the exponential component.
+	                    for (position = Index; position < length && ((charCode = source.charCodeAt(position)), charCode >= 48 && charCode <= 57); position++);
+	                    if (position == Index) {
+	                      // Illegal empty exponent.
+	                      abort();
+	                    }
+	                    Index = position;
+	                  }
+	                  // Coerce the parsed value to a JavaScript number.
+	                  return +source.slice(begin, Index);
+	                }
+	                // A negative sign may only precede numbers.
+	                if (isSigned) {
+	                  abort();
+	                }
+	                // `true`, `false`, and `null` literals.
+	                if (source.slice(Index, Index + 4) == "true") {
+	                  Index += 4;
+	                  return true;
+	                } else if (source.slice(Index, Index + 5) == "false") {
+	                  Index += 5;
+	                  return false;
+	                } else if (source.slice(Index, Index + 4) == "null") {
+	                  Index += 4;
+	                  return null;
+	                }
+	                // Unrecognized token.
+	                abort();
+	            }
+	          }
+	          // Return the sentinel `$` character if the parser has reached the end
+	          // of the source string.
+	          return "$";
+	        };
+	
+	        // Internal: Parses a JSON `value` token.
+	        var get = function (value) {
+	          var results, hasMembers;
+	          if (value == "$") {
+	            // Unexpected end of input.
+	            abort();
+	          }
+	          if (typeof value == "string") {
+	            if ((charIndexBuggy ? value.charAt(0) : value[0]) == "@") {
+	              // Remove the sentinel `@` character.
+	              return value.slice(1);
+	            }
+	            // Parse object and array literals.
+	            if (value == "[") {
+	              // Parses a JSON array, returning a new JavaScript array.
+	              results = [];
+	              for (;; hasMembers || (hasMembers = true)) {
+	                value = lex();
+	                // A closing square bracket marks the end of the array literal.
+	                if (value == "]") {
+	                  break;
+	                }
+	                // If the array literal contains elements, the current token
+	                // should be a comma separating the previous element from the
+	                // next.
+	                if (hasMembers) {
+	                  if (value == ",") {
+	                    value = lex();
+	                    if (value == "]") {
+	                      // Unexpected trailing `,` in array literal.
+	                      abort();
+	                    }
+	                  } else {
+	                    // A `,` must separate each array element.
+	                    abort();
+	                  }
+	                }
+	                // Elisions and leading commas are not permitted.
+	                if (value == ",") {
+	                  abort();
+	                }
+	                results.push(get(value));
+	              }
+	              return results;
+	            } else if (value == "{") {
+	              // Parses a JSON object, returning a new JavaScript object.
+	              results = {};
+	              for (;; hasMembers || (hasMembers = true)) {
+	                value = lex();
+	                // A closing curly brace marks the end of the object literal.
+	                if (value == "}") {
+	                  break;
+	                }
+	                // If the object literal contains members, the current token
+	                // should be a comma separator.
+	                if (hasMembers) {
+	                  if (value == ",") {
+	                    value = lex();
+	                    if (value == "}") {
+	                      // Unexpected trailing `,` in object literal.
+	                      abort();
+	                    }
+	                  } else {
+	                    // A `,` must separate each object member.
+	                    abort();
+	                  }
+	                }
+	                // Leading commas are not permitted, object property names must be
+	                // double-quoted strings, and a `:` must separate each property
+	                // name and value.
+	                if (value == "," || typeof value != "string" || (charIndexBuggy ? value.charAt(0) : value[0]) != "@" || lex() != ":") {
+	                  abort();
+	                }
+	                results[value.slice(1)] = get(lex());
+	              }
+	              return results;
+	            }
+	            // Unexpected token encountered.
+	            abort();
+	          }
+	          return value;
+	        };
+	
+	        // Internal: Updates a traversed object member.
+	        var update = function (source, property, callback) {
+	          var element = walk(source, property, callback);
+	          if (element === undef) {
+	            delete source[property];
+	          } else {
+	            source[property] = element;
+	          }
+	        };
+	
+	        // Internal: Recursively traverses a parsed JSON object, invoking the
+	        // `callback` function for each value. This is an implementation of the
+	        // `Walk(holder, name)` operation defined in ES 5.1 section 15.12.2.
+	        var walk = function (source, property, callback) {
+	          var value = source[property], length;
+	          if (typeof value == "object" && value) {
+	            // `forEach` can't be used to traverse an array in Opera <= 8.54
+	            // because its `Object#hasOwnProperty` implementation returns `false`
+	            // for array indices (e.g., `![1, 2, 3].hasOwnProperty("0")`).
+	            if (getClass.call(value) == arrayClass) {
+	              for (length = value.length; length--;) {
+	                update(value, length, callback);
+	              }
+	            } else {
+	              forEach(value, function (property) {
+	                update(value, property, callback);
+	              });
+	            }
+	          }
+	          return callback.call(source, property, value);
+	        };
+	
+	        // Public: `JSON.parse`. See ES 5.1 section 15.12.2.
+	        exports.parse = function (source, callback) {
+	          var result, value;
+	          Index = 0;
+	          Source = "" + source;
+	          result = get(lex());
+	          // If a JSON string contains multiple tokens, it is invalid.
+	          if (lex() != "$") {
+	            abort();
+	          }
+	          // Reset the parser state.
+	          Index = Source = null;
+	          return callback && getClass.call(callback) == functionClass ? walk((value = {}, value[""] = result, value), "", callback) : result;
+	        };
+	      }
+	    }
+	
+	    exports["runInContext"] = runInContext;
+	    return exports;
+	  }
+	
+	  if (freeExports && !isLoader) {
+	    // Export for CommonJS environments.
+	    runInContext(root, freeExports);
+	  } else {
+	    // Export for web browsers and JavaScript engines.
+	    var nativeJSON = root.JSON,
+	        previousJSON = root["JSON3"],
+	        isRestored = false;
+	
+	    var JSON3 = runInContext(root, (root["JSON3"] = {
+	      // Public: Restores the original value of the global `JSON` object and
+	      // returns a reference to the `JSON3` object.
+	      "noConflict": function () {
+	        if (!isRestored) {
+	          isRestored = true;
+	          root.JSON = nativeJSON;
+	          root["JSON3"] = previousJSON;
+	          nativeJSON = previousJSON = null;
+	        }
+	        return JSON3;
+	      }
+	    }));
+	
+	    root.JSON = {
+	      "parse": JSON3.parse,
+	      "stringify": JSON3.stringify
+	    };
+	  }
+	
+	  // Export for asynchronous module loaders.
+	  if (isLoader) {
+	    !(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
+	      return JSON3;
+	    }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	  }
+	}).call(this);
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(119)(module), (function() { return this; }())))
+
+/***/ },
+/* 119 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = (__webpack_require__(2))(62);
+
+/***/ },
+/* 120 */
+/***/ function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, {}))
+
+/***/ },
+/* 121 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = (__webpack_require__(2))(250);
+
+/***/ },
+/* 122 */
+/***/ function(module, exports) {
+
+	
+	/**
+	 * Expose `Emitter`.
+	 */
+	
+	module.exports = Emitter;
+	
+	/**
+	 * Initialize a new `Emitter`.
+	 *
+	 * @api public
+	 */
+	
+	function Emitter(obj) {
+	  if (obj) return mixin(obj);
+	};
+	
+	/**
+	 * Mixin the emitter properties.
+	 *
+	 * @param {Object} obj
+	 * @return {Object}
+	 * @api private
+	 */
+	
+	function mixin(obj) {
+	  for (var key in Emitter.prototype) {
+	    obj[key] = Emitter.prototype[key];
+	  }
+	  return obj;
+	}
+	
+	/**
+	 * Listen on the given `event` with `fn`.
+	 *
+	 * @param {String} event
+	 * @param {Function} fn
+	 * @return {Emitter}
+	 * @api public
+	 */
+	
+	Emitter.prototype.on =
+	Emitter.prototype.addEventListener = function(event, fn){
+	  this._callbacks = this._callbacks || {};
+	  (this._callbacks[event] = this._callbacks[event] || [])
+	    .push(fn);
+	  return this;
+	};
+	
+	/**
+	 * Adds an `event` listener that will be invoked a single
+	 * time then automatically removed.
+	 *
+	 * @param {String} event
+	 * @param {Function} fn
+	 * @return {Emitter}
+	 * @api public
+	 */
+	
+	Emitter.prototype.once = function(event, fn){
+	  var self = this;
+	  this._callbacks = this._callbacks || {};
+	
+	  function on() {
+	    self.off(event, on);
+	    fn.apply(this, arguments);
+	  }
+	
+	  on.fn = fn;
+	  this.on(event, on);
+	  return this;
+	};
+	
+	/**
+	 * Remove the given callback for `event` or all
+	 * registered callbacks.
+	 *
+	 * @param {String} event
+	 * @param {Function} fn
+	 * @return {Emitter}
+	 * @api public
+	 */
+	
+	Emitter.prototype.off =
+	Emitter.prototype.removeListener =
+	Emitter.prototype.removeAllListeners =
+	Emitter.prototype.removeEventListener = function(event, fn){
+	  this._callbacks = this._callbacks || {};
+	
+	  // all
+	  if (0 == arguments.length) {
+	    this._callbacks = {};
+	    return this;
+	  }
+	
+	  // specific event
+	  var callbacks = this._callbacks[event];
+	  if (!callbacks) return this;
+	
+	  // remove all handlers
+	  if (1 == arguments.length) {
+	    delete this._callbacks[event];
+	    return this;
+	  }
+	
+	  // remove specific handler
+	  var cb;
+	  for (var i = 0; i < callbacks.length; i++) {
+	    cb = callbacks[i];
+	    if (cb === fn || cb.fn === fn) {
+	      callbacks.splice(i, 1);
+	      break;
+	    }
+	  }
+	  return this;
+	};
+	
+	/**
+	 * Emit `event` with the given args.
+	 *
+	 * @param {String} event
+	 * @param {Mixed} ...
+	 * @return {Emitter}
+	 */
+	
+	Emitter.prototype.emit = function(event){
+	  this._callbacks = this._callbacks || {};
+	  var args = [].slice.call(arguments, 1)
+	    , callbacks = this._callbacks[event];
+	
+	  if (callbacks) {
+	    callbacks = callbacks.slice(0);
+	    for (var i = 0, len = callbacks.length; i < len; ++i) {
+	      callbacks[i].apply(this, args);
+	    }
+	  }
+	
+	  return this;
+	};
+	
+	/**
+	 * Return array of callbacks for `event`.
+	 *
+	 * @param {String} event
+	 * @return {Array}
+	 * @api public
+	 */
+	
+	Emitter.prototype.listeners = function(event){
+	  this._callbacks = this._callbacks || {};
+	  return this._callbacks[event] || [];
+	};
+	
+	/**
+	 * Check if this emitter has `event` handlers.
+	 *
+	 * @param {String} event
+	 * @return {Boolean}
+	 * @api public
+	 */
+	
+	Emitter.prototype.hasListeners = function(event){
+	  return !! this.listeners(event).length;
+	};
+
+
+/***/ },
+/* 123 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/*global Blob,File*/
+	
+	/**
+	 * Module requirements
+	 */
+	
+	var isArray = __webpack_require__(121);
+	var isBuf = __webpack_require__(124);
+	
+	/**
+	 * Replaces every Buffer | ArrayBuffer in packet with a numbered placeholder.
+	 * Anything with blobs or files should be fed through removeBlobs before coming
+	 * here.
+	 *
+	 * @param {Object} packet - socket.io event packet
+	 * @return {Object} with deconstructed packet and list of buffers
+	 * @api public
+	 */
+	
+	exports.deconstructPacket = function(packet){
+	  var buffers = [];
+	  var packetData = packet.data;
+	
+	  function _deconstructPacket(data) {
+	    if (!data) return data;
+	
+	    if (isBuf(data)) {
+	      var placeholder = { _placeholder: true, num: buffers.length };
+	      buffers.push(data);
+	      return placeholder;
+	    } else if (isArray(data)) {
+	      var newData = new Array(data.length);
+	      for (var i = 0; i < data.length; i++) {
+	        newData[i] = _deconstructPacket(data[i]);
+	      }
+	      return newData;
+	    } else if ('object' == typeof data && !(data instanceof Date)) {
+	      var newData = {};
+	      for (var key in data) {
+	        newData[key] = _deconstructPacket(data[key]);
+	      }
+	      return newData;
+	    }
+	    return data;
+	  }
+	
+	  var pack = packet;
+	  pack.data = _deconstructPacket(packetData);
+	  pack.attachments = buffers.length; // number of binary 'attachments'
+	  return {packet: pack, buffers: buffers};
+	};
+	
+	/**
+	 * Reconstructs a binary packet from its placeholder packet and buffers
+	 *
+	 * @param {Object} packet - event packet with placeholders
+	 * @param {Array} buffers - binary buffers to put in placeholder positions
+	 * @return {Object} reconstructed packet
+	 * @api public
+	 */
+	
+	exports.reconstructPacket = function(packet, buffers) {
+	  var curPlaceHolder = 0;
+	
+	  function _reconstructPacket(data) {
+	    if (data && data._placeholder) {
+	      var buf = buffers[data.num]; // appropriate buffer (should be natural order anyway)
+	      return buf;
+	    } else if (isArray(data)) {
+	      for (var i = 0; i < data.length; i++) {
+	        data[i] = _reconstructPacket(data[i]);
+	      }
+	      return data;
+	    } else if (data && 'object' == typeof data) {
+	      for (var key in data) {
+	        data[key] = _reconstructPacket(data[key]);
+	      }
+	      return data;
+	    }
+	    return data;
+	  }
+	
+	  packet.data = _reconstructPacket(packet.data);
+	  packet.attachments = undefined; // no longer useful
+	  return packet;
+	};
+	
+	/**
+	 * Asynchronously removes Blobs or Files from data via
+	 * FileReader's readAsArrayBuffer method. Used before encoding
+	 * data as msgpack. Calls callback with the blobless data.
+	 *
+	 * @param {Object} data
+	 * @param {Function} callback
+	 * @api private
+	 */
+	
+	exports.removeBlobs = function(data, callback) {
+	  function _removeBlobs(obj, curKey, containingObject) {
+	    if (!obj) return obj;
+	
+	    // convert any blob
+	    if ((global.Blob && obj instanceof Blob) ||
+	        (global.File && obj instanceof File)) {
+	      pendingBlobs++;
+	
+	      // async filereader
+	      var fileReader = new FileReader();
+	      fileReader.onload = function() { // this.result == arraybuffer
+	        if (containingObject) {
+	          containingObject[curKey] = this.result;
+	        }
+	        else {
+	          bloblessData = this.result;
+	        }
+	
+	        // if nothing pending its callback time
+	        if(! --pendingBlobs) {
+	          callback(bloblessData);
+	        }
+	      };
+	
+	      fileReader.readAsArrayBuffer(obj); // blob -> arraybuffer
+	    } else if (isArray(obj)) { // handle array
+	      for (var i = 0; i < obj.length; i++) {
+	        _removeBlobs(obj[i], i, obj);
+	      }
+	    } else if (obj && 'object' == typeof obj && !isBuf(obj)) { // and object
+	      for (var key in obj) {
+	        _removeBlobs(obj[key], key, obj);
+	      }
+	    }
+	  }
+	
+	  var pendingBlobs = 0;
+	  var bloblessData = data;
+	  _removeBlobs(bloblessData);
+	  if (!pendingBlobs) {
+	    callback(bloblessData);
+	  }
+	};
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 124 */
+/***/ function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {
+	module.exports = isBuf;
+	
+	/**
+	 * Returns true if obj is a buffer or an arraybuffer.
+	 *
+	 * @api private
+	 */
+	
+	function isBuf(obj) {
+	  return (global.Buffer && global.Buffer.isBuffer(obj)) ||
+	         (global.ArrayBuffer && obj instanceof ArrayBuffer);
+	}
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 125 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * Module dependencies.
+	 */
+	
+	var eio = __webpack_require__(126);
+	var Socket = __webpack_require__(151);
+	var Emitter = __webpack_require__(152);
+	var parser = __webpack_require__(117);
+	var on = __webpack_require__(154);
+	var bind = __webpack_require__(155);
+	var debug = __webpack_require__(114)('socket.io-client:manager');
+	var indexOf = __webpack_require__(149);
+	var Backoff = __webpack_require__(157);
+	
+	/**
+	 * IE6+ hasOwnProperty
+	 */
+	
+	var has = Object.prototype.hasOwnProperty;
+	
+	/**
+	 * Module exports
+	 */
+	
+	module.exports = Manager;
+	
+	/**
+	 * `Manager` constructor.
+	 *
+	 * @param {String} engine instance or engine uri/opts
+	 * @param {Object} options
+	 * @api public
+	 */
+	
+	function Manager (uri, opts) {
+	  if (!(this instanceof Manager)) return new Manager(uri, opts);
+	  if (uri && ('object' === typeof uri)) {
+	    opts = uri;
+	    uri = undefined;
+	  }
+	  opts = opts || {};
+	
+	  opts.path = opts.path || '/socket.io';
+	  this.nsps = {};
+	  this.subs = [];
+	  this.opts = opts;
+	  this.reconnection(opts.reconnection !== false);
+	  this.reconnectionAttempts(opts.reconnectionAttempts || Infinity);
+	  this.reconnectionDelay(opts.reconnectionDelay || 1000);
+	  this.reconnectionDelayMax(opts.reconnectionDelayMax || 5000);
+	  this.randomizationFactor(opts.randomizationFactor || 0.5);
+	  this.backoff = new Backoff({
+	    min: this.reconnectionDelay(),
+	    max: this.reconnectionDelayMax(),
+	    jitter: this.randomizationFactor()
+	  });
+	  this.timeout(null == opts.timeout ? 20000 : opts.timeout);
+	  this.readyState = 'closed';
+	  this.uri = uri;
+	  this.connecting = [];
+	  this.lastPing = null;
+	  this.encoding = false;
+	  this.packetBuffer = [];
+	  this.encoder = new parser.Encoder();
+	  this.decoder = new parser.Decoder();
+	  this.autoConnect = opts.autoConnect !== false;
+	  if (this.autoConnect) this.open();
+	}
+	
+	/**
+	 * Propagate given event to sockets and emit on `this`
+	 *
+	 * @api private
+	 */
+	
+	Manager.prototype.emitAll = function () {
+	  this.emit.apply(this, arguments);
+	  for (var nsp in this.nsps) {
+	    if (has.call(this.nsps, nsp)) {
+	      this.nsps[nsp].emit.apply(this.nsps[nsp], arguments);
+	    }
+	  }
+	};
+	
+	/**
+	 * Update `socket.id` of all sockets
+	 *
+	 * @api private
+	 */
+	
+	Manager.prototype.updateSocketIds = function () {
+	  for (var nsp in this.nsps) {
+	    if (has.call(this.nsps, nsp)) {
+	      this.nsps[nsp].id = this.engine.id;
+	    }
+	  }
+	};
+	
+	/**
+	 * Mix in `Emitter`.
+	 */
+	
+	Emitter(Manager.prototype);
+	
+	/**
+	 * Sets the `reconnection` config.
+	 *
+	 * @param {Boolean} true/false if it should automatically reconnect
+	 * @return {Manager} self or value
+	 * @api public
+	 */
+	
+	Manager.prototype.reconnection = function (v) {
+	  if (!arguments.length) return this._reconnection;
+	  this._reconnection = !!v;
+	  return this;
+	};
+	
+	/**
+	 * Sets the reconnection attempts config.
+	 *
+	 * @param {Number} max reconnection attempts before giving up
+	 * @return {Manager} self or value
+	 * @api public
+	 */
+	
+	Manager.prototype.reconnectionAttempts = function (v) {
+	  if (!arguments.length) return this._reconnectionAttempts;
+	  this._reconnectionAttempts = v;
+	  return this;
+	};
+	
+	/**
+	 * Sets the delay between reconnections.
+	 *
+	 * @param {Number} delay
+	 * @return {Manager} self or value
+	 * @api public
+	 */
+	
+	Manager.prototype.reconnectionDelay = function (v) {
+	  if (!arguments.length) return this._reconnectionDelay;
+	  this._reconnectionDelay = v;
+	  this.backoff && this.backoff.setMin(v);
+	  return this;
+	};
+	
+	Manager.prototype.randomizationFactor = function (v) {
+	  if (!arguments.length) return this._randomizationFactor;
+	  this._randomizationFactor = v;
+	  this.backoff && this.backoff.setJitter(v);
+	  return this;
+	};
+	
+	/**
+	 * Sets the maximum delay between reconnections.
+	 *
+	 * @param {Number} delay
+	 * @return {Manager} self or value
+	 * @api public
+	 */
+	
+	Manager.prototype.reconnectionDelayMax = function (v) {
+	  if (!arguments.length) return this._reconnectionDelayMax;
+	  this._reconnectionDelayMax = v;
+	  this.backoff && this.backoff.setMax(v);
+	  return this;
+	};
+	
+	/**
+	 * Sets the connection timeout. `false` to disable
+	 *
+	 * @return {Manager} self or value
+	 * @api public
+	 */
+	
+	Manager.prototype.timeout = function (v) {
+	  if (!arguments.length) return this._timeout;
+	  this._timeout = v;
+	  return this;
+	};
+	
+	/**
+	 * Starts trying to reconnect if reconnection is enabled and we have not
+	 * started reconnecting yet
+	 *
+	 * @api private
+	 */
+	
+	Manager.prototype.maybeReconnectOnOpen = function () {
+	  // Only try to reconnect if it's the first time we're connecting
+	  if (!this.reconnecting && this._reconnection && this.backoff.attempts === 0) {
+	    // keeps reconnection from firing twice for the same reconnection loop
+	    this.reconnect();
+	  }
+	};
+	
+	/**
+	 * Sets the current transport `socket`.
+	 *
+	 * @param {Function} optional, callback
+	 * @return {Manager} self
+	 * @api public
+	 */
+	
+	Manager.prototype.open =
+	Manager.prototype.connect = function (fn, opts) {
+	  debug('readyState %s', this.readyState);
+	  if (~this.readyState.indexOf('open')) return this;
+	
+	  debug('opening %s', this.uri);
+	  this.engine = eio(this.uri, this.opts);
+	  var socket = this.engine;
+	  var self = this;
+	  this.readyState = 'opening';
+	  this.skipReconnect = false;
+	
+	  // emit `open`
+	  var openSub = on(socket, 'open', function () {
+	    self.onopen();
+	    fn && fn();
+	  });
+	
+	  // emit `connect_error`
+	  var errorSub = on(socket, 'error', function (data) {
+	    debug('connect_error');
+	    self.cleanup();
+	    self.readyState = 'closed';
+	    self.emitAll('connect_error', data);
+	    if (fn) {
+	      var err = new Error('Connection error');
+	      err.data = data;
+	      fn(err);
+	    } else {
+	      // Only do this if there is no fn to handle the error
+	      self.maybeReconnectOnOpen();
+	    }
+	  });
+	
+	  // emit `connect_timeout`
+	  if (false !== this._timeout) {
+	    var timeout = this._timeout;
+	    debug('connect attempt will timeout after %d', timeout);
+	
+	    // set timer
+	    var timer = setTimeout(function () {
+	      debug('connect attempt timed out after %d', timeout);
+	      openSub.destroy();
+	      socket.close();
+	      socket.emit('error', 'timeout');
+	      self.emitAll('connect_timeout', timeout);
+	    }, timeout);
+	
+	    this.subs.push({
+	      destroy: function () {
+	        clearTimeout(timer);
+	      }
+	    });
+	  }
+	
+	  this.subs.push(openSub);
+	  this.subs.push(errorSub);
+	
+	  return this;
+	};
+	
+	/**
+	 * Called upon transport open.
+	 *
+	 * @api private
+	 */
+	
+	Manager.prototype.onopen = function () {
+	  debug('open');
+	
+	  // clear old subs
+	  this.cleanup();
+	
+	  // mark as open
+	  this.readyState = 'open';
+	  this.emit('open');
+	
+	  // add new subs
+	  var socket = this.engine;
+	  this.subs.push(on(socket, 'data', bind(this, 'ondata')));
+	  this.subs.push(on(socket, 'ping', bind(this, 'onping')));
+	  this.subs.push(on(socket, 'pong', bind(this, 'onpong')));
+	  this.subs.push(on(socket, 'error', bind(this, 'onerror')));
+	  this.subs.push(on(socket, 'close', bind(this, 'onclose')));
+	  this.subs.push(on(this.decoder, 'decoded', bind(this, 'ondecoded')));
+	};
+	
+	/**
+	 * Called upon a ping.
+	 *
+	 * @api private
+	 */
+	
+	Manager.prototype.onping = function () {
+	  this.lastPing = new Date();
+	  this.emitAll('ping');
+	};
+	
+	/**
+	 * Called upon a packet.
+	 *
+	 * @api private
+	 */
+	
+	Manager.prototype.onpong = function () {
+	  this.emitAll('pong', new Date() - this.lastPing);
+	};
+	
+	/**
+	 * Called with data.
+	 *
+	 * @api private
+	 */
+	
+	Manager.prototype.ondata = function (data) {
+	  this.decoder.add(data);
+	};
+	
+	/**
+	 * Called when parser fully decodes a packet.
+	 *
+	 * @api private
+	 */
+	
+	Manager.prototype.ondecoded = function (packet) {
+	  this.emit('packet', packet);
+	};
+	
+	/**
+	 * Called upon socket error.
+	 *
+	 * @api private
+	 */
+	
+	Manager.prototype.onerror = function (err) {
+	  debug('error', err);
+	  this.emitAll('error', err);
+	};
+	
+	/**
+	 * Creates a new socket for the given `nsp`.
+	 *
+	 * @return {Socket}
+	 * @api public
+	 */
+	
+	Manager.prototype.socket = function (nsp, opts) {
+	  var socket = this.nsps[nsp];
+	  if (!socket) {
+	    socket = new Socket(this, nsp, opts);
+	    this.nsps[nsp] = socket;
+	    var self = this;
+	    socket.on('connecting', onConnecting);
+	    socket.on('connect', function () {
+	      socket.id = self.engine.id;
+	    });
+	
+	    if (this.autoConnect) {
+	      // manually call here since connecting evnet is fired before listening
+	      onConnecting();
+	    }
+	  }
+	
+	  function onConnecting () {
+	    if (!~indexOf(self.connecting, socket)) {
+	      self.connecting.push(socket);
+	    }
+	  }
+	
+	  return socket;
+	};
+	
+	/**
+	 * Called upon a socket close.
+	 *
+	 * @param {Socket} socket
+	 */
+	
+	Manager.prototype.destroy = function (socket) {
+	  var index = indexOf(this.connecting, socket);
+	  if (~index) this.connecting.splice(index, 1);
+	  if (this.connecting.length) return;
+	
+	  this.close();
+	};
+	
+	/**
+	 * Writes a packet.
+	 *
+	 * @param {Object} packet
+	 * @api private
+	 */
+	
+	Manager.prototype.packet = function (packet) {
+	  debug('writing packet %j', packet);
+	  var self = this;
+	  if (packet.query && packet.type === 0) packet.nsp += '?' + packet.query;
+	
+	  if (!self.encoding) {
+	    // encode, then write to engine with result
+	    self.encoding = true;
+	    this.encoder.encode(packet, function (encodedPackets) {
+	      for (var i = 0; i < encodedPackets.length; i++) {
+	        self.engine.write(encodedPackets[i], packet.options);
+	      }
+	      self.encoding = false;
+	      self.processPacketQueue();
+	    });
+	  } else { // add packet to the queue
+	    self.packetBuffer.push(packet);
+	  }
+	};
+	
+	/**
+	 * If packet buffer is non-empty, begins encoding the
+	 * next packet in line.
+	 *
+	 * @api private
+	 */
+	
+	Manager.prototype.processPacketQueue = function () {
+	  if (this.packetBuffer.length > 0 && !this.encoding) {
+	    var pack = this.packetBuffer.shift();
+	    this.packet(pack);
+	  }
+	};
+	
+	/**
+	 * Clean up transport subscriptions and packet buffer.
+	 *
+	 * @api private
+	 */
+	
+	Manager.prototype.cleanup = function () {
+	  debug('cleanup');
+	
+	  var subsLength = this.subs.length;
+	  for (var i = 0; i < subsLength; i++) {
+	    var sub = this.subs.shift();
+	    sub.destroy();
+	  }
+	
+	  this.packetBuffer = [];
+	  this.encoding = false;
+	  this.lastPing = null;
+	
+	  this.decoder.destroy();
+	};
+	
+	/**
+	 * Close the current socket.
+	 *
+	 * @api private
+	 */
+	
+	Manager.prototype.close =
+	Manager.prototype.disconnect = function () {
+	  debug('disconnect');
+	  this.skipReconnect = true;
+	  this.reconnecting = false;
+	  if ('opening' === this.readyState) {
+	    // `onclose` will not fire because
+	    // an open event never happened
+	    this.cleanup();
+	  }
+	  this.backoff.reset();
+	  this.readyState = 'closed';
+	  if (this.engine) this.engine.close();
+	};
+	
+	/**
+	 * Called upon engine close.
+	 *
+	 * @api private
+	 */
+	
+	Manager.prototype.onclose = function (reason) {
+	  debug('onclose');
+	
+	  this.cleanup();
+	  this.backoff.reset();
+	  this.readyState = 'closed';
+	  this.emit('close', reason);
+	
+	  if (this._reconnection && !this.skipReconnect) {
+	    this.reconnect();
+	  }
+	};
+	
+	/**
+	 * Attempt a reconnection.
+	 *
+	 * @api private
+	 */
+	
+	Manager.prototype.reconnect = function () {
+	  if (this.reconnecting || this.skipReconnect) return this;
+	
+	  var self = this;
+	
+	  if (this.backoff.attempts >= this._reconnectionAttempts) {
+	    debug('reconnect failed');
+	    this.backoff.reset();
+	    this.emitAll('reconnect_failed');
+	    this.reconnecting = false;
+	  } else {
+	    var delay = this.backoff.duration();
+	    debug('will wait %dms before reconnect attempt', delay);
+	
+	    this.reconnecting = true;
+	    var timer = setTimeout(function () {
+	      if (self.skipReconnect) return;
+	
+	      debug('attempting reconnect');
+	      self.emitAll('reconnect_attempt', self.backoff.attempts);
+	      self.emitAll('reconnecting', self.backoff.attempts);
+	
+	      // check again for the case socket closed in above events
+	      if (self.skipReconnect) return;
+	
+	      self.open(function (err) {
+	        if (err) {
+	          debug('reconnect attempt error');
+	          self.reconnecting = false;
+	          self.reconnect();
+	          self.emitAll('reconnect_error', err.data);
+	        } else {
+	          debug('reconnect success');
+	          self.onreconnect();
+	        }
+	      });
+	    }, delay);
+	
+	    this.subs.push({
+	      destroy: function () {
+	        clearTimeout(timer);
+	      }
+	    });
+	  }
+	};
+	
+	/**
+	 * Called upon successful reconnect.
+	 *
+	 * @api private
+	 */
+	
+	Manager.prototype.onreconnect = function () {
+	  var attempt = this.backoff.attempts;
+	  this.reconnecting = false;
+	  this.backoff.reset();
+	  this.updateSocketIds();
+	  this.emitAll('reconnect', attempt);
+	};
+
+
+/***/ },
+/* 126 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	module.exports = __webpack_require__(127);
+
+
+/***/ },
+/* 127 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	module.exports = __webpack_require__(128);
+	
+	/**
+	 * Exports parser
+	 *
+	 * @api public
+	 *
+	 */
+	module.exports.parser = __webpack_require__(135);
+
+
+/***/ },
+/* 128 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/**
+	 * Module dependencies.
+	 */
+	
+	var transports = __webpack_require__(129);
+	var Emitter = __webpack_require__(122);
+	var debug = __webpack_require__(114)('engine.io-client:socket');
+	var index = __webpack_require__(149);
+	var parser = __webpack_require__(135);
+	var parseuri = __webpack_require__(113);
+	var parsejson = __webpack_require__(150);
+	var parseqs = __webpack_require__(143);
+	
+	/**
+	 * Module exports.
+	 */
+	
+	module.exports = Socket;
+	
+	/**
+	 * Socket constructor.
+	 *
+	 * @param {String|Object} uri or options
+	 * @param {Object} options
+	 * @api public
+	 */
+	
+	function Socket (uri, opts) {
+	  if (!(this instanceof Socket)) return new Socket(uri, opts);
+	
+	  opts = opts || {};
+	
+	  if (uri && 'object' === typeof uri) {
+	    opts = uri;
+	    uri = null;
+	  }
+	
+	  if (uri) {
+	    uri = parseuri(uri);
+	    opts.hostname = uri.host;
+	    opts.secure = uri.protocol === 'https' || uri.protocol === 'wss';
+	    opts.port = uri.port;
+	    if (uri.query) opts.query = uri.query;
+	  } else if (opts.host) {
+	    opts.hostname = parseuri(opts.host).host;
+	  }
+	
+	  this.secure = null != opts.secure ? opts.secure
+	    : (global.location && 'https:' === location.protocol);
+	
+	  if (opts.hostname && !opts.port) {
+	    // if no port is specified manually, use the protocol default
+	    opts.port = this.secure ? '443' : '80';
+	  }
+	
+	  this.agent = opts.agent || false;
+	  this.hostname = opts.hostname ||
+	    (global.location ? location.hostname : 'localhost');
+	  this.port = opts.port || (global.location && location.port
+	      ? location.port
+	      : (this.secure ? 443 : 80));
+	  this.query = opts.query || {};
+	  if ('string' === typeof this.query) this.query = parseqs.decode(this.query);
+	  this.upgrade = false !== opts.upgrade;
+	  this.path = (opts.path || '/engine.io').replace(/\/$/, '') + '/';
+	  this.forceJSONP = !!opts.forceJSONP;
+	  this.jsonp = false !== opts.jsonp;
+	  this.forceBase64 = !!opts.forceBase64;
+	  this.enablesXDR = !!opts.enablesXDR;
+	  this.timestampParam = opts.timestampParam || 't';
+	  this.timestampRequests = opts.timestampRequests;
+	  this.transports = opts.transports || ['polling', 'websocket'];
+	  this.readyState = '';
+	  this.writeBuffer = [];
+	  this.policyPort = opts.policyPort || 843;
+	  this.rememberUpgrade = opts.rememberUpgrade || false;
+	  this.binaryType = null;
+	  this.onlyBinaryUpgrades = opts.onlyBinaryUpgrades;
+	  this.perMessageDeflate = false !== opts.perMessageDeflate ? (opts.perMessageDeflate || {}) : false;
+	
+	  if (true === this.perMessageDeflate) this.perMessageDeflate = {};
+	  if (this.perMessageDeflate && null == this.perMessageDeflate.threshold) {
+	    this.perMessageDeflate.threshold = 1024;
+	  }
+	
+	  // SSL options for Node.js client
+	  this.pfx = opts.pfx || null;
+	  this.key = opts.key || null;
+	  this.passphrase = opts.passphrase || null;
+	  this.cert = opts.cert || null;
+	  this.ca = opts.ca || null;
+	  this.ciphers = opts.ciphers || null;
+	  this.rejectUnauthorized = opts.rejectUnauthorized === undefined ? null : opts.rejectUnauthorized;
+	
+	  // other options for Node.js client
+	  var freeGlobal = typeof global === 'object' && global;
+	  if (freeGlobal.global === freeGlobal) {
+	    if (opts.extraHeaders && Object.keys(opts.extraHeaders).length > 0) {
+	      this.extraHeaders = opts.extraHeaders;
+	    }
+	  }
+	
+	  this.open();
+	}
+	
+	Socket.priorWebsocketSuccess = false;
+	
+	/**
+	 * Mix in `Emitter`.
+	 */
+	
+	Emitter(Socket.prototype);
+	
+	/**
+	 * Protocol version.
+	 *
+	 * @api public
+	 */
+	
+	Socket.protocol = parser.protocol; // this is an int
+	
+	/**
+	 * Expose deps for legacy compatibility
+	 * and standalone browser access.
+	 */
+	
+	Socket.Socket = Socket;
+	Socket.Transport = __webpack_require__(134);
+	Socket.transports = __webpack_require__(129);
+	Socket.parser = __webpack_require__(135);
+	
+	/**
+	 * Creates transport of the given type.
+	 *
+	 * @param {String} transport name
+	 * @return {Transport}
+	 * @api private
+	 */
+	
+	Socket.prototype.createTransport = function (name) {
+	  debug('creating transport "%s"', name);
+	  var query = clone(this.query);
+	
+	  // append engine.io protocol identifier
+	  query.EIO = parser.protocol;
+	
+	  // transport name
+	  query.transport = name;
+	
+	  // session id if we already have one
+	  if (this.id) query.sid = this.id;
+	
+	  var transport = new transports[name]({
+	    agent: this.agent,
+	    hostname: this.hostname,
+	    port: this.port,
+	    secure: this.secure,
+	    path: this.path,
+	    query: query,
+	    forceJSONP: this.forceJSONP,
+	    jsonp: this.jsonp,
+	    forceBase64: this.forceBase64,
+	    enablesXDR: this.enablesXDR,
+	    timestampRequests: this.timestampRequests,
+	    timestampParam: this.timestampParam,
+	    policyPort: this.policyPort,
+	    socket: this,
+	    pfx: this.pfx,
+	    key: this.key,
+	    passphrase: this.passphrase,
+	    cert: this.cert,
+	    ca: this.ca,
+	    ciphers: this.ciphers,
+	    rejectUnauthorized: this.rejectUnauthorized,
+	    perMessageDeflate: this.perMessageDeflate,
+	    extraHeaders: this.extraHeaders
+	  });
+	
+	  return transport;
+	};
+	
+	function clone (obj) {
+	  var o = {};
+	  for (var i in obj) {
+	    if (obj.hasOwnProperty(i)) {
+	      o[i] = obj[i];
+	    }
+	  }
+	  return o;
+	}
+	
+	/**
+	 * Initializes transport to use and starts probe.
+	 *
+	 * @api private
+	 */
+	Socket.prototype.open = function () {
+	  var transport;
+	  if (this.rememberUpgrade && Socket.priorWebsocketSuccess && this.transports.indexOf('websocket') !== -1) {
+	    transport = 'websocket';
+	  } else if (0 === this.transports.length) {
+	    // Emit error on next tick so it can be listened to
+	    var self = this;
+	    setTimeout(function () {
+	      self.emit('error', 'No transports available');
+	    }, 0);
+	    return;
+	  } else {
+	    transport = this.transports[0];
+	  }
+	  this.readyState = 'opening';
+	
+	  // Retry with the next transport if the transport is disabled (jsonp: false)
+	  try {
+	    transport = this.createTransport(transport);
+	  } catch (e) {
+	    this.transports.shift();
+	    this.open();
+	    return;
+	  }
+	
+	  transport.open();
+	  this.setTransport(transport);
+	};
+	
+	/**
+	 * Sets the current transport. Disables the existing one (if any).
+	 *
+	 * @api private
+	 */
+	
+	Socket.prototype.setTransport = function (transport) {
+	  debug('setting transport %s', transport.name);
+	  var self = this;
+	
+	  if (this.transport) {
+	    debug('clearing existing transport %s', this.transport.name);
+	    this.transport.removeAllListeners();
+	  }
+	
+	  // set up transport
+	  this.transport = transport;
+	
+	  // set up transport listeners
+	  transport
+	  .on('drain', function () {
+	    self.onDrain();
+	  })
+	  .on('packet', function (packet) {
+	    self.onPacket(packet);
+	  })
+	  .on('error', function (e) {
+	    self.onError(e);
+	  })
+	  .on('close', function () {
+	    self.onClose('transport close');
+	  });
+	};
+	
+	/**
+	 * Probes a transport.
+	 *
+	 * @param {String} transport name
+	 * @api private
+	 */
+	
+	Socket.prototype.probe = function (name) {
+	  debug('probing transport "%s"', name);
+	  var transport = this.createTransport(name, { probe: 1 });
+	  var failed = false;
+	  var self = this;
+	
+	  Socket.priorWebsocketSuccess = false;
+	
+	  function onTransportOpen () {
+	    if (self.onlyBinaryUpgrades) {
+	      var upgradeLosesBinary = !this.supportsBinary && self.transport.supportsBinary;
+	      failed = failed || upgradeLosesBinary;
+	    }
+	    if (failed) return;
+	
+	    debug('probe transport "%s" opened', name);
+	    transport.send([{ type: 'ping', data: 'probe' }]);
+	    transport.once('packet', function (msg) {
+	      if (failed) return;
+	      if ('pong' === msg.type && 'probe' === msg.data) {
+	        debug('probe transport "%s" pong', name);
+	        self.upgrading = true;
+	        self.emit('upgrading', transport);
+	        if (!transport) return;
+	        Socket.priorWebsocketSuccess = 'websocket' === transport.name;
+	
+	        debug('pausing current transport "%s"', self.transport.name);
+	        self.transport.pause(function () {
+	          if (failed) return;
+	          if ('closed' === self.readyState) return;
+	          debug('changing transport and sending upgrade packet');
+	
+	          cleanup();
+	
+	          self.setTransport(transport);
+	          transport.send([{ type: 'upgrade' }]);
+	          self.emit('upgrade', transport);
+	          transport = null;
+	          self.upgrading = false;
+	          self.flush();
+	        });
+	      } else {
+	        debug('probe transport "%s" failed', name);
+	        var err = new Error('probe error');
+	        err.transport = transport.name;
+	        self.emit('upgradeError', err);
+	      }
+	    });
+	  }
+	
+	  function freezeTransport () {
+	    if (failed) return;
+	
+	    // Any callback called by transport should be ignored since now
+	    failed = true;
+	
+	    cleanup();
+	
+	    transport.close();
+	    transport = null;
+	  }
+	
+	  // Handle any error that happens while probing
+	  function onerror (err) {
+	    var error = new Error('probe error: ' + err);
+	    error.transport = transport.name;
+	
+	    freezeTransport();
+	
+	    debug('probe transport "%s" failed because of error: %s', name, err);
+	
+	    self.emit('upgradeError', error);
+	  }
+	
+	  function onTransportClose () {
+	    onerror('transport closed');
+	  }
+	
+	  // When the socket is closed while we're probing
+	  function onclose () {
+	    onerror('socket closed');
+	  }
+	
+	  // When the socket is upgraded while we're probing
+	  function onupgrade (to) {
+	    if (transport && to.name !== transport.name) {
+	      debug('"%s" works - aborting "%s"', to.name, transport.name);
+	      freezeTransport();
+	    }
+	  }
+	
+	  // Remove all listeners on the transport and on self
+	  function cleanup () {
+	    transport.removeListener('open', onTransportOpen);
+	    transport.removeListener('error', onerror);
+	    transport.removeListener('close', onTransportClose);
+	    self.removeListener('close', onclose);
+	    self.removeListener('upgrading', onupgrade);
+	  }
+	
+	  transport.once('open', onTransportOpen);
+	  transport.once('error', onerror);
+	  transport.once('close', onTransportClose);
+	
+	  this.once('close', onclose);
+	  this.once('upgrading', onupgrade);
+	
+	  transport.open();
+	};
+	
+	/**
+	 * Called when connection is deemed open.
+	 *
+	 * @api public
+	 */
+	
+	Socket.prototype.onOpen = function () {
+	  debug('socket open');
+	  this.readyState = 'open';
+	  Socket.priorWebsocketSuccess = 'websocket' === this.transport.name;
+	  this.emit('open');
+	  this.flush();
+	
+	  // we check for `readyState` in case an `open`
+	  // listener already closed the socket
+	  if ('open' === this.readyState && this.upgrade && this.transport.pause) {
+	    debug('starting upgrade probes');
+	    for (var i = 0, l = this.upgrades.length; i < l; i++) {
+	      this.probe(this.upgrades[i]);
+	    }
+	  }
+	};
+	
+	/**
+	 * Handles a packet.
+	 *
+	 * @api private
+	 */
+	
+	Socket.prototype.onPacket = function (packet) {
+	  if ('opening' === this.readyState || 'open' === this.readyState) {
+	    debug('socket receive: type "%s", data "%s"', packet.type, packet.data);
+	
+	    this.emit('packet', packet);
+	
+	    // Socket is live - any packet counts
+	    this.emit('heartbeat');
+	
+	    switch (packet.type) {
+	      case 'open':
+	        this.onHandshake(parsejson(packet.data));
+	        break;
+	
+	      case 'pong':
+	        this.setPing();
+	        this.emit('pong');
+	        break;
+	
+	      case 'error':
+	        var err = new Error('server error');
+	        err.code = packet.data;
+	        this.onError(err);
+	        break;
+	
+	      case 'message':
+	        this.emit('data', packet.data);
+	        this.emit('message', packet.data);
+	        break;
+	    }
+	  } else {
+	    debug('packet received with socket readyState "%s"', this.readyState);
+	  }
+	};
+	
+	/**
+	 * Called upon handshake completion.
+	 *
+	 * @param {Object} handshake obj
+	 * @api private
+	 */
+	
+	Socket.prototype.onHandshake = function (data) {
+	  this.emit('handshake', data);
+	  this.id = data.sid;
+	  this.transport.query.sid = data.sid;
+	  this.upgrades = this.filterUpgrades(data.upgrades);
+	  this.pingInterval = data.pingInterval;
+	  this.pingTimeout = data.pingTimeout;
+	  this.onOpen();
+	  // In case open handler closes socket
+	  if ('closed' === this.readyState) return;
+	  this.setPing();
+	
+	  // Prolong liveness of socket on heartbeat
+	  this.removeListener('heartbeat', this.onHeartbeat);
+	  this.on('heartbeat', this.onHeartbeat);
+	};
+	
+	/**
+	 * Resets ping timeout.
+	 *
+	 * @api private
+	 */
+	
+	Socket.prototype.onHeartbeat = function (timeout) {
+	  clearTimeout(this.pingTimeoutTimer);
+	  var self = this;
+	  self.pingTimeoutTimer = setTimeout(function () {
+	    if ('closed' === self.readyState) return;
+	    self.onClose('ping timeout');
+	  }, timeout || (self.pingInterval + self.pingTimeout));
+	};
+	
+	/**
+	 * Pings server every `this.pingInterval` and expects response
+	 * within `this.pingTimeout` or closes connection.
+	 *
+	 * @api private
+	 */
+	
+	Socket.prototype.setPing = function () {
+	  var self = this;
+	  clearTimeout(self.pingIntervalTimer);
+	  self.pingIntervalTimer = setTimeout(function () {
+	    debug('writing ping packet - expecting pong within %sms', self.pingTimeout);
+	    self.ping();
+	    self.onHeartbeat(self.pingTimeout);
+	  }, self.pingInterval);
+	};
+	
+	/**
+	* Sends a ping packet.
+	*
+	* @api private
+	*/
+	
+	Socket.prototype.ping = function () {
+	  var self = this;
+	  this.sendPacket('ping', function () {
+	    self.emit('ping');
+	  });
+	};
+	
+	/**
+	 * Called on `drain` event
+	 *
+	 * @api private
+	 */
+	
+	Socket.prototype.onDrain = function () {
+	  this.writeBuffer.splice(0, this.prevBufferLen);
+	
+	  // setting prevBufferLen = 0 is very important
+	  // for example, when upgrading, upgrade packet is sent over,
+	  // and a nonzero prevBufferLen could cause problems on `drain`
+	  this.prevBufferLen = 0;
+	
+	  if (0 === this.writeBuffer.length) {
+	    this.emit('drain');
+	  } else {
+	    this.flush();
+	  }
+	};
+	
+	/**
+	 * Flush write buffers.
+	 *
+	 * @api private
+	 */
+	
+	Socket.prototype.flush = function () {
+	  if ('closed' !== this.readyState && this.transport.writable &&
+	    !this.upgrading && this.writeBuffer.length) {
+	    debug('flushing %d packets in socket', this.writeBuffer.length);
+	    this.transport.send(this.writeBuffer);
+	    // keep track of current length of writeBuffer
+	    // splice writeBuffer and callbackBuffer on `drain`
+	    this.prevBufferLen = this.writeBuffer.length;
+	    this.emit('flush');
+	  }
+	};
+	
+	/**
+	 * Sends a message.
+	 *
+	 * @param {String} message.
+	 * @param {Function} callback function.
+	 * @param {Object} options.
+	 * @return {Socket} for chaining.
+	 * @api public
+	 */
+	
+	Socket.prototype.write =
+	Socket.prototype.send = function (msg, options, fn) {
+	  this.sendPacket('message', msg, options, fn);
+	  return this;
+	};
+	
+	/**
+	 * Sends a packet.
+	 *
+	 * @param {String} packet type.
+	 * @param {String} data.
+	 * @param {Object} options.
+	 * @param {Function} callback function.
+	 * @api private
+	 */
+	
+	Socket.prototype.sendPacket = function (type, data, options, fn) {
+	  if ('function' === typeof data) {
+	    fn = data;
+	    data = undefined;
+	  }
+	
+	  if ('function' === typeof options) {
+	    fn = options;
+	    options = null;
+	  }
+	
+	  if ('closing' === this.readyState || 'closed' === this.readyState) {
+	    return;
+	  }
+	
+	  options = options || {};
+	  options.compress = false !== options.compress;
+	
+	  var packet = {
+	    type: type,
+	    data: data,
+	    options: options
+	  };
+	  this.emit('packetCreate', packet);
+	  this.writeBuffer.push(packet);
+	  if (fn) this.once('flush', fn);
+	  this.flush();
+	};
+	
+	/**
+	 * Closes the connection.
+	 *
+	 * @api private
+	 */
+	
+	Socket.prototype.close = function () {
+	  if ('opening' === this.readyState || 'open' === this.readyState) {
+	    this.readyState = 'closing';
+	
+	    var self = this;
+	
+	    if (this.writeBuffer.length) {
+	      this.once('drain', function () {
+	        if (this.upgrading) {
+	          waitForUpgrade();
+	        } else {
+	          close();
+	        }
+	      });
+	    } else if (this.upgrading) {
+	      waitForUpgrade();
+	    } else {
+	      close();
+	    }
+	  }
+	
+	  function close () {
+	    self.onClose('forced close');
+	    debug('socket closing - telling transport to close');
+	    self.transport.close();
+	  }
+	
+	  function cleanupAndClose () {
+	    self.removeListener('upgrade', cleanupAndClose);
+	    self.removeListener('upgradeError', cleanupAndClose);
+	    close();
+	  }
+	
+	  function waitForUpgrade () {
+	    // wait for upgrade to finish since we can't send packets while pausing a transport
+	    self.once('upgrade', cleanupAndClose);
+	    self.once('upgradeError', cleanupAndClose);
+	  }
+	
+	  return this;
+	};
+	
+	/**
+	 * Called upon transport error
+	 *
+	 * @api private
+	 */
+	
+	Socket.prototype.onError = function (err) {
+	  debug('socket error %j', err);
+	  Socket.priorWebsocketSuccess = false;
+	  this.emit('error', err);
+	  this.onClose('transport error', err);
+	};
+	
+	/**
+	 * Called upon transport close.
+	 *
+	 * @api private
+	 */
+	
+	Socket.prototype.onClose = function (reason, desc) {
+	  if ('opening' === this.readyState || 'open' === this.readyState || 'closing' === this.readyState) {
+	    debug('socket close with reason: "%s"', reason);
+	    var self = this;
+	
+	    // clear timers
+	    clearTimeout(this.pingIntervalTimer);
+	    clearTimeout(this.pingTimeoutTimer);
+	
+	    // stop event from firing again for transport
+	    this.transport.removeAllListeners('close');
+	
+	    // ensure transport won't stay open
+	    this.transport.close();
+	
+	    // ignore further transport communication
+	    this.transport.removeAllListeners();
+	
+	    // set ready state
+	    this.readyState = 'closed';
+	
+	    // clear session id
+	    this.id = null;
+	
+	    // emit close event
+	    this.emit('close', reason, desc);
+	
+	    // clean buffers after, so users can still
+	    // grab the buffers on `close` event
+	    self.writeBuffer = [];
+	    self.prevBufferLen = 0;
+	  }
+	};
+	
+	/**
+	 * Filters upgrades, returning only those matching client transports.
+	 *
+	 * @param {Array} server upgrades
+	 * @api private
+	 *
+	 */
+	
+	Socket.prototype.filterUpgrades = function (upgrades) {
+	  var filteredUpgrades = [];
+	  for (var i = 0, j = upgrades.length; i < j; i++) {
+	    if (~index(this.transports, upgrades[i])) filteredUpgrades.push(upgrades[i]);
+	  }
+	  return filteredUpgrades;
+	};
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 129 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/**
+	 * Module dependencies
+	 */
+	
+	var XMLHttpRequest = __webpack_require__(130);
+	var XHR = __webpack_require__(132);
+	var JSONP = __webpack_require__(146);
+	var websocket = __webpack_require__(147);
+	
+	/**
+	 * Export transports.
+	 */
+	
+	exports.polling = polling;
+	exports.websocket = websocket;
+	
+	/**
+	 * Polling transport polymorphic constructor.
+	 * Decides on xhr vs jsonp based on feature detection.
+	 *
+	 * @api private
+	 */
+	
+	function polling (opts) {
+	  var xhr;
+	  var xd = false;
+	  var xs = false;
+	  var jsonp = false !== opts.jsonp;
+	
+	  if (global.location) {
+	    var isSSL = 'https:' === location.protocol;
+	    var port = location.port;
+	
+	    // some user agents have empty `location.port`
+	    if (!port) {
+	      port = isSSL ? 443 : 80;
+	    }
+	
+	    xd = opts.hostname !== location.hostname || port !== opts.port;
+	    xs = opts.secure !== isSSL;
+	  }
+	
+	  opts.xdomain = xd;
+	  opts.xscheme = xs;
+	  xhr = new XMLHttpRequest(opts);
+	
+	  if ('open' in xhr && !opts.forceJSONP) {
+	    return new XHR(opts);
+	  } else {
+	    if (!jsonp) throw new Error('JSONP disabled');
+	    return new JSONP(opts);
+	  }
+	}
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 130 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// browser shim for xmlhttprequest module
+	
+	// Indicate to eslint that ActiveXObject is global
+	/* global ActiveXObject */
+	
+	var hasCORS = __webpack_require__(131);
+	
+	module.exports = function (opts) {
+	  var xdomain = opts.xdomain;
+	
+	  // scheme must be same when usign XDomainRequest
+	  // http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx
+	  var xscheme = opts.xscheme;
+	
+	  // XDomainRequest has a flow of not sending cookie, therefore it should be disabled as a default.
+	  // https://github.com/Automattic/engine.io-client/pull/217
+	  var enablesXDR = opts.enablesXDR;
+	
+	  // XMLHttpRequest can be disabled on IE
+	  try {
+	    if ('undefined' !== typeof XMLHttpRequest && (!xdomain || hasCORS)) {
+	      return new XMLHttpRequest();
+	    }
+	  } catch (e) { }
+	
+	  // Use XDomainRequest for IE8 if enablesXDR is true
+	  // because loading bar keeps flashing when using jsonp-polling
+	  // https://github.com/yujiosaka/socke.io-ie8-loading-example
+	  try {
+	    if ('undefined' !== typeof XDomainRequest && !xscheme && enablesXDR) {
+	      return new XDomainRequest();
+	    }
+	  } catch (e) { }
+	
+	  if (!xdomain) {
+	    try {
+	      return new ActiveXObject('Microsoft.XMLHTTP');
+	    } catch (e) { }
+	  }
+	};
+
+
+/***/ },
+/* 131 */
+/***/ function(module, exports) {
+
+	
+	/**
+	 * Module exports.
+	 *
+	 * Logic borrowed from Modernizr:
+	 *
+	 *   - https://github.com/Modernizr/Modernizr/blob/master/feature-detects/cors.js
+	 */
+	
+	try {
+	  module.exports = typeof XMLHttpRequest !== 'undefined' &&
+	    'withCredentials' in new XMLHttpRequest();
+	} catch (err) {
+	  // if XMLHttp support is disabled in IE then it will throw
+	  // when trying to create
+	  module.exports = false;
+	}
+
+
+/***/ },
+/* 132 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/**
+	 * Module requirements.
+	 */
+	
+	var XMLHttpRequest = __webpack_require__(130);
+	var Polling = __webpack_require__(133);
+	var Emitter = __webpack_require__(122);
+	var inherit = __webpack_require__(144);
+	var debug = __webpack_require__(114)('engine.io-client:polling-xhr');
+	
+	/**
+	 * Module exports.
+	 */
+	
+	module.exports = XHR;
+	module.exports.Request = Request;
+	
+	/**
+	 * Empty function
+	 */
+	
+	function empty () {}
+	
+	/**
+	 * XHR Polling constructor.
+	 *
+	 * @param {Object} opts
+	 * @api public
+	 */
+	
+	function XHR (opts) {
+	  Polling.call(this, opts);
+	
+	  if (global.location) {
+	    var isSSL = 'https:' === location.protocol;
+	    var port = location.port;
+	
+	    // some user agents have empty `location.port`
+	    if (!port) {
+	      port = isSSL ? 443 : 80;
+	    }
+	
+	    this.xd = opts.hostname !== global.location.hostname ||
+	      port !== opts.port;
+	    this.xs = opts.secure !== isSSL;
+	  } else {
+	    this.extraHeaders = opts.extraHeaders;
+	  }
+	}
+	
+	/**
+	 * Inherits from Polling.
+	 */
+	
+	inherit(XHR, Polling);
+	
+	/**
+	 * XHR supports binary
+	 */
+	
+	XHR.prototype.supportsBinary = true;
+	
+	/**
+	 * Creates a request.
+	 *
+	 * @param {String} method
+	 * @api private
+	 */
+	
+	XHR.prototype.request = function (opts) {
+	  opts = opts || {};
+	  opts.uri = this.uri();
+	  opts.xd = this.xd;
+	  opts.xs = this.xs;
+	  opts.agent = this.agent || false;
+	  opts.supportsBinary = this.supportsBinary;
+	  opts.enablesXDR = this.enablesXDR;
+	
+	  // SSL options for Node.js client
+	  opts.pfx = this.pfx;
+	  opts.key = this.key;
+	  opts.passphrase = this.passphrase;
+	  opts.cert = this.cert;
+	  opts.ca = this.ca;
+	  opts.ciphers = this.ciphers;
+	  opts.rejectUnauthorized = this.rejectUnauthorized;
+	
+	  // other options for Node.js client
+	  opts.extraHeaders = this.extraHeaders;
+	
+	  return new Request(opts);
+	};
+	
+	/**
+	 * Sends data.
+	 *
+	 * @param {String} data to send.
+	 * @param {Function} called upon flush.
+	 * @api private
+	 */
+	
+	XHR.prototype.doWrite = function (data, fn) {
+	  var isBinary = typeof data !== 'string' && data !== undefined;
+	  var req = this.request({ method: 'POST', data: data, isBinary: isBinary });
+	  var self = this;
+	  req.on('success', fn);
+	  req.on('error', function (err) {
+	    self.onError('xhr post error', err);
+	  });
+	  this.sendXhr = req;
+	};
+	
+	/**
+	 * Starts a poll cycle.
+	 *
+	 * @api private
+	 */
+	
+	XHR.prototype.doPoll = function () {
+	  debug('xhr poll');
+	  var req = this.request();
+	  var self = this;
+	  req.on('data', function (data) {
+	    self.onData(data);
+	  });
+	  req.on('error', function (err) {
+	    self.onError('xhr poll error', err);
+	  });
+	  this.pollXhr = req;
+	};
+	
+	/**
+	 * Request constructor
+	 *
+	 * @param {Object} options
+	 * @api public
+	 */
+	
+	function Request (opts) {
+	  this.method = opts.method || 'GET';
+	  this.uri = opts.uri;
+	  this.xd = !!opts.xd;
+	  this.xs = !!opts.xs;
+	  this.async = false !== opts.async;
+	  this.data = undefined !== opts.data ? opts.data : null;
+	  this.agent = opts.agent;
+	  this.isBinary = opts.isBinary;
+	  this.supportsBinary = opts.supportsBinary;
+	  this.enablesXDR = opts.enablesXDR;
+	
+	  // SSL options for Node.js client
+	  this.pfx = opts.pfx;
+	  this.key = opts.key;
+	  this.passphrase = opts.passphrase;
+	  this.cert = opts.cert;
+	  this.ca = opts.ca;
+	  this.ciphers = opts.ciphers;
+	  this.rejectUnauthorized = opts.rejectUnauthorized;
+	
+	  // other options for Node.js client
+	  this.extraHeaders = opts.extraHeaders;
+	
+	  this.create();
+	}
+	
+	/**
+	 * Mix in `Emitter`.
+	 */
+	
+	Emitter(Request.prototype);
+	
+	/**
+	 * Creates the XHR object and sends the request.
+	 *
+	 * @api private
+	 */
+	
+	Request.prototype.create = function () {
+	  var opts = { agent: this.agent, xdomain: this.xd, xscheme: this.xs, enablesXDR: this.enablesXDR };
+	
+	  // SSL options for Node.js client
+	  opts.pfx = this.pfx;
+	  opts.key = this.key;
+	  opts.passphrase = this.passphrase;
+	  opts.cert = this.cert;
+	  opts.ca = this.ca;
+	  opts.ciphers = this.ciphers;
+	  opts.rejectUnauthorized = this.rejectUnauthorized;
+	
+	  var xhr = this.xhr = new XMLHttpRequest(opts);
+	  var self = this;
+	
+	  try {
+	    debug('xhr open %s: %s', this.method, this.uri);
+	    xhr.open(this.method, this.uri, this.async);
+	    try {
+	      if (this.extraHeaders) {
+	        xhr.setDisableHeaderCheck(true);
+	        for (var i in this.extraHeaders) {
+	          if (this.extraHeaders.hasOwnProperty(i)) {
+	            xhr.setRequestHeader(i, this.extraHeaders[i]);
+	          }
+	        }
+	      }
+	    } catch (e) {}
+	    if (this.supportsBinary) {
+	      // This has to be done after open because Firefox is stupid
+	      // http://stackoverflow.com/questions/13216903/get-binary-data-with-xmlhttprequest-in-a-firefox-extension
+	      xhr.responseType = 'arraybuffer';
+	    }
+	
+	    if ('POST' === this.method) {
+	      try {
+	        if (this.isBinary) {
+	          xhr.setRequestHeader('Content-type', 'application/octet-stream');
+	        } else {
+	          xhr.setRequestHeader('Content-type', 'text/plain;charset=UTF-8');
+	        }
+	      } catch (e) {}
+	    }
+	
+	    // ie6 check
+	    if ('withCredentials' in xhr) {
+	      xhr.withCredentials = true;
+	    }
+	
+	    if (this.hasXDR()) {
+	      xhr.onload = function () {
+	        self.onLoad();
+	      };
+	      xhr.onerror = function () {
+	        self.onError(xhr.responseText);
+	      };
+	    } else {
+	      xhr.onreadystatechange = function () {
+	        if (4 !== xhr.readyState) return;
+	        if (200 === xhr.status || 1223 === xhr.status) {
+	          self.onLoad();
+	        } else {
+	          // make sure the `error` event handler that's user-set
+	          // does not throw in the same tick and gets caught here
+	          setTimeout(function () {
+	            self.onError(xhr.status);
+	          }, 0);
+	        }
+	      };
+	    }
+	
+	    debug('xhr data %s', this.data);
+	    xhr.send(this.data);
+	  } catch (e) {
+	    // Need to defer since .create() is called directly fhrom the constructor
+	    // and thus the 'error' event can only be only bound *after* this exception
+	    // occurs.  Therefore, also, we cannot throw here at all.
+	    setTimeout(function () {
+	      self.onError(e);
+	    }, 0);
+	    return;
+	  }
+	
+	  if (global.document) {
+	    this.index = Request.requestsCount++;
+	    Request.requests[this.index] = this;
+	  }
+	};
+	
+	/**
+	 * Called upon successful response.
+	 *
+	 * @api private
+	 */
+	
+	Request.prototype.onSuccess = function () {
+	  this.emit('success');
+	  this.cleanup();
+	};
+	
+	/**
+	 * Called if we have data.
+	 *
+	 * @api private
+	 */
+	
+	Request.prototype.onData = function (data) {
+	  this.emit('data', data);
+	  this.onSuccess();
+	};
+	
+	/**
+	 * Called upon error.
+	 *
+	 * @api private
+	 */
+	
+	Request.prototype.onError = function (err) {
+	  this.emit('error', err);
+	  this.cleanup(true);
+	};
+	
+	/**
+	 * Cleans up house.
+	 *
+	 * @api private
+	 */
+	
+	Request.prototype.cleanup = function (fromError) {
+	  if ('undefined' === typeof this.xhr || null === this.xhr) {
+	    return;
+	  }
+	  // xmlhttprequest
+	  if (this.hasXDR()) {
+	    this.xhr.onload = this.xhr.onerror = empty;
+	  } else {
+	    this.xhr.onreadystatechange = empty;
+	  }
+	
+	  if (fromError) {
+	    try {
+	      this.xhr.abort();
+	    } catch (e) {}
+	  }
+	
+	  if (global.document) {
+	    delete Request.requests[this.index];
+	  }
+	
+	  this.xhr = null;
+	};
+	
+	/**
+	 * Called upon load.
+	 *
+	 * @api private
+	 */
+	
+	Request.prototype.onLoad = function () {
+	  var data;
+	  try {
+	    var contentType;
+	    try {
+	      contentType = this.xhr.getResponseHeader('Content-Type').split(';')[0];
+	    } catch (e) {}
+	    if (contentType === 'application/octet-stream') {
+	      data = this.xhr.response || this.xhr.responseText;
+	    } else {
+	      if (!this.supportsBinary) {
+	        data = this.xhr.responseText;
+	      } else {
+	        try {
+	          data = String.fromCharCode.apply(null, new Uint8Array(this.xhr.response));
+	        } catch (e) {
+	          var ui8Arr = new Uint8Array(this.xhr.response);
+	          var dataArray = [];
+	          for (var idx = 0, length = ui8Arr.length; idx < length; idx++) {
+	            dataArray.push(ui8Arr[idx]);
+	          }
+	
+	          data = String.fromCharCode.apply(null, dataArray);
+	        }
+	      }
+	    }
+	  } catch (e) {
+	    this.onError(e);
+	  }
+	  if (null != data) {
+	    this.onData(data);
+	  }
+	};
+	
+	/**
+	 * Check if it has XDomainRequest.
+	 *
+	 * @api private
+	 */
+	
+	Request.prototype.hasXDR = function () {
+	  return 'undefined' !== typeof global.XDomainRequest && !this.xs && this.enablesXDR;
+	};
+	
+	/**
+	 * Aborts the request.
+	 *
+	 * @api public
+	 */
+	
+	Request.prototype.abort = function () {
+	  this.cleanup();
+	};
+	
+	/**
+	 * Aborts pending requests when unloading the window. This is needed to prevent
+	 * memory leaks (e.g. when using IE) and to ensure that no spurious error is
+	 * emitted.
+	 */
+	
+	if (global.document) {
+	  Request.requestsCount = 0;
+	  Request.requests = {};
+	  if (global.attachEvent) {
+	    global.attachEvent('onunload', unloadHandler);
+	  } else if (global.addEventListener) {
+	    global.addEventListener('beforeunload', unloadHandler, false);
+	  }
+	}
+	
+	function unloadHandler () {
+	  for (var i in Request.requests) {
+	    if (Request.requests.hasOwnProperty(i)) {
+	      Request.requests[i].abort();
+	    }
+	  }
+	}
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 133 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Module dependencies.
+	 */
+	
+	var Transport = __webpack_require__(134);
+	var parseqs = __webpack_require__(143);
+	var parser = __webpack_require__(135);
+	var inherit = __webpack_require__(144);
+	var yeast = __webpack_require__(145);
+	var debug = __webpack_require__(114)('engine.io-client:polling');
+	
+	/**
+	 * Module exports.
+	 */
+	
+	module.exports = Polling;
+	
+	/**
+	 * Is XHR2 supported?
+	 */
+	
+	var hasXHR2 = (function () {
+	  var XMLHttpRequest = __webpack_require__(130);
+	  var xhr = new XMLHttpRequest({ xdomain: false });
+	  return null != xhr.responseType;
+	})();
+	
+	/**
+	 * Polling interface.
+	 *
+	 * @param {Object} opts
+	 * @api private
+	 */
+	
+	function Polling (opts) {
+	  var forceBase64 = (opts && opts.forceBase64);
+	  if (!hasXHR2 || forceBase64) {
+	    this.supportsBinary = false;
+	  }
+	  Transport.call(this, opts);
+	}
+	
+	/**
+	 * Inherits from Transport.
+	 */
+	
+	inherit(Polling, Transport);
+	
+	/**
+	 * Transport name.
+	 */
+	
+	Polling.prototype.name = 'polling';
+	
+	/**
+	 * Opens the socket (triggers polling). We write a PING message to determine
+	 * when the transport is open.
+	 *
+	 * @api private
+	 */
+	
+	Polling.prototype.doOpen = function () {
+	  this.poll();
+	};
+	
+	/**
+	 * Pauses polling.
+	 *
+	 * @param {Function} callback upon buffers are flushed and transport is paused
+	 * @api private
+	 */
+	
+	Polling.prototype.pause = function (onPause) {
+	  var self = this;
+	
+	  this.readyState = 'pausing';
+	
+	  function pause () {
+	    debug('paused');
+	    self.readyState = 'paused';
+	    onPause();
+	  }
+	
+	  if (this.polling || !this.writable) {
+	    var total = 0;
+	
+	    if (this.polling) {
+	      debug('we are currently polling - waiting to pause');
+	      total++;
+	      this.once('pollComplete', function () {
+	        debug('pre-pause polling complete');
+	        --total || pause();
+	      });
+	    }
+	
+	    if (!this.writable) {
+	      debug('we are currently writing - waiting to pause');
+	      total++;
+	      this.once('drain', function () {
+	        debug('pre-pause writing complete');
+	        --total || pause();
+	      });
+	    }
+	  } else {
+	    pause();
+	  }
+	};
+	
+	/**
+	 * Starts polling cycle.
+	 *
+	 * @api public
+	 */
+	
+	Polling.prototype.poll = function () {
+	  debug('polling');
+	  this.polling = true;
+	  this.doPoll();
+	  this.emit('poll');
+	};
+	
+	/**
+	 * Overloads onData to detect payloads.
+	 *
+	 * @api private
+	 */
+	
+	Polling.prototype.onData = function (data) {
+	  var self = this;
+	  debug('polling got data %s', data);
+	  var callback = function (packet, index, total) {
+	    // if its the first message we consider the transport open
+	    if ('opening' === self.readyState) {
+	      self.onOpen();
+	    }
+	
+	    // if its a close packet, we close the ongoing requests
+	    if ('close' === packet.type) {
+	      self.onClose();
+	      return false;
+	    }
+	
+	    // otherwise bypass onData and handle the message
+	    self.onPacket(packet);
+	  };
+	
+	  // decode payload
+	  parser.decodePayload(data, this.socket.binaryType, callback);
+	
+	  // if an event did not trigger closing
+	  if ('closed' !== this.readyState) {
+	    // if we got data we're not polling
+	    this.polling = false;
+	    this.emit('pollComplete');
+	
+	    if ('open' === this.readyState) {
+	      this.poll();
+	    } else {
+	      debug('ignoring poll - transport state "%s"', this.readyState);
+	    }
+	  }
+	};
+	
+	/**
+	 * For polling, send a close packet.
+	 *
+	 * @api private
+	 */
+	
+	Polling.prototype.doClose = function () {
+	  var self = this;
+	
+	  function close () {
+	    debug('writing close packet');
+	    self.write([{ type: 'close' }]);
+	  }
+	
+	  if ('open' === this.readyState) {
+	    debug('transport open - closing');
+	    close();
+	  } else {
+	    // in case we're trying to close while
+	    // handshaking is in progress (GH-164)
+	    debug('transport not open - deferring close');
+	    this.once('open', close);
+	  }
+	};
+	
+	/**
+	 * Writes a packets payload.
+	 *
+	 * @param {Array} data packets
+	 * @param {Function} drain callback
+	 * @api private
+	 */
+	
+	Polling.prototype.write = function (packets) {
+	  var self = this;
+	  this.writable = false;
+	  var callbackfn = function () {
+	    self.writable = true;
+	    self.emit('drain');
+	  };
+	
+	  parser.encodePayload(packets, this.supportsBinary, function (data) {
+	    self.doWrite(data, callbackfn);
+	  });
+	};
+	
+	/**
+	 * Generates uri for connection.
+	 *
+	 * @api private
+	 */
+	
+	Polling.prototype.uri = function () {
+	  var query = this.query || {};
+	  var schema = this.secure ? 'https' : 'http';
+	  var port = '';
+	
+	  // cache busting is forced
+	  if (false !== this.timestampRequests) {
+	    query[this.timestampParam] = yeast();
+	  }
+	
+	  if (!this.supportsBinary && !query.sid) {
+	    query.b64 = 1;
+	  }
+	
+	  query = parseqs.encode(query);
+	
+	  // avoid port if default for schema
+	  if (this.port && (('https' === schema && this.port !== 443) ||
+	     ('http' === schema && this.port !== 80))) {
+	    port = ':' + this.port;
+	  }
+	
+	  // prepend ? to query
+	  if (query.length) {
+	    query = '?' + query;
+	  }
+	
+	  var ipv6 = this.hostname.indexOf(':') !== -1;
+	  return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
+	};
+
+
+/***/ },
+/* 134 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Module dependencies.
+	 */
+	
+	var parser = __webpack_require__(135);
+	var Emitter = __webpack_require__(122);
+	
+	/**
+	 * Module exports.
+	 */
+	
+	module.exports = Transport;
+	
+	/**
+	 * Transport abstract constructor.
+	 *
+	 * @param {Object} options.
+	 * @api private
+	 */
+	
+	function Transport (opts) {
+	  this.path = opts.path;
+	  this.hostname = opts.hostname;
+	  this.port = opts.port;
+	  this.secure = opts.secure;
+	  this.query = opts.query;
+	  this.timestampParam = opts.timestampParam;
+	  this.timestampRequests = opts.timestampRequests;
+	  this.readyState = '';
+	  this.agent = opts.agent || false;
+	  this.socket = opts.socket;
+	  this.enablesXDR = opts.enablesXDR;
+	
+	  // SSL options for Node.js client
+	  this.pfx = opts.pfx;
+	  this.key = opts.key;
+	  this.passphrase = opts.passphrase;
+	  this.cert = opts.cert;
+	  this.ca = opts.ca;
+	  this.ciphers = opts.ciphers;
+	  this.rejectUnauthorized = opts.rejectUnauthorized;
+	
+	  // other options for Node.js client
+	  this.extraHeaders = opts.extraHeaders;
+	}
+	
+	/**
+	 * Mix in `Emitter`.
+	 */
+	
+	Emitter(Transport.prototype);
+	
+	/**
+	 * Emits an error.
+	 *
+	 * @param {String} str
+	 * @return {Transport} for chaining
+	 * @api public
+	 */
+	
+	Transport.prototype.onError = function (msg, desc) {
+	  var err = new Error(msg);
+	  err.type = 'TransportError';
+	  err.description = desc;
+	  this.emit('error', err);
+	  return this;
+	};
+	
+	/**
+	 * Opens the transport.
+	 *
+	 * @api public
+	 */
+	
+	Transport.prototype.open = function () {
+	  if ('closed' === this.readyState || '' === this.readyState) {
+	    this.readyState = 'opening';
+	    this.doOpen();
+	  }
+	
+	  return this;
+	};
+	
+	/**
+	 * Closes the transport.
+	 *
+	 * @api private
+	 */
+	
+	Transport.prototype.close = function () {
+	  if ('opening' === this.readyState || 'open' === this.readyState) {
+	    this.doClose();
+	    this.onClose();
+	  }
+	
+	  return this;
+	};
+	
+	/**
+	 * Sends multiple packets.
+	 *
+	 * @param {Array} packets
+	 * @api private
+	 */
+	
+	Transport.prototype.send = function (packets) {
+	  if ('open' === this.readyState) {
+	    this.write(packets);
+	  } else {
+	    throw new Error('Transport not open');
+	  }
+	};
+	
+	/**
+	 * Called upon open
+	 *
+	 * @api private
+	 */
+	
+	Transport.prototype.onOpen = function () {
+	  this.readyState = 'open';
+	  this.writable = true;
+	  this.emit('open');
+	};
+	
+	/**
+	 * Called with data.
+	 *
+	 * @param {String} data
+	 * @api private
+	 */
+	
+	Transport.prototype.onData = function (data) {
+	  var packet = parser.decodePacket(data, this.socket.binaryType);
+	  this.onPacket(packet);
+	};
+	
+	/**
+	 * Called with a decoded packet.
+	 */
+	
+	Transport.prototype.onPacket = function (packet) {
+	  this.emit('packet', packet);
+	};
+	
+	/**
+	 * Called upon close.
+	 *
+	 * @api private
+	 */
+	
+	Transport.prototype.onClose = function () {
+	  this.readyState = 'closed';
+	  this.emit('close');
+	};
+
+
+/***/ },
+/* 135 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/**
+	 * Module dependencies.
+	 */
+	
+	var keys = __webpack_require__(136);
+	var hasBinary = __webpack_require__(137);
+	var sliceBuffer = __webpack_require__(138);
+	var after = __webpack_require__(139);
+	var utf8 = __webpack_require__(140);
+	
+	var base64encoder;
+	if (global.ArrayBuffer) {
+	  base64encoder = __webpack_require__(141);
+	}
+	
+	/**
+	 * Check if we are running an android browser. That requires us to use
+	 * ArrayBuffer with polling transports...
+	 *
+	 * http://ghinda.net/jpeg-blob-ajax-android/
+	 */
+	
+	var isAndroid = typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent);
+	
+	/**
+	 * Check if we are running in PhantomJS.
+	 * Uploading a Blob with PhantomJS does not work correctly, as reported here:
+	 * https://github.com/ariya/phantomjs/issues/11395
+	 * @type boolean
+	 */
+	var isPhantomJS = typeof navigator !== 'undefined' && /PhantomJS/i.test(navigator.userAgent);
+	
+	/**
+	 * When true, avoids using Blobs to encode payloads.
+	 * @type boolean
+	 */
+	var dontSendBlobs = isAndroid || isPhantomJS;
+	
+	/**
+	 * Current protocol version.
+	 */
+	
+	exports.protocol = 3;
+	
+	/**
+	 * Packet types.
+	 */
+	
+	var packets = exports.packets = {
+	    open:     0    // non-ws
+	  , close:    1    // non-ws
+	  , ping:     2
+	  , pong:     3
+	  , message:  4
+	  , upgrade:  5
+	  , noop:     6
+	};
+	
+	var packetslist = keys(packets);
+	
+	/**
+	 * Premade error packet.
+	 */
+	
+	var err = { type: 'error', data: 'parser error' };
+	
+	/**
+	 * Create a blob api even for blob builder when vendor prefixes exist
+	 */
+	
+	var Blob = __webpack_require__(142);
+	
+	/**
+	 * Encodes a packet.
+	 *
+	 *     <packet type id> [ <data> ]
+	 *
+	 * Example:
+	 *
+	 *     5hello world
+	 *     3
+	 *     4
+	 *
+	 * Binary is encoded in an identical principle
+	 *
+	 * @api private
+	 */
+	
+	exports.encodePacket = function (packet, supportsBinary, utf8encode, callback) {
+	  if ('function' == typeof supportsBinary) {
+	    callback = supportsBinary;
+	    supportsBinary = false;
+	  }
+	
+	  if ('function' == typeof utf8encode) {
+	    callback = utf8encode;
+	    utf8encode = null;
+	  }
+	
+	  var data = (packet.data === undefined)
+	    ? undefined
+	    : packet.data.buffer || packet.data;
+	
+	  if (global.ArrayBuffer && data instanceof ArrayBuffer) {
+	    return encodeArrayBuffer(packet, supportsBinary, callback);
+	  } else if (Blob && data instanceof global.Blob) {
+	    return encodeBlob(packet, supportsBinary, callback);
+	  }
+	
+	  // might be an object with { base64: true, data: dataAsBase64String }
+	  if (data && data.base64) {
+	    return encodeBase64Object(packet, callback);
+	  }
+	
+	  // Sending data as a utf-8 string
+	  var encoded = packets[packet.type];
+	
+	  // data fragment is optional
+	  if (undefined !== packet.data) {
+	    encoded += utf8encode ? utf8.encode(String(packet.data)) : String(packet.data);
+	  }
+	
+	  return callback('' + encoded);
+	
+	};
+	
+	function encodeBase64Object(packet, callback) {
+	  // packet data is an object { base64: true, data: dataAsBase64String }
+	  var message = 'b' + exports.packets[packet.type] + packet.data.data;
+	  return callback(message);
+	}
+	
+	/**
+	 * Encode packet helpers for binary types
+	 */
+	
+	function encodeArrayBuffer(packet, supportsBinary, callback) {
+	  if (!supportsBinary) {
+	    return exports.encodeBase64Packet(packet, callback);
+	  }
+	
+	  var data = packet.data;
+	  var contentArray = new Uint8Array(data);
+	  var resultBuffer = new Uint8Array(1 + data.byteLength);
+	
+	  resultBuffer[0] = packets[packet.type];
+	  for (var i = 0; i < contentArray.length; i++) {
+	    resultBuffer[i+1] = contentArray[i];
+	  }
+	
+	  return callback(resultBuffer.buffer);
+	}
+	
+	function encodeBlobAsArrayBuffer(packet, supportsBinary, callback) {
+	  if (!supportsBinary) {
+	    return exports.encodeBase64Packet(packet, callback);
+	  }
+	
+	  var fr = new FileReader();
+	  fr.onload = function() {
+	    packet.data = fr.result;
+	    exports.encodePacket(packet, supportsBinary, true, callback);
+	  };
+	  return fr.readAsArrayBuffer(packet.data);
+	}
+	
+	function encodeBlob(packet, supportsBinary, callback) {
+	  if (!supportsBinary) {
+	    return exports.encodeBase64Packet(packet, callback);
+	  }
+	
+	  if (dontSendBlobs) {
+	    return encodeBlobAsArrayBuffer(packet, supportsBinary, callback);
+	  }
+	
+	  var length = new Uint8Array(1);
+	  length[0] = packets[packet.type];
+	  var blob = new Blob([length.buffer, packet.data]);
+	
+	  return callback(blob);
+	}
+	
+	/**
+	 * Encodes a packet with binary data in a base64 string
+	 *
+	 * @param {Object} packet, has `type` and `data`
+	 * @return {String} base64 encoded message
+	 */
+	
+	exports.encodeBase64Packet = function(packet, callback) {
+	  var message = 'b' + exports.packets[packet.type];
+	  if (Blob && packet.data instanceof global.Blob) {
+	    var fr = new FileReader();
+	    fr.onload = function() {
+	      var b64 = fr.result.split(',')[1];
+	      callback(message + b64);
+	    };
+	    return fr.readAsDataURL(packet.data);
+	  }
+	
+	  var b64data;
+	  try {
+	    b64data = String.fromCharCode.apply(null, new Uint8Array(packet.data));
+	  } catch (e) {
+	    // iPhone Safari doesn't let you apply with typed arrays
+	    var typed = new Uint8Array(packet.data);
+	    var basic = new Array(typed.length);
+	    for (var i = 0; i < typed.length; i++) {
+	      basic[i] = typed[i];
+	    }
+	    b64data = String.fromCharCode.apply(null, basic);
+	  }
+	  message += global.btoa(b64data);
+	  return callback(message);
+	};
+	
+	/**
+	 * Decodes a packet. Changes format to Blob if requested.
+	 *
+	 * @return {Object} with `type` and `data` (if any)
+	 * @api private
+	 */
+	
+	exports.decodePacket = function (data, binaryType, utf8decode) {
+	  // String data
+	  if (typeof data == 'string' || data === undefined) {
+	    if (data.charAt(0) == 'b') {
+	      return exports.decodeBase64Packet(data.substr(1), binaryType);
+	    }
+	
+	    if (utf8decode) {
+	      data = tryDecode(data);
+	      if (data === false) {
+	        return err;
+	      }
+	    }
+	    var type = data.charAt(0);
+	
+	    if (Number(type) != type || !packetslist[type]) {
+	      return err;
+	    }
+	
+	    if (data.length > 1) {
+	      return { type: packetslist[type], data: data.substring(1) };
+	    } else {
+	      return { type: packetslist[type] };
+	    }
+	  }
+	
+	  var asArray = new Uint8Array(data);
+	  var type = asArray[0];
+	  var rest = sliceBuffer(data, 1);
+	  if (Blob && binaryType === 'blob') {
+	    rest = new Blob([rest]);
+	  }
+	  return { type: packetslist[type], data: rest };
+	};
+	
+	function tryDecode(data) {
+	  try {
+	    data = utf8.decode(data);
+	  } catch (e) {
+	    return false;
+	  }
+	  return data;
+	}
+	
+	/**
+	 * Decodes a packet encoded in a base64 string
+	 *
+	 * @param {String} base64 encoded message
+	 * @return {Object} with `type` and `data` (if any)
+	 */
+	
+	exports.decodeBase64Packet = function(msg, binaryType) {
+	  var type = packetslist[msg.charAt(0)];
+	  if (!base64encoder) {
+	    return { type: type, data: { base64: true, data: msg.substr(1) } };
+	  }
+	
+	  var data = base64encoder.decode(msg.substr(1));
+	
+	  if (binaryType === 'blob' && Blob) {
+	    data = new Blob([data]);
+	  }
+	
+	  return { type: type, data: data };
+	};
+	
+	/**
+	 * Encodes multiple messages (payload).
+	 *
+	 *     <length>:data
+	 *
+	 * Example:
+	 *
+	 *     11:hello world2:hi
+	 *
+	 * If any contents are binary, they will be encoded as base64 strings. Base64
+	 * encoded strings are marked with a b before the length specifier
+	 *
+	 * @param {Array} packets
+	 * @api private
+	 */
+	
+	exports.encodePayload = function (packets, supportsBinary, callback) {
+	  if (typeof supportsBinary == 'function') {
+	    callback = supportsBinary;
+	    supportsBinary = null;
+	  }
+	
+	  var isBinary = hasBinary(packets);
+	
+	  if (supportsBinary && isBinary) {
+	    if (Blob && !dontSendBlobs) {
+	      return exports.encodePayloadAsBlob(packets, callback);
+	    }
+	
+	    return exports.encodePayloadAsArrayBuffer(packets, callback);
+	  }
+	
+	  if (!packets.length) {
+	    return callback('0:');
+	  }
+	
+	  function setLengthHeader(message) {
+	    return message.length + ':' + message;
+	  }
+	
+	  function encodeOne(packet, doneCallback) {
+	    exports.encodePacket(packet, !isBinary ? false : supportsBinary, true, function(message) {
+	      doneCallback(null, setLengthHeader(message));
+	    });
+	  }
+	
+	  map(packets, encodeOne, function(err, results) {
+	    return callback(results.join(''));
+	  });
+	};
+	
+	/**
+	 * Async array map using after
+	 */
+	
+	function map(ary, each, done) {
+	  var result = new Array(ary.length);
+	  var next = after(ary.length, done);
+	
+	  var eachWithIndex = function(i, el, cb) {
+	    each(el, function(error, msg) {
+	      result[i] = msg;
+	      cb(error, result);
+	    });
+	  };
+	
+	  for (var i = 0; i < ary.length; i++) {
+	    eachWithIndex(i, ary[i], next);
+	  }
+	}
+	
+	/*
+	 * Decodes data when a payload is maybe expected. Possible binary contents are
+	 * decoded from their base64 representation
+	 *
+	 * @param {String} data, callback method
+	 * @api public
+	 */
+	
+	exports.decodePayload = function (data, binaryType, callback) {
+	  if (typeof data != 'string') {
+	    return exports.decodePayloadAsBinary(data, binaryType, callback);
+	  }
+	
+	  if (typeof binaryType === 'function') {
+	    callback = binaryType;
+	    binaryType = null;
+	  }
+	
+	  var packet;
+	  if (data == '') {
+	    // parser error - ignoring payload
+	    return callback(err, 0, 1);
+	  }
+	
+	  var length = ''
+	    , n, msg;
+	
+	  for (var i = 0, l = data.length; i < l; i++) {
+	    var chr = data.charAt(i);
+	
+	    if (':' != chr) {
+	      length += chr;
+	    } else {
+	      if ('' == length || (length != (n = Number(length)))) {
+	        // parser error - ignoring payload
+	        return callback(err, 0, 1);
+	      }
+	
+	      msg = data.substr(i + 1, n);
+	
+	      if (length != msg.length) {
+	        // parser error - ignoring payload
+	        return callback(err, 0, 1);
+	      }
+	
+	      if (msg.length) {
+	        packet = exports.decodePacket(msg, binaryType, true);
+	
+	        if (err.type == packet.type && err.data == packet.data) {
+	          // parser error in individual packet - ignoring payload
+	          return callback(err, 0, 1);
+	        }
+	
+	        var ret = callback(packet, i + n, l);
+	        if (false === ret) return;
+	      }
+	
+	      // advance cursor
+	      i += n;
+	      length = '';
+	    }
+	  }
+	
+	  if (length != '') {
+	    // parser error - ignoring payload
+	    return callback(err, 0, 1);
+	  }
+	
+	};
+	
+	/**
+	 * Encodes multiple messages (payload) as binary.
+	 *
+	 * <1 = binary, 0 = string><number from 0-9><number from 0-9>[...]<number
+	 * 255><data>
+	 *
+	 * Example:
+	 * 1 3 255 1 2 3, if the binary contents are interpreted as 8 bit integers
+	 *
+	 * @param {Array} packets
+	 * @return {ArrayBuffer} encoded payload
+	 * @api private
+	 */
+	
+	exports.encodePayloadAsArrayBuffer = function(packets, callback) {
+	  if (!packets.length) {
+	    return callback(new ArrayBuffer(0));
+	  }
+	
+	  function encodeOne(packet, doneCallback) {
+	    exports.encodePacket(packet, true, true, function(data) {
+	      return doneCallback(null, data);
+	    });
+	  }
+	
+	  map(packets, encodeOne, function(err, encodedPackets) {
+	    var totalLength = encodedPackets.reduce(function(acc, p) {
+	      var len;
+	      if (typeof p === 'string'){
+	        len = p.length;
+	      } else {
+	        len = p.byteLength;
+	      }
+	      return acc + len.toString().length + len + 2; // string/binary identifier + separator = 2
+	    }, 0);
+	
+	    var resultArray = new Uint8Array(totalLength);
+	
+	    var bufferIndex = 0;
+	    encodedPackets.forEach(function(p) {
+	      var isString = typeof p === 'string';
+	      var ab = p;
+	      if (isString) {
+	        var view = new Uint8Array(p.length);
+	        for (var i = 0; i < p.length; i++) {
+	          view[i] = p.charCodeAt(i);
+	        }
+	        ab = view.buffer;
+	      }
+	
+	      if (isString) { // not true binary
+	        resultArray[bufferIndex++] = 0;
+	      } else { // true binary
+	        resultArray[bufferIndex++] = 1;
+	      }
+	
+	      var lenStr = ab.byteLength.toString();
+	      for (var i = 0; i < lenStr.length; i++) {
+	        resultArray[bufferIndex++] = parseInt(lenStr[i]);
+	      }
+	      resultArray[bufferIndex++] = 255;
+	
+	      var view = new Uint8Array(ab);
+	      for (var i = 0; i < view.length; i++) {
+	        resultArray[bufferIndex++] = view[i];
+	      }
+	    });
+	
+	    return callback(resultArray.buffer);
+	  });
+	};
+	
+	/**
+	 * Encode as Blob
+	 */
+	
+	exports.encodePayloadAsBlob = function(packets, callback) {
+	  function encodeOne(packet, doneCallback) {
+	    exports.encodePacket(packet, true, true, function(encoded) {
+	      var binaryIdentifier = new Uint8Array(1);
+	      binaryIdentifier[0] = 1;
+	      if (typeof encoded === 'string') {
+	        var view = new Uint8Array(encoded.length);
+	        for (var i = 0; i < encoded.length; i++) {
+	          view[i] = encoded.charCodeAt(i);
+	        }
+	        encoded = view.buffer;
+	        binaryIdentifier[0] = 0;
+	      }
+	
+	      var len = (encoded instanceof ArrayBuffer)
+	        ? encoded.byteLength
+	        : encoded.size;
+	
+	      var lenStr = len.toString();
+	      var lengthAry = new Uint8Array(lenStr.length + 1);
+	      for (var i = 0; i < lenStr.length; i++) {
+	        lengthAry[i] = parseInt(lenStr[i]);
+	      }
+	      lengthAry[lenStr.length] = 255;
+	
+	      if (Blob) {
+	        var blob = new Blob([binaryIdentifier.buffer, lengthAry.buffer, encoded]);
+	        doneCallback(null, blob);
+	      }
+	    });
+	  }
+	
+	  map(packets, encodeOne, function(err, results) {
+	    return callback(new Blob(results));
+	  });
+	};
+	
+	/*
+	 * Decodes data when a payload is maybe expected. Strings are decoded by
+	 * interpreting each byte as a key code for entries marked to start with 0. See
+	 * description of encodePayloadAsBinary
+	 *
+	 * @param {ArrayBuffer} data, callback method
+	 * @api public
+	 */
+	
+	exports.decodePayloadAsBinary = function (data, binaryType, callback) {
+	  if (typeof binaryType === 'function') {
+	    callback = binaryType;
+	    binaryType = null;
+	  }
+	
+	  var bufferTail = data;
+	  var buffers = [];
+	
+	  var numberTooLong = false;
+	  while (bufferTail.byteLength > 0) {
+	    var tailArray = new Uint8Array(bufferTail);
+	    var isString = tailArray[0] === 0;
+	    var msgLength = '';
+	
+	    for (var i = 1; ; i++) {
+	      if (tailArray[i] == 255) break;
+	
+	      if (msgLength.length > 310) {
+	        numberTooLong = true;
+	        break;
+	      }
+	
+	      msgLength += tailArray[i];
+	    }
+	
+	    if(numberTooLong) return callback(err, 0, 1);
+	
+	    bufferTail = sliceBuffer(bufferTail, 2 + msgLength.length);
+	    msgLength = parseInt(msgLength);
+	
+	    var msg = sliceBuffer(bufferTail, 0, msgLength);
+	    if (isString) {
+	      try {
+	        msg = String.fromCharCode.apply(null, new Uint8Array(msg));
+	      } catch (e) {
+	        // iPhone Safari doesn't let you apply to typed arrays
+	        var typed = new Uint8Array(msg);
+	        msg = '';
+	        for (var i = 0; i < typed.length; i++) {
+	          msg += String.fromCharCode(typed[i]);
+	        }
+	      }
+	    }
+	
+	    buffers.push(msg);
+	    bufferTail = sliceBuffer(bufferTail, msgLength);
+	  }
+	
+	  var total = buffers.length;
+	  buffers.forEach(function(buffer, i) {
+	    callback(exports.decodePacket(buffer, binaryType, true), i, total);
+	  });
+	};
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 136 */
+/***/ function(module, exports) {
+
+	
+	/**
+	 * Gets the keys for an object.
+	 *
+	 * @return {Array} keys
+	 * @api private
+	 */
+	
+	module.exports = Object.keys || function keys (obj){
+	  var arr = [];
+	  var has = Object.prototype.hasOwnProperty;
+	
+	  for (var i in obj) {
+	    if (has.call(obj, i)) {
+	      arr.push(i);
+	    }
+	  }
+	  return arr;
+	};
+
+
+/***/ },
+/* 137 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {
+	/*
+	 * Module requirements.
+	 */
+	
+	var isArray = __webpack_require__(121);
+	
+	/**
+	 * Module exports.
+	 */
+	
+	module.exports = hasBinary;
+	
+	/**
+	 * Checks for binary data.
+	 *
+	 * Right now only Buffer and ArrayBuffer are supported..
+	 *
+	 * @param {Object} anything
+	 * @api public
+	 */
+	
+	function hasBinary(data) {
+	
+	  function _hasBinary(obj) {
+	    if (!obj) return false;
+	
+	    if ( (global.Buffer && global.Buffer.isBuffer(obj)) ||
+	         (global.ArrayBuffer && obj instanceof ArrayBuffer) ||
+	         (global.Blob && obj instanceof Blob) ||
+	         (global.File && obj instanceof File)
+	        ) {
+	      return true;
+	    }
+	
+	    if (isArray(obj)) {
+	      for (var i = 0; i < obj.length; i++) {
+	          if (_hasBinary(obj[i])) {
+	              return true;
+	          }
+	      }
+	    } else if (obj && 'object' == typeof obj) {
+	      if (obj.toJSON) {
+	        obj = obj.toJSON();
+	      }
+	
+	      for (var key in obj) {
+	        if (Object.prototype.hasOwnProperty.call(obj, key) && _hasBinary(obj[key])) {
+	          return true;
+	        }
+	      }
+	    }
+	
+	    return false;
+	  }
+	
+	  return _hasBinary(data);
+	}
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 138 */
+/***/ function(module, exports) {
+
+	/**
+	 * An abstraction for slicing an arraybuffer even when
+	 * ArrayBuffer.prototype.slice is not supported
+	 *
+	 * @api public
+	 */
+	
+	module.exports = function(arraybuffer, start, end) {
+	  var bytes = arraybuffer.byteLength;
+	  start = start || 0;
+	  end = end || bytes;
+	
+	  if (arraybuffer.slice) { return arraybuffer.slice(start, end); }
+	
+	  if (start < 0) { start += bytes; }
+	  if (end < 0) { end += bytes; }
+	  if (end > bytes) { end = bytes; }
+	
+	  if (start >= bytes || start >= end || bytes === 0) {
+	    return new ArrayBuffer(0);
+	  }
+	
+	  var abv = new Uint8Array(arraybuffer);
+	  var result = new Uint8Array(end - start);
+	  for (var i = start, ii = 0; i < end; i++, ii++) {
+	    result[ii] = abv[i];
+	  }
+	  return result.buffer;
+	};
+
+
+/***/ },
+/* 139 */
+/***/ function(module, exports) {
+
+	module.exports = after
+	
+	function after(count, callback, err_cb) {
+	    var bail = false
+	    err_cb = err_cb || noop
+	    proxy.count = count
+	
+	    return (count === 0) ? callback() : proxy
+	
+	    function proxy(err, result) {
+	        if (proxy.count <= 0) {
+	            throw new Error('after called too many times')
+	        }
+	        --proxy.count
+	
+	        // after first error, rest are passed to err_cb
+	        if (err) {
+	            bail = true
+	            callback(err)
+	            // future error callbacks will go to error handler
+	            callback = err_cb
+	        } else if (proxy.count === 0 && !bail) {
+	            callback(null, result)
+	        }
+	    }
+	}
+	
+	function noop() {}
+
+
+/***/ },
+/* 140 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! https://mths.be/wtf8 v1.0.0 by @mathias */
+	;(function(root) {
+	
+		// Detect free variables `exports`
+		var freeExports = typeof exports == 'object' && exports;
+	
+		// Detect free variable `module`
+		var freeModule = typeof module == 'object' && module &&
+			module.exports == freeExports && module;
+	
+		// Detect free variable `global`, from Node.js or Browserified code,
+		// and use it as `root`
+		var freeGlobal = typeof global == 'object' && global;
+		if (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal) {
+			root = freeGlobal;
+		}
+	
+		/*--------------------------------------------------------------------------*/
+	
+		var stringFromCharCode = String.fromCharCode;
+	
+		// Taken from https://mths.be/punycode
+		function ucs2decode(string) {
+			var output = [];
+			var counter = 0;
+			var length = string.length;
+			var value;
+			var extra;
+			while (counter < length) {
+				value = string.charCodeAt(counter++);
+				if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
+					// high surrogate, and there is a next character
+					extra = string.charCodeAt(counter++);
+					if ((extra & 0xFC00) == 0xDC00) { // low surrogate
+						output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
+					} else {
+						// unmatched surrogate; only append this code unit, in case the next
+						// code unit is the high surrogate of a surrogate pair
+						output.push(value);
+						counter--;
+					}
+				} else {
+					output.push(value);
+				}
+			}
+			return output;
+		}
+	
+		// Taken from https://mths.be/punycode
+		function ucs2encode(array) {
+			var length = array.length;
+			var index = -1;
+			var value;
+			var output = '';
+			while (++index < length) {
+				value = array[index];
+				if (value > 0xFFFF) {
+					value -= 0x10000;
+					output += stringFromCharCode(value >>> 10 & 0x3FF | 0xD800);
+					value = 0xDC00 | value & 0x3FF;
+				}
+				output += stringFromCharCode(value);
+			}
+			return output;
+		}
+	
+		/*--------------------------------------------------------------------------*/
+	
+		function createByte(codePoint, shift) {
+			return stringFromCharCode(((codePoint >> shift) & 0x3F) | 0x80);
+		}
+	
+		function encodeCodePoint(codePoint) {
+			if ((codePoint & 0xFFFFFF80) == 0) { // 1-byte sequence
+				return stringFromCharCode(codePoint);
+			}
+			var symbol = '';
+			if ((codePoint & 0xFFFFF800) == 0) { // 2-byte sequence
+				symbol = stringFromCharCode(((codePoint >> 6) & 0x1F) | 0xC0);
+			}
+			else if ((codePoint & 0xFFFF0000) == 0) { // 3-byte sequence
+				symbol = stringFromCharCode(((codePoint >> 12) & 0x0F) | 0xE0);
+				symbol += createByte(codePoint, 6);
+			}
+			else if ((codePoint & 0xFFE00000) == 0) { // 4-byte sequence
+				symbol = stringFromCharCode(((codePoint >> 18) & 0x07) | 0xF0);
+				symbol += createByte(codePoint, 12);
+				symbol += createByte(codePoint, 6);
+			}
+			symbol += stringFromCharCode((codePoint & 0x3F) | 0x80);
+			return symbol;
+		}
+	
+		function wtf8encode(string) {
+			var codePoints = ucs2decode(string);
+			var length = codePoints.length;
+			var index = -1;
+			var codePoint;
+			var byteString = '';
+			while (++index < length) {
+				codePoint = codePoints[index];
+				byteString += encodeCodePoint(codePoint);
+			}
+			return byteString;
+		}
+	
+		/*--------------------------------------------------------------------------*/
+	
+		function readContinuationByte() {
+			if (byteIndex >= byteCount) {
+				throw Error('Invalid byte index');
+			}
+	
+			var continuationByte = byteArray[byteIndex] & 0xFF;
+			byteIndex++;
+	
+			if ((continuationByte & 0xC0) == 0x80) {
+				return continuationByte & 0x3F;
+			}
+	
+			// If we end up here, it’s not a continuation byte.
+			throw Error('Invalid continuation byte');
+		}
+	
+		function decodeSymbol() {
+			var byte1;
+			var byte2;
+			var byte3;
+			var byte4;
+			var codePoint;
+	
+			if (byteIndex > byteCount) {
+				throw Error('Invalid byte index');
+			}
+	
+			if (byteIndex == byteCount) {
+				return false;
+			}
+	
+			// Read the first byte.
+			byte1 = byteArray[byteIndex] & 0xFF;
+			byteIndex++;
+	
+			// 1-byte sequence (no continuation bytes)
+			if ((byte1 & 0x80) == 0) {
+				return byte1;
+			}
+	
+			// 2-byte sequence
+			if ((byte1 & 0xE0) == 0xC0) {
+				var byte2 = readContinuationByte();
+				codePoint = ((byte1 & 0x1F) << 6) | byte2;
+				if (codePoint >= 0x80) {
+					return codePoint;
+				} else {
+					throw Error('Invalid continuation byte');
+				}
+			}
+	
+			// 3-byte sequence (may include unpaired surrogates)
+			if ((byte1 & 0xF0) == 0xE0) {
+				byte2 = readContinuationByte();
+				byte3 = readContinuationByte();
+				codePoint = ((byte1 & 0x0F) << 12) | (byte2 << 6) | byte3;
+				if (codePoint >= 0x0800) {
+					return codePoint;
+				} else {
+					throw Error('Invalid continuation byte');
+				}
+			}
+	
+			// 4-byte sequence
+			if ((byte1 & 0xF8) == 0xF0) {
+				byte2 = readContinuationByte();
+				byte3 = readContinuationByte();
+				byte4 = readContinuationByte();
+				codePoint = ((byte1 & 0x0F) << 0x12) | (byte2 << 0x0C) |
+					(byte3 << 0x06) | byte4;
+				if (codePoint >= 0x010000 && codePoint <= 0x10FFFF) {
+					return codePoint;
+				}
+			}
+	
+			throw Error('Invalid WTF-8 detected');
+		}
+	
+		var byteArray;
+		var byteCount;
+		var byteIndex;
+		function wtf8decode(byteString) {
+			byteArray = ucs2decode(byteString);
+			byteCount = byteArray.length;
+			byteIndex = 0;
+			var codePoints = [];
+			var tmp;
+			while ((tmp = decodeSymbol()) !== false) {
+				codePoints.push(tmp);
+			}
+			return ucs2encode(codePoints);
+		}
+	
+		/*--------------------------------------------------------------------------*/
+	
+		var wtf8 = {
+			'version': '1.0.0',
+			'encode': wtf8encode,
+			'decode': wtf8decode
+		};
+	
+		// Some AMD build optimizers, like r.js, check for specific condition patterns
+		// like the following:
+		if (
+			true
+		) {
+			!(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+				return wtf8;
+			}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		}	else if (freeExports && !freeExports.nodeType) {
+			if (freeModule) { // in Node.js or RingoJS v0.8.0+
+				freeModule.exports = wtf8;
+			} else { // in Narwhal or RingoJS v0.7.0-
+				var object = {};
+				var hasOwnProperty = object.hasOwnProperty;
+				for (var key in wtf8) {
+					hasOwnProperty.call(wtf8, key) && (freeExports[key] = wtf8[key]);
+				}
+			}
+		} else { // in Rhino or a web browser
+			root.wtf8 = wtf8;
+		}
+	
+	}(this));
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(119)(module), (function() { return this; }())))
+
+/***/ },
+/* 141 */
+/***/ function(module, exports) {
+
+	/*
+	 * base64-arraybuffer
+	 * https://github.com/niklasvh/base64-arraybuffer
+	 *
+	 * Copyright (c) 2012 Niklas von Hertzen
+	 * Licensed under the MIT license.
+	 */
+	(function(){
+	  "use strict";
+	
+	  var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+	
+	  // Use a lookup table to find the index.
+	  var lookup = new Uint8Array(256);
+	  for (var i = 0; i < chars.length; i++) {
+	    lookup[chars.charCodeAt(i)] = i;
+	  }
+	
+	  exports.encode = function(arraybuffer) {
+	    var bytes = new Uint8Array(arraybuffer),
+	    i, len = bytes.length, base64 = "";
+	
+	    for (i = 0; i < len; i+=3) {
+	      base64 += chars[bytes[i] >> 2];
+	      base64 += chars[((bytes[i] & 3) << 4) | (bytes[i + 1] >> 4)];
+	      base64 += chars[((bytes[i + 1] & 15) << 2) | (bytes[i + 2] >> 6)];
+	      base64 += chars[bytes[i + 2] & 63];
+	    }
+	
+	    if ((len % 3) === 2) {
+	      base64 = base64.substring(0, base64.length - 1) + "=";
+	    } else if (len % 3 === 1) {
+	      base64 = base64.substring(0, base64.length - 2) + "==";
+	    }
+	
+	    return base64;
+	  };
+	
+	  exports.decode =  function(base64) {
+	    var bufferLength = base64.length * 0.75,
+	    len = base64.length, i, p = 0,
+	    encoded1, encoded2, encoded3, encoded4;
+	
+	    if (base64[base64.length - 1] === "=") {
+	      bufferLength--;
+	      if (base64[base64.length - 2] === "=") {
+	        bufferLength--;
+	      }
+	    }
+	
+	    var arraybuffer = new ArrayBuffer(bufferLength),
+	    bytes = new Uint8Array(arraybuffer);
+	
+	    for (i = 0; i < len; i+=4) {
+	      encoded1 = lookup[base64.charCodeAt(i)];
+	      encoded2 = lookup[base64.charCodeAt(i+1)];
+	      encoded3 = lookup[base64.charCodeAt(i+2)];
+	      encoded4 = lookup[base64.charCodeAt(i+3)];
+	
+	      bytes[p++] = (encoded1 << 2) | (encoded2 >> 4);
+	      bytes[p++] = ((encoded2 & 15) << 4) | (encoded3 >> 2);
+	      bytes[p++] = ((encoded3 & 3) << 6) | (encoded4 & 63);
+	    }
+	
+	    return arraybuffer;
+	  };
+	})();
+
+
+/***/ },
+/* 142 */
+/***/ function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/**
+	 * Create a blob builder even when vendor prefixes exist
+	 */
+	
+	var BlobBuilder = global.BlobBuilder
+	  || global.WebKitBlobBuilder
+	  || global.MSBlobBuilder
+	  || global.MozBlobBuilder;
+	
+	/**
+	 * Check if Blob constructor is supported
+	 */
+	
+	var blobSupported = (function() {
+	  try {
+	    var a = new Blob(['hi']);
+	    return a.size === 2;
+	  } catch(e) {
+	    return false;
+	  }
+	})();
+	
+	/**
+	 * Check if Blob constructor supports ArrayBufferViews
+	 * Fails in Safari 6, so we need to map to ArrayBuffers there.
+	 */
+	
+	var blobSupportsArrayBufferView = blobSupported && (function() {
+	  try {
+	    var b = new Blob([new Uint8Array([1,2])]);
+	    return b.size === 2;
+	  } catch(e) {
+	    return false;
+	  }
+	})();
+	
+	/**
+	 * Check if BlobBuilder is supported
+	 */
+	
+	var blobBuilderSupported = BlobBuilder
+	  && BlobBuilder.prototype.append
+	  && BlobBuilder.prototype.getBlob;
+	
+	/**
+	 * Helper function that maps ArrayBufferViews to ArrayBuffers
+	 * Used by BlobBuilder constructor and old browsers that didn't
+	 * support it in the Blob constructor.
+	 */
+	
+	function mapArrayBufferViews(ary) {
+	  for (var i = 0; i < ary.length; i++) {
+	    var chunk = ary[i];
+	    if (chunk.buffer instanceof ArrayBuffer) {
+	      var buf = chunk.buffer;
+	
+	      // if this is a subarray, make a copy so we only
+	      // include the subarray region from the underlying buffer
+	      if (chunk.byteLength !== buf.byteLength) {
+	        var copy = new Uint8Array(chunk.byteLength);
+	        copy.set(new Uint8Array(buf, chunk.byteOffset, chunk.byteLength));
+	        buf = copy.buffer;
+	      }
+	
+	      ary[i] = buf;
+	    }
+	  }
+	}
+	
+	function BlobBuilderConstructor(ary, options) {
+	  options = options || {};
+	
+	  var bb = new BlobBuilder();
+	  mapArrayBufferViews(ary);
+	
+	  for (var i = 0; i < ary.length; i++) {
+	    bb.append(ary[i]);
+	  }
+	
+	  return (options.type) ? bb.getBlob(options.type) : bb.getBlob();
+	};
+	
+	function BlobConstructor(ary, options) {
+	  mapArrayBufferViews(ary);
+	  return new Blob(ary, options || {});
+	};
+	
+	module.exports = (function() {
+	  if (blobSupported) {
+	    return blobSupportsArrayBufferView ? global.Blob : BlobConstructor;
+	  } else if (blobBuilderSupported) {
+	    return BlobBuilderConstructor;
+	  } else {
+	    return undefined;
+	  }
+	})();
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 143 */
+/***/ function(module, exports) {
+
+	/**
+	 * Compiles a querystring
+	 * Returns string representation of the object
+	 *
+	 * @param {Object}
+	 * @api private
+	 */
+	
+	exports.encode = function (obj) {
+	  var str = '';
+	
+	  for (var i in obj) {
+	    if (obj.hasOwnProperty(i)) {
+	      if (str.length) str += '&';
+	      str += encodeURIComponent(i) + '=' + encodeURIComponent(obj[i]);
+	    }
+	  }
+	
+	  return str;
+	};
+	
+	/**
+	 * Parses a simple querystring into an object
+	 *
+	 * @param {String} qs
+	 * @api private
+	 */
+	
+	exports.decode = function(qs){
+	  var qry = {};
+	  var pairs = qs.split('&');
+	  for (var i = 0, l = pairs.length; i < l; i++) {
+	    var pair = pairs[i].split('=');
+	    qry[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+	  }
+	  return qry;
+	};
+
+
+/***/ },
+/* 144 */
+/***/ function(module, exports) {
+
+	
+	module.exports = function(a, b){
+	  var fn = function(){};
+	  fn.prototype = b.prototype;
+	  a.prototype = new fn;
+	  a.prototype.constructor = a;
+	};
+
+/***/ },
+/* 145 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'.split('')
+	  , length = 64
+	  , map = {}
+	  , seed = 0
+	  , i = 0
+	  , prev;
+	
+	/**
+	 * Return a string representing the specified number.
+	 *
+	 * @param {Number} num The number to convert.
+	 * @returns {String} The string representation of the number.
+	 * @api public
+	 */
+	function encode(num) {
+	  var encoded = '';
+	
+	  do {
+	    encoded = alphabet[num % length] + encoded;
+	    num = Math.floor(num / length);
+	  } while (num > 0);
+	
+	  return encoded;
+	}
+	
+	/**
+	 * Return the integer value specified by the given string.
+	 *
+	 * @param {String} str The string to convert.
+	 * @returns {Number} The integer value represented by the string.
+	 * @api public
+	 */
+	function decode(str) {
+	  var decoded = 0;
+	
+	  for (i = 0; i < str.length; i++) {
+	    decoded = decoded * length + map[str.charAt(i)];
+	  }
+	
+	  return decoded;
+	}
+	
+	/**
+	 * Yeast: A tiny growing id generator.
+	 *
+	 * @returns {String} A unique id.
+	 * @api public
+	 */
+	function yeast() {
+	  var now = encode(+new Date());
+	
+	  if (now !== prev) return seed = 0, prev = now;
+	  return now +'.'+ encode(seed++);
+	}
+	
+	//
+	// Map each character to its index.
+	//
+	for (; i < length; i++) map[alphabet[i]] = i;
+	
+	//
+	// Expose the `yeast`, `encode` and `decode` functions.
+	//
+	yeast.encode = encode;
+	yeast.decode = decode;
+	module.exports = yeast;
+
+
+/***/ },
+/* 146 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {
+	/**
+	 * Module requirements.
+	 */
+	
+	var Polling = __webpack_require__(133);
+	var inherit = __webpack_require__(144);
+	
+	/**
+	 * Module exports.
+	 */
+	
+	module.exports = JSONPPolling;
+	
+	/**
+	 * Cached regular expressions.
+	 */
+	
+	var rNewline = /\n/g;
+	var rEscapedNewline = /\\n/g;
+	
+	/**
+	 * Global JSONP callbacks.
+	 */
+	
+	var callbacks;
+	
+	/**
+	 * Noop.
+	 */
+	
+	function empty () { }
+	
+	/**
+	 * JSONP Polling constructor.
+	 *
+	 * @param {Object} opts.
+	 * @api public
+	 */
+	
+	function JSONPPolling (opts) {
+	  Polling.call(this, opts);
+	
+	  this.query = this.query || {};
+	
+	  // define global callbacks array if not present
+	  // we do this here (lazily) to avoid unneeded global pollution
+	  if (!callbacks) {
+	    // we need to consider multiple engines in the same page
+	    if (!global.___eio) global.___eio = [];
+	    callbacks = global.___eio;
+	  }
+	
+	  // callback identifier
+	  this.index = callbacks.length;
+	
+	  // add callback to jsonp global
+	  var self = this;
+	  callbacks.push(function (msg) {
+	    self.onData(msg);
+	  });
+	
+	  // append to query string
+	  this.query.j = this.index;
+	
+	  // prevent spurious errors from being emitted when the window is unloaded
+	  if (global.document && global.addEventListener) {
+	    global.addEventListener('beforeunload', function () {
+	      if (self.script) self.script.onerror = empty;
+	    }, false);
+	  }
+	}
+	
+	/**
+	 * Inherits from Polling.
+	 */
+	
+	inherit(JSONPPolling, Polling);
+	
+	/*
+	 * JSONP only supports binary as base64 encoded strings
+	 */
+	
+	JSONPPolling.prototype.supportsBinary = false;
+	
+	/**
+	 * Closes the socket.
+	 *
+	 * @api private
+	 */
+	
+	JSONPPolling.prototype.doClose = function () {
+	  if (this.script) {
+	    this.script.parentNode.removeChild(this.script);
+	    this.script = null;
+	  }
+	
+	  if (this.form) {
+	    this.form.parentNode.removeChild(this.form);
+	    this.form = null;
+	    this.iframe = null;
+	  }
+	
+	  Polling.prototype.doClose.call(this);
+	};
+	
+	/**
+	 * Starts a poll cycle.
+	 *
+	 * @api private
+	 */
+	
+	JSONPPolling.prototype.doPoll = function () {
+	  var self = this;
+	  var script = document.createElement('script');
+	
+	  if (this.script) {
+	    this.script.parentNode.removeChild(this.script);
+	    this.script = null;
+	  }
+	
+	  script.async = true;
+	  script.src = this.uri();
+	  script.onerror = function (e) {
+	    self.onError('jsonp poll error', e);
+	  };
+	
+	  var insertAt = document.getElementsByTagName('script')[0];
+	  if (insertAt) {
+	    insertAt.parentNode.insertBefore(script, insertAt);
+	  } else {
+	    (document.head || document.body).appendChild(script);
+	  }
+	  this.script = script;
+	
+	  var isUAgecko = 'undefined' !== typeof navigator && /gecko/i.test(navigator.userAgent);
+	
+	  if (isUAgecko) {
+	    setTimeout(function () {
+	      var iframe = document.createElement('iframe');
+	      document.body.appendChild(iframe);
+	      document.body.removeChild(iframe);
+	    }, 100);
+	  }
+	};
+	
+	/**
+	 * Writes with a hidden iframe.
+	 *
+	 * @param {String} data to send
+	 * @param {Function} called upon flush.
+	 * @api private
+	 */
+	
+	JSONPPolling.prototype.doWrite = function (data, fn) {
+	  var self = this;
+	
+	  if (!this.form) {
+	    var form = document.createElement('form');
+	    var area = document.createElement('textarea');
+	    var id = this.iframeId = 'eio_iframe_' + this.index;
+	    var iframe;
+	
+	    form.className = 'socketio';
+	    form.style.position = 'absolute';
+	    form.style.top = '-1000px';
+	    form.style.left = '-1000px';
+	    form.target = id;
+	    form.method = 'POST';
+	    form.setAttribute('accept-charset', 'utf-8');
+	    area.name = 'd';
+	    form.appendChild(area);
+	    document.body.appendChild(form);
+	
+	    this.form = form;
+	    this.area = area;
+	  }
+	
+	  this.form.action = this.uri();
+	
+	  function complete () {
+	    initIframe();
+	    fn();
+	  }
+	
+	  function initIframe () {
+	    if (self.iframe) {
+	      try {
+	        self.form.removeChild(self.iframe);
+	      } catch (e) {
+	        self.onError('jsonp polling iframe removal error', e);
+	      }
+	    }
+	
+	    try {
+	      // ie6 dynamic iframes with target="" support (thanks Chris Lambacher)
+	      var html = '<iframe src="javascript:0" name="' + self.iframeId + '">';
+	      iframe = document.createElement(html);
+	    } catch (e) {
+	      iframe = document.createElement('iframe');
+	      iframe.name = self.iframeId;
+	      iframe.src = 'javascript:0';
+	    }
+	
+	    iframe.id = self.iframeId;
+	
+	    self.form.appendChild(iframe);
+	    self.iframe = iframe;
+	  }
+	
+	  initIframe();
+	
+	  // escape \n to prevent it from being converted into \r\n by some UAs
+	  // double escaping is required for escaped new lines because unescaping of new lines can be done safely on server-side
+	  data = data.replace(rEscapedNewline, '\\\n');
+	  this.area.value = data.replace(rNewline, '\\n');
+	
+	  try {
+	    this.form.submit();
+	  } catch (e) {}
+	
+	  if (this.iframe.attachEvent) {
+	    this.iframe.onreadystatechange = function () {
+	      if (self.iframe.readyState === 'complete') {
+	        complete();
+	      }
+	    };
+	  } else {
+	    this.iframe.onload = complete;
+	  }
+	};
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 147 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/**
+	 * Module dependencies.
+	 */
+	
+	var Transport = __webpack_require__(134);
+	var parser = __webpack_require__(135);
+	var parseqs = __webpack_require__(143);
+	var inherit = __webpack_require__(144);
+	var yeast = __webpack_require__(145);
+	var debug = __webpack_require__(114)('engine.io-client:websocket');
+	var BrowserWebSocket = global.WebSocket || global.MozWebSocket;
+	
+	/**
+	 * Get either the `WebSocket` or `MozWebSocket` globals
+	 * in the browser or try to resolve WebSocket-compatible
+	 * interface exposed by `ws` for Node-like environment.
+	 */
+	
+	var WebSocket = BrowserWebSocket;
+	if (!WebSocket && typeof window === 'undefined') {
+	  try {
+	    WebSocket = __webpack_require__(148);
+	  } catch (e) { }
+	}
+	
+	/**
+	 * Module exports.
+	 */
+	
+	module.exports = WS;
+	
+	/**
+	 * WebSocket transport constructor.
+	 *
+	 * @api {Object} connection options
+	 * @api public
+	 */
+	
+	function WS (opts) {
+	  var forceBase64 = (opts && opts.forceBase64);
+	  if (forceBase64) {
+	    this.supportsBinary = false;
+	  }
+	  this.perMessageDeflate = opts.perMessageDeflate;
+	  Transport.call(this, opts);
+	}
+	
+	/**
+	 * Inherits from Transport.
+	 */
+	
+	inherit(WS, Transport);
+	
+	/**
+	 * Transport name.
+	 *
+	 * @api public
+	 */
+	
+	WS.prototype.name = 'websocket';
+	
+	/*
+	 * WebSockets support binary
+	 */
+	
+	WS.prototype.supportsBinary = true;
+	
+	/**
+	 * Opens socket.
+	 *
+	 * @api private
+	 */
+	
+	WS.prototype.doOpen = function () {
+	  if (!this.check()) {
+	    // let probe timeout
+	    return;
+	  }
+	
+	  var uri = this.uri();
+	  var protocols = void (0);
+	  var opts = {
+	    agent: this.agent,
+	    perMessageDeflate: this.perMessageDeflate
+	  };
+	
+	  // SSL options for Node.js client
+	  opts.pfx = this.pfx;
+	  opts.key = this.key;
+	  opts.passphrase = this.passphrase;
+	  opts.cert = this.cert;
+	  opts.ca = this.ca;
+	  opts.ciphers = this.ciphers;
+	  opts.rejectUnauthorized = this.rejectUnauthorized;
+	  if (this.extraHeaders) {
+	    opts.headers = this.extraHeaders;
+	  }
+	
+	  try {
+	    this.ws = BrowserWebSocket ? new WebSocket(uri) : new WebSocket(uri, protocols, opts);
+	  } catch (err) {
+	    return this.emit('error', err);
+	  }
+	
+	  if (this.ws.binaryType === undefined) {
+	    this.supportsBinary = false;
+	  }
+	
+	  if (this.ws.supports && this.ws.supports.binary) {
+	    this.supportsBinary = true;
+	    this.ws.binaryType = 'nodebuffer';
+	  } else {
+	    this.ws.binaryType = 'arraybuffer';
+	  }
+	
+	  this.addEventListeners();
+	};
+	
+	/**
+	 * Adds event listeners to the socket
+	 *
+	 * @api private
+	 */
+	
+	WS.prototype.addEventListeners = function () {
+	  var self = this;
+	
+	  this.ws.onopen = function () {
+	    self.onOpen();
+	  };
+	  this.ws.onclose = function () {
+	    self.onClose();
+	  };
+	  this.ws.onmessage = function (ev) {
+	    self.onData(ev.data);
+	  };
+	  this.ws.onerror = function (e) {
+	    self.onError('websocket error', e);
+	  };
+	};
+	
+	/**
+	 * Override `onData` to use a timer on iOS.
+	 * See: https://gist.github.com/mloughran/2052006
+	 *
+	 * @api private
+	 */
+	
+	if ('undefined' !== typeof navigator &&
+	  /iPad|iPhone|iPod/i.test(navigator.userAgent)) {
+	  WS.prototype.onData = function (data) {
+	    var self = this;
+	    setTimeout(function () {
+	      Transport.prototype.onData.call(self, data);
+	    }, 0);
+	  };
+	}
+	
+	/**
+	 * Writes data to socket.
+	 *
+	 * @param {Array} array of packets.
+	 * @api private
+	 */
+	
+	WS.prototype.write = function (packets) {
+	  var self = this;
+	  this.writable = false;
+	
+	  // encodePacket efficient as it uses WS framing
+	  // no need for encodePayload
+	  var total = packets.length;
+	  for (var i = 0, l = total; i < l; i++) {
+	    (function (packet) {
+	      parser.encodePacket(packet, self.supportsBinary, function (data) {
+	        if (!BrowserWebSocket) {
+	          // always create a new object (GH-437)
+	          var opts = {};
+	          if (packet.options) {
+	            opts.compress = packet.options.compress;
+	          }
+	
+	          if (self.perMessageDeflate) {
+	            var len = 'string' === typeof data ? global.Buffer.byteLength(data) : data.length;
+	            if (len < self.perMessageDeflate.threshold) {
+	              opts.compress = false;
+	            }
+	          }
+	        }
+	
+	        // Sometimes the websocket has already been closed but the browser didn't
+	        // have a chance of informing us about it yet, in that case send will
+	        // throw an error
+	        try {
+	          if (BrowserWebSocket) {
+	            // TypeError is thrown when passing the second argument on Safari
+	            self.ws.send(data);
+	          } else {
+	            self.ws.send(data, opts);
+	          }
+	        } catch (e) {
+	          debug('websocket closed before onclose event');
+	        }
+	
+	        --total || done();
+	      });
+	    })(packets[i]);
+	  }
+	
+	  function done () {
+	    self.emit('flush');
+	
+	    // fake drain
+	    // defer to next tick to allow Socket to clear writeBuffer
+	    setTimeout(function () {
+	      self.writable = true;
+	      self.emit('drain');
+	    }, 0);
+	  }
+	};
+	
+	/**
+	 * Called upon close
+	 *
+	 * @api private
+	 */
+	
+	WS.prototype.onClose = function () {
+	  Transport.prototype.onClose.call(this);
+	};
+	
+	/**
+	 * Closes socket.
+	 *
+	 * @api private
+	 */
+	
+	WS.prototype.doClose = function () {
+	  if (typeof this.ws !== 'undefined') {
+	    this.ws.close();
+	  }
+	};
+	
+	/**
+	 * Generates uri for connection.
+	 *
+	 * @api private
+	 */
+	
+	WS.prototype.uri = function () {
+	  var query = this.query || {};
+	  var schema = this.secure ? 'wss' : 'ws';
+	  var port = '';
+	
+	  // avoid port if default for schema
+	  if (this.port && (('wss' === schema && this.port !== 443) ||
+	    ('ws' === schema && this.port !== 80))) {
+	    port = ':' + this.port;
+	  }
+	
+	  // append timestamp to URI
+	  if (this.timestampRequests) {
+	    query[this.timestampParam] = yeast();
+	  }
+	
+	  // communicate binary support capabilities
+	  if (!this.supportsBinary) {
+	    query.b64 = 1;
+	  }
+	
+	  query = parseqs.encode(query);
+	
+	  // prepend ? to query
+	  if (query.length) {
+	    query = '?' + query;
+	  }
+	
+	  var ipv6 = this.hostname.indexOf(':') !== -1;
+	  return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
+	};
+	
+	/**
+	 * Feature detection for WebSocket.
+	 *
+	 * @return {Boolean} whether this transport is available.
+	 * @api public
+	 */
+	
+	WS.prototype.check = function () {
+	  return !!WebSocket && !('__initialize' in WebSocket && this.name === WS.prototype.name);
+	};
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 148 */
+/***/ function(module, exports) {
+
+	/* (ignored) */
+
+/***/ },
+/* 149 */
+/***/ function(module, exports) {
+
+	
+	var indexOf = [].indexOf;
+	
+	module.exports = function(arr, obj){
+	  if (indexOf) return arr.indexOf(obj);
+	  for (var i = 0; i < arr.length; ++i) {
+	    if (arr[i] === obj) return i;
+	  }
+	  return -1;
+	};
+
+/***/ },
+/* 150 */
+/***/ function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/**
+	 * JSON parse.
+	 *
+	 * @see Based on jQuery#parseJSON (MIT) and JSON2
+	 * @api private
+	 */
+	
+	var rvalidchars = /^[\],:{}\s]*$/;
+	var rvalidescape = /\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g;
+	var rvalidtokens = /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
+	var rvalidbraces = /(?:^|:|,)(?:\s*\[)+/g;
+	var rtrimLeft = /^\s+/;
+	var rtrimRight = /\s+$/;
+	
+	module.exports = function parsejson(data) {
+	  if ('string' != typeof data || !data) {
+	    return null;
+	  }
+	
+	  data = data.replace(rtrimLeft, '').replace(rtrimRight, '');
+	
+	  // Attempt to parse using the native JSON parser first
+	  if (global.JSON && JSON.parse) {
+	    return JSON.parse(data);
+	  }
+	
+	  if (rvalidchars.test(data.replace(rvalidescape, '@')
+	      .replace(rvalidtokens, ']')
+	      .replace(rvalidbraces, ''))) {
+	    return (new Function('return ' + data))();
+	  }
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 151 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * Module dependencies.
+	 */
+	
+	var parser = __webpack_require__(117);
+	var Emitter = __webpack_require__(152);
+	var toArray = __webpack_require__(153);
+	var on = __webpack_require__(154);
+	var bind = __webpack_require__(155);
+	var debug = __webpack_require__(114)('socket.io-client:socket');
+	var hasBin = __webpack_require__(156);
+	
+	/**
+	 * Module exports.
+	 */
+	
+	module.exports = exports = Socket;
+	
+	/**
+	 * Internal events (blacklisted).
+	 * These events can't be emitted by the user.
+	 *
+	 * @api private
+	 */
+	
+	var events = {
+	  connect: 1,
+	  connect_error: 1,
+	  connect_timeout: 1,
+	  connecting: 1,
+	  disconnect: 1,
+	  error: 1,
+	  reconnect: 1,
+	  reconnect_attempt: 1,
+	  reconnect_failed: 1,
+	  reconnect_error: 1,
+	  reconnecting: 1,
+	  ping: 1,
+	  pong: 1
+	};
+	
+	/**
+	 * Shortcut to `Emitter#emit`.
+	 */
+	
+	var emit = Emitter.prototype.emit;
+	
+	/**
+	 * `Socket` constructor.
+	 *
+	 * @api public
+	 */
+	
+	function Socket (io, nsp, opts) {
+	  this.io = io;
+	  this.nsp = nsp;
+	  this.json = this; // compat
+	  this.ids = 0;
+	  this.acks = {};
+	  this.receiveBuffer = [];
+	  this.sendBuffer = [];
+	  this.connected = false;
+	  this.disconnected = true;
+	  if (opts && opts.query) {
+	    this.query = opts.query;
+	  }
+	  if (this.io.autoConnect) this.open();
+	}
+	
+	/**
+	 * Mix in `Emitter`.
+	 */
+	
+	Emitter(Socket.prototype);
+	
+	/**
+	 * Subscribe to open, close and packet events
+	 *
+	 * @api private
+	 */
+	
+	Socket.prototype.subEvents = function () {
+	  if (this.subs) return;
+	
+	  var io = this.io;
+	  this.subs = [
+	    on(io, 'open', bind(this, 'onopen')),
+	    on(io, 'packet', bind(this, 'onpacket')),
+	    on(io, 'close', bind(this, 'onclose'))
+	  ];
+	};
+	
+	/**
+	 * "Opens" the socket.
+	 *
+	 * @api public
+	 */
+	
+	Socket.prototype.open =
+	Socket.prototype.connect = function () {
+	  if (this.connected) return this;
+	
+	  this.subEvents();
+	  this.io.open(); // ensure open
+	  if ('open' === this.io.readyState) this.onopen();
+	  this.emit('connecting');
+	  return this;
+	};
+	
+	/**
+	 * Sends a `message` event.
+	 *
+	 * @return {Socket} self
+	 * @api public
+	 */
+	
+	Socket.prototype.send = function () {
+	  var args = toArray(arguments);
+	  args.unshift('message');
+	  this.emit.apply(this, args);
+	  return this;
+	};
+	
+	/**
+	 * Override `emit`.
+	 * If the event is in `events`, it's emitted normally.
+	 *
+	 * @param {String} event name
+	 * @return {Socket} self
+	 * @api public
+	 */
+	
+	Socket.prototype.emit = function (ev) {
+	  if (events.hasOwnProperty(ev)) {
+	    emit.apply(this, arguments);
+	    return this;
+	  }
+	
+	  var args = toArray(arguments);
+	  var parserType = parser.EVENT; // default
+	  if (hasBin(args)) { parserType = parser.BINARY_EVENT; } // binary
+	  var packet = { type: parserType, data: args };
+	
+	  packet.options = {};
+	  packet.options.compress = !this.flags || false !== this.flags.compress;
+	
+	  // event ack callback
+	  if ('function' === typeof args[args.length - 1]) {
+	    debug('emitting packet with ack id %d', this.ids);
+	    this.acks[this.ids] = args.pop();
+	    packet.id = this.ids++;
+	  }
+	
+	  if (this.connected) {
+	    this.packet(packet);
+	  } else {
+	    this.sendBuffer.push(packet);
+	  }
+	
+	  delete this.flags;
+	
+	  return this;
+	};
+	
+	/**
+	 * Sends a packet.
+	 *
+	 * @param {Object} packet
+	 * @api private
+	 */
+	
+	Socket.prototype.packet = function (packet) {
+	  packet.nsp = this.nsp;
+	  this.io.packet(packet);
+	};
+	
+	/**
+	 * Called upon engine `open`.
+	 *
+	 * @api private
+	 */
+	
+	Socket.prototype.onopen = function () {
+	  debug('transport is open - connecting');
+	
+	  // write connect packet if necessary
+	  if ('/' !== this.nsp) {
+	    if (this.query) {
+	      this.packet({type: parser.CONNECT, query: this.query});
+	    } else {
+	      this.packet({type: parser.CONNECT});
+	    }
+	  }
+	};
+	
+	/**
+	 * Called upon engine `close`.
+	 *
+	 * @param {String} reason
+	 * @api private
+	 */
+	
+	Socket.prototype.onclose = function (reason) {
+	  debug('close (%s)', reason);
+	  this.connected = false;
+	  this.disconnected = true;
+	  delete this.id;
+	  this.emit('disconnect', reason);
+	};
+	
+	/**
+	 * Called with socket packet.
+	 *
+	 * @param {Object} packet
+	 * @api private
+	 */
+	
+	Socket.prototype.onpacket = function (packet) {
+	  if (packet.nsp !== this.nsp) return;
+	
+	  switch (packet.type) {
+	    case parser.CONNECT:
+	      this.onconnect();
+	      break;
+	
+	    case parser.EVENT:
+	      this.onevent(packet);
+	      break;
+	
+	    case parser.BINARY_EVENT:
+	      this.onevent(packet);
+	      break;
+	
+	    case parser.ACK:
+	      this.onack(packet);
+	      break;
+	
+	    case parser.BINARY_ACK:
+	      this.onack(packet);
+	      break;
+	
+	    case parser.DISCONNECT:
+	      this.ondisconnect();
+	      break;
+	
+	    case parser.ERROR:
+	      this.emit('error', packet.data);
+	      break;
+	  }
+	};
+	
+	/**
+	 * Called upon a server event.
+	 *
+	 * @param {Object} packet
+	 * @api private
+	 */
+	
+	Socket.prototype.onevent = function (packet) {
+	  var args = packet.data || [];
+	  debug('emitting event %j', args);
+	
+	  if (null != packet.id) {
+	    debug('attaching ack callback to event');
+	    args.push(this.ack(packet.id));
+	  }
+	
+	  if (this.connected) {
+	    emit.apply(this, args);
+	  } else {
+	    this.receiveBuffer.push(args);
+	  }
+	};
+	
+	/**
+	 * Produces an ack callback to emit with an event.
+	 *
+	 * @api private
+	 */
+	
+	Socket.prototype.ack = function (id) {
+	  var self = this;
+	  var sent = false;
+	  return function () {
+	    // prevent double callbacks
+	    if (sent) return;
+	    sent = true;
+	    var args = toArray(arguments);
+	    debug('sending ack %j', args);
+	
+	    var type = hasBin(args) ? parser.BINARY_ACK : parser.ACK;
+	    self.packet({
+	      type: type,
+	      id: id,
+	      data: args
+	    });
+	  };
+	};
+	
+	/**
+	 * Called upon a server acknowlegement.
+	 *
+	 * @param {Object} packet
+	 * @api private
+	 */
+	
+	Socket.prototype.onack = function (packet) {
+	  var ack = this.acks[packet.id];
+	  if ('function' === typeof ack) {
+	    debug('calling ack %s with %j', packet.id, packet.data);
+	    ack.apply(this, packet.data);
+	    delete this.acks[packet.id];
+	  } else {
+	    debug('bad ack %s', packet.id);
+	  }
+	};
+	
+	/**
+	 * Called upon server connect.
+	 *
+	 * @api private
+	 */
+	
+	Socket.prototype.onconnect = function () {
+	  this.connected = true;
+	  this.disconnected = false;
+	  this.emit('connect');
+	  this.emitBuffered();
+	};
+	
+	/**
+	 * Emit buffered events (received and emitted).
+	 *
+	 * @api private
+	 */
+	
+	Socket.prototype.emitBuffered = function () {
+	  var i;
+	  for (i = 0; i < this.receiveBuffer.length; i++) {
+	    emit.apply(this, this.receiveBuffer[i]);
+	  }
+	  this.receiveBuffer = [];
+	
+	  for (i = 0; i < this.sendBuffer.length; i++) {
+	    this.packet(this.sendBuffer[i]);
+	  }
+	  this.sendBuffer = [];
+	};
+	
+	/**
+	 * Called upon server disconnect.
+	 *
+	 * @api private
+	 */
+	
+	Socket.prototype.ondisconnect = function () {
+	  debug('server disconnect (%s)', this.nsp);
+	  this.destroy();
+	  this.onclose('io server disconnect');
+	};
+	
+	/**
+	 * Called upon forced client/server side disconnections,
+	 * this method ensures the manager stops tracking us and
+	 * that reconnections don't get triggered for this.
+	 *
+	 * @api private.
+	 */
+	
+	Socket.prototype.destroy = function () {
+	  if (this.subs) {
+	    // clean subscriptions to avoid reconnections
+	    for (var i = 0; i < this.subs.length; i++) {
+	      this.subs[i].destroy();
+	    }
+	    this.subs = null;
+	  }
+	
+	  this.io.destroy(this);
+	};
+	
+	/**
+	 * Disconnects the socket manually.
+	 *
+	 * @return {Socket} self
+	 * @api public
+	 */
+	
+	Socket.prototype.close =
+	Socket.prototype.disconnect = function () {
+	  if (this.connected) {
+	    debug('performing disconnect (%s)', this.nsp);
+	    this.packet({ type: parser.DISCONNECT });
+	  }
+	
+	  // remove socket from pool
+	  this.destroy();
+	
+	  if (this.connected) {
+	    // fire events
+	    this.onclose('io client disconnect');
+	  }
+	  return this;
+	};
+	
+	/**
+	 * Sets the compress flag.
+	 *
+	 * @param {Boolean} if `true`, compresses the sending data
+	 * @return {Socket} self
+	 * @api public
+	 */
+	
+	Socket.prototype.compress = function (compress) {
+	  this.flags = this.flags || {};
+	  this.flags.compress = compress;
+	  return this;
+	};
+
+
+/***/ },
+/* 152 */
+/***/ function(module, exports) {
+
+	
+	/**
+	 * Expose `Emitter`.
+	 */
+	
+	module.exports = Emitter;
+	
+	/**
+	 * Initialize a new `Emitter`.
+	 *
+	 * @api public
+	 */
+	
+	function Emitter(obj) {
+	  if (obj) return mixin(obj);
+	};
+	
+	/**
+	 * Mixin the emitter properties.
+	 *
+	 * @param {Object} obj
+	 * @return {Object}
+	 * @api private
+	 */
+	
+	function mixin(obj) {
+	  for (var key in Emitter.prototype) {
+	    obj[key] = Emitter.prototype[key];
+	  }
+	  return obj;
+	}
+	
+	/**
+	 * Listen on the given `event` with `fn`.
+	 *
+	 * @param {String} event
+	 * @param {Function} fn
+	 * @return {Emitter}
+	 * @api public
+	 */
+	
+	Emitter.prototype.on =
+	Emitter.prototype.addEventListener = function(event, fn){
+	  this._callbacks = this._callbacks || {};
+	  (this._callbacks['$' + event] = this._callbacks['$' + event] || [])
+	    .push(fn);
+	  return this;
+	};
+	
+	/**
+	 * Adds an `event` listener that will be invoked a single
+	 * time then automatically removed.
+	 *
+	 * @param {String} event
+	 * @param {Function} fn
+	 * @return {Emitter}
+	 * @api public
+	 */
+	
+	Emitter.prototype.once = function(event, fn){
+	  function on() {
+	    this.off(event, on);
+	    fn.apply(this, arguments);
+	  }
+	
+	  on.fn = fn;
+	  this.on(event, on);
+	  return this;
+	};
+	
+	/**
+	 * Remove the given callback for `event` or all
+	 * registered callbacks.
+	 *
+	 * @param {String} event
+	 * @param {Function} fn
+	 * @return {Emitter}
+	 * @api public
+	 */
+	
+	Emitter.prototype.off =
+	Emitter.prototype.removeListener =
+	Emitter.prototype.removeAllListeners =
+	Emitter.prototype.removeEventListener = function(event, fn){
+	  this._callbacks = this._callbacks || {};
+	
+	  // all
+	  if (0 == arguments.length) {
+	    this._callbacks = {};
+	    return this;
+	  }
+	
+	  // specific event
+	  var callbacks = this._callbacks['$' + event];
+	  if (!callbacks) return this;
+	
+	  // remove all handlers
+	  if (1 == arguments.length) {
+	    delete this._callbacks['$' + event];
+	    return this;
+	  }
+	
+	  // remove specific handler
+	  var cb;
+	  for (var i = 0; i < callbacks.length; i++) {
+	    cb = callbacks[i];
+	    if (cb === fn || cb.fn === fn) {
+	      callbacks.splice(i, 1);
+	      break;
+	    }
+	  }
+	  return this;
+	};
+	
+	/**
+	 * Emit `event` with the given args.
+	 *
+	 * @param {String} event
+	 * @param {Mixed} ...
+	 * @return {Emitter}
+	 */
+	
+	Emitter.prototype.emit = function(event){
+	  this._callbacks = this._callbacks || {};
+	  var args = [].slice.call(arguments, 1)
+	    , callbacks = this._callbacks['$' + event];
+	
+	  if (callbacks) {
+	    callbacks = callbacks.slice(0);
+	    for (var i = 0, len = callbacks.length; i < len; ++i) {
+	      callbacks[i].apply(this, args);
+	    }
+	  }
+	
+	  return this;
+	};
+	
+	/**
+	 * Return array of callbacks for `event`.
+	 *
+	 * @param {String} event
+	 * @return {Array}
+	 * @api public
+	 */
+	
+	Emitter.prototype.listeners = function(event){
+	  this._callbacks = this._callbacks || {};
+	  return this._callbacks['$' + event] || [];
+	};
+	
+	/**
+	 * Check if this emitter has `event` handlers.
+	 *
+	 * @param {String} event
+	 * @return {Boolean}
+	 * @api public
+	 */
+	
+	Emitter.prototype.hasListeners = function(event){
+	  return !! this.listeners(event).length;
+	};
+
+
+/***/ },
+/* 153 */
+/***/ function(module, exports) {
+
+	module.exports = toArray
+	
+	function toArray(list, index) {
+	    var array = []
+	
+	    index = index || 0
+	
+	    for (var i = index || 0; i < list.length; i++) {
+	        array[i - index] = list[i]
+	    }
+	
+	    return array
+	}
+
+
+/***/ },
+/* 154 */
+/***/ function(module, exports) {
+
+	
+	/**
+	 * Module exports.
+	 */
+	
+	module.exports = on;
+	
+	/**
+	 * Helper for subscriptions.
+	 *
+	 * @param {Object|EventEmitter} obj with `Emitter` mixin or `EventEmitter`
+	 * @param {String} event name
+	 * @param {Function} callback
+	 * @api public
+	 */
+	
+	function on (obj, ev, fn) {
+	  obj.on(ev, fn);
+	  return {
+	    destroy: function () {
+	      obj.removeListener(ev, fn);
+	    }
+	  };
+	}
+
+
+/***/ },
+/* 155 */
+/***/ function(module, exports) {
+
+	/**
+	 * Slice reference.
+	 */
+	
+	var slice = [].slice;
+	
+	/**
+	 * Bind `obj` to `fn`.
+	 *
+	 * @param {Object} obj
+	 * @param {Function|String} fn or string
+	 * @return {Function}
+	 * @api public
+	 */
+	
+	module.exports = function(obj, fn){
+	  if ('string' == typeof fn) fn = obj[fn];
+	  if ('function' != typeof fn) throw new Error('bind() requires a function');
+	  var args = slice.call(arguments, 2);
+	  return function(){
+	    return fn.apply(obj, args.concat(slice.call(arguments)));
+	  }
+	};
+
+
+/***/ },
+/* 156 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {
+	/*
+	 * Module requirements.
+	 */
+	
+	var isArray = __webpack_require__(121);
+	
+	/**
+	 * Module exports.
+	 */
+	
+	module.exports = hasBinary;
+	
+	/**
+	 * Checks for binary data.
+	 *
+	 * Right now only Buffer and ArrayBuffer are supported..
+	 *
+	 * @param {Object} anything
+	 * @api public
+	 */
+	
+	function hasBinary(data) {
+	
+	  function _hasBinary(obj) {
+	    if (!obj) return false;
+	
+	    if ( (global.Buffer && global.Buffer.isBuffer && global.Buffer.isBuffer(obj)) ||
+	         (global.ArrayBuffer && obj instanceof ArrayBuffer) ||
+	         (global.Blob && obj instanceof Blob) ||
+	         (global.File && obj instanceof File)
+	        ) {
+	      return true;
+	    }
+	
+	    if (isArray(obj)) {
+	      for (var i = 0; i < obj.length; i++) {
+	          if (_hasBinary(obj[i])) {
+	              return true;
+	          }
+	      }
+	    } else if (obj && 'object' == typeof obj) {
+	      // see: https://github.com/Automattic/has-binary/pull/4
+	      if (obj.toJSON && 'function' == typeof obj.toJSON) {
+	        obj = obj.toJSON();
+	      }
+	
+	      for (var key in obj) {
+	        if (Object.prototype.hasOwnProperty.call(obj, key) && _hasBinary(obj[key])) {
+	          return true;
+	        }
+	      }
+	    }
+	
+	    return false;
+	  }
+	
+	  return _hasBinary(data);
+	}
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 157 */
+/***/ function(module, exports) {
+
+	
+	/**
+	 * Expose `Backoff`.
+	 */
+	
+	module.exports = Backoff;
+	
+	/**
+	 * Initialize backoff timer with `opts`.
+	 *
+	 * - `min` initial timeout in milliseconds [100]
+	 * - `max` max timeout [10000]
+	 * - `jitter` [0]
+	 * - `factor` [2]
+	 *
+	 * @param {Object} opts
+	 * @api public
+	 */
+	
+	function Backoff(opts) {
+	  opts = opts || {};
+	  this.ms = opts.min || 100;
+	  this.max = opts.max || 10000;
+	  this.factor = opts.factor || 2;
+	  this.jitter = opts.jitter > 0 && opts.jitter <= 1 ? opts.jitter : 0;
+	  this.attempts = 0;
+	}
+	
+	/**
+	 * Return the backoff duration.
+	 *
+	 * @return {Number}
+	 * @api public
+	 */
+	
+	Backoff.prototype.duration = function(){
+	  var ms = this.ms * Math.pow(this.factor, this.attempts++);
+	  if (this.jitter) {
+	    var rand =  Math.random();
+	    var deviation = Math.floor(rand * this.jitter * ms);
+	    ms = (Math.floor(rand * 10) & 1) == 0  ? ms - deviation : ms + deviation;
+	  }
+	  return Math.min(ms, this.max) | 0;
+	};
+	
+	/**
+	 * Reset the number of attempts.
+	 *
+	 * @api public
+	 */
+	
+	Backoff.prototype.reset = function(){
+	  this.attempts = 0;
+	};
+	
+	/**
+	 * Set the minimum duration
+	 *
+	 * @api public
+	 */
+	
+	Backoff.prototype.setMin = function(min){
+	  this.ms = min;
+	};
+	
+	/**
+	 * Set the maximum duration
+	 *
+	 * @api public
+	 */
+	
+	Backoff.prototype.setMax = function(max){
+	  this.max = max;
+	};
+	
+	/**
+	 * Set the jitter
+	 *
+	 * @api public
+	 */
+	
+	Backoff.prototype.setJitter = function(jitter){
+	  this.jitter = jitter;
+	};
+	
+
+
+/***/ },
+/* 158 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -11948,9 +15737,9 @@
 	    value: true
 	});
 	
-	__webpack_require__(112);
+	__webpack_require__(159);
 	
-	var _tpl = __webpack_require__(113);
+	var _tpl = __webpack_require__(160);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -12016,19 +15805,19 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 112 */
+/* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(224);
 
 /***/ },
-/* 113 */
+/* 160 */
 /***/ function(module, exports) {
 
 	module.exports = "<ul role=\"menu\" class=\"dropdown-menu\" ng-init=\"vm._showType= true\">\n    <li ng-repeat=\"type in vm.types\"\n        dnd-draggable=\"type\"\n        dnd-type=\"type.type\"\n        dnd-dragstart=\"vm.start(type.type)\"\n        dnd-effect-allowed=\"move\"\n        dnd-dragend=\"vm.end()\"\n        ng-show=\"vm._showType\">\n        <a ng-click=\"vm._showType = !vm._showType;\n                    vm.selectType(type.type);\n                    $event.stopPropagation();\">\n            {{type.type}}\n        </a>\n    </li>\n    <li ng-show=\"!vm._showType\"\n        style=\"padding-left: 5px;padding-right: 20px;\">\n        <div class=\"col-xs-10\">\n            <input type=\"text\" class=\"input-xs\" ng-model=\"vm._filter\">\n        </div>\n        <div class=\"col-xs-2\">\n            <button type=\"button\" class=\"btn btn-xs btn-white\"\n                    ng-click=\"vm._showType = !vm._showType;$event.stopPropagation();\">\n                <i class=\"fa fa-times\"></i>\n            </button>\n        </div>\n    </li>\n    <li ng-repeat=\"element in vm.list\"\n        ng-init=\"_element = vm.convert(element)\"\n        dnd-draggable=\"_element\"\n        dnd-type=\"vm._type\"\n        dnd-effect-allowed=\"move\"\n        dnd-dragstart=\"vm.start(vm._type)\"\n        dnd-dragend=\"vm.end()\"\n        ng-show=\"!vm._showType\">\n        <a ng-click=\"\">{{vm.getTitle(element)}}</a>\n    </li>\n</ul>\n"
 
 /***/ },
-/* 114 */
+/* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -12041,45 +15830,45 @@
 	
 	var _common2 = _interopRequireDefault(_common);
 	
-	__webpack_require__(112);
+	__webpack_require__(159);
 	
 	var _module2 = __webpack_require__(13);
 	
 	var _module3 = _interopRequireDefault(_module2);
 	
-	var _module4 = __webpack_require__(115);
+	var _module4 = __webpack_require__(162);
 	
 	var _module5 = _interopRequireDefault(_module4);
 	
 	__webpack_require__(14);
 	
-	var _element = __webpack_require__(117);
+	var _element = __webpack_require__(164);
 	
 	var _element2 = _interopRequireDefault(_element);
 	
-	var _editor = __webpack_require__(118);
+	var _editor = __webpack_require__(165);
 	
 	var _editor2 = _interopRequireDefault(_editor);
 	
-	var _cmsWrapper = __webpack_require__(120);
+	var _cmsWrapper = __webpack_require__(167);
 	
 	var _cmsWrapper2 = _interopRequireDefault(_cmsWrapper);
 	
-	__webpack_require__(121);
+	__webpack_require__(168);
 	
-	var _fragment = __webpack_require__(122);
+	var _fragment = __webpack_require__(169);
 	
 	var _fragment2 = _interopRequireDefault(_fragment);
 	
-	var _container = __webpack_require__(123);
+	var _container = __webpack_require__(170);
 	
 	var _container2 = _interopRequireDefault(_container);
 	
-	var _containerEdit = __webpack_require__(125);
+	var _containerEdit = __webpack_require__(172);
 	
 	var _containerEdit2 = _interopRequireDefault(_containerEdit);
 	
-	var _cmsFormPath = __webpack_require__(127);
+	var _cmsFormPath = __webpack_require__(174);
 	
 	var _cmsFormPath2 = _interopRequireDefault(_cmsFormPath);
 	
@@ -12090,7 +15879,7 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 115 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -12103,7 +15892,7 @@
 	
 	var _module3 = _interopRequireDefault(_module2);
 	
-	var _tpl = __webpack_require__(116);
+	var _tpl = __webpack_require__(163);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -12319,13 +16108,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 116 */
+/* 163 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms-wrapper cms\"\n     ng-init=\"_showId = false;\">\n\n    <div style=\"position: absolute;right: 10px;\">\n        <button class=\"btn btn-xs btn-white\"\n                ng-click=\"_showId=!_showId;\"\n                ng-bind=\"_showId?'hide id':'show id'\">\n        </button>\n        <button type=\"button\" class=\"btn btn-xs btn-white\" ng-bind=\"vm.fullScreenText\"\n                ng-click=\"vm.changeScreenSize();\"></button>\n    </div>\n\n    <h3 style=\"font-weight: 300;\">Edit {{vm.cmsType}} {{_showId?'('+vm.cmsModel._id+')':''}}:</h3>\n\n    <form ng-submit=\"vm.onSubmit()\"\n          novalidate\n          class=\"cms-form form-horizontal\">\n\n        <uib-tabset ng-if=\"vm.isTab\">\n            <uib-tab ng-repeat=\"tab in vm.cmsFields\"\n                     heading=\"{{tab.title}}\"\n                     active=\"tab.active\">\n                <br>\n                <formly-form model=\"vm.cmsModel\" fields=\"tab.fields\"\n                             form=\"vm.form\" options=\"vm.options\">\n                </formly-form>\n            </uib-tab>\n        </uib-tabset>\n\n        <div>\n            <br>\n            <formly-form model=\"vm.cmsModel\" fields=\"vm.cmsFields\"\n                         form=\"vm.form\" options=\"vm.options\" ng-if=\"!vm.isTab\">\n            </formly-form>\n        </div>\n\n        <div class=\"form-group\">\n            <div class=\"col-sm-offset-2 col-sm-10\">\n                <button type=\"submit\" class=\"btn btn-primary submit-button\" ng-disabled=\"vm.form.$invalid\">Submit\n                </button>\n                <button type=\"button\" class=\"btn btn-primary\" ng-click=\"vm.onApply()\">Apply</button>\n                <button type=\"button\" class=\"btn btn-primary\" ng-click=\"vm.onAdd()\">Save and Add</button>\n                <button type=\"button\" class=\"btn btn-primary\" ng-click=\"vm.onCancel()\">Cancel</button>\n\n                <button type=\"button\" class=\"cms-btn btn-outline btn btn-danger pull-right\" ng-click=\"vm.onDelete()\">Delete</button>\n\n            </div>\n        </div>\n    </form>\n</div>"
 
 /***/ },
-/* 117 */
+/* 164 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -12536,7 +16325,7 @@
 	exports.default = elementDirective;
 
 /***/ },
-/* 118 */
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12545,7 +16334,7 @@
 	    value: true
 	});
 	
-	var _editor = __webpack_require__(119);
+	var _editor = __webpack_require__(166);
 	
 	var _editor2 = _interopRequireDefault(_editor);
 	
@@ -12665,13 +16454,13 @@
 	exports.default = directive;
 
 /***/ },
-/* 119 */
+/* 166 */
 /***/ function(module, exports) {
 
 	module.exports = "<div context-menu=\"menu\"\n     ng-style=\"{display:vm.cmsMenu === 'true'?'inline-block':'block'}\">\n    <div ng-if=\"vm.cmsMenu !== 'true'\" class=\"cms cms-element-wrapper\" ng-style=\"vm.editorIcon\">\n        <div class=\"cms-element-controll-icon label label-primary\" style=\"font-size: 13px\"\n             ng-mouseover=\"vm.showControl()\" ng-show=\"vm.getControlVisible()\">\n            <i class=\"fa fa-circle-o-notch\"></i>\n        </div>\n\n        <div class=\"cms-element-controll\"\n             ng-mouseover=\"vm.__showControl = true\"\n             ng-mouseleave=\"vm.__showControl = false\"\n             ng-show=\"vm._showControl || vm.__showControl\">\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.edit()\">\n                <i class=\"fa fa-pencil-square-o\"></i>\n            </button>\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.removeByDatabase()\">\n                <i class=\"fa fa-trash\"></i>\n            </button>\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.remove()\">\n                <i class=\"fa fa-trash-o\"></i>\n            </button>\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.copy()\">\n                <i class=\"fa fa-files-o\"></i>\n            </button>\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.cmsRefresh()\">\n                <i class=\"fa fa-refresh\"></i>\n            </button>\n        </div>\n\n    </div>\n    <ng-transclude></ng-transclude>\n</div>"
 
 /***/ },
-/* 120 */
+/* 167 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -12791,13 +16580,13 @@
 	exports.default = directive;
 
 /***/ },
-/* 121 */
+/* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(225);
 
 /***/ },
-/* 122 */
+/* 169 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -12849,7 +16638,7 @@
 	exports.default = directive;
 
 /***/ },
-/* 123 */
+/* 170 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12858,7 +16647,7 @@
 	    value: true
 	});
 	
-	var _container = __webpack_require__(124);
+	var _container = __webpack_require__(171);
 	
 	var _container2 = _interopRequireDefault(_container);
 	
@@ -12918,13 +16707,13 @@
 	exports.default = directive;
 
 /***/ },
-/* 124 */
+/* 171 */
 /***/ function(module, exports) {
 
 	module.exports = "<i class=\"fa fa-circle-o-notch cms-element-controll-icon\"\n   ng-mouseover=\"vm.showControl()\"\n   ng-show=\"!vm._showControl && (vm.editState.editMode === 1)\"></i>\n<div class=\"cms-element-controll\"\n     ng-mouseover=\"vm.__showControl = true\"\n     ng-mouseleave=\"vm.__showControl = false\"\n     ng-show=\"vm._showControl || vm.__showControl\">\n    <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"\">\n        <i class=\"fa fa-plus\"></i>\n    </button>\n</div>\n<div class=\"{{vm.cmsInline === 'true'?'cms-containers-inline':'cms-containers'}}\"\n     dnd-list=\"vm.elements\"\n     dnd-disable-if=\"vm.elements.length > 0 && vm.elements[0].binding\"\n     dnd-allowed-types=\"vm.allowedTypes\"\n     dnd-horizontal-list=\"{{vm.cmsInline}}\"\n     ng-class=\"{'cms-panel-highlight':vm.highlight()}\">\n    <div ng-repeat=\"element in vm.elements\"\n         dnd-disable-if=\"element.binding || !vm.matchEditMode(element.type)\"\n         dnd-draggable=\"element\"\n         dnd-type=\"element.type\"\n         dnd-moved=\"vm.elements.splice($index, 1);\"\n         dnd-effect-allowed=\"move\"\n         dnd-dragstart=\"vm.start(element.type)\"\n         dnd-dragend=\"vm.end();\"\n         cms-element=\"element\"\n         cms-path=\"{{vm.path}}.elements[{{$index}}]\"\n         class=\"{{vm.cmsInline === 'true'?'cms-element':''}}\"\n    ></div>\n</div>\n"
 
 /***/ },
-/* 125 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -12933,7 +16722,7 @@
 	    value: true
 	});
 	
-	var _containerEdit = __webpack_require__(126);
+	var _containerEdit = __webpack_require__(173);
 	
 	var _containerEdit2 = _interopRequireDefault(_containerEdit);
 	
@@ -13020,13 +16809,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 126 */
+/* 173 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms-container-panel panel panel-default ui-widget-content\"\n     ng-show=\"vm.editState.showContainerEdit\"\n     style=\"position: fixed; top: 70px; right: 50px;width: 300px;height: 600px;z-index:1000\">\n    <div class=\"panel-heading\" style=\"padding: 0px 0px 0px 10px;height: 26px;cursor: move\">\n        <div class=\"panel-title\">\n            <h5>Edit panel</h5>\n        </div>\n    </div>\n    <div class=\"panel-body\">\n        <div js-tree=\"vm.treeConfig\" ng-model=\"vm.tree\"\n             tree-events=\"changed:vm.selectNode\" tree=\"vm.treeInstance\"></div>\n    </div>\n</div>"
 
 /***/ },
-/* 127 */
+/* 174 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -13066,7 +16855,7 @@
 	exports.default = directive;
 
 /***/ },
-/* 128 */
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13089,7 +16878,7 @@
 	
 	__webpack_require__(64);
 	
-	var _tpl = __webpack_require__(129);
+	var _tpl = __webpack_require__(176);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -13213,13 +17002,13 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 129 */
+/* 176 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms-wrapper animated fadeInRight cms-sidebar cms\">\n    <button type=\"button\" class=\"btn btn-sm btn-white cms-close-position\"\n            ng-click=\"cancel()\">\n        <i class=\"fa fa-times\"></i>\n    </button>\n\n    <div class=\"col-xs-6 col-sm-4 pull-right cms-controll-panel-right\">\n        <div ng-show=\"node\">\n            <h4>Information: </h4>\n            <h5 style=\"word-break: break-all;\">Name: {{node.text}}</h5>\n            <h5 style=\"word-break: break-all;\">Type: {{node.type}}</h5>\n            <h5 style=\"word-break: break-all;\">Path: {{node.path}}</h5>\n            <br>\n\n            <div class=\"btn-group\">\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        ng-click=\"open()\">\n                    Open page\n                </button>\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        ng-click=\"deletePage()\">\n                    Delete\n                </button>\n            </div>\n            <form role=\"form\" ng-submit=\"makeTemplate(templateName);templateName = '';\">\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        type=\"submit\" style=\"position: absolute;right: 15px;\"\n                        ng-disabled=\"!templateName\">\n                    Make template page\n                </button>\n                <input ng-model=\"templateName\" type=\"text\" class=\"form-control input-xs\" placeholder=\"template name\">\n            </form>\n            <form role=\"form\" ng-submit=\"createPage(template.selected, pageName);pageName = '';\">\n                <ui-select class=\"cms-select\" ng-model=\"template.selected\" theme=\"bootstrap\" ng-disabled=\"disabled\"\n                           style=\"min-width: 60px;\">\n                    <ui-select-match placeholder=\"Select a template page\">{{$select.selected}}</ui-select-match>\n                    <ui-select-choices repeat=\"_template in templates\">\n                        {{_template}}\n                    </ui-select-choices>\n                </ui-select>\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        type=\"submit\" style=\"position: absolute;right: 15px;\"\n                        ng-disabled=\"!pageName || !template.selected\">\n                    Create new page\n                </button>\n                <input ng-model=\"pageName\" type=\"text\" class=\"form-control input-xs\" placeholder=\"page name\">\n            </form>\n\n            <form role=\"form\" ng-submit=\"renamePage(newPageName);newPageName = '';\">\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        type=\"submit\" style=\"position: absolute;right: 15px;\"\n                        ng-disabled=\"!newPageName\">\n                    Rename\n                </button>\n                <input ng-model=\"newPageName\" type=\"text\" class=\"form-control input-xs\" placeholder=\"page name\">\n            </form>\n\n            <form role=\"form\" ng-submit=\"onFileSelect(files);\">\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        type=\"submit\" style=\"position: absolute;right: 15px;\">\n                    Up\n                </button>\n                <input type=\"file\" ngf-select ng-model=\"files\"\n                       ngf-multiple=\"true\" name=\"file\" class=\"form-control input-xs\"\n                       placeholder=\"file upload\">\n            </form>\n\n        </div>\n    </div>\n\n    <h2>Sitemaps:</h2>\n\n    <div js-tree=\"treeConfig\" ng-model=\"tree\"\n         tree-events=\"changed:selectNode\"></div>\n</div>\n"
 
 /***/ },
-/* 130 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13228,7 +17017,7 @@
 	    value: true
 	});
 	
-	var _tpl = __webpack_require__(131);
+	var _tpl = __webpack_require__(178);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -13267,13 +17056,13 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 131 */
+/* 178 */
 /***/ function(module, exports) {
 
 	module.exports = "<div style=\"margin-top: 7px;cursor: pointer;\">\n    <ui-select data-ng-model=\"vm.editState.editMode\" theme=\"bootstrap\" on-select=\"vm.onSelect($item)\">\n        <ui-select-match placeholder=\"\">\n            {{$select.selected.label}}&nbsp;&nbsp;&nbsp;\n        </ui-select-match>\n        <ui-select-choices data-repeat=\"item.value as item in vm.modes | filterBy: ['label']: $select.search\">\n            <div ng-bind-html=\"item.label | highlight: $select.search\"></div>\n        </ui-select-choices>\n    </ui-select>\n</div>\n"
 
 /***/ },
-/* 132 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13294,27 +17083,27 @@
 	
 	__webpack_require__(64);
 	
-	var _module2 = __webpack_require__(114);
+	var _module2 = __webpack_require__(161);
 	
 	var _module3 = _interopRequireDefault(_module2);
 	
-	var _module4 = __webpack_require__(115);
+	var _module4 = __webpack_require__(162);
 	
 	var _module5 = _interopRequireDefault(_module4);
 	
-	var _cmsList = __webpack_require__(133);
+	var _cmsList = __webpack_require__(180);
 	
 	var _cmsList2 = _interopRequireDefault(_cmsList);
 	
-	var _importService2 = __webpack_require__(135);
+	var _importService2 = __webpack_require__(182);
 	
 	var _importService3 = _interopRequireDefault(_importService2);
 	
-	var _exportService2 = __webpack_require__(137);
+	var _exportService2 = __webpack_require__(184);
 	
 	var _exportService3 = _interopRequireDefault(_exportService2);
 	
-	var _tpl = __webpack_require__(139);
+	var _tpl = __webpack_require__(186);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -13339,7 +17128,9 @@
 	
 	        vm.openSitemap = function () {
 	            function modalCtrl($scope, $uibModalInstance) {
-	                $scope.list = [];
+	                $scope.data = {
+	                    list: []
+	                };
 	                $scope.cancel = function () {
 	                    $uibModalInstance.dismiss('cancel');
 	                };
@@ -13366,64 +17157,75 @@
 	                    var onlyChangePage = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
 	                    var changeAdminList = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 	
-	                    $timeout(function () {
-	                        if (!$scope.node) return;
 	
-	                        $scope.list.length = 0;
-	                        $scope.loading = true;
+	                    //$timeout(function () {
+	                    if (!$scope.node) return;
 	
-	                        $scope.element = {};
+	                    $scope.data.list = [];
+	
+	                    $scope.data.loading = true;
+	
+	                    $scope.element = {};
+	
+	                    if (changeAdminList) {
 	                        $timeout(function () {
-	                            if (changeAdminList) {
-	                                $scope.tree = cms.getAdminList();
-	                                $scope.treeConfig.version++;
-	                            }
+	                            $scope.tree = cms.getAdminList();
+	                            $scope.treeConfig.version++;
 	                        });
+	                    }
 	
-	                        var paramsBuilder = new _QueryBuilder2.default().part(false).limit($scope.page.limit).page($scope.page.currentPage).query($scope.node.query);
-	                        if (cms.types[$scope.node.type].lean) paramsBuilder.lean();
-	                        _.each($scope.queries, function (q) {
-	                            if (q.model) {
-	                                var val = _.get(q.model, q.form[0].key);
-	                                if (val && val.hasOwnProperty('_id') && !val._id) return;
-	                                if (!val) return;
+	                    var paramsBuilder = new _QueryBuilder2.default().part(false).limit($scope.page.limit).page($scope.page.currentPage).query($scope.node.query);
+	                    if (cms.types[$scope.node.type].lean) paramsBuilder.lean();
+	                    _.each($scope.queries, function (q) {
+	                        if (q.model) {
+	                            var val = _.get(q.model, q.form[0].key);
+	                            if (val && val.hasOwnProperty('_id') && !val._id) return;
+	                            if (!val) return;
 	
-	                                if (q.form[0].key === 0 && _.endsWith(q.path, '.field')) q.path = q.path.replace('.field', '');
+	                            if (q.form[0].key === 0 && _.endsWith(q.path, '.field')) q.path = q.path.replace('.field', '');
 	
-	                                if (q.fn) {
-	                                    var result = q.fn(val, _.dropRight(q.path.split('\.'), 1).join('\.'), q.path.split('\.').pop());
-	                                    if (result.populate) {
-	                                        paramsBuilder.populate(result.populate);
-	                                    } else if (result.$where) {
-	                                        paramsBuilder.query(result);
-	                                    } else {
-	                                        paramsBuilder.query(_defineProperty({}, q.path, result));
-	                                    }
-	                                } else if (val.name !== 'None') {
-	                                    paramsBuilder.query(_defineProperty({}, q.path, val._id || val));
+	                            if (q.fn) {
+	                                var result = q.fn(val, _.dropRight(q.path.split('\.'), 1).join('\.'), q.path.split('\.').pop());
+	                                if (result.populate) {
+	                                    paramsBuilder.populate(result.populate);
+	                                } else if (result.$where) {
+	                                    paramsBuilder.query(result);
+	                                } else {
+	                                    paramsBuilder.query(_defineProperty({}, q.path, result));
 	                                }
+	                            } else if (val.name !== 'None') {
+	                                paramsBuilder.query(_defineProperty({}, q.path, val._id || val));
 	                            }
-	                        });
-	                        if (!_.isEmpty($scope.search.text)) {
-	                            paramsBuilder.search($scope.search.text);
 	                        }
-	
-	                        cms.loadElements($scope.node.type, function (list) {
-	                            var _$scope$list;
-	
-	                            $scope.loading = false;
-	                            (_$scope$list = $scope.list).push.apply(_$scope$list, _toConsumableArray(list));
-	
-	                            if ($scope.showAs.type === 'element') {
-	                                $scope.selectElement($scope.list[0]._id);
-	                            }
-	                        }, paramsBuilder);
-	
-	                        // number of pages;
-	                        if (!onlyChangePage) cms.countElements($scope.node.type, function (count) {
-	                            $scope.page.size = count;
-	                        }, paramsBuilder);
 	                    });
+	                    if (!_.isEmpty($scope.search.text)) {
+	                        paramsBuilder.search($scope.search.text);
+	                    }
+	
+	                    console.time('test');
+	                    cms.loadElements($scope.node.type, function (list) {
+	                        var _$scope$data$list;
+	
+	                        console.timeEnd('test');
+	                        $scope.data.loading = false;
+	                        //$timeout(function () {
+	
+	                        (_$scope$data$list = $scope.data.list).push.apply(_$scope$data$list, _toConsumableArray(list));
+	                        if ($scope.showAs.type === 'element') {
+	                            $scope.selectElement($scope.data.list[0]._id);
+	                        }
+	                        $scope.$digest();
+	                        //})
+	                    }, paramsBuilder);
+	
+	                    // number of pages;
+	                    if (!onlyChangePage) cms.countElements($scope.node.type, function (count) {
+	                        $timeout(function () {
+	                            $scope.page.size = count;
+	                        });
+	                    }, paramsBuilder);
+	                    //});
+	
 	                };
 	
 	                $scope.watchs = [];
@@ -13471,7 +17273,7 @@
 	                };
 	
 	                $scope.remove = function (e) {
-	                    _.remove($scope.list, e);
+	                    _.remove($scope.data.list, e);
 	                };
 	                $scope.add = function () {
 	                    cms.createElement($scope.node.type, {}, function (model) {
@@ -13529,11 +17331,6 @@
 	                    currentPage: 1
 	                };
 	
-	                $scope.setItemsPerPage = function (num) {
-	                    $scope.itemsPerPage = num;
-	                    $scope.currentPage = 1; //reset to first page
-	                };
-	
 	                // show as
 	                $scope.showAs = {
 	                    type: 'table'
@@ -13576,7 +17373,7 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 133 */
+/* 180 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13585,7 +17382,7 @@
 	    value: true
 	});
 	
-	var _cmsList = __webpack_require__(134);
+	var _cmsList = __webpack_require__(181);
 	
 	var _cmsList2 = _interopRequireDefault(_cmsList);
 	
@@ -13613,13 +17410,13 @@
 	exports.default = directive;
 
 /***/ },
-/* 134 */
+/* 181 */
 /***/ function(module, exports) {
 
 	module.exports = ""
 
 /***/ },
-/* 135 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13628,7 +17425,7 @@
 	    value: true
 	});
 	
-	var _importService = __webpack_require__(136);
+	var _importService = __webpack_require__(183);
 	
 	var _importService2 = _interopRequireDefault(_importService);
 	
@@ -13747,13 +17544,13 @@
 	exports.default = service;
 
 /***/ },
-/* 136 */
+/* 183 */
 /***/ function(module, exports) {
 
 	module.exports = "<div style=\"padding: 20px\">\n    <div class=\"panel panel-default\">\n        <div class=\"panel-body\">\n            <div js-tree=\"treeConfig\" ng-model=\"tree\"\n                 tree=\"treeInstance\"\n                 tree-events=\"changed:selectNode\"></div>\n        </div>\n    </div>\n    <br><br>\n    <button type=\"button\" class=\"btn btn-primary submit-button\" ng-click=\"choose()\">Choose</button>\n    <button type=\"button\" class=\"btn btn-primary\" ng-click=\"cancel()\">Cancel</button>\n</div>\n"
 
 /***/ },
-/* 137 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13762,7 +17559,7 @@
 	    value: true
 	});
 	
-	var _exportService = __webpack_require__(138);
+	var _exportService = __webpack_require__(185);
 	
 	var _exportService2 = _interopRequireDefault(_exportService);
 	
@@ -13826,19 +17623,19 @@
 	exports.default = service;
 
 /***/ },
-/* 138 */
+/* 185 */
 /***/ function(module, exports) {
 
 	module.exports = "<div style=\"padding: 20px\">\n\n    <div class=\"panel panel-default\">\n        <div class=\"panel-body\">\n            <form role=\"form\" class=\"form-horizontal\">\n                <div class=\"form-group\">\n                    <label class=\"col-sm-12\">Filename:</label>\n                    <div class=\"col-sm-12\"><input type=\"text\" ng-model=\"filename\" class=\"form-control\"></div>\n                </div>\n                <div class=\"form-group\">\n                    <label class=\"col-sm-12\">Select Types:</label>\n                    <div class=\"cms-neutral\">\n                        <formly-form model=\"data\" fields=\"fields\" form=\"form\" options=\"options\"></formly-form>\n                    </div>\n                </div>\n            </form>\n        </div>\n    </div>\n\n\n    <br><br>\n    <button type=\"button\" class=\"btn btn-primary submit-button\" ng-click=\"choose()\">Choose</button>\n    <button type=\"button\" class=\"btn btn-primary\" ng-click=\"cancel()\">Cancel</button>\n</div>\n"
 
 /***/ },
-/* 139 */
+/* 186 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"cms-wrapper animated fadeInRight cms-sidebar cms\">\n    <button type=\"button\" class=\"btn btn-sm btn-white cms-close-position\"\n            ng-click=\"cancel()\">\n        <i class=\"fa fa-times\"></i>\n    </button>\n\n    <br>\n    <div class=\"row\">\n        <div class=\"col-xs-3 cms-panel\">\n            <div class=\"panel panel-primary\">\n                <div class=\"panel-heading\">Types</div>\n                <div class=\"panel-body\">\n                    <div js-tree=\"treeConfig\" ng-model=\"tree\"\n                         tree-events=\"changed:selectNode\" tree=\"treeInstance\"></div>\n                </div>\n            </div>\n        </div>\n        <div class=\"col-xs-9 cms-panel\">\n            <div class=\"panel panel-primary\">\n                <div class=\"panel-heading\">\n                    <div class=\"cms-admin-right-panel\">\n                        <label style=\"color: white\"> {{'Show' | translate}} : </label>\n\n                        <ui-select style=\"min-width: 50px;margin-left: 10px;margin-right: 10px;\"\n                                   class=\"cms-select\" data-ng-model=\"page.limit\" theme=\"bootstrap\"\n                                   on-select=\"refresh()\">\n                            <ui-select-match placeholder=\"\">{{$select.selected}}&nbsp;&nbsp;</ui-select-match>\n                            <ui-select-choices data-repeat=\"item in [10,25,50,100,200]\">{{item}}</ui-select-choices>\n                        </ui-select>\n\n                        <ui-select style=\"min-width: 60px;margin-left: 10px;margin-right: 10px;\"\n                                   class=\"cms-select\" data-ng-model=\"showAs.type\" theme=\"bootstrap\"\n                                   on-select=\"refresh()\">\n                            <ui-select-match placeholder=\"\">\n                                {{$select.selected.label}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</ui-select-match>\n                            <ui-select-choices\n                                    data-repeat=\"item.value as item in [{value:'list',label:'List'},{value:'table',label:'Table'},{value:'element',label:'Element'}]\">\n                                {{item.label}}\n                            </ui-select-choices>\n                        </ui-select>\n\n                        <div class=\"btn-group btn-group-xs\" style=\"margin-top: -12px;margin-right: 10px;\">\n                            <button type=\"button\" class=\"btn btn-white\" ng-click=\"setting()\">{{'Setting' | translate}}</button>\n                            <button type=\"button\" class=\"btn btn-white dropdown-toggle\" data-toggle=\"dropdown\">\n                                <span class=\"caret\"></span>\n                            </button>\n                            <ul class=\"dropdown-menu\" role=\"menu\" style=\"z-index: 10000 !important;\">\n                                <li><a href ng-click=\"deleteAll()\">{{'DeleteAll' | translate}}</a></li>\n                                <li><a href ng-click=\"import()\">Import</a></li>\n                                <li><a href ng-click=\"export()\">Export</a></li>\n\n                            </ul>\n                        </div>\n\n                        <button class=\"btn btn-white btn-xs\" ng-click=\"add()\">\n                            {{'Add' | translate}}\n                        </button>\n\n                    </div>\n\n                    <input type=\"text\" class=\"form-control input-xs\"\n                           style=\"margin-left: 10px;width: 100px;display: inline-block;\"\n                           ng-model=\"search.text\" ng-model-options=\"{debounce: 300}\" placeholder=\"search ...\">\n\n                    <div ng-if=\"queries && queries.length > 0\">\n                        <hr style=\"margin-top: 10px;margin-bottom: 5px;\">\n\n                        <div class=\"cms-admin-heading-form\" style=\"height: 60px;\">\n                            <formly-form ng-repeat=\"query in queries\" model=\"query.model\" fields=\"query.form\"\n                                         form=\"form\"\n                                         options=\"options\">\n                            </formly-form>\n                        </div>\n                    </div>\n\n                </div>\n                <div class=\"panel-body\" ng-if=\"node\">\n\n                    <div style=\"width: 100%;overflow-x: auto\" ng-if=\"showAs.type === 'table'\">\n                        <table class=\"table cms-admin-table\">\n                            <thead>\n                            <tr>\n                                <th ng-repeat=\"col in node.columns track by $index\" ng-bind=\"col.label\"></th>\n                                <th>Edit</th>\n                            </tr>\n                            </thead>\n                            <tbody>\n                            <tr ng-repeat=\"element in list track by $index\">\n                                <td ng-repeat=\"col in node.columns track by $index\">\n                                <span cms-direct-editable=\"model.{{col.value}}\"\n                                      cms-value=\"element[col.value]\"\n                                      cms-ref=\"{{element._id}}\"\n                                      cms-type=\"{{node.type}}\"></span>\n                                </td>\n                                <td>\n                                    <div cms-editor=\"{ref: element._id, type: node.type}\"\n                                         cms-remove=\"remove(element)\"></div>\n                                </td>\n                            </tr>\n                            </tbody>\n                        </table>\n                    </div>\n\n                    <div ng-if=\"loading\">\n                        <img src=\"/build/images/ajax-loader.gif\">\n                    </div>\n\n                    <div class=\"cms-panel-list-content\" ng-if=\"showAs.type === 'list'\">\n                        <div ng-repeat=\"element in list track by $index\"\n                             ng-class=\"elementClass\"\n                             cms-element=\"{ref: element._id, type: node.type, containers: {}}\"\n                             dnd-moved=\"remove(element)\"\n                             inline=\"false\"></div>\n                    </div>\n\n                    <div class=\"\" ng-if=\"showAs.type === 'element'\">\n                        <button class=\"btn cms-btn btn-primary btn-outline btn-xs\" style=\"margin-right: 10px;\"\n                                ng-repeat=\"e in list track by $index\"\n                                ng-click=\"selectElement(e._id);\" ng-show=\"list.length > 1\">\n                            {{getTitle(node.type, e._id)}}\n                        </button>\n                        <br><br>\n\n                        <div ng-if=\"element._id\"\n                             cms-element=\"{ref: element._id, type: node.type, containers: {}}\"\n                             inline=\"false\"></div>\n                    </div>\n\n                    <div class=\"clearfix\"></div>\n                    <uib-pagination ng-show=\"page.size > 1\" total-items=\"page.size\" ng-model=\"page.currentPage\"\n                                    class=\"pagination-sm\"\n                                    items-per-page=\"page.limit\"\n                                    ng-change=\"refresh(true)\"\n                                    max-size=\"10\"\n                                    boundary-link-numbers=\"true\"></uib-pagination>\n\n                </div>\n            </div>\n        </div>\n    </div>\n\n</div>\n"
+	module.exports = "<div class=\"cms-wrapper animated fadeInRight cms-sidebar cms\">\n    <button type=\"button\" class=\"btn btn-sm btn-white cms-close-position\"\n            ng-click=\"cancel()\">\n        <i class=\"fa fa-times\"></i>\n    </button>\n\n    <br>\n    <div class=\"row\">\n        <div class=\"col-xs-3 cms-panel\">\n            <div class=\"panel panel-primary\">\n                <div class=\"panel-heading\">Types</div>\n                <div class=\"panel-body\">\n                    <div js-tree=\"treeConfig\" ng-model=\"tree\"\n                         tree-events=\"changed:selectNode\" tree=\"treeInstance\"></div>\n                </div>\n            </div>\n        </div>\n        <div class=\"col-xs-9 cms-panel\">\n            <div class=\"panel panel-primary\">\n                <div class=\"panel-heading\">\n                    <div class=\"cms-admin-right-panel\">\n                        <label style=\"color: white\"> {{'Show' | translate}} : </label>\n\n                        <ui-select style=\"min-width: 50px;margin-left: 10px;margin-right: 10px;\"\n                                   class=\"cms-select\" data-ng-model=\"page.limit\" theme=\"bootstrap\"\n                                   on-select=\"refresh()\">\n                            <ui-select-match placeholder=\"\">{{$select.selected}}&nbsp;&nbsp;</ui-select-match>\n                            <ui-select-choices data-repeat=\"item in [10,25,50,100,200]\">{{item}}</ui-select-choices>\n                        </ui-select>\n\n                        <ui-select style=\"min-width: 60px;margin-left: 10px;margin-right: 10px;\"\n                                   class=\"cms-select\" data-ng-model=\"showAs.type\" theme=\"bootstrap\"\n                                   on-select=\"refresh()\">\n                            <ui-select-match placeholder=\"\">\n                                {{$select.selected.label}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</ui-select-match>\n                            <ui-select-choices\n                                    data-repeat=\"item.value as item in [{value:'list',label:'List'},{value:'table',label:'Table'},{value:'element',label:'Element'}]\">\n                                {{item.label}}\n                            </ui-select-choices>\n                        </ui-select>\n\n                        <div class=\"btn-group btn-group-xs\" style=\"margin-top: -12px;margin-right: 10px;\">\n                            <button type=\"button\" class=\"btn btn-white\" ng-click=\"setting()\">{{'Setting' | translate}}\n                            </button>\n                            <button type=\"button\" class=\"btn btn-white dropdown-toggle\" data-toggle=\"dropdown\">\n                                <span class=\"caret\"></span>\n                            </button>\n                            <ul class=\"dropdown-menu\" role=\"menu\" style=\"z-index: 10000 !important;\">\n                                <li><a href ng-click=\"deleteAll()\">{{'DeleteAll' | translate}}</a></li>\n                                <li><a href ng-click=\"import()\">Import</a></li>\n                                <li><a href ng-click=\"export()\">Export</a></li>\n\n                            </ul>\n                        </div>\n\n                        <button class=\"btn btn-white btn-xs\" ng-click=\"add()\">\n                            {{'Add' | translate}}\n                        </button>\n\n                    </div>\n\n                    <input type=\"text\" class=\"form-control input-xs\"\n                           style=\"margin-left: 10px;width: 100px;display: inline-block;\"\n                           ng-model=\"search.text\" ng-model-options=\"{debounce: 300}\" placeholder=\"search ...\">\n\n                    <div ng-if=\"queries && queries.length > 0\">\n                        <hr style=\"margin-top: 10px;margin-bottom: 5px;\">\n\n                        <div class=\"cms-admin-heading-form\" style=\"height: 60px;\">\n                            <formly-form ng-repeat=\"query in queries\" model=\"query.model\" fields=\"query.form\"\n                                         form=\"form\"\n                                         options=\"options\">\n                            </formly-form>\n                        </div>\n                    </div>\n\n                </div>\n                <div class=\"panel-body\" ng-if=\"node\">\n\n                    <div style=\"width: 100%;overflow-x: auto\" ng-if=\"showAs.type === 'table'\">\n                        <table class=\"table cms-admin-table\">\n                            <thead>\n                            <tr>\n                                <th ng-repeat=\"col in node.columns track by $index\" ng-bind=\"col.label\"></th>\n                                <th>Edit</th>\n                            </tr>\n                            </thead>\n                            <tbody>\n                            <tr ng-repeat=\"element in data.list track by $index\">\n                                <td ng-repeat=\"col in node.columns track by $index\">\n                                <span cms-direct-editable=\"model.{{col.value}}\"\n                                      cms-value=\"element[col.value]\"\n                                      cms-ref=\"{{element._id}}\"\n                                      cms-type=\"{{node.type}}\"></span>\n                                </td>\n                                <td>\n                                    <div cms-editor=\"{ref: element._id, type: node.type}\"\n                                         cms-remove=\"remove(element)\"></div>\n                                </td>\n                            </tr>\n                            </tbody>\n                        </table>\n                    </div>\n\n                    <div ng-show=\"data.loading\">\n                        <img src=\"/build/images/ajax-loader.gif\">\n                    </div>\n\n                    <div class=\"cms-panel-list-content\" ng-if=\"showAs.type === 'list'\">\n                        <div ng-repeat=\"element in data.list track by $index\"\n                             ng-class=\"elementClass\"\n                             cms-element=\"{ref: element._id, type: node.type, containers: {}}\"\n                             dnd-moved=\"remove(element)\"\n                             inline=\"false\"></div>\n                    </div>\n\n                    <div class=\"\" ng-if=\"showAs.type === 'element'\">\n                        <button class=\"btn cms-btn btn-primary btn-outline btn-xs\" style=\"margin-right: 10px;\"\n                                ng-repeat=\"e in data.list track by $index\"\n                                ng-click=\"selectElement(e._id);\" ng-show=\"data.list.length > 1\">\n                            {{getTitle(node.type, e._id)}}\n                        </button>\n                        <br><br>\n\n                        <div ng-if=\"element._id\"\n                             cms-element=\"{ref: element._id, type: node.type, containers: {}}\"\n                             inline=\"false\"></div>\n                    </div>\n\n                    <div class=\"clearfix\"></div>\n\n                    <ul uib-pagination\n                        ng-show=\"page.size > 1\"\n                        total-items=\"page.size\"\n                        ng-model=\"page.currentPage\"\n                        class=\"pagination-sm\"\n                        items-per-page=\"page.limit\"\n                        ng-change=\"refresh(true)\"\n                        max-size=\"10\"\n                        boundary-link-numbers=\"true\"></ul>\n                </div>\n            </div>\n        </div>\n    </div>\n\n</div>\n"
 
 /***/ },
-/* 140 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -13851,23 +17648,23 @@
 	
 	var _common2 = _interopRequireDefault(_common);
 	
-	var _cmsNav = __webpack_require__(141);
+	var _cmsNav = __webpack_require__(188);
 	
 	var _cmsNav2 = _interopRequireDefault(_cmsNav);
 	
-	var _module2 = __webpack_require__(132);
+	var _module2 = __webpack_require__(179);
 	
 	var _module3 = _interopRequireDefault(_module2);
 	
-	var _module4 = __webpack_require__(111);
+	var _module4 = __webpack_require__(158);
 	
 	var _module5 = _interopRequireDefault(_module4);
 	
-	var _module6 = __webpack_require__(128);
+	var _module6 = __webpack_require__(175);
 	
 	var _module7 = _interopRequireDefault(_module6);
 	
-	var _module8 = __webpack_require__(130);
+	var _module8 = __webpack_require__(177);
 	
 	var _module9 = _interopRequireDefault(_module8);
 	
@@ -13878,7 +17675,7 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 141 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -13887,7 +17684,7 @@
 	    value: true
 	});
 	
-	var _cmsNav = __webpack_require__(142);
+	var _cmsNav = __webpack_require__(189);
 	
 	var _cmsNav2 = _interopRequireDefault(_cmsNav);
 	
@@ -13937,7 +17734,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 142 */
+/* 189 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms\">\n    <nav role=\"navigation\" class=\"navbar navbar-fixed-top navbar-default cms-menu\">\n        <div class=\"container\">\n            <div class=\"navbar-header\">\n                <button type=\"button\" data-toggle=\"collapse\" data-target=\"#dropdown_menu\" aria-expanded=\"false\"\n                        aria-controls=\"navbar\" class=\"navbar-toggle collapsed\"><span\n                        class=\"sr-only\">Toggle navigation</span><span class=\"icon-bar\"></span><span\n                        class=\"icon-bar\"></span><span\n                        class=\"icon-bar\"></span></button>\n                <a href=\"#\" class=\"navbar-brand\">Cms Mon</a></div>\n            <div id=\"dropdown_menu\" class=\"collapse navbar-collapse\">\n                <ul class=\"nav navbar-nav\">\n                    <li class=\"dropdown cms-types-dropdown\">\n                        <a href=\"#\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\"\n                                            class=\"dropdown-toggle\">Types<span class=\"caret\"></span></a>\n                        <ul role=\"menu\" cms-types=\"\" class=\"dropdown-menu\"></ul>\n                    </li>\n                    <li><a cms-admin>Admin</a></li>\n                    <li><a href=\"#\" cms-sitemap>Sitemap</a></li>\n                </ul>\n                <ul class=\"nav navbar-nav navbar-right\">\n                    <li>\n                        <div cms-edit-state></div>\n                    </li>\n                    <li><button class=\"btn btn-default navbar-btn\"\n                                style=\"margin-left: 10px\"\n                                ng-click=\"vm.toggleContainer()\">Container</button></li>\n                </ul>\n            </div>\n        </div>\n    </nav>\n</div>"

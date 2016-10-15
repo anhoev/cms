@@ -19,10 +19,11 @@ const fs = require('fs');
 const cache = new NodeCache({useClones: false, stdTTL: 20 * 60});
 const ngcompile = require('../lib/ng.compile');
 const Path = require('path');
-const ews = require('express-ws')(_app);
-var deasync = require('deasync');
+const deasync = require('deasync');
 const co = require('co');
 const request = require('request');
+const server = require('http').Server(_app);
+const _io = require('socket.io')(server);
 
 var download = function (uri, filename, callback) {
     request.head(uri, function (err, res, body) {
@@ -51,13 +52,19 @@ const app = new Proxy(_app, {
             };
         }
 
-        if (key === 'ws') {
+        return target[key];
+    }
+});
+
+let io = new Proxy(_io, {
+    get(target, key) {
+        if (key === 'on') {
             return function () {
                 const _fn = arguments[1];
                 if (_fn && _fn.constructor) {
-                    const fn = function (ws, req) {
-                        const _on = ws.on;
-                        ws.on = function (path, cb) {
+                    const fn = function (socket) {
+                        const _on = socket.on;
+                        socket.on = function (path, cb) {
                             if (cb && cb.constructor && cb.constructor.name === 'GeneratorFunction') {
                                 const callback = function (msg) {
                                     try {
@@ -74,26 +81,22 @@ const app = new Proxy(_app, {
                                     }
                                 };
 
-                                _on.bind(ws)(path, callback);
+                                _on.bind(socket)(path, callback);
                             } else {
-                                _on.bind(ws)(path, cb);
+                                _on.bind(socket)(path, cb);
                             }
                         }
 
-                        const _send = ws.send;
-                        ws.send = function (result) {
+                        const _emit = socket.emit;
+                        socket.emit = function (name, result) {
                             console.time("send");
                             if (typeof result === 'string') {
-                                _send.bind(ws)(result, {}, function () {
-                                    console.timeEnd("send");
-                                });
+                                _emit.bind(socket)(name, result);
                             } else {
-                                _send.bind(ws)(JsonFn.stringify(result), {}, function () {
-                                    console.timeEnd("send");
-                                });
+                                _emit.bind(socket)(name, JsonFn.stringify(result));
                             }
                         }
-                        _fn.bind(this)(ws, req);
+                        _fn.bind(this)(socket);
                     }
 
                     arguments[1] = fn;
@@ -105,6 +108,7 @@ const app = new Proxy(_app, {
         return target[key];
     }
 });
+
 
 app.use(session({
     secret: 'best cms system',
@@ -129,6 +133,7 @@ const WebType = {APPLICATION: 'APPLICATION', WEB: 'WEB'};
 
 // todo : use class for cms
 const cms = {
+    io,
     readFile,
     download,
     compile,
@@ -194,7 +199,7 @@ const cms = {
     },
     utils: {},
     express,
-    ews,
+    ews:null,
     app,
     mongoose,
     routers: {},
@@ -266,7 +271,8 @@ function listen() {
     cms.use(require('./serverFn'));
     cms.use(require('./config'));
     _.each(cms.routers, r => app.use(r));
-    app.listen(...arguments);
+    //app.listen(...arguments);
+    server.listen(...arguments);
 }
 
 /**
