@@ -29,3 +29,7 @@
 
 * selection for admin
 
+* plugins
+
+* ACL
+

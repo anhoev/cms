@@ -252,7 +252,6 @@ function config(formlyConfigProvider, size, $rootScopeProvider) {
                         name: $scope.to.labelProp ? e[$scope.to.labelProp] : value
                     });
                 }));
-
             })
         },
         overwriteOk: true,

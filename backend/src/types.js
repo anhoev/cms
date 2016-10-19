@@ -236,60 +236,60 @@ module.exports = (cms) => {
 
     /*app.ws(`/`, function (ws, req) {
 
-        ws.on('error', function (e) {
-            console.warn(e);
-        })
+     ws.on('error', function (e) {
+     console.warn(e);
+     })
 
-        ws.on('message', function*({path, params = {}, uuid, model}) {
-            const base = '([^\/]*)\/api\/v1\/([^\/]*)';
-            const modelQueryTester = new RegExp(`${base}$`);
-            const countQueryTester = new RegExp(`${base}\/count$`);
-            if (modelQueryTester.test(path)) {
-                const [,method,type] = path.match(modelQueryTester);
-                if (method === 'get') {
-                    if (Object.keys(cms.Types).indexOf(type) !== -1) {
-                        let q = cms.getModel(type).find(params.query);
-                        if (params.populate) {
-                            q = q.populate(params.populate);
-                        }
-                        q = q.sort(params.sort).skip(params.skip).limit(params.limit);
-                        if (params.lean) q = q.lean();
-                        const result = yield q;
-                        ws.send({result, uuid});
-                    }
-                } else if (method === 'post') {
-                    if (Object.keys(cms.Types).indexOf(type) !== -1) {
-                        var Model = cms.Types[type].Model;
-                        yield Model.findByIdAndUpdate(model._id, _.pickBy(model, (v, k) => k !== '__v', true), {
-                            upsert: true,
-                            setDefaultsOnInsert: true
-                        }).exec();
-                        var result = yield Model.findById(model._id);
-                        ws.send({result, uuid});
-                    }
-                }
-            }
-            if (countQueryTester.test(path)) {
-                const [,method,modelName] = path.match(countQueryTester);
-                if (method === 'get') {
-                    if (Object.keys(cms.Types).indexOf(modelName) !== -1) {
-                        const result = yield cms.Types[modelName].Model.find(params.query).count(params.query);
-                        ws.send({result, uuid});
-                    }
-                }
-            }
+     ws.on('message', function*({path, params = {}, uuid, model}) {
+     const base = '([^\/]*)\/api\/v1\/([^\/]*)';
+     const modelQueryTester = new RegExp(`${base}$`);
+     const countQueryTester = new RegExp(`${base}\/count$`);
+     if (modelQueryTester.test(path)) {
+     const [,method,type] = path.match(modelQueryTester);
+     if (method === 'get') {
+     if (Object.keys(cms.Types).indexOf(type) !== -1) {
+     let q = cms.getModel(type).find(params.query);
+     if (params.populate) {
+     q = q.populate(params.populate);
+     }
+     q = q.sort(params.sort).skip(params.skip).limit(params.limit);
+     if (params.lean) q = q.lean();
+     const result = yield q;
+     ws.send({result, uuid});
+     }
+     } else if (method === 'post') {
+     if (Object.keys(cms.Types).indexOf(type) !== -1) {
+     var Model = cms.Types[type].Model;
+     yield Model.findByIdAndUpdate(model._id, _.pickBy(model, (v, k) => k !== '__v', true), {
+     upsert: true,
+     setDefaultsOnInsert: true
+     }).exec();
+     var result = yield Model.findById(model._id);
+     ws.send({result, uuid});
+     }
+     }
+     }
+     if (countQueryTester.test(path)) {
+     const [,method,modelName] = path.match(countQueryTester);
+     if (method === 'get') {
+     if (Object.keys(cms.Types).indexOf(modelName) !== -1) {
+     const result = yield cms.Types[modelName].Model.find(params.query).count(params.query);
+     ws.send({result, uuid});
+     }
+     }
+     }
 
-            var serverFnPath = /\/cms-types\/([^\/]*)\/([^\/]*)\/([^\/]*)/;
-            if (serverFnPath.test(path)) {
-                const [type,id,fn] = path.match(serverFnPath);
-                const args = params;
-                const {Model, serverFn} = cms.Types[type];
-                const obj = yield Model.findById(id).exec();
-                const result = yield* serverFn[fn].bind(obj)(...args);
-                ws.send({result: isNaN(result) ? result : result + '', uuid});
-            }
-        });
-    });*/
+     var serverFnPath = /\/cms-types\/([^\/]*)\/([^\/]*)\/([^\/]*)/;
+     if (serverFnPath.test(path)) {
+     const [type,id,fn] = path.match(serverFnPath);
+     const args = params;
+     const {Model, serverFn} = cms.Types[type];
+     const obj = yield Model.findById(id).exec();
+     const result = yield* serverFn[fn].bind(obj)(...args);
+     ws.send({result: isNaN(result) ? result : result + '', uuid});
+     }
+     });
+     });*/
 
     cms.io.on(`connection`, function (socket) {
 
@@ -317,11 +317,18 @@ module.exports = (cms) => {
                 } else if (method === 'post') {
                     if (Object.keys(cms.Types).indexOf(type) !== -1) {
                         var Model = cms.Types[type].Model;
+
+                        if (!model._id) {
+                            const _model = new Model();
+                            model._id = _model._id;
+                        }
+
                         yield Model.findByIdAndUpdate(model._id, _.pickBy(model, (v, k) => k !== '__v', true), {
                             upsert: true,
                             setDefaultsOnInsert: true
                         }).exec();
-                        var result = yield Model.findById(model._id);
+
+                        let result = yield Model.findById(model._id);
                         socket.emit('message', {result, uuid});
                     }
                 }

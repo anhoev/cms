@@ -103,6 +103,10 @@ function cms($http, Upload) {
     }
 
     function createElement(type, content, cb, onfly = true) {
+        if (!onfly) {
+            updateElement(type, content, cb);
+        }
+
         return getType(type, null, cb, content, onfly);
     }
 
@@ -228,9 +232,11 @@ function cms($http, Upload) {
             model
         }, ({result:model}) => {
 
-            if (_.find(Types[type].list, {_id: model._id})) {
+            var oldModel = _.find(Types[type].list, {_id: model._id});
+            if (oldModel) {
+                for (var member in oldModel) delete oldModel[member];
+                _.assign(oldModel, model);
                 _.remove(Types[type].list, {_id: model._id});
-                Types[type].list.push(model);
             }
 
             if (resolve) resolve(model);

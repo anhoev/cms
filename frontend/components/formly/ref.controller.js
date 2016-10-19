@@ -24,6 +24,9 @@ function controller($scope, cms, $timeout) {
                     $scope.model[$scope.options.key] = val.map(_id => _.find($scope.models, {_id}));
                 }
             })
+        },
+        onInitialize: function (selectize) {
+            $scope.selectize = selectize
         }
     }
 
@@ -57,8 +60,14 @@ function controller($scope, cms, $timeout) {
     $scope.$watch(`model['${$scope.options.key}']`, () => {
         if ($scope.model[$scope.options.key] && $scope.model[$scope.options.key]._id) {
             $scope._model = $scope.model[$scope.options.key]._id;
+            if (!_.includes($scope.models.map(obj => obj._id), $scope.model[$scope.options.key]._id)) {
+                $scope.models.push($scope.model[$scope.options.key]);
+            }
         } else if (Array.isArray($scope.model[$scope.options.key]) && $scope.model[$scope.options.key][0]._id) {
             $scope._model = $scope.model[$scope.options.key].map(m => m._id);
+        } else if (!$scope.model[$scope.options.key]) {
+            $scope._model = '';
+            if ($scope.selectize) $scope.selectize.clear();
         }
     })
 

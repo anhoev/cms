@@ -1160,6 +1160,9 @@
 	                    });
 	                }
 	            });
+	        },
+	        onInitialize: function onInitialize(selectize) {
+	            $scope.selectize = selectize;
 	        }
 	    };
 	
@@ -1194,10 +1197,18 @@
 	    $scope.$watch('model[\'' + $scope.options.key + '\']', function () {
 	        if ($scope.model[$scope.options.key] && $scope.model[$scope.options.key]._id) {
 	            $scope._model = $scope.model[$scope.options.key]._id;
+	            if (!_.includes($scope.models.map(function (obj) {
+	                return obj._id;
+	            }), $scope.model[$scope.options.key]._id)) {
+	                $scope.models.push($scope.model[$scope.options.key]);
+	            }
 	        } else if (Array.isArray($scope.model[$scope.options.key]) && $scope.model[$scope.options.key][0]._id) {
 	            $scope._model = $scope.model[$scope.options.key].map(function (m) {
 	                return m._id;
 	            });
+	        } else if (!$scope.model[$scope.options.key]) {
+	            $scope._model = '';
+	            if ($scope.selectize) $scope.selectize.clear();
 	        }
 	    });
 	}
@@ -5918,7 +5929,7 @@
 	                }
 	
 	                scope.$watchCollection('options', setSelectizeOptions);
-	                scope.$watch('ngModel', setSelectizeValue);
+	                scope.$watch('ngModel', setSelectizeValue, true);
 	                scope.$watch('ngDisabled', toggle);
 	            };
 	
@@ -7474,6 +7485,10 @@
 	    function createElement(type, content, cb) {
 	        var onfly = arguments.length <= 3 || arguments[3] === undefined ? true : arguments[3];
 	
+	        if (!onfly) {
+	            updateElement(type, content, cb);
+	        }
+	
 	        return getType(type, null, cb, content, onfly);
 	    }
 	
@@ -7615,9 +7630,12 @@
 	            var model = _ref3.result;
 	
 	
-	            if (_.find(Types[type].list, { _id: model._id })) {
+	            var oldModel = _.find(Types[type].list, { _id: model._id });
+	            if (oldModel) {
+	                for (var member in oldModel) {
+	                    delete oldModel[member];
+	                }_.assign(oldModel, model);
 	                _.remove(Types[type].list, { _id: model._id });
-	                Types[type].list.push(model);
 	            }
 	
 	            if (resolve) resolve(model);
@@ -17204,18 +17222,16 @@
 	
 	                    console.time('test');
 	                    cms.loadElements($scope.node.type, function (list) {
-	                        var _$scope$data$list;
-	
 	                        console.timeEnd('test');
 	                        $scope.data.loading = false;
-	                        //$timeout(function () {
+	                        $timeout(function () {
+	                            var _$scope$data$list;
 	
-	                        (_$scope$data$list = $scope.data.list).push.apply(_$scope$data$list, _toConsumableArray(list));
-	                        if ($scope.showAs.type === 'element') {
-	                            $scope.selectElement($scope.data.list[0]._id);
-	                        }
-	                        $scope.$digest();
-	                        //})
+	                            (_$scope$data$list = $scope.data.list).push.apply(_$scope$data$list, _toConsumableArray(list));
+	                            if ($scope.showAs.type === 'element') {
+	                                $scope.selectElement($scope.data.list[0]._id);
+	                            }
+	                        });
 	                    }, paramsBuilder);
 	
 	                    // number of pages;

@@ -103,14 +103,14 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
                         cms.loadElements($scope.node.type, (list) => {
                             console.timeEnd('test');
                             $scope.data.loading = false;
-                            //$timeout(function () {
+                            $timeout(function () {
 
                                 $scope.data.list.push(...list);
                                 if ($scope.showAs.type === 'element') {
                                     $scope.selectElement($scope.data.list[0]._id);
                                 }
-                                $scope.$digest();
-                            //})
+
+                            })
 
                         }, paramsBuilder);
 
