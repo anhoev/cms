@@ -57,7 +57,7 @@ module.exports = (cms) => {
         mTemplate: `
         <WrapLayout cms-wrapper [name]="model.name" [element]="model"></WrapLayout>
         `,
-        isViewElement: false,
+        isViewElement: true,
         autopopulate: true
     });
 

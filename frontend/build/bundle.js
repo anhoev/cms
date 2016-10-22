@@ -366,7 +366,7 @@
 	
 	cmsDirectEditableDirective.$inject = ['cms', '$filter'];
 	
-	function cmsDirectEditableDirective(cms, $filter) {
+	function cmsDirectEditableDirective(cms, $filter, $timeout) {
 	
 	    function link(scope, element, attrs, elementController) {
 	        var vm = scope.vm;
@@ -393,7 +393,7 @@
 	            }
 	
 	            vm.isValueUndefined = typeof vm.value === 'undefined';
-	        });
+	        }, true);
 	
 	        if (!ref) return;
 	
@@ -17179,7 +17179,9 @@
 	                    //$timeout(function () {
 	                    if (!$scope.node) return;
 	
-	                    $scope.data.list = [];
+	                    $timeout(function () {
+	                        $scope.data.list = [];
+	                    });
 	
 	                    $scope.data.loading = true;
 	

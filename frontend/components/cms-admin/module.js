@@ -55,71 +55,73 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
                 $scope.refresh = (onlyChangePage = false, changeAdminList = false) => {
 
                     //$timeout(function () {
-                        if (!$scope.node) return;
+                    if (!$scope.node) return;
 
+                    $timeout(() => {
                         $scope.data.list = [];
+                    });
 
-                        $scope.data.loading = true;
+                    $scope.data.loading = true;
 
-                        $scope.element = {};
+                    $scope.element = {};
 
-                        if (changeAdminList) {
-                            $timeout(() => {
-                                $scope.tree = cms.getAdminList();
-                                $scope.treeConfig.version++;
-                            })
-
-                        }
-
-                        let paramsBuilder = new QueryBuilder().part(false).limit($scope.page.limit).page($scope.page.currentPage).query($scope.node.query);
-                        if (cms.types[$scope.node.type].lean) paramsBuilder.lean();
-                        _.each($scope.queries, q => {
-                            if (q.model) {
-                                const val = _.get(q.model, q.form[0].key);
-                                if (val && val.hasOwnProperty('_id') && !val._id) return;
-                                if (!val) return;
-
-                                if (q.form[0].key === 0 && _.endsWith(q.path, '.field')) q.path = q.path.replace('.field', '');
-
-                                if (q.fn) {
-                                    const result = q.fn(val, _.dropRight(q.path.split('\.'), 1).join('\.'), q.path.split('\.').pop());
-                                    if (result.populate) {
-                                        paramsBuilder.populate(result.populate);
-                                    } else if (result.$where) {
-                                        paramsBuilder.query(result);
-                                    } else {
-                                        paramsBuilder.query({[q.path]: result});
-                                    }
-                                } else if (val.name !== 'None') {
-                                    paramsBuilder.query({[q.path]: val._id || val});
-                                }
-                            }
+                    if (changeAdminList) {
+                        $timeout(() => {
+                            $scope.tree = cms.getAdminList();
+                            $scope.treeConfig.version++;
                         })
-                        if (!_.isEmpty($scope.search.text)) {
-                            paramsBuilder.search($scope.search.text);
-                        }
 
-                        console.time('test');
-                        cms.loadElements($scope.node.type, (list) => {
-                            console.timeEnd('test');
-                            $scope.data.loading = false;
-                            $timeout(function () {
+                    }
 
-                                $scope.data.list.push(...list);
-                                if ($scope.showAs.type === 'element') {
-                                    $scope.selectElement($scope.data.list[0]._id);
+                    let paramsBuilder = new QueryBuilder().part(false).limit($scope.page.limit).page($scope.page.currentPage).query($scope.node.query);
+                    if (cms.types[$scope.node.type].lean) paramsBuilder.lean();
+                    _.each($scope.queries, q => {
+                        if (q.model) {
+                            const val = _.get(q.model, q.form[0].key);
+                            if (val && val.hasOwnProperty('_id') && !val._id) return;
+                            if (!val) return;
+
+                            if (q.form[0].key === 0 && _.endsWith(q.path, '.field')) q.path = q.path.replace('.field', '');
+
+                            if (q.fn) {
+                                const result = q.fn(val, _.dropRight(q.path.split('\.'), 1).join('\.'), q.path.split('\.').pop());
+                                if (result.populate) {
+                                    paramsBuilder.populate(result.populate);
+                                } else if (result.$where) {
+                                    paramsBuilder.query(result);
+                                } else {
+                                    paramsBuilder.query({[q.path]: result});
                                 }
+                            } else if (val.name !== 'None') {
+                                paramsBuilder.query({[q.path]: val._id || val});
+                            }
+                        }
+                    })
+                    if (!_.isEmpty($scope.search.text)) {
+                        paramsBuilder.search($scope.search.text);
+                    }
 
-                            })
+                    console.time('test');
+                    cms.loadElements($scope.node.type, (list) => {
+                        console.timeEnd('test');
+                        $scope.data.loading = false;
+                        $timeout(function () {
 
-                        }, paramsBuilder);
+                            $scope.data.list.push(...list);
+                            if ($scope.showAs.type === 'element') {
+                                $scope.selectElement($scope.data.list[0]._id);
+                            }
 
-                        // number of pages;
-                        if (!onlyChangePage) cms.countElements($scope.node.type, (count) => {
-                            $timeout(function () {
-                                $scope.page.size = count;
-                            })
-                        }, paramsBuilder);
+                        })
+
+                    }, paramsBuilder);
+
+                    // number of pages;
+                    if (!onlyChangePage) cms.countElements($scope.node.type, (count) => {
+                        $timeout(function () {
+                            $scope.page.size = count;
+                        })
+                    }, paramsBuilder);
                     //});
 
 

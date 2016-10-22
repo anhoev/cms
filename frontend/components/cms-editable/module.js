@@ -56,7 +56,7 @@ function directive(cms) {
 
 cmsDirectEditableDirective.$inject = ['cms', '$filter'];
 
-function cmsDirectEditableDirective(cms, $filter) {
+function cmsDirectEditableDirective(cms, $filter, $timeout) {
 
     function link(scope, element, attrs, elementController) {
         const {vm} = scope;
@@ -79,7 +79,7 @@ function cmsDirectEditableDirective(cms, $filter) {
 
             vm.isValueUndefined = typeof vm.value === 'undefined';
 
-        });
+        }, true);
 
         if (!ref) return;
 
