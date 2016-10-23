@@ -12,7 +12,6 @@
   "license": "proprietary",
   "devDependencies": {
     "acorn": "^2.7.0",
-    "angular": "^1.5.8",
     "angular-bootstrap-contextmenu": "^0.9.6",
     "angular-datepicker": "^1.0.5",
     "angular-drag-and-drop-lists": "^1.4.0",
@@ -28,7 +27,6 @@
     "angular-selectize2": "^1.2.3",
     "angular-translate": "^2.12.1",
     "angular-tree-control": "git+https://github.com/wix/angular-tree-control.git",
-    "angular-ui-bootstrap": "^2.2.0",
     "angular-ui-codemirror": "^0.3.0",
     "angular-ui-grid": "^3.0.7",
     "angular-ui-notification": "^0.1.0",
@@ -84,6 +82,8 @@
     "start": "node --harmony_destructuring ./backend/src/server.js"
   },
   "dependencies": {
+    "angular": "^1.5.8",
+    "angular-ui-bootstrap": "^2.2.0",
     "archiver": "^0.21.0",
     "body-parser": "^1.14.1",
     "bootstrap": "^3.3.6",

@@ -40,18 +40,21 @@ module.exports = (cms) => {
         const {Model, Formatter, FormatterUrl, Form, info, fn, serverFnForClient} = cms.Types[type];
 
         let obj = noElement ? new Model(content) : (ref ? yield Model.findOne({_id: ref}) : yield Model.create(content));
-        var _autopopulate = Model.schema.s.hooks._pres.find[0].fn;
-        if (_autopopulate) {
-            let options = [];
-            const _query = {
-                p: obj,
-                populate: function (opt) {
-                    this.p = this.p.populate(opt);
+        try {
+            var _autopopulate = Model.schema.s.hooks._pres.find[0].fn;
+            if (_autopopulate) {
+                let options = [];
+                const _query = {
+                    p: obj,
+                    populate: function (opt) {
+                        this.p = this.p.populate(opt);
+                    }
                 }
-            }
-            _autopopulate.bind(_query)();
+                _autopopulate.bind(_query)();
 
-            yield _query.p.execPopulate();
+                yield _query.p.execPopulate();
+            }
+        } catch (e) {
         }
         let result = {info, fn, serverFn: serverFnForClient};
         result.data = obj;
