@@ -75,6 +75,7 @@ module.exports = (cms) => {
         schema.pre('findOneAndUpdate', function (next) {
             let _textIndex = ''
             traverse(this._update).forEach(function (node) {
+                if (!node) return;
                 if (this.key && !_.includes(['$set', '$setOnInsert', '__v', '_id', 'id'], this.key)) {
                     const _type = schema.path(this.path.filter(p=> p !== '$set' && p !== '$setOnInsert').join('.'));
                     if (_type) {
