@@ -120,7 +120,9 @@
                                 ng-click="selectElement(e._id);" ng-show="data.list.length > 1">
                             {{getTitle(node.type, e._id)}}
                         </button>
-                        <br><br>
+                        <div ng-show="data.list.length > 1">
+                            <br><br>
+                        </div>
 
                         <div ng-if="element._id"
                              cms-element="{ref: element._id, type: node.type, containers: {}}"

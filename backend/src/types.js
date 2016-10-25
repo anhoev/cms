@@ -19,7 +19,7 @@ module.exports = (cms) => {
         const args = _.map(JsonFn.clone(req.body, true), v => v);
         const {Model, serverFn} = cms.Types[type];
         const obj = yield Model.findById(id).exec();
-        const result = yield* serverFn[fn].bind(obj)(...args);
+        const result = obj ? yield* serverFn[fn].bind(obj)(...args) : yield* serverFn[fn](...args);
         res.send(isNaN(result) ? result : result + '');
     })
 
@@ -43,7 +43,6 @@ module.exports = (cms) => {
         try {
             var _autopopulate = Model.schema.s.hooks._pres.find[0].fn;
             if (_autopopulate) {
-                let options = [];
                 const _query = {
                     p: obj,
                     populate: function (opt) {

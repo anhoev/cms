@@ -153,6 +153,9 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
 
                         $scope.queries.forEach((q, index) => {
                             q.form = !q.form ? [angular.copy(_.get(cms.types[$scope.node.type].form, q.pathInForm))] : [q.form];
+                            if (q.form[0].default) q.model = {[q.form[0].key]:q.form[0].default};
+                            if (q.form[0].defaultValue) q.model = {[q.form[0].key]:q.form[0].defaultValue};
+
                             _.merge(q.form[0], {templateOptions: {class: 'col-xs-3'}});
                             var listen = $scope.$watch(`queries[${index}].model`, function (m1, m2) {
                                 if (typeof m2 === 'undefined') return;

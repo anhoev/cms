@@ -76,7 +76,8 @@ module.exports = {
             'selectize',
             //'angular-selectize2/dist/angular-selectize',
 
-            'angular-translate'
+            'angular-translate',
+            'extend'
         ]
     },
     output: {

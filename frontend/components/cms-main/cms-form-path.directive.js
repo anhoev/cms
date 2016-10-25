@@ -1,3 +1,8 @@
+const _merge = require('extend');
+function merge() {
+    return _merge(true, ...arguments);
+}
+
 directive.$inject = ['cms'];
 function directive(cms) {
 
@@ -9,6 +14,7 @@ function directive(cms) {
             model: '=',
             type: '@',
             path: '@cmsFormPath',
+            extend: '=',
             class: '@?cmsClass'
         },
         template: `
@@ -20,11 +26,12 @@ function directive(cms) {
             const Path = _.find(cms.types[vm.type].paths, {path: vm.path});
 
             if (Path) {
-                vm.fields = [angular.copy(_.get(cms.types[vm.type].form, Path.pathInForm))];
+                var field = angular.copy(_.get(cms.types[vm.type].form, Path.pathInForm));
+                if (vm.extend) merge(field, vm.extend);
+                vm.fields = [field];
 
                 if (vm.class && vm.class !== '') _.merge(vm.fields[0], {templateOptions: {class: vm.class}});
             }
-
 
 
         },

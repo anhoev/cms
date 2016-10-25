@@ -105,9 +105,10 @@ function cms($http, Upload) {
     function createElement(type, content, cb, onfly = true) {
         if (!onfly) {
             updateElement(type, content, cb);
+        } else {
+            getType(type, null, cb, content, onfly);
         }
 
-        return getType(type, null, cb, content, onfly);
     }
 
     function removeElement(type, _id, cb, onerror) {
@@ -233,10 +234,11 @@ function cms($http, Upload) {
         }, ({result:model}) => {
 
             var oldModel = _.find(Types[type].list, {_id: model._id});
-            if (oldModel) {
+            if (oldModel && angular.equals(oldModel, model)) {
                 for (var member in oldModel) delete oldModel[member];
                 _.assign(oldModel, model);
-                _.remove(Types[type].list, {_id: model._id});
+            } else {
+                Types[type].list.push(model);
             }
 
             if (resolve) resolve(model);
