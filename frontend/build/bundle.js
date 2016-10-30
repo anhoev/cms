@@ -120,6 +120,11 @@
 	        if (typeof key === 'string' && key.charAt(0) === '$' && key.charAt(1) === '$') {
 	            value = undefined;
 	        }
+	
+	        if (key === '$order') {
+	            value = undefined;
+	        }
+	
 	        if (value && value.hasOwnProperty('isObjectId')) {
 	            value = value._id;
 	        }

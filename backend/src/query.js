@@ -19,6 +19,7 @@ module.exports = cms => {
             // group nested object
             if (!this.key || this.key === 'paths') {
                 const paths = _.reduce(Object.keys(node), (obj, key) => {
+                    if (node[key].options && node[key].options.form === false) return obj;
                     if (_.includes(key, '\.')) {
                         const [k1,k2] = key.split('\.');
                         obj[k1] = obj[k1] || {instance: 'NestedObject', schema: {paths: {}}};
@@ -39,6 +40,7 @@ module.exports = cms => {
         let Form = traverse(paths).map(function (node) {
             // control
             {
+
                 if (!this.key) {
                     return this.after(function (_node) {
                         this.update(_.compact(_.map(_node, v => v)), true);
@@ -56,6 +58,7 @@ module.exports = cms => {
                 if (this.key === 'fieldGroup' || this.key === 'fields') this.after(function (_node) {
                     this.update(_.compact(_.map(_node, v => v)), true);
                 })
+
             }
 
             // make Form

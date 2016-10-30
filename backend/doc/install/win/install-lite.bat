@@ -16,13 +16,3 @@ refreshenv
 npm install --global --production windows-build-tools
 npm config set msvs_version 2015 --global
 npm install -g npm@next
-
-
-
-choco install vcbuildtools -y
-choco install visualcppbuildtools -y
-choco install python2 -y
-
-choco install microsoft-build-tools
-choco install visualstudio2015community -y
-choco install intellijidea-ultimate -y
