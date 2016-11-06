@@ -334,10 +334,10 @@
 	
 	    function link(scope, element, attrs, elementController) {
 	        // resolve type and ref
-	        var _elementController$ge = elementController.getElement();
+	        var _elementController$ge = elementController.getElement(),
+	            type = _elementController$ge.type,
+	            ref = _elementController$ge.ref;
 	
-	        var type = _elementController$ge.type;
-	        var ref = _elementController$ge.ref;
 	        var vm = scope.vm;
 	
 	
@@ -378,8 +378,8 @@
 	
 	        // resolve type and ref
 	
-	        var type = vm.type;
-	        var ref = vm.ref;
+	        var type = vm.type,
+	            ref = vm.ref;
 	
 	
 	        var property = vm.property.replace('model.', '');
@@ -430,11 +430,9 @@
 	
 	        // resolve type and ref
 	
-	        var _ref = vm.element ? vm.element : elementController.getElement();
-	
-	        var type = _ref.type;
-	        var ref = _ref.ref;
-	
+	        var _ref = vm.element ? vm.element : elementController.getElement(),
+	            type = _ref.type,
+	            ref = _ref.ref;
 	
 	        vm.showJson = function () {
 	            return false;
@@ -1630,15 +1628,14 @@
 	
 	function controller($scope) {
 	    var options = $scope.to.options = [];
-	    var _$scope$formState = $scope.formState;
-	    var path = _$scope$formState.path;
-	    var model = _$scope$formState.model;
+	    var _$scope$formState = $scope.formState,
+	        path = _$scope$formState.path,
+	        model = _$scope$formState.model;
 	
 	    path = _.dropRight(path.split('\.')).join('.');
 	
-	    var _$get = _.get(model, path);
-	
-	    var containers = _$get.containers;
+	    var _$get = _.get(model, path),
+	        containers = _$get.containers;
 	
 	    $scope.to.labelProp = 'Type';
 	    var map = {};
@@ -1667,9 +1664,9 @@
 	
 	function controller($scope, cms) {
 	    debugger;
-	    var _$scope$formState = $scope.formState;
-	    var path = _$scope$formState.path;
-	    var model = _$scope$formState.model;
+	    var _$scope$formState = $scope.formState,
+	        path = _$scope$formState.path,
+	        model = _$scope$formState.model;
 	
 	    path = _.dropRight(path.split('\.')).join('.');
 	
@@ -1724,15 +1721,14 @@
 	controller.$inject = ['$scope', 'cms'];
 	
 	function controller($scope, cms) {
-	    var _$scope$formState = $scope.formState;
-	    var path = _$scope$formState.path;
-	    var model = _$scope$formState.model;
+	    var _$scope$formState = $scope.formState,
+	        path = _$scope$formState.path,
+	        model = _$scope$formState.model;
 	
 	    path = _.dropRight(path.split('\.')).join('.');
 	
-	    var _$get = _.get(model, path);
-	
-	    var BindType = _$get.BindType;
+	    var _$get = _.get(model, path),
+	        BindType = _$get.BindType;
 	
 	    var Type = cms.data.types[BindType];
 	    $scope.to.options = _.map(Type.fn, function (v, k) {
@@ -2010,7 +2006,7 @@
 /* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_LOCAL_MODULE_0__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_LOCAL_MODULE_1__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function($, jQuery) {/**
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_LOCAL_MODULE_0__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_LOCAL_MODULE_1__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function($) {/**
 	 * sifter.js
 	 * Copyright (c) 2013 Brian Reavis & contributors
 	 *
@@ -2647,7 +2643,7 @@
 	}));
 	
 	/**
-	 * selectize.js (v0.12.3)
+	 * selectize.js (v0.12.4)
 	 * Copyright (c) 2013–2015 Brian Reavis & contributors
 	 *
 	 * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -2712,7 +2708,7 @@
 		 * removeHighlight fn copied from highlight v5 and
 		 * edited to remove with() and pass js strict mode
 		 */
-		jQuery.fn.removeHighlight = function() {
+		$.fn.removeHighlight = function() {
 			return this.find("span.highlight").each(function() {
 				this.parentNode.firstChild.nodeName;
 				var parent = this.parentNode;
@@ -3778,7 +3774,7 @@
 					self.refreshState();
 		
 					// IE11 bug: element still marked as active
-					dest && dest.focus();
+					dest && dest.focus && dest.focus();
 		
 					self.ignoreFocus = false;
 					self.trigger('blur');
@@ -5839,7 +5835,7 @@
 	
 		return Selectize;
 	}));
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(1)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
 /* 68 */
@@ -7361,7 +7357,7 @@
 	    value: true
 	});
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 	
 	__webpack_require__(102);
 	
@@ -7454,7 +7450,7 @@
 	    changeEditMode(Enum.EditMode.DATAELEMENT);
 	
 	    function getType(type, ref, cb, content) {
-	        var onfly = arguments.length <= 4 || arguments[4] === undefined ? true : arguments[4];
+	        var onfly = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
 	
 	        var Type = data.types[type];
 	        if (!Type || !Type.template || !ref || !_.find(Type.list, { _id: ref })) {
@@ -7488,7 +7484,7 @@
 	    }
 	
 	    function createElement(type, content, cb) {
-	        var onfly = arguments.length <= 3 || arguments[3] === undefined ? true : arguments[3];
+	        var onfly = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
 	
 	        if (!onfly) {
 	            updateElement(type, content, cb);
@@ -7636,7 +7632,7 @@
 	
 	
 	            var oldModel = _.find(Types[type].list, { _id: model._id });
-	            if (oldModel && angular.equals(oldModel, model)) {
+	            if (oldModel && !angular.equals(oldModel, model)) {
 	                for (var member in oldModel) {
 	                    delete oldModel[member];
 	                }_.assign(oldModel, model);
@@ -7675,7 +7671,7 @@
 	    }
 	
 	    function findField(form, property) {
-	        var deep = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+	        var deep = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 	
 	        if (!deep) {
 	            if (form[0].isTab) {
@@ -7848,8 +7844,8 @@
 	                    var options = field.templateOptions.options;
 	
 	                    _.each(options, function (_ref10) {
-	                        var name = _ref10.name;
-	                        var value = _ref10.value;
+	                        var name = _ref10.name,
+	                            value = _ref10.value;
 	
 	                        var _path = path + '.children[' + children.length + ']';
 	                        var _query = [_defineProperty({}, property, value)];
@@ -8259,7 +8255,8 @@
 	/* WEBPACK VAR INJECTION */(function(global) {
 	var rng;
 	
-	if (global.crypto && crypto.getRandomValues) {
+	var crypto = global.crypto || global.msCrypto; // for IE 11
+	if (crypto && crypto.getRandomValues) {
 	  // WHATWG crypto-based RNG - http://wiki.whatwg.org/wiki/Crypto
 	  // Moderately fast, high quality
 	  var _rnds8 = new Uint8Array(16);
@@ -9075,9 +9072,8 @@
 	
 	var debug = __webpack_require__(114)('socket.io-parser');
 	var json = __webpack_require__(118);
-	var isArray = __webpack_require__(121);
-	var Emitter = __webpack_require__(122);
-	var binary = __webpack_require__(123);
+	var Emitter = __webpack_require__(121);
+	var binary = __webpack_require__(122);
 	var isBuf = __webpack_require__(124);
 	
 	/**
@@ -9393,16 +9389,21 @@
 	
 	  // look up json data
 	  if (str.charAt(++i)) {
-	    try {
-	      p.data = json.parse(str.substr(i));
-	    } catch(e){
-	      return error();
-	    }
+	    p = tryParse(p, str.substr(i));
 	  }
 	
 	  debug('decoded %s as %j', str, p);
 	  return p;
 	}
+	
+	function tryParse(p, str) {
+	  try {
+	    p.data = json.parse(str);
+	  } catch(e){
+	    return error();
+	  }
+	  return p; 
+	};
 	
 	/**
 	 * Deallocates a parser's resources
@@ -10395,12 +10396,6 @@
 
 /***/ },
 /* 121 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = (__webpack_require__(2))(250);
-
-/***/ },
-/* 122 */
 /***/ function(module, exports) {
 
 	
@@ -10570,7 +10565,7 @@
 
 
 /***/ },
-/* 123 */
+/* 122 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*global Blob,File*/
@@ -10579,7 +10574,7 @@
 	 * Module requirements
 	 */
 	
-	var isArray = __webpack_require__(121);
+	var isArray = __webpack_require__(123);
 	var isBuf = __webpack_require__(124);
 	
 	/**
@@ -10716,6 +10711,12 @@
 	};
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 123 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = (__webpack_require__(2))(250);
 
 /***/ },
 /* 124 */
@@ -11336,7 +11337,7 @@
 	 */
 	
 	var transports = __webpack_require__(129);
-	var Emitter = __webpack_require__(122);
+	var Emitter = __webpack_require__(121);
 	var debug = __webpack_require__(114)('engine.io-client:socket');
 	var index = __webpack_require__(149);
 	var parser = __webpack_require__(135);
@@ -11405,6 +11406,7 @@
 	  this.transports = opts.transports || ['polling', 'websocket'];
 	  this.readyState = '';
 	  this.writeBuffer = [];
+	  this.prevBufferLen = 0;
 	  this.policyPort = opts.policyPort || 843;
 	  this.rememberUpgrade = opts.rememberUpgrade || false;
 	  this.binaryType = null;
@@ -11432,6 +11434,16 @@
 	      this.extraHeaders = opts.extraHeaders;
 	    }
 	  }
+	
+	  // set on handshake
+	  this.id = null;
+	  this.upgrades = null;
+	  this.pingInterval = null;
+	  this.pingTimeout = null;
+	
+	  // set on heartbeat
+	  this.pingIntervalTimer = null;
+	  this.pingTimeoutTimer = null;
 	
 	  this.open();
 	}
@@ -11737,7 +11749,8 @@
 	 */
 	
 	Socket.prototype.onPacket = function (packet) {
-	  if ('opening' === this.readyState || 'open' === this.readyState) {
+	  if ('opening' === this.readyState || 'open' === this.readyState ||
+	      'closing' === this.readyState) {
 	    debug('socket receive: type "%s", data "%s"', packet.type, packet.data);
 	
 	    this.emit('packet', packet);
@@ -12117,10 +12130,7 @@
 /* 130 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// browser shim for xmlhttprequest module
-	
-	// Indicate to eslint that ActiveXObject is global
-	/* global ActiveXObject */
+	/* WEBPACK VAR INJECTION */(function(global) {// browser shim for xmlhttprequest module
 	
 	var hasCORS = __webpack_require__(131);
 	
@@ -12153,11 +12163,12 @@
 	
 	  if (!xdomain) {
 	    try {
-	      return new ActiveXObject('Microsoft.XMLHTTP');
+	      return new global[['Active'].concat('Object').join('X')]('Microsoft.XMLHTTP');
 	    } catch (e) { }
 	  }
 	};
-
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 131 */
@@ -12192,7 +12203,7 @@
 	
 	var XMLHttpRequest = __webpack_require__(130);
 	var Polling = __webpack_require__(133);
-	var Emitter = __webpack_require__(122);
+	var Emitter = __webpack_require__(121);
 	var inherit = __webpack_require__(144);
 	var debug = __webpack_require__(114)('engine.io-client:polling-xhr');
 	
@@ -12407,6 +12418,10 @@
 	      } catch (e) {}
 	    }
 	
+	    try {
+	      xhr.setRequestHeader('Accept', '*/*');
+	    } catch (e) {}
+	
 	    // ie6 check
 	    if ('withCredentials' in xhr) {
 	      xhr.withCredentials = true;
@@ -12581,9 +12596,10 @@
 	 * emitted.
 	 */
 	
+	Request.requestsCount = 0;
+	Request.requests = {};
+	
 	if (global.document) {
-	  Request.requestsCount = 0;
-	  Request.requests = {};
 	  if (global.attachEvent) {
 	    global.attachEvent('onunload', unloadHandler);
 	  } else if (global.addEventListener) {
@@ -12861,7 +12877,7 @@
 	 */
 	
 	var parser = __webpack_require__(135);
-	var Emitter = __webpack_require__(122);
+	var Emitter = __webpack_require__(121);
 	
 	/**
 	 * Module exports.
@@ -13028,7 +13044,7 @@
 	var utf8 = __webpack_require__(140);
 	
 	var base64encoder;
-	if (global.ArrayBuffer) {
+	if (global && global.ArrayBuffer) {
 	  base64encoder = __webpack_require__(141);
 	}
 	
@@ -13241,8 +13257,11 @@
 	 */
 	
 	exports.decodePacket = function (data, binaryType, utf8decode) {
+	  if (data === undefined) {
+	    return err;
+	  }
 	  // String data
-	  if (typeof data == 'string' || data === undefined) {
+	  if (typeof data == 'string') {
 	    if (data.charAt(0) == 'b') {
 	      return exports.decodeBase64Packet(data.substr(1), binaryType);
 	    }
@@ -13660,7 +13679,7 @@
 	 * Module requirements.
 	 */
 	
-	var isArray = __webpack_require__(121);
+	var isArray = __webpack_require__(123);
 	
 	/**
 	 * Module exports.
@@ -14713,23 +14732,6 @@
 	};
 	
 	/**
-	 * Override `onData` to use a timer on iOS.
-	 * See: https://gist.github.com/mloughran/2052006
-	 *
-	 * @api private
-	 */
-	
-	if ('undefined' !== typeof navigator &&
-	  /iPad|iPhone|iPod/i.test(navigator.userAgent)) {
-	  WS.prototype.onData = function (data) {
-	    var self = this;
-	    setTimeout(function () {
-	      Transport.prototype.onData.call(self, data);
-	    }, 0);
-	  };
-	}
-	
-	/**
 	 * Writes data to socket.
 	 *
 	 * @param {Array} array of packets.
@@ -15603,7 +15605,7 @@
 	 * Module requirements.
 	 */
 	
-	var isArray = __webpack_require__(121);
+	var isArray = __webpack_require__(123);
 	
 	/**
 	 * Module exports.
@@ -16154,11 +16156,11 @@
 	
 	    function link(scope, element, attr, controller) {
 	        var vm = scope.vm;
-	        var _vm$element = vm.element;
-	        var ref = _vm$element.ref;
-	        var type = _vm$element.type;
-	        var containers = _vm$element.containers;
-	        var binding = _vm$element.binding;
+	        var _vm$element = vm.element,
+	            ref = _vm$element.ref,
+	            type = _vm$element.type,
+	            containers = _vm$element.containers,
+	            binding = _vm$element.binding;
 	
 	        scope.$on('saveContainersFw', function (e, obj) {
 	            if (obj.type === type) obj.cb(vm.element.containers);
@@ -16202,18 +16204,18 @@
 	
 	                        if (bind.choice === 'model') {
 	                            (function () {
-	                                var _bind$model = bind.model;
-	                                var parentKey = _bind$model.parentKey;
-	                                var key = _bind$model.key;
+	                                var _bind$model = bind.model,
+	                                    parentKey = _bind$model.parentKey,
+	                                    key = _bind$model.key;
 	
 	                                scope.$watch('parentModel.' + parentKey, function () {
 	                                    return scope.model[key] = scope.parentModel[parentKey];
 	                                }, true);
 	                            })();
 	                        } else if (bind.choice === 'fn') {
-	                            var _bind$fn = bind.fn;
-	                            var _parentKey = _bind$fn.parentKey;
-	                            var _key = _bind$fn.key;
+	                            var _bind$fn = bind.fn,
+	                                _parentKey = _bind$fn.parentKey,
+	                                _key = _bind$fn.key;
 	
 	                            scope.model[_key] = Types[binding.BindType].fn[parentFn].bind(model);
 	                        } else if (bind.choice === 'scope') {
@@ -16292,9 +16294,9 @@
 	            }
 	
 	            function _render() {
-	                var _Type = Type;
-	                var serverFn = _Type.serverFn;
-	                var ctrl = _Type.controller;
+	                var _Type = Type,
+	                    serverFn = _Type.serverFn,
+	                    ctrl = _Type.controller;
 	
 	                var fn = JsonFn.clone(Type.fn);
 	                if (fn) {
@@ -16370,9 +16372,9 @@
 	
 	    function controller(scope) {
 	        var vm = this;
-	        var _vm$cmsEditor = vm.cmsEditor;
-	        var ref = _vm$cmsEditor.ref;
-	        var type = _vm$cmsEditor.type;
+	        var _vm$cmsEditor = vm.cmsEditor,
+	            ref = _vm$cmsEditor.ref,
+	            type = _vm$cmsEditor.type;
 	
 	        var Type = cms.data.types[type];
 	
@@ -16389,17 +16391,17 @@
 	        };
 	
 	        vm.edit = function (cb) {
-	            var _vm$cmsEditor2 = vm.cmsEditor;
-	            var ref = _vm$cmsEditor2.ref;
-	            var type = _vm$cmsEditor2.type;
+	            var _vm$cmsEditor2 = vm.cmsEditor,
+	                ref = _vm$cmsEditor2.ref,
+	                type = _vm$cmsEditor2.type;
 	
 	            formService.edit(ref, type, cb);
 	        };
 	
 	        vm.copy = function (cb) {
-	            var _vm$cmsEditor3 = vm.cmsEditor;
-	            var ref = _vm$cmsEditor3.ref;
-	            var type = _vm$cmsEditor3.type;
+	            var _vm$cmsEditor3 = vm.cmsEditor,
+	                ref = _vm$cmsEditor3.ref,
+	                type = _vm$cmsEditor3.type;
 	
 	            var e = cms.findByRef(type, ref);
 	
@@ -16430,9 +16432,9 @@
 	    function link(scope, element, attr, elementController) {
 	        scope.menu = [];
 	        var vm = scope.vm;
-	        var _vm$cmsEditor4 = vm.cmsEditor;
-	        var ref = _vm$cmsEditor4.ref;
-	        var type = _vm$cmsEditor4.type;
+	        var _vm$cmsEditor4 = vm.cmsEditor,
+	            ref = _vm$cmsEditor4.ref,
+	            type = _vm$cmsEditor4.type;
 	
 	        if (vm.cmsMenu === 'true') {
 	            scope.menu = [['Edit', function () {
@@ -16515,12 +16517,12 @@
 	
 	        function render() {
 	            if (Type.store[vm.cmsWrapper]) {
-	                var _Type$store$vm$cmsWra = Type.store[vm.cmsWrapper];
-	                var template = _Type$store$vm$cmsWra.template;
-	                var serverFn = _Type$store$vm$cmsWra.serverFn;
-	                var fn = _Type$store$vm$cmsWra.fn;
-	                var serverFnData = _Type$store$vm$cmsWra.serverFnData;
-	                var controller = _Type$store$vm$cmsWra.controller;
+	                var _Type$store$vm$cmsWra = Type.store[vm.cmsWrapper],
+	                    template = _Type$store$vm$cmsWra.template,
+	                    serverFn = _Type$store$vm$cmsWra.serverFn,
+	                    fn = _Type$store$vm$cmsWra.fn,
+	                    serverFnData = _Type$store$vm$cmsWra.serverFnData,
+	                    controller = _Type$store$vm$cmsWra.controller;
 	
 	
 	                _.assign(scope, { fn: {}, model: vm.element, serverFn: {}, serverFnData: serverFnData });
@@ -16536,16 +16538,16 @@
 	
 	                element.html(template);
 	            } else {
-	                var _vm$element = vm.element;
-	                var list = _vm$element.list;
-	                var _element = _vm$element.element;
-	                var _fn = _vm$element.Fn;
+	                var _vm$element = vm.element,
+	                    list = _vm$element.list,
+	                    _element = _vm$element.element,
+	                    _fn = _vm$element.Fn;
 	
 	                var _template = void 0;
 	                if (!list.null) {
-	                    var BindType = list.BindType;
-	                    var layout = list.layout;
-	                    var query = list.query;
+	                    var BindType = list.BindType,
+	                        layout = list.layout,
+	                        query = list.query;
 	                    // resolve data before render
 	
 	                    if (!Types[BindType]._load) {
@@ -16567,10 +16569,10 @@
 	                        _template = '\n                        <br>\n                        <div ng-repeat="element in result track by $index">\n                            <div cms-element="{type:type,ref:element._id}"></div>\n                        </div>\n                        ';
 	                    }
 	                } else if (!_element.null) {
-	                    var _BindType = _element.BindType;
-	                    var _layout = _element.layout;
-	                    var model = _element.model;
-	                    var _query = _element.query;
+	                    var _BindType = _element.BindType,
+	                        _layout = _element.layout,
+	                        model = _element.model,
+	                        _query = _element.query;
 	
 	                    _.assign(scope, { model: model, layout: _layout, type: _BindType });
 	                    _template = '<br><div cms-element="{type:type,ref:vm.element.element.model._id}"></div>';
@@ -16632,11 +16634,10 @@
 	
 	        var _ref = vm.save ? _.find(layout.SAVE, function (save) {
 	            return save.name === vm.save;
-	        }) : layout.SAVE[0];
-	
-	        var containers = _ref.containers;
-	        var bind = _ref.bind;
-	        var BindType = _ref.BindType;
+	        }) : layout.SAVE[0],
+	            containers = _ref.containers,
+	            bind = _ref.bind,
+	            BindType = _ref.BindType;
 	
 	        containers = angular.copy(containers);
 	        Layout.fn.getTreeWithBinding(containers, bind, vm.model, BindType);
@@ -16976,9 +16977,8 @@
 	                };
 	                $scope.onFileSelect = function (files) {
 	                    //files: an array of files selected, each file has name, size, and type.
-	                    var _files = _slicedToArray(files, 1);
-	
-	                    var file = _files[0];
+	                    var _files = _slicedToArray(files, 1),
+	                        file = _files[0];
 	
 	                    cms.uploadFile(file, $scope.node.path, function () {
 	                        console.log('upload successful');
@@ -17192,8 +17192,8 @@
 	                $scope.get = _.get;
 	
 	                $scope.refresh = function () {
-	                    var onlyChangePage = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
-	                    var changeAdminList = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+	                    var onlyChangePage = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	                    var changeAdminList = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 	
 	
 	                    //$timeout(function () {
@@ -17649,8 +17649,8 @@
 	        });
 	
 	        modalInstance.result.then(function (_ref) {
-	            var filename = _ref.filename;
-	            var types = _ref.types;
+	            var filename = _ref.filename,
+	                types = _ref.types;
 	
 	            cms.exportAll(filename, types);
 	        });

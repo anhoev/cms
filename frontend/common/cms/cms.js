@@ -234,7 +234,7 @@ function cms($http, Upload) {
         }, ({result:model}) => {
 
             var oldModel = _.find(Types[type].list, {_id: model._id});
-            if (oldModel && angular.equals(oldModel, model)) {
+            if (oldModel && !angular.equals(oldModel, model)) {
                 for (var member in oldModel) delete oldModel[member];
                 _.assign(oldModel, model);
             } else {
