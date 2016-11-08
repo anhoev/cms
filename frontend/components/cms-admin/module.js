@@ -27,7 +27,7 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
     function controller() {
         const vm = this;
 
-        vm.openSitemap = function () {
+        vm.openAdminPage = function () {
             function modalCtrl($scope, $uibModalInstance) {
                 $scope.data = {
                     list: []
@@ -245,8 +245,11 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
             });
         }
 
-        if (cms.data.online.autoOpenAdmin) vm.openSitemap();
+        if (cms.data.online.autoOpenAdmin) vm.openAdminPage();
 
+        window._openAdminPage = function () {
+            vm.openAdminPage();
+        }
     }
 
     return {

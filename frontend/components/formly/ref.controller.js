@@ -32,7 +32,7 @@ function controller($scope, cms, $timeout) {
 
     if ($scope.to.async) {
         $scope.config.load = function (query, callback) {
-            const queryBuilder = new QueryBuilder().limit(100).query({_textIndex: new RegExp(query, 'i')});
+            const queryBuilder = new QueryBuilder().limit(100).query({_textIndex: $scope.to.makeRegex ? $scope.to.makeRegex(query) : new RegExp(query, 'i')});
             cms.loadElements(type, function (list) {
                 // $scope.models = list;
                 callback(list);

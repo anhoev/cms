@@ -76,6 +76,9 @@ function service($http, $timeout, cms, $uibModal) {
             animation: true,
             template,
             controller: modalCtrl
+
+
+
         });
 
 

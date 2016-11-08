@@ -108,7 +108,7 @@ function elementDirective(cms, $compile, $http, $timeout, $controller) {
             }
 
             function _render() {
-                let {serverFn, controller: ctrl} = Type;
+                let {serverFn, controller: ctrl, link} = Type;
                 let fn = JsonFn.clone(Type.fn);
                 if (fn) {
                     const _fn = {};
@@ -123,6 +123,7 @@ function elementDirective(cms, $compile, $http, $timeout, $controller) {
                     fn.bind(scope.model)($http.post, scope, type, k);
                 })
                 if (ctrl) $controller(ctrl, {$scope: scope});
+                if (link) link(scope, element, attr);
 
                 controller.refresh = function () {
                     if (scope.serverFnData) scope.serverFnData = null;
