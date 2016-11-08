@@ -151,6 +151,7 @@ module.exports = cms => {
         function convertSingleField(field, {key, label}) {
             const defaultOptions = {form: {key: key, templateOptions: {label: label ? label : key}}};
             if (field.instance === 'ObjectID') {
+                if (!cms.Types[field.options.ref]) console.log(`Type ${name} and ${field.options.ref}  have problems`);
                 return merge(defaultOptions.form, {
                     type: 'refSelect',
                     templateOptions: {Type: field.options.ref, labelProp: cms.Types[field.options.ref].info.title}

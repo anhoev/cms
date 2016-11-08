@@ -1171,7 +1171,7 @@
 	
 	    if ($scope.to.async) {
 	        $scope.config.load = function (query, callback) {
-	            var queryBuilder = new _QueryBuilder2.default().limit(100).query({ _textIndex: new RegExp(query, 'i') });
+	            var queryBuilder = new _QueryBuilder2.default().limit(100).query({ _textIndex: $scope.to.makeRegex ? $scope.to.makeRegex(query) : new RegExp(query, 'i') });
 	            cms.loadElements(type, function (list) {
 	                // $scope.models = list;
 	                callback(list);
@@ -16296,7 +16296,8 @@
 	            function _render() {
 	                var _Type = Type,
 	                    serverFn = _Type.serverFn,
-	                    ctrl = _Type.controller;
+	                    ctrl = _Type.controller,
+	                    link = _Type.link;
 	
 	                var fn = JsonFn.clone(Type.fn);
 	                if (fn) {
@@ -16314,6 +16315,7 @@
 	                    fn.bind(scope.model)($http.post, scope, type, k);
 	                });
 	                if (ctrl) $controller(ctrl, { $scope: scope });
+	                if (link) link(scope, element, attr);
 	
 	                controller.refresh = function () {
 	                    if (scope.serverFnData) scope.serverFnData = null;
@@ -17164,7 +17166,7 @@
 	    function controller() {
 	        var vm = this;
 	
-	        vm.openSitemap = function () {
+	        vm.openAdminPage = function () {
 	            function modalCtrl($scope, $uibModalInstance) {
 	                $scope.data = {
 	                    list: []
@@ -17397,7 +17399,11 @@
 	            });
 	        };
 	
-	        if (cms.data.online.autoOpenAdmin) vm.openSitemap();
+	        if (cms.data.online.autoOpenAdmin) vm.openAdminPage();
+	
+	        window._openAdminPage = function () {
+	            vm.openAdminPage();
+	        };
 	    }
 	
 	    return {
