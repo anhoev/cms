@@ -544,7 +544,7 @@ function run(cms, $http, $websocket) {
          } else {
          new_uri = "ws:";
          }*/
-        new_uri += "http://" + loc.host;
+        new_uri += "ws://" + loc.host;
         //new_uri += loc.pathname;
     }
 

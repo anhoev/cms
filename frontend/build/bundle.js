@@ -7984,7 +7984,7 @@
 	         } else {
 	         new_uri = "ws:";
 	         }*/
-	        new_uri += "http://" + loc.host;
+	        new_uri += "ws://" + loc.host;
 	        //new_uri += loc.pathname;
 	    }
 	
@@ -17565,6 +17565,7 @@
 	            animation: true,
 	            template: _importService2.default,
 	            controller: modalCtrl
+	
 	        });
 	
 	        modalInstance.result.then(function (_url) {
