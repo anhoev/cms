@@ -30,14 +30,22 @@ function config($translateProvider) {
         Add: 'Add',
         Setting: 'Setting',
         DeleteAll: 'Delete all',
-        Show: 'Show'
+        Show: 'Show',
+        Submit: 'Submit',
+        Cancel: 'Cancel',
+        Apply: 'Apply',
+        'Save and add': 'Save and add'
     });
 
     $translateProvider.translations('de', {
         Add: 'Hinzufügen',
         Setting: 'Einstellung',
         DeleteAll: 'alles Löschen',
-        Show: 'Anzeigen'
+        Show: 'Anzeigen',
+        Submit: 'Absenden',
+        Cancel: 'Abbrechen',
+        Apply: 'Übernehmen',
+        'Save and add': 'Speichern und hinzufügen'
     });
 
     $translateProvider.preferredLanguage('de');

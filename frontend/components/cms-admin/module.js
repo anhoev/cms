@@ -257,7 +257,7 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
         restrict: 'A',
         scope: {},
         bindToController: {},
-        template: '<a ng-click="vm.openSitemap()">Admin</a>',
+        template: '<a ng-click="vm.openAdminPage()">Admin</a>',
         controllerAs: 'vm',
         controller
     };
