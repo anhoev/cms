@@ -147,14 +147,18 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
 
                     $scope.queries = null;
 
-                    if (config && config.query) {
+                    let manualQuery = false;
 
+                    if (config && config.query) {
                         $scope.queries = JsonFn.clone(config.query.filter(q => q.choice === 'builtIn').map(q => q.builtIn).map(k => _.find(cms.types[$scope.node.type].queries, {path: k}) || _.find(cms.types[$scope.node.type].paths, {path: k})), true);
 
                         $scope.queries.forEach((q, index) => {
                             q.form = !q.form ? [angular.copy(_.get(cms.types[$scope.node.type].form, q.pathInForm))] : [q.form];
-                            if (q.form[0].default) q.model = {[q.form[0].key]:q.form[0].default};
-                            if (q.form[0].defaultValue) q.model = {[q.form[0].key]:q.form[0].defaultValue};
+                            if (q.form[0].default) q.model = {[q.form[0].key]: q.form[0].default};
+                            if (q.form[0].defaultValue) {
+                                q.model = {[q.form[0].key]: q.form[0].defaultValue};
+                                manualQuery = true;
+                            }
 
                             _.merge(q.form[0], {templateOptions: {class: 'col-xs-3'}});
                             var listen = $scope.$watch(`queries[${index}].model`, function (m1, m2) {
@@ -165,8 +169,12 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
                         });
                     }
 
+                    if (!manualQuery) {
+                        $scope.refresh();
+                    } else {
+                        $scope.$digest();
+                    }
 
-                    $scope.refresh();
                 }
 
 
