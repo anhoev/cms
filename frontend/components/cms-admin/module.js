@@ -172,7 +172,7 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
                     if (!manualQuery) {
                         $scope.refresh();
                     } else {
-                        $scope.$digest();
+                        $scope.$apply();
                     }
 
                 }

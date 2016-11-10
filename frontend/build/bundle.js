@@ -17327,7 +17327,7 @@
 	                    if (!manualQuery) {
 	                        $scope.refresh();
 	                    } else {
-	                        $scope.$digest();
+	                        $scope.$apply();
 	                    }
 	                };
 	
