@@ -209,7 +209,7 @@
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(329);
+	module.exports = (__webpack_require__(2))(450);
 
 /***/ },
 /* 6 */
@@ -221,31 +221,31 @@
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(77);
+	module.exports = (__webpack_require__(2))(78);
 
 /***/ },
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(152);
+	module.exports = (__webpack_require__(2))(164);
 
 /***/ },
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(328);
+	module.exports = (__webpack_require__(2))(344);
 
 /***/ },
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(327);
+	module.exports = (__webpack_require__(2))(342);
 
 /***/ },
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(226);
+	module.exports = (__webpack_require__(2))(242);
 
 /***/ },
 /* 12 */
@@ -261,27 +261,27 @@
 	
 	var _module2 = _interopRequireDefault(_module);
 	
-	var _module3 = __webpack_require__(158);
+	var _module3 = __webpack_require__(161);
 	
 	var _module4 = _interopRequireDefault(_module3);
 	
-	var _module5 = __webpack_require__(161);
+	var _module5 = __webpack_require__(164);
 	
 	var _module6 = _interopRequireDefault(_module5);
 	
-	var _module7 = __webpack_require__(176);
+	var _module7 = __webpack_require__(179);
 	
 	var _module8 = _interopRequireDefault(_module7);
 	
-	var _module9 = __webpack_require__(178);
+	var _module9 = __webpack_require__(181);
 	
 	var _module10 = _interopRequireDefault(_module9);
 	
-	var _module11 = __webpack_require__(180);
+	var _module11 = __webpack_require__(183);
 	
 	var _module12 = _interopRequireDefault(_module11);
 	
-	var _module13 = __webpack_require__(188);
+	var _module13 = __webpack_require__(191);
 	
 	var _module14 = _interopRequireDefault(_module13);
 	
@@ -1476,13 +1476,13 @@
 /* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(339);
+	module.exports = (__webpack_require__(2))(460);
 
 /***/ },
 /* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(355);
+	module.exports = (__webpack_require__(2))(476);
 
 /***/ },
 /* 31 */
@@ -2000,7 +2000,7 @@
 /* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(330);
+	module.exports = (__webpack_require__(2))(451);
 
 /***/ },
 /* 67 */
@@ -7169,157 +7169,157 @@
 /* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(60);
+	module.exports = (__webpack_require__(2))(64);
 
 /***/ },
 /* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(59);
+	module.exports = (__webpack_require__(2))(63);
 
 /***/ },
 /* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(63);
+	module.exports = (__webpack_require__(2))(65);
 
 /***/ },
 /* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(64);
+	module.exports = (__webpack_require__(2))(66);
 
 /***/ },
 /* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(66);
+	module.exports = (__webpack_require__(2))(68);
 
 /***/ },
 /* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(67);
+	module.exports = (__webpack_require__(2))(69);
 
 /***/ },
 /* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(70);
+	module.exports = (__webpack_require__(2))(72);
 
 /***/ },
 /* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(72);
+	module.exports = (__webpack_require__(2))(74);
 
 /***/ },
 /* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(73);
+	module.exports = (__webpack_require__(2))(75);
 
 /***/ },
 /* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(75);
+	module.exports = (__webpack_require__(2))(77);
 
 /***/ },
 /* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(76);
+	module.exports = (__webpack_require__(2))(152);
 
 /***/ },
 /* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(140);
+	module.exports = (__webpack_require__(2))(153);
 
 /***/ },
 /* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(142);
+	module.exports = (__webpack_require__(2))(155);
 
 /***/ },
 /* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(143);
+	module.exports = (__webpack_require__(2))(156);
 
 /***/ },
 /* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(144);
+	module.exports = (__webpack_require__(2))(157);
 
 /***/ },
 /* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(145);
+	module.exports = (__webpack_require__(2))(158);
 
 /***/ },
 /* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(219);
+	module.exports = (__webpack_require__(2))(235);
 
 /***/ },
 /* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(146);
+	module.exports = (__webpack_require__(2))(159);
 
 /***/ },
 /* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(148);
+	module.exports = (__webpack_require__(2))(161);
 
 /***/ },
 /* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(149);
+	module.exports = (__webpack_require__(2))(162);
 
 /***/ },
 /* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(150);
+	module.exports = (__webpack_require__(2))(163);
 
 /***/ },
 /* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(151);
+	module.exports = (__webpack_require__(2))(233);
 
 /***/ },
 /* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(218);
+	module.exports = (__webpack_require__(2))(234);
 
 /***/ },
 /* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(220);
+	module.exports = (__webpack_require__(2))(236);
 
 /***/ },
 /* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(222);
+	module.exports = (__webpack_require__(2))(238);
 
 /***/ },
 /* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(223);
+	module.exports = (__webpack_require__(2))(239);
 
 /***/ },
 /* 99 */
@@ -7385,7 +7385,11 @@
 	
 	__webpack_require__(110);
 	
-	var _socket = __webpack_require__(111);
+	__webpack_require__(111);
+	
+	__webpack_require__(112);
+	
+	var _socket = __webpack_require__(114);
 	
 	var _socket2 = _interopRequireDefault(_socket);
 	
@@ -7402,7 +7406,7 @@
 	    EditMode: { ALL: 'ALL', VIEWELEMENT: 'VIEWELEMENT', DATAELEMENT: 'DATAELEMENT', CONTAINER: 'CONTAINER' }
 	};
 	
-	var modelModule = angular.module('common.data', ['ngFileUpload', 'ngWebSocket', 'pascalprecht.translate']).config(config).factory('cms', cms).run(run);
+	var modelModule = angular.module('common.data', ['ngFileUpload', 'ngWebSocket', 'pascalprecht.translate', 'ui-notification']).config(config).factory('cms', cms).run(run);
 	
 	config.$inject = ['$translateProvider'];
 	function config($translateProvider) {
@@ -8014,7 +8018,7 @@
 /* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(337);
+	module.exports = (__webpack_require__(2))(458);
 
 /***/ },
 /* 103 */
@@ -8065,7 +8069,7 @@
 /* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(227);
+	module.exports = (__webpack_require__(2))(243);
 
 /***/ },
 /* 105 */
@@ -8311,16 +8315,62 @@
 /* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(326);
+	module.exports = (__webpack_require__(2))(343);
 
 /***/ },
 /* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(335);
+	module.exports = (__webpack_require__(2))(456);
 
 /***/ },
 /* 111 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = (__webpack_require__(2))(59);
+
+/***/ },
+/* 112 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(113);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(57)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../css-loader/index.js!./angular-ui-notification.min.css", function() {
+				var newContent = require("!!./../../css-loader/index.js!./angular-ui-notification.min.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 113 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(56)();
+	// imports
+	
+	
+	// module
+	exports.push([module.id, "/**\n * angular-ui-notification - Angular.js service providing simple notifications using Bootstrap 3 styles with css transitions for animating\n * @author Alex_Crack\n * @version v0.1.0\n * @link https://github.com/alexcrack/angular-ui-notification\n * @license MIT\n */\n.ui-notification{position:fixed;z-index:9999;width:300px;cursor:pointer;-webkit-transition:all ease .5s;-o-transition:all ease .5s;transition:all ease .5s;color:#fff;border-radius:0;background:#337ab7;box-shadow:5px 5px 10px rgba(0,0,0,.3)}.ui-notification.killed{-webkit-transition:opacity ease 1s;-o-transition:opacity ease 1s;transition:opacity ease 1s;opacity:0}.ui-notification>h3{font-size:14px;font-weight:700;display:block;margin:10px 10px 0;padding:0 0 5px;text-align:left;border-bottom:1px solid rgba(255,255,255,.3)}.ui-notification a{color:#fff}.ui-notification a:hover{text-decoration:underline}.ui-notification>.message{margin:10px}.ui-notification.warning{color:#fff;background:#f0ad4e}.ui-notification.error{color:#fff;background:#d9534f}.ui-notification.success{color:#fff;background:#5cb85c}.ui-notification.info{color:#fff;background:#5bc0de}.ui-notification:hover{opacity:.7}", ""]);
+	
+	// exports
+
+
+/***/ },
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -8328,10 +8378,10 @@
 	 * Module dependencies.
 	 */
 	
-	var url = __webpack_require__(112);
-	var parser = __webpack_require__(117);
-	var Manager = __webpack_require__(125);
-	var debug = __webpack_require__(114)('socket.io-client');
+	var url = __webpack_require__(115);
+	var parser = __webpack_require__(120);
+	var Manager = __webpack_require__(128);
+	var debug = __webpack_require__(117)('socket.io-client');
 	
 	/**
 	 * Module exports.
@@ -8430,12 +8480,12 @@
 	 * @api public
 	 */
 	
-	exports.Manager = __webpack_require__(125);
-	exports.Socket = __webpack_require__(151);
+	exports.Manager = __webpack_require__(128);
+	exports.Socket = __webpack_require__(154);
 
 
 /***/ },
-/* 112 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -8443,8 +8493,8 @@
 	 * Module dependencies.
 	 */
 	
-	var parseuri = __webpack_require__(113);
-	var debug = __webpack_require__(114)('socket.io-client:url');
+	var parseuri = __webpack_require__(116);
+	var debug = __webpack_require__(117)('socket.io-client:url');
 	
 	/**
 	 * Module exports.
@@ -8517,7 +8567,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 113 */
+/* 116 */
 /***/ function(module, exports) {
 
 	/**
@@ -8562,7 +8612,7 @@
 
 
 /***/ },
-/* 114 */
+/* 117 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -8572,7 +8622,7 @@
 	 * Expose `debug()` as the module.
 	 */
 	
-	exports = module.exports = __webpack_require__(115);
+	exports = module.exports = __webpack_require__(118);
 	exports.log = log;
 	exports.formatArgs = formatArgs;
 	exports.save = save;
@@ -8736,7 +8786,7 @@
 
 
 /***/ },
-/* 115 */
+/* 118 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -8752,7 +8802,7 @@
 	exports.disable = disable;
 	exports.enable = enable;
 	exports.enabled = enabled;
-	exports.humanize = __webpack_require__(116);
+	exports.humanize = __webpack_require__(119);
 	
 	/**
 	 * The currently active debug mode names, and names to skip.
@@ -8939,7 +8989,7 @@
 
 
 /***/ },
-/* 116 */
+/* 119 */
 /***/ function(module, exports) {
 
 	/**
@@ -9070,7 +9120,7 @@
 
 
 /***/ },
-/* 117 */
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -9078,11 +9128,11 @@
 	 * Module dependencies.
 	 */
 	
-	var debug = __webpack_require__(114)('socket.io-parser');
-	var json = __webpack_require__(118);
-	var Emitter = __webpack_require__(121);
-	var binary = __webpack_require__(122);
-	var isBuf = __webpack_require__(124);
+	var debug = __webpack_require__(117)('socket.io-parser');
+	var json = __webpack_require__(121);
+	var Emitter = __webpack_require__(124);
+	var binary = __webpack_require__(125);
+	var isBuf = __webpack_require__(127);
 	
 	/**
 	 * Protocol version.
@@ -9480,14 +9530,14 @@
 
 
 /***/ },
-/* 118 */
+/* 121 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! JSON v3.3.2 | http://bestiejs.github.io/json3 | Copyright 2012-2014, Kit Cambridge | http://kit.mit-license.org */
 	;(function () {
 	  // Detect the `define` function exposed by asynchronous module loaders. The
 	  // strict `define` check is necessary for compatibility with `r.js`.
-	  var isLoader = "function" === "function" && __webpack_require__(120);
+	  var isLoader = "function" === "function" && __webpack_require__(123);
 	
 	  // A set of types used to distinguish objects from primitives.
 	  var objectTypes = {
@@ -10386,16 +10436,16 @@
 	  }
 	}).call(this);
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(119)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(122)(module), (function() { return this; }())))
 
 /***/ },
-/* 119 */
+/* 122 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(62);
 
 /***/ },
-/* 120 */
+/* 123 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -10403,7 +10453,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 121 */
+/* 124 */
 /***/ function(module, exports) {
 
 	
@@ -10573,7 +10623,7 @@
 
 
 /***/ },
-/* 122 */
+/* 125 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*global Blob,File*/
@@ -10582,8 +10632,8 @@
 	 * Module requirements
 	 */
 	
-	var isArray = __webpack_require__(123);
-	var isBuf = __webpack_require__(124);
+	var isArray = __webpack_require__(126);
+	var isBuf = __webpack_require__(127);
 	
 	/**
 	 * Replaces every Buffer | ArrayBuffer in packet with a numbered placeholder.
@@ -10721,13 +10771,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 123 */
+/* 126 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(250);
+	module.exports = (__webpack_require__(2))(266);
 
 /***/ },
-/* 124 */
+/* 127 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -10747,7 +10797,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 125 */
+/* 128 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -10755,15 +10805,15 @@
 	 * Module dependencies.
 	 */
 	
-	var eio = __webpack_require__(126);
-	var Socket = __webpack_require__(151);
-	var Emitter = __webpack_require__(152);
-	var parser = __webpack_require__(117);
-	var on = __webpack_require__(154);
-	var bind = __webpack_require__(155);
-	var debug = __webpack_require__(114)('socket.io-client:manager');
-	var indexOf = __webpack_require__(149);
-	var Backoff = __webpack_require__(157);
+	var eio = __webpack_require__(129);
+	var Socket = __webpack_require__(154);
+	var Emitter = __webpack_require__(155);
+	var parser = __webpack_require__(120);
+	var on = __webpack_require__(157);
+	var bind = __webpack_require__(158);
+	var debug = __webpack_require__(117)('socket.io-client:manager');
+	var indexOf = __webpack_require__(152);
+	var Backoff = __webpack_require__(160);
 	
 	/**
 	 * IE6+ hasOwnProperty
@@ -11313,19 +11363,19 @@
 
 
 /***/ },
-/* 126 */
+/* 129 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports = __webpack_require__(127);
+	module.exports = __webpack_require__(130);
 
 
 /***/ },
-/* 127 */
+/* 130 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports = __webpack_require__(128);
+	module.exports = __webpack_require__(131);
 	
 	/**
 	 * Exports parser
@@ -11333,25 +11383,25 @@
 	 * @api public
 	 *
 	 */
-	module.exports.parser = __webpack_require__(135);
+	module.exports.parser = __webpack_require__(138);
 
 
 /***/ },
-/* 128 */
+/* 131 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 	
-	var transports = __webpack_require__(129);
-	var Emitter = __webpack_require__(121);
-	var debug = __webpack_require__(114)('engine.io-client:socket');
-	var index = __webpack_require__(149);
-	var parser = __webpack_require__(135);
-	var parseuri = __webpack_require__(113);
-	var parsejson = __webpack_require__(150);
-	var parseqs = __webpack_require__(143);
+	var transports = __webpack_require__(132);
+	var Emitter = __webpack_require__(124);
+	var debug = __webpack_require__(117)('engine.io-client:socket');
+	var index = __webpack_require__(152);
+	var parser = __webpack_require__(138);
+	var parseuri = __webpack_require__(116);
+	var parsejson = __webpack_require__(153);
+	var parseqs = __webpack_require__(146);
 	
 	/**
 	 * Module exports.
@@ -11478,9 +11528,9 @@
 	 */
 	
 	Socket.Socket = Socket;
-	Socket.Transport = __webpack_require__(134);
-	Socket.transports = __webpack_require__(129);
-	Socket.parser = __webpack_require__(135);
+	Socket.Transport = __webpack_require__(137);
+	Socket.transports = __webpack_require__(132);
+	Socket.parser = __webpack_require__(138);
 	
 	/**
 	 * Creates transport of the given type.
@@ -12075,17 +12125,17 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 129 */
+/* 132 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies
 	 */
 	
-	var XMLHttpRequest = __webpack_require__(130);
-	var XHR = __webpack_require__(132);
-	var JSONP = __webpack_require__(146);
-	var websocket = __webpack_require__(147);
+	var XMLHttpRequest = __webpack_require__(133);
+	var XHR = __webpack_require__(135);
+	var JSONP = __webpack_require__(149);
+	var websocket = __webpack_require__(150);
 	
 	/**
 	 * Export transports.
@@ -12135,12 +12185,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 130 */
+/* 133 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {// browser shim for xmlhttprequest module
 	
-	var hasCORS = __webpack_require__(131);
+	var hasCORS = __webpack_require__(134);
 	
 	module.exports = function (opts) {
 	  var xdomain = opts.xdomain;
@@ -12179,7 +12229,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 131 */
+/* 134 */
 /***/ function(module, exports) {
 
 	
@@ -12202,18 +12252,18 @@
 
 
 /***/ },
-/* 132 */
+/* 135 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module requirements.
 	 */
 	
-	var XMLHttpRequest = __webpack_require__(130);
-	var Polling = __webpack_require__(133);
-	var Emitter = __webpack_require__(121);
-	var inherit = __webpack_require__(144);
-	var debug = __webpack_require__(114)('engine.io-client:polling-xhr');
+	var XMLHttpRequest = __webpack_require__(133);
+	var Polling = __webpack_require__(136);
+	var Emitter = __webpack_require__(124);
+	var inherit = __webpack_require__(147);
+	var debug = __webpack_require__(117)('engine.io-client:polling-xhr');
 	
 	/**
 	 * Module exports.
@@ -12626,19 +12676,19 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 133 */
+/* 136 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 	
-	var Transport = __webpack_require__(134);
-	var parseqs = __webpack_require__(143);
-	var parser = __webpack_require__(135);
-	var inherit = __webpack_require__(144);
-	var yeast = __webpack_require__(145);
-	var debug = __webpack_require__(114)('engine.io-client:polling');
+	var Transport = __webpack_require__(137);
+	var parseqs = __webpack_require__(146);
+	var parser = __webpack_require__(138);
+	var inherit = __webpack_require__(147);
+	var yeast = __webpack_require__(148);
+	var debug = __webpack_require__(117)('engine.io-client:polling');
 	
 	/**
 	 * Module exports.
@@ -12651,7 +12701,7 @@
 	 */
 	
 	var hasXHR2 = (function () {
-	  var XMLHttpRequest = __webpack_require__(130);
+	  var XMLHttpRequest = __webpack_require__(133);
 	  var xhr = new XMLHttpRequest({ xdomain: false });
 	  return null != xhr.responseType;
 	})();
@@ -12877,15 +12927,15 @@
 
 
 /***/ },
-/* 134 */
+/* 137 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 	
-	var parser = __webpack_require__(135);
-	var Emitter = __webpack_require__(121);
+	var parser = __webpack_require__(138);
+	var Emitter = __webpack_require__(124);
 	
 	/**
 	 * Module exports.
@@ -13038,22 +13088,22 @@
 
 
 /***/ },
-/* 135 */
+/* 138 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 	
-	var keys = __webpack_require__(136);
-	var hasBinary = __webpack_require__(137);
-	var sliceBuffer = __webpack_require__(138);
-	var after = __webpack_require__(139);
-	var utf8 = __webpack_require__(140);
+	var keys = __webpack_require__(139);
+	var hasBinary = __webpack_require__(140);
+	var sliceBuffer = __webpack_require__(141);
+	var after = __webpack_require__(142);
+	var utf8 = __webpack_require__(143);
 	
 	var base64encoder;
 	if (global && global.ArrayBuffer) {
-	  base64encoder = __webpack_require__(141);
+	  base64encoder = __webpack_require__(144);
 	}
 	
 	/**
@@ -13111,7 +13161,7 @@
 	 * Create a blob api even for blob builder when vendor prefixes exist
 	 */
 	
-	var Blob = __webpack_require__(142);
+	var Blob = __webpack_require__(145);
 	
 	/**
 	 * Encodes a packet.
@@ -13654,7 +13704,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 136 */
+/* 139 */
 /***/ function(module, exports) {
 
 	
@@ -13679,7 +13729,7 @@
 
 
 /***/ },
-/* 137 */
+/* 140 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -13687,7 +13737,7 @@
 	 * Module requirements.
 	 */
 	
-	var isArray = __webpack_require__(123);
+	var isArray = __webpack_require__(126);
 	
 	/**
 	 * Module exports.
@@ -13744,7 +13794,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 138 */
+/* 141 */
 /***/ function(module, exports) {
 
 	/**
@@ -13779,7 +13829,7 @@
 
 
 /***/ },
-/* 139 */
+/* 142 */
 /***/ function(module, exports) {
 
 	module.exports = after
@@ -13813,7 +13863,7 @@
 
 
 /***/ },
-/* 140 */
+/* 143 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! https://mths.be/wtf8 v1.0.0 by @mathias */
@@ -14049,10 +14099,10 @@
 	
 	}(this));
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(119)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(122)(module), (function() { return this; }())))
 
 /***/ },
-/* 141 */
+/* 144 */
 /***/ function(module, exports) {
 
 	/*
@@ -14125,7 +14175,7 @@
 
 
 /***/ },
-/* 142 */
+/* 145 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14228,7 +14278,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 143 */
+/* 146 */
 /***/ function(module, exports) {
 
 	/**
@@ -14271,7 +14321,7 @@
 
 
 /***/ },
-/* 144 */
+/* 147 */
 /***/ function(module, exports) {
 
 	
@@ -14283,7 +14333,7 @@
 	};
 
 /***/ },
-/* 145 */
+/* 148 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -14357,7 +14407,7 @@
 
 
 /***/ },
-/* 146 */
+/* 149 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -14365,8 +14415,8 @@
 	 * Module requirements.
 	 */
 	
-	var Polling = __webpack_require__(133);
-	var inherit = __webpack_require__(144);
+	var Polling = __webpack_require__(136);
+	var inherit = __webpack_require__(147);
 	
 	/**
 	 * Module exports.
@@ -14595,19 +14645,19 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 147 */
+/* 150 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 	
-	var Transport = __webpack_require__(134);
-	var parser = __webpack_require__(135);
-	var parseqs = __webpack_require__(143);
-	var inherit = __webpack_require__(144);
-	var yeast = __webpack_require__(145);
-	var debug = __webpack_require__(114)('engine.io-client:websocket');
+	var Transport = __webpack_require__(137);
+	var parser = __webpack_require__(138);
+	var parseqs = __webpack_require__(146);
+	var inherit = __webpack_require__(147);
+	var yeast = __webpack_require__(148);
+	var debug = __webpack_require__(117)('engine.io-client:websocket');
 	var BrowserWebSocket = global.WebSocket || global.MozWebSocket;
 	
 	/**
@@ -14619,7 +14669,7 @@
 	var WebSocket = BrowserWebSocket;
 	if (!WebSocket && typeof window === 'undefined') {
 	  try {
-	    WebSocket = __webpack_require__(148);
+	    WebSocket = __webpack_require__(151);
 	  } catch (e) { }
 	}
 	
@@ -14876,13 +14926,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 148 */
+/* 151 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 149 */
+/* 152 */
 /***/ function(module, exports) {
 
 	
@@ -14897,7 +14947,7 @@
 	};
 
 /***/ },
-/* 150 */
+/* 153 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14935,7 +14985,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 151 */
+/* 154 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -14943,13 +14993,13 @@
 	 * Module dependencies.
 	 */
 	
-	var parser = __webpack_require__(117);
-	var Emitter = __webpack_require__(152);
-	var toArray = __webpack_require__(153);
-	var on = __webpack_require__(154);
-	var bind = __webpack_require__(155);
-	var debug = __webpack_require__(114)('socket.io-client:socket');
-	var hasBin = __webpack_require__(156);
+	var parser = __webpack_require__(120);
+	var Emitter = __webpack_require__(155);
+	var toArray = __webpack_require__(156);
+	var on = __webpack_require__(157);
+	var bind = __webpack_require__(158);
+	var debug = __webpack_require__(117)('socket.io-client:socket');
+	var hasBin = __webpack_require__(159);
 	
 	/**
 	 * Module exports.
@@ -15360,7 +15410,7 @@
 
 
 /***/ },
-/* 152 */
+/* 155 */
 /***/ function(module, exports) {
 
 	
@@ -15527,7 +15577,7 @@
 
 
 /***/ },
-/* 153 */
+/* 156 */
 /***/ function(module, exports) {
 
 	module.exports = toArray
@@ -15546,7 +15596,7 @@
 
 
 /***/ },
-/* 154 */
+/* 157 */
 /***/ function(module, exports) {
 
 	
@@ -15576,7 +15626,7 @@
 
 
 /***/ },
-/* 155 */
+/* 158 */
 /***/ function(module, exports) {
 
 	/**
@@ -15605,7 +15655,7 @@
 
 
 /***/ },
-/* 156 */
+/* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -15613,7 +15663,7 @@
 	 * Module requirements.
 	 */
 	
-	var isArray = __webpack_require__(123);
+	var isArray = __webpack_require__(126);
 	
 	/**
 	 * Module exports.
@@ -15671,7 +15721,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 157 */
+/* 160 */
 /***/ function(module, exports) {
 
 	
@@ -15762,7 +15812,7 @@
 
 
 /***/ },
-/* 158 */
+/* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -15771,9 +15821,9 @@
 	    value: true
 	});
 	
-	__webpack_require__(159);
+	__webpack_require__(162);
 	
-	var _tpl = __webpack_require__(160);
+	var _tpl = __webpack_require__(163);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -15839,19 +15889,19 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 159 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(224);
+	module.exports = (__webpack_require__(2))(240);
 
 /***/ },
-/* 160 */
+/* 163 */
 /***/ function(module, exports) {
 
 	module.exports = "<ul role=\"menu\" class=\"dropdown-menu\" ng-init=\"vm._showType= true\">\n    <li ng-repeat=\"type in vm.types\"\n        dnd-draggable=\"type\"\n        dnd-type=\"type.type\"\n        dnd-dragstart=\"vm.start(type.type)\"\n        dnd-effect-allowed=\"move\"\n        dnd-dragend=\"vm.end()\"\n        ng-show=\"vm._showType\">\n        <a ng-click=\"vm._showType = !vm._showType;\n                    vm.selectType(type.type);\n                    $event.stopPropagation();\">\n            {{type.type}}\n        </a>\n    </li>\n    <li ng-show=\"!vm._showType\"\n        style=\"padding-left: 5px;padding-right: 20px;\">\n        <div class=\"col-xs-10\">\n            <input type=\"text\" class=\"input-xs\" ng-model=\"vm._filter\">\n        </div>\n        <div class=\"col-xs-2\">\n            <button type=\"button\" class=\"btn btn-xs btn-white\"\n                    ng-click=\"vm._showType = !vm._showType;$event.stopPropagation();\">\n                <i class=\"fa fa-times\"></i>\n            </button>\n        </div>\n    </li>\n    <li ng-repeat=\"element in vm.list\"\n        ng-init=\"_element = vm.convert(element)\"\n        dnd-draggable=\"_element\"\n        dnd-type=\"vm._type\"\n        dnd-effect-allowed=\"move\"\n        dnd-dragstart=\"vm.start(vm._type)\"\n        dnd-dragend=\"vm.end()\"\n        ng-show=\"!vm._showType\">\n        <a ng-click=\"\">{{vm.getTitle(element)}}</a>\n    </li>\n</ul>\n"
 
 /***/ },
-/* 161 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -15864,45 +15914,45 @@
 	
 	var _common2 = _interopRequireDefault(_common);
 	
-	__webpack_require__(159);
+	__webpack_require__(162);
 	
 	var _module2 = __webpack_require__(13);
 	
 	var _module3 = _interopRequireDefault(_module2);
 	
-	var _module4 = __webpack_require__(162);
+	var _module4 = __webpack_require__(165);
 	
 	var _module5 = _interopRequireDefault(_module4);
 	
 	__webpack_require__(14);
 	
-	var _element = __webpack_require__(164);
+	var _element = __webpack_require__(167);
 	
 	var _element2 = _interopRequireDefault(_element);
 	
-	var _editor = __webpack_require__(165);
+	var _editor = __webpack_require__(168);
 	
 	var _editor2 = _interopRequireDefault(_editor);
 	
-	var _cmsWrapper = __webpack_require__(167);
+	var _cmsWrapper = __webpack_require__(170);
 	
 	var _cmsWrapper2 = _interopRequireDefault(_cmsWrapper);
 	
-	__webpack_require__(168);
+	__webpack_require__(171);
 	
-	var _fragment = __webpack_require__(169);
+	var _fragment = __webpack_require__(172);
 	
 	var _fragment2 = _interopRequireDefault(_fragment);
 	
-	var _container = __webpack_require__(170);
+	var _container = __webpack_require__(173);
 	
 	var _container2 = _interopRequireDefault(_container);
 	
-	var _containerEdit = __webpack_require__(172);
+	var _containerEdit = __webpack_require__(175);
 	
 	var _containerEdit2 = _interopRequireDefault(_containerEdit);
 	
-	var _cmsFormPath = __webpack_require__(174);
+	var _cmsFormPath = __webpack_require__(177);
 	
 	var _cmsFormPath2 = _interopRequireDefault(_cmsFormPath);
 	
@@ -15913,7 +15963,7 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 162 */
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -15926,7 +15976,7 @@
 	
 	var _module3 = _interopRequireDefault(_module2);
 	
-	var _tpl = __webpack_require__(163);
+	var _tpl = __webpack_require__(166);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -16142,13 +16192,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 163 */
+/* 166 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms-wrapper cms\"\n     ng-init=\"_showId = false;\">\n\n    <div style=\"position: absolute;right: 10px;\">\n        <button class=\"btn btn-xs btn-white\"\n                ng-click=\"_showId=!_showId;\"\n                ng-bind=\"_showId?'hide id':'show id'\">\n        </button>\n        <button type=\"button\" class=\"btn btn-xs btn-white\" ng-bind=\"vm.fullScreenText\"\n                ng-click=\"vm.changeScreenSize();\"></button>\n    </div>\n\n    <h3 style=\"font-weight: 300;\">Edit {{vm.cmsType}} {{_showId?'('+vm.cmsModel._id+')':''}}:</h3>\n\n    <form ng-submit=\"vm.onSubmit()\"\n          novalidate\n          class=\"cms-form form-horizontal\">\n\n        <uib-tabset ng-if=\"vm.isTab\">\n            <uib-tab ng-repeat=\"tab in vm.cmsFields\"\n                     heading=\"{{tab.title}}\"\n                     active=\"tab.active\">\n                <br>\n                <formly-form model=\"vm.cmsModel\" fields=\"tab.fields\"\n                             form=\"vm.form\" options=\"vm.options\">\n                </formly-form>\n            </uib-tab>\n        </uib-tabset>\n\n        <div>\n            <br>\n            <formly-form model=\"vm.cmsModel\" fields=\"vm.cmsFields\"\n                         form=\"vm.form\" options=\"vm.options\" ng-if=\"!vm.isTab\">\n            </formly-form>\n        </div>\n\n        <div class=\"form-group\" style=\"margin-top: 25px;\">\n            <div class=\"col-sm-offset-2 col-sm-10\">\n                <button type=\"submit\" class=\"btn btn-primary submit-button\" ng-disabled=\"vm.form.$invalid\">{{'Submit' | translate}}</button>\n                <button type=\"button\" class=\"btn btn-primary\" ng-click=\"vm.onApply()\">{{'Apply' | translate}}</button>\n                <button type=\"button\" class=\"btn btn-primary\" ng-click=\"vm.onAdd()\">{{'Save and add' | translate}}</button>\n                <button type=\"button\" class=\"btn btn-primary\" ng-click=\"vm.onCancel()\">{{'Cancel' | translate}}</button>\n\n                <button type=\"button\" class=\"cms-btn btn-outline btn btn-danger pull-right\" ng-click=\"vm.onDelete()\">Delete</button>\n\n            </div>\n        </div>\n    </form>\n</div>"
 
 /***/ },
-/* 164 */
+/* 167 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -16361,7 +16411,7 @@
 	exports.default = elementDirective;
 
 /***/ },
-/* 165 */
+/* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16370,7 +16420,7 @@
 	    value: true
 	});
 	
-	var _editor = __webpack_require__(166);
+	var _editor = __webpack_require__(169);
 	
 	var _editor2 = _interopRequireDefault(_editor);
 	
@@ -16490,13 +16540,13 @@
 	exports.default = directive;
 
 /***/ },
-/* 166 */
+/* 169 */
 /***/ function(module, exports) {
 
 	module.exports = "<div context-menu=\"menu\"\n     ng-style=\"{display:vm.cmsMenu === 'true'?'inline-block':'block'}\">\n    <div ng-if=\"vm.cmsMenu !== 'true'\" class=\"cms cms-element-wrapper\" ng-style=\"vm.editorIcon\">\n        <div class=\"cms-element-controll-icon label label-primary\" style=\"font-size: 13px\"\n             ng-mouseover=\"vm.showControl()\" ng-show=\"vm.getControlVisible()\">\n            <i class=\"fa fa-circle-o-notch\"></i>\n        </div>\n\n        <div class=\"cms-element-controll\"\n             ng-mouseover=\"vm.__showControl = true\"\n             ng-mouseleave=\"vm.__showControl = false\"\n             ng-show=\"vm._showControl || vm.__showControl\">\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.edit()\">\n                <i class=\"fa fa-pencil-square-o\"></i>\n            </button>\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.removeByDatabase()\">\n                <i class=\"fa fa-trash\"></i>\n            </button>\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.remove()\">\n                <i class=\"fa fa-trash-o\"></i>\n            </button>\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.copy()\">\n                <i class=\"fa fa-files-o\"></i>\n            </button>\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.cmsRefresh()\">\n                <i class=\"fa fa-refresh\"></i>\n            </button>\n        </div>\n\n    </div>\n    <ng-transclude></ng-transclude>\n</div>"
 
 /***/ },
-/* 167 */
+/* 170 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -16616,13 +16666,13 @@
 	exports.default = directive;
 
 /***/ },
-/* 168 */
+/* 171 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(225);
+	module.exports = (__webpack_require__(2))(241);
 
 /***/ },
-/* 169 */
+/* 172 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -16673,7 +16723,7 @@
 	exports.default = directive;
 
 /***/ },
-/* 170 */
+/* 173 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16682,7 +16732,7 @@
 	    value: true
 	});
 	
-	var _container = __webpack_require__(171);
+	var _container = __webpack_require__(174);
 	
 	var _container2 = _interopRequireDefault(_container);
 	
@@ -16742,13 +16792,13 @@
 	exports.default = directive;
 
 /***/ },
-/* 171 */
+/* 174 */
 /***/ function(module, exports) {
 
 	module.exports = "<i class=\"fa fa-circle-o-notch cms-element-controll-icon\"\n   ng-mouseover=\"vm.showControl()\"\n   ng-show=\"!vm._showControl && (vm.editState.editMode === 1)\"></i>\n<div class=\"cms-element-controll\"\n     ng-mouseover=\"vm.__showControl = true\"\n     ng-mouseleave=\"vm.__showControl = false\"\n     ng-show=\"vm._showControl || vm.__showControl\">\n    <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"\">\n        <i class=\"fa fa-plus\"></i>\n    </button>\n</div>\n<div class=\"{{vm.cmsInline === 'true'?'cms-containers-inline':'cms-containers'}}\"\n     dnd-list=\"vm.elements\"\n     dnd-disable-if=\"vm.elements.length > 0 && vm.elements[0].binding\"\n     dnd-allowed-types=\"vm.allowedTypes\"\n     dnd-horizontal-list=\"{{vm.cmsInline}}\"\n     ng-class=\"{'cms-panel-highlight':vm.highlight()}\">\n    <div ng-repeat=\"element in vm.elements\"\n         dnd-disable-if=\"element.binding || !vm.matchEditMode(element.type)\"\n         dnd-draggable=\"element\"\n         dnd-type=\"element.type\"\n         dnd-moved=\"vm.elements.splice($index, 1);\"\n         dnd-effect-allowed=\"move\"\n         dnd-dragstart=\"vm.start(element.type)\"\n         dnd-dragend=\"vm.end();\"\n         cms-element=\"element\"\n         cms-path=\"{{vm.path}}.elements[{{$index}}]\"\n         class=\"{{vm.cmsInline === 'true'?'cms-element':''}}\"\n    ></div>\n</div>\n"
 
 /***/ },
-/* 172 */
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -16757,7 +16807,7 @@
 	    value: true
 	});
 	
-	var _containerEdit = __webpack_require__(173);
+	var _containerEdit = __webpack_require__(176);
 	
 	var _containerEdit2 = _interopRequireDefault(_containerEdit);
 	
@@ -16844,13 +16894,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 173 */
+/* 176 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms-container-panel panel panel-default ui-widget-content\"\n     ng-show=\"vm.editState.showContainerEdit\"\n     style=\"position: fixed; top: 70px; right: 50px;width: 300px;height: 600px;z-index:1000\">\n    <div class=\"panel-heading\" style=\"padding: 0px 0px 0px 10px;height: 26px;cursor: move\">\n        <div class=\"panel-title\">\n            <h5>Edit panel</h5>\n        </div>\n    </div>\n    <div class=\"panel-body\">\n        <div js-tree=\"vm.treeConfig\" ng-model=\"vm.tree\"\n             tree-events=\"changed:vm.selectNode\" tree=\"vm.treeInstance\"></div>\n    </div>\n</div>"
 
 /***/ },
-/* 174 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16858,7 +16908,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	var _merge = __webpack_require__(175);
+	var _merge = __webpack_require__(178);
 	function merge() {
 	    return _merge.apply(undefined, [true].concat(Array.prototype.slice.call(arguments)));
 	}
@@ -16898,13 +16948,13 @@
 	exports.default = directive;
 
 /***/ },
-/* 175 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(336);
+	module.exports = (__webpack_require__(2))(457);
 
 /***/ },
-/* 176 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16927,7 +16977,7 @@
 	
 	__webpack_require__(64);
 	
-	var _tpl = __webpack_require__(177);
+	var _tpl = __webpack_require__(180);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -17050,13 +17100,13 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 177 */
+/* 180 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms-wrapper animated fadeInRight cms-sidebar cms\">\n    <button type=\"button\" class=\"btn btn-sm btn-white cms-close-position\"\n            ng-click=\"cancel()\">\n        <i class=\"fa fa-times\"></i>\n    </button>\n\n    <div class=\"col-xs-6 col-sm-4 pull-right cms-controll-panel-right\">\n        <div ng-show=\"node\">\n            <h4>Information: </h4>\n            <h5 style=\"word-break: break-all;\">Name: {{node.text}}</h5>\n            <h5 style=\"word-break: break-all;\">Type: {{node.type}}</h5>\n            <h5 style=\"word-break: break-all;\">Path: {{node.path}}</h5>\n            <br>\n\n            <div class=\"btn-group\">\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        ng-click=\"open()\">\n                    Open page\n                </button>\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        ng-click=\"deletePage()\">\n                    Delete\n                </button>\n            </div>\n            <form role=\"form\" ng-submit=\"makeTemplate(templateName);templateName = '';\">\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        type=\"submit\" style=\"position: absolute;right: 15px;\"\n                        ng-disabled=\"!templateName\">\n                    Make template page\n                </button>\n                <input ng-model=\"templateName\" type=\"text\" class=\"form-control input-xs\" placeholder=\"template name\">\n            </form>\n            <form role=\"form\" ng-submit=\"createPage(template.selected, pageName);pageName = '';\">\n                <ui-select class=\"cms-select\" ng-model=\"template.selected\" theme=\"bootstrap\" ng-disabled=\"disabled\"\n                           style=\"min-width: 60px;\">\n                    <ui-select-match placeholder=\"Select a template page\">{{$select.selected}}</ui-select-match>\n                    <ui-select-choices repeat=\"_template in templates\">\n                        {{_template}}\n                    </ui-select-choices>\n                </ui-select>\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        type=\"submit\" style=\"position: absolute;right: 15px;\"\n                        ng-disabled=\"!pageName || !template.selected\">\n                    Create new page\n                </button>\n                <input ng-model=\"pageName\" type=\"text\" class=\"form-control input-xs\" placeholder=\"page name\">\n            </form>\n\n            <form role=\"form\" ng-submit=\"renamePage(newPageName);newPageName = '';\">\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        type=\"submit\" style=\"position: absolute;right: 15px;\"\n                        ng-disabled=\"!newPageName\">\n                    Rename\n                </button>\n                <input ng-model=\"newPageName\" type=\"text\" class=\"form-control input-xs\" placeholder=\"page name\">\n            </form>\n\n            <form role=\"form\" ng-submit=\"onFileSelect(files);\">\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        type=\"submit\" style=\"position: absolute;right: 15px;\">\n                    Up\n                </button>\n                <input type=\"file\" ngf-select ng-model=\"files\"\n                       ngf-multiple=\"true\" name=\"file\" class=\"form-control input-xs\"\n                       placeholder=\"file upload\">\n            </form>\n\n        </div>\n    </div>\n\n    <h2>Sitemaps:</h2>\n\n    <div js-tree=\"treeConfig\" ng-model=\"tree\"\n         tree-events=\"changed:selectNode\"></div>\n</div>\n"
 
 /***/ },
-/* 178 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17065,7 +17115,7 @@
 	    value: true
 	});
 	
-	var _tpl = __webpack_require__(179);
+	var _tpl = __webpack_require__(182);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -17104,13 +17154,13 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 179 */
+/* 182 */
 /***/ function(module, exports) {
 
 	module.exports = "<div style=\"margin-top: 7px;cursor: pointer;\">\n    <ui-select data-ng-model=\"vm.editState.editMode\" theme=\"bootstrap\" on-select=\"vm.onSelect($item)\">\n        <ui-select-match placeholder=\"\">\n            {{$select.selected.label}}&nbsp;&nbsp;&nbsp;\n        </ui-select-match>\n        <ui-select-choices data-repeat=\"item.value as item in vm.modes | filterBy: ['label']: $select.search\">\n            <div ng-bind-html=\"item.label | highlight: $select.search\"></div>\n        </ui-select-choices>\n    </ui-select>\n</div>\n"
 
 /***/ },
-/* 180 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17131,27 +17181,27 @@
 	
 	__webpack_require__(64);
 	
-	var _module2 = __webpack_require__(161);
+	var _module2 = __webpack_require__(164);
 	
 	var _module3 = _interopRequireDefault(_module2);
 	
-	var _module4 = __webpack_require__(162);
+	var _module4 = __webpack_require__(165);
 	
 	var _module5 = _interopRequireDefault(_module4);
 	
-	var _cmsList = __webpack_require__(181);
+	var _cmsList = __webpack_require__(184);
 	
 	var _cmsList2 = _interopRequireDefault(_cmsList);
 	
-	var _importService2 = __webpack_require__(183);
+	var _importService2 = __webpack_require__(186);
 	
 	var _importService3 = _interopRequireDefault(_importService2);
 	
-	var _exportService2 = __webpack_require__(185);
+	var _exportService2 = __webpack_require__(188);
 	
 	var _exportService3 = _interopRequireDefault(_exportService2);
 	
-	var _tpl = __webpack_require__(187);
+	var _tpl = __webpack_require__(190);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -17436,7 +17486,7 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 181 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17445,7 +17495,7 @@
 	    value: true
 	});
 	
-	var _cmsList = __webpack_require__(182);
+	var _cmsList = __webpack_require__(185);
 	
 	var _cmsList2 = _interopRequireDefault(_cmsList);
 	
@@ -17473,13 +17523,13 @@
 	exports.default = directive;
 
 /***/ },
-/* 182 */
+/* 185 */
 /***/ function(module, exports) {
 
 	module.exports = ""
 
 /***/ },
-/* 183 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17488,7 +17538,7 @@
 	    value: true
 	});
 	
-	var _importService = __webpack_require__(184);
+	var _importService = __webpack_require__(187);
 	
 	var _importService2 = _interopRequireDefault(_importService);
 	
@@ -17608,13 +17658,13 @@
 	exports.default = service;
 
 /***/ },
-/* 184 */
+/* 187 */
 /***/ function(module, exports) {
 
 	module.exports = "<div style=\"padding: 20px\">\n    <div class=\"panel panel-default\">\n        <div class=\"panel-body\">\n            <div js-tree=\"treeConfig\" ng-model=\"tree\"\n                 tree=\"treeInstance\"\n                 tree-events=\"changed:selectNode\"></div>\n        </div>\n    </div>\n    <br><br>\n    <button type=\"button\" class=\"btn btn-primary submit-button\" ng-click=\"choose()\">Choose</button>\n    <button type=\"button\" class=\"btn btn-primary\" ng-click=\"cancel()\">Cancel</button>\n</div>\n"
 
 /***/ },
-/* 185 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17623,7 +17673,7 @@
 	    value: true
 	});
 	
-	var _exportService = __webpack_require__(186);
+	var _exportService = __webpack_require__(189);
 	
 	var _exportService2 = _interopRequireDefault(_exportService);
 	
@@ -17687,19 +17737,19 @@
 	exports.default = service;
 
 /***/ },
-/* 186 */
+/* 189 */
 /***/ function(module, exports) {
 
 	module.exports = "<div style=\"padding: 20px\">\n\n    <div class=\"panel panel-default\">\n        <div class=\"panel-body\">\n            <form role=\"form\" class=\"form-horizontal\">\n                <div class=\"form-group\">\n                    <label class=\"col-sm-12\">Filename:</label>\n                    <div class=\"col-sm-12\"><input type=\"text\" ng-model=\"filename\" class=\"form-control\"></div>\n                </div>\n                <div class=\"form-group\">\n                    <label class=\"col-sm-12\">Select Types:</label>\n                    <div class=\"cms-neutral\">\n                        <formly-form model=\"data\" fields=\"fields\" form=\"form\" options=\"options\"></formly-form>\n                    </div>\n                </div>\n            </form>\n        </div>\n    </div>\n\n\n    <br><br>\n    <button type=\"button\" class=\"btn btn-primary submit-button\" ng-click=\"choose()\">Choose</button>\n    <button type=\"button\" class=\"btn btn-primary\" ng-click=\"cancel()\">Cancel</button>\n</div>\n"
 
 /***/ },
-/* 187 */
+/* 190 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms-wrapper animated fadeInRight cms-sidebar cms\">\n    <button type=\"button\" class=\"btn btn-sm btn-white cms-close-position\"\n            ng-click=\"cancel()\">\n        <i class=\"fa fa-times\"></i>\n    </button>\n\n    <br>\n    <div class=\"row\">\n        <div class=\"col-xs-3 cms-panel\">\n            <div class=\"panel panel-primary\">\n                <div class=\"panel-heading\">Types</div>\n                <div class=\"panel-body\">\n                    <div js-tree=\"treeConfig\" ng-model=\"tree\"\n                         tree-events=\"changed:selectNode\" tree=\"treeInstance\"></div>\n                </div>\n            </div>\n        </div>\n        <div class=\"col-xs-9 cms-panel\">\n            <div class=\"panel panel-primary\">\n                <div class=\"panel-heading\">\n                    <div class=\"cms-admin-right-panel\">\n                        <label style=\"color: white\"> {{'Show' | translate}} : </label>\n\n                        <ui-select style=\"min-width: 50px;margin-left: 10px;margin-right: 10px;\"\n                                   class=\"cms-select\" data-ng-model=\"page.limit\" theme=\"bootstrap\"\n                                   on-select=\"refresh()\">\n                            <ui-select-match placeholder=\"\">{{$select.selected}}&nbsp;&nbsp;</ui-select-match>\n                            <ui-select-choices data-repeat=\"item in [10,25,50,100,200]\">{{item}}</ui-select-choices>\n                        </ui-select>\n\n                        <ui-select style=\"min-width: 60px;margin-left: 10px;margin-right: 10px;\"\n                                   class=\"cms-select\" data-ng-model=\"showAs.type\" theme=\"bootstrap\"\n                                   on-select=\"refresh()\">\n                            <ui-select-match placeholder=\"\">\n                                {{$select.selected.label}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</ui-select-match>\n                            <ui-select-choices\n                                    data-repeat=\"item.value as item in [{value:'list',label:'List'},{value:'table',label:'Table'},{value:'element',label:'Element'}]\">\n                                {{item.label}}\n                            </ui-select-choices>\n                        </ui-select>\n\n                        <div class=\"btn-group btn-group-xs\" style=\"margin-top: -12px;margin-right: 10px;\">\n                            <button type=\"button\" class=\"btn btn-white\" ng-click=\"setting()\">{{'Setting' | translate}}\n                            </button>\n                            <button type=\"button\" class=\"btn btn-white dropdown-toggle\" data-toggle=\"dropdown\">\n                                <span class=\"caret\"></span>\n                            </button>\n                            <ul class=\"dropdown-menu\" role=\"menu\" style=\"z-index: 10000 !important;\">\n                                <li><a href ng-click=\"deleteAll()\">{{'DeleteAll' | translate}}</a></li>\n                                <li><a href ng-click=\"import()\">Import</a></li>\n                                <li><a href ng-click=\"export()\">Export</a></li>\n\n                            </ul>\n                        </div>\n\n                        <button class=\"btn btn-white btn-xs\" ng-click=\"add()\">\n                            {{'Add' | translate}}\n                        </button>\n\n                    </div>\n\n                    <input type=\"text\" class=\"form-control input-xs\"\n                           style=\"margin-left: 10px;width: 100px;display: inline-block;\"\n                           ng-model=\"search.text\" ng-model-options=\"{debounce: 300}\" placeholder=\"search ...\">\n\n                    <div ng-if=\"queries && queries.length > 0\">\n                        <hr style=\"margin-top: 10px;margin-bottom: 5px;\">\n\n                        <div class=\"cms-admin-heading-form\" style=\"height: 60px;\">\n                            <formly-form ng-repeat=\"query in queries\" model=\"query.model\" fields=\"query.form\"\n                                         form=\"form\"\n                                         options=\"options\">\n                            </formly-form>\n                        </div>\n                    </div>\n\n                </div>\n                <div class=\"panel-body\" ng-if=\"node\">\n\n                    <div style=\"width: 100%;overflow-x: auto\" ng-if=\"showAs.type === 'table'\">\n                        <table class=\"table cms-admin-table\">\n                            <thead>\n                            <tr>\n                                <th ng-repeat=\"col in node.columns track by $index\" ng-bind=\"col.label\"></th>\n                                <th>Edit</th>\n                            </tr>\n                            </thead>\n                            <tbody>\n                            <tr ng-repeat=\"element in data.list track by $index\">\n                                <td ng-repeat=\"col in node.columns track by $index\">\n                                <span cms-direct-editable=\"model.{{col.value}}\"\n                                      cms-value=\"element[col.value]\"\n                                      cms-ref=\"{{element._id}}\"\n                                      cms-type=\"{{node.type}}\"></span>\n                                </td>\n                                <td>\n                                    <div cms-editor=\"{ref: element._id, type: node.type}\"\n                                         cms-remove=\"remove(element)\"></div>\n                                </td>\n                            </tr>\n                            </tbody>\n                        </table>\n                    </div>\n\n                    <div ng-show=\"data.loading\">\n                        <img src=\"/build/images/ajax-loader.gif\">\n                    </div>\n\n                    <div class=\"cms-panel-list-content\" ng-if=\"showAs.type === 'list'\">\n                        <div ng-repeat=\"element in data.list track by $index\"\n                             ng-class=\"elementClass\"\n                             cms-element=\"{ref: element._id, type: node.type, containers: {}}\"\n                             dnd-moved=\"remove(element)\"\n                             inline=\"false\"></div>\n                    </div>\n\n                    <div class=\"\" ng-if=\"showAs.type === 'element'\">\n                        <button class=\"btn cms-btn btn-primary btn-outline btn-xs\" style=\"margin-right: 10px;\"\n                                ng-repeat=\"e in data.list track by $index\"\n                                ng-click=\"selectElement(e._id);\" ng-show=\"data.list.length > 1\">\n                            {{getTitle(node.type, e._id)}}\n                        </button>\n                        <div ng-show=\"data.list.length > 1\">\n                            <br><br>\n                        </div>\n\n                        <div ng-if=\"element._id\"\n                             cms-element=\"{ref: element._id, type: node.type, containers: {}}\"\n                             inline=\"false\"></div>\n                    </div>\n\n                    <div class=\"clearfix\"></div>\n\n                    <ul uib-pagination\n                        ng-show=\"page.size > 1\"\n                        total-items=\"page.size\"\n                        ng-model=\"page.currentPage\"\n                        class=\"pagination-sm\"\n                        items-per-page=\"page.limit\"\n                        ng-change=\"refresh(true)\"\n                        max-size=\"10\"\n                        boundary-link-numbers=\"true\"></ul>\n                </div>\n            </div>\n        </div>\n    </div>\n\n</div>\n"
 
 /***/ },
-/* 188 */
+/* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -17712,23 +17762,23 @@
 	
 	var _common2 = _interopRequireDefault(_common);
 	
-	var _cmsNav = __webpack_require__(189);
+	var _cmsNav = __webpack_require__(192);
 	
 	var _cmsNav2 = _interopRequireDefault(_cmsNav);
 	
-	var _module2 = __webpack_require__(180);
+	var _module2 = __webpack_require__(183);
 	
 	var _module3 = _interopRequireDefault(_module2);
 	
-	var _module4 = __webpack_require__(158);
+	var _module4 = __webpack_require__(161);
 	
 	var _module5 = _interopRequireDefault(_module4);
 	
-	var _module6 = __webpack_require__(176);
+	var _module6 = __webpack_require__(179);
 	
 	var _module7 = _interopRequireDefault(_module6);
 	
-	var _module8 = __webpack_require__(178);
+	var _module8 = __webpack_require__(181);
 	
 	var _module9 = _interopRequireDefault(_module8);
 	
@@ -17739,7 +17789,7 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 189 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -17748,7 +17798,7 @@
 	    value: true
 	});
 	
-	var _cmsNav = __webpack_require__(190);
+	var _cmsNav = __webpack_require__(193);
 	
 	var _cmsNav2 = _interopRequireDefault(_cmsNav);
 	
@@ -17798,7 +17848,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 190 */
+/* 193 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms\">\n    <nav role=\"navigation\" class=\"navbar navbar-fixed-top navbar-default cms-menu\">\n        <div class=\"container\">\n            <div class=\"navbar-header\">\n                <button type=\"button\" data-toggle=\"collapse\" data-target=\"#dropdown_menu\" aria-expanded=\"false\"\n                        aria-controls=\"navbar\" class=\"navbar-toggle collapsed\"><span\n                        class=\"sr-only\">Toggle navigation</span><span class=\"icon-bar\"></span><span\n                        class=\"icon-bar\"></span><span\n                        class=\"icon-bar\"></span></button>\n                <a href=\"#\" class=\"navbar-brand\">Cms Mon</a></div>\n            <div id=\"dropdown_menu\" class=\"collapse navbar-collapse\">\n                <ul class=\"nav navbar-nav\">\n                    <li class=\"dropdown cms-types-dropdown\">\n                        <a href=\"#\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\"\n                                            class=\"dropdown-toggle\">Types<span class=\"caret\"></span></a>\n                        <ul role=\"menu\" cms-types=\"\" class=\"dropdown-menu\"></ul>\n                    </li>\n                    <li><a cms-admin>Admin</a></li>\n                    <li><a href=\"#\" cms-sitemap>Sitemap</a></li>\n                </ul>\n                <ul class=\"nav navbar-nav navbar-right\">\n                    <li>\n                        <div cms-edit-state></div>\n                    </li>\n                    <li><button class=\"btn btn-default navbar-btn\"\n                                style=\"margin-left: 10px\"\n                                ng-click=\"vm.toggleContainer()\">Container</button></li>\n                </ul>\n            </div>\n        </div>\n    </nav>\n</div>"

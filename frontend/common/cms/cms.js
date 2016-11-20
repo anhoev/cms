@@ -8,6 +8,8 @@ import 'jquery-ui/ui/widgets/draggable';
 import 'jquery-ui/ui/widgets/resizable';
 import traverse from 'traverse';
 import 'angular-translate';
+import 'angular-ui-notification';
+import 'angular-ui-notification/dist/angular-ui-notification.min.css'
 
 import _io from 'socket.io-client';
 window.io = _io;
@@ -18,7 +20,7 @@ window.Enum = {
 }
 
 const modelModule = angular
-    .module('common.data', ['ngFileUpload', 'ngWebSocket', 'pascalprecht.translate'])
+    .module('common.data', ['ngFileUpload', 'ngWebSocket', 'pascalprecht.translate', 'ui-notification'])
     .config(config)
     .factory('cms', cms)
     .run(run);
