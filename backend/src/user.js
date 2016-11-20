@@ -96,9 +96,9 @@ module.exports = (cms) => {
     app.post('/login-api', function*({body: {password}, session}, res) {
         const user = yield User.findOne({password, role: 'Admin'}).exec();
         if (user) {
-            res.send();
+            res.send({loggin: true});
         } else {
-            res.status(401).send();
+            res.send({loggin: false});
         }
     })
 }
