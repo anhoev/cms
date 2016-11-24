@@ -7,7 +7,7 @@ choco install mongodb -y
 refreshenv
 mkdir c:\data
 mkdir c:\data\db
-C:\Program Files\MongoDB\Server\3.2\bin\mongod --install --logpath "c:\data\log.txt"
+C:\"Program Files"\MongoDB\Server\3.2\bin\mongod --install --logpath "c:\data\log.txt"
 net start MongoDb
 
 choco install jdk8 -y
@@ -26,3 +26,5 @@ choco install python2 -y
 choco install microsoft-build-tools
 choco install visualstudio2015community -y
 choco install intellijidea-ultimate -y
+
+choco install dotnet4.5
