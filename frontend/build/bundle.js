@@ -1177,6 +1177,11 @@
 	                callback(list);
 	            }, queryBuilder);
 	        };
+	    } else if ($scope.to.showWithQuery) {
+	        $scope.config.load = function (query, callback) {
+	            if (!query || query === '') return callback([]);
+	            callback(Types[type].list);
+	        };
 	    } else {
 	        cms.loadElements(type, function () {
 	            var _$scope$models;

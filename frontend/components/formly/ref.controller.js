@@ -32,13 +32,17 @@ function controller($scope, cms, $timeout) {
 
     if ($scope.to.async) {
         $scope.config.load = function (query, callback) {
-            if (!query || query === '')  return callback([]);
             const queryBuilder = new QueryBuilder().limit(100).query({_textIndex: $scope.to.makeRegex ? $scope.to.makeRegex(query) : new RegExp(query, 'i')});
             cms.loadElements(type, function (list) {
                 // $scope.models = list;
                 callback(list);
             }, queryBuilder);
 
+        }
+    } else if ($scope.to.showWithQuery) {
+        $scope.config.load = function (query, callback) {
+            if (!query || query === '') return callback([]);
+            callback(Types[type].list);
         }
     } else {
         cms.loadElements(type, () => {
