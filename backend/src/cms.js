@@ -199,7 +199,7 @@ const cms = {
     },
     utils: {},
     express,
-    ews:null,
+    ews: null,
     app,
     mongoose,
     routers: {},
@@ -262,7 +262,7 @@ function listen() {
     cms.use(require('./types.builder'));
     cms.use(require('./wrapper'));
     cms.use(require('./container'));
-    cms.use(require('./user'));
+    if (cms.data.security) cms.use(require('./user'));
     cms.use(require('./admin'));
     cms.use(require('./category'));
     cms.use(require('./element.filter'));
@@ -332,7 +332,7 @@ function async(fn) {
             result = _result;
             done = true;
         }, () => done = true);
-        deasync.loopWhile(()=>!done);
+        deasync.loopWhile(() => !done);
         return result;
     }
 
