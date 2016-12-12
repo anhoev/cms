@@ -209,13 +209,13 @@
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(450);
+	module.exports = (__webpack_require__(2))(334);
 
 /***/ },
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(61);
+	module.exports = (__webpack_require__(2))(60);
 
 /***/ },
 /* 7 */
@@ -227,25 +227,25 @@
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(164);
+	module.exports = (__webpack_require__(2))(154);
 
 /***/ },
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(344);
+	module.exports = (__webpack_require__(2))(333);
 
 /***/ },
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(342);
+	module.exports = (__webpack_require__(2))(231);
 
 /***/ },
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(242);
+	module.exports = (__webpack_require__(2))(232);
 
 /***/ },
 /* 12 */
@@ -261,11 +261,11 @@
 	
 	var _module2 = _interopRequireDefault(_module);
 	
-	var _module3 = __webpack_require__(161);
+	var _module3 = __webpack_require__(160);
 	
 	var _module4 = _interopRequireDefault(_module3);
 	
-	var _module5 = __webpack_require__(164);
+	var _module5 = __webpack_require__(163);
 	
 	var _module6 = _interopRequireDefault(_module5);
 	
@@ -334,10 +334,10 @@
 	
 	    function link(scope, element, attrs, elementController) {
 	        // resolve type and ref
-	        var _elementController$ge = elementController.getElement(),
-	            type = _elementController$ge.type,
-	            ref = _elementController$ge.ref;
+	        var _elementController$ge = elementController.getElement();
 	
+	        var type = _elementController$ge.type;
+	        var ref = _elementController$ge.ref;
 	        var vm = scope.vm;
 	
 	
@@ -378,8 +378,8 @@
 	
 	        // resolve type and ref
 	
-	        var type = vm.type,
-	            ref = vm.ref;
+	        var type = vm.type;
+	        var ref = vm.ref;
 	
 	
 	        var property = vm.property.replace('model.', '');
@@ -430,9 +430,11 @@
 	
 	        // resolve type and ref
 	
-	        var _ref = vm.element ? vm.element : elementController.getElement(),
-	            type = _ref.type,
-	            ref = _ref.ref;
+	        var _ref = vm.element ? vm.element : elementController.getElement();
+	
+	        var type = _ref.type;
+	        var ref = _ref.ref;
+	
 	
 	        vm.showJson = function () {
 	            return false;
@@ -1481,13 +1483,13 @@
 /* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(460);
+	module.exports = (__webpack_require__(2))(344);
 
 /***/ },
 /* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(476);
+	module.exports = (__webpack_require__(2))(360);
 
 /***/ },
 /* 31 */
@@ -1633,14 +1635,15 @@
 	
 	function controller($scope) {
 	    var options = $scope.to.options = [];
-	    var _$scope$formState = $scope.formState,
-	        path = _$scope$formState.path,
-	        model = _$scope$formState.model;
+	    var _$scope$formState = $scope.formState;
+	    var path = _$scope$formState.path;
+	    var model = _$scope$formState.model;
 	
 	    path = _.dropRight(path.split('\.')).join('.');
 	
-	    var _$get = _.get(model, path),
-	        containers = _$get.containers;
+	    var _$get = _.get(model, path);
+	
+	    var containers = _$get.containers;
 	
 	    $scope.to.labelProp = 'Type';
 	    var map = {};
@@ -1669,9 +1672,9 @@
 	
 	function controller($scope, cms) {
 	    debugger;
-	    var _$scope$formState = $scope.formState,
-	        path = _$scope$formState.path,
-	        model = _$scope$formState.model;
+	    var _$scope$formState = $scope.formState;
+	    var path = _$scope$formState.path;
+	    var model = _$scope$formState.model;
 	
 	    path = _.dropRight(path.split('\.')).join('.');
 	
@@ -1726,14 +1729,15 @@
 	controller.$inject = ['$scope', 'cms'];
 	
 	function controller($scope, cms) {
-	    var _$scope$formState = $scope.formState,
-	        path = _$scope$formState.path,
-	        model = _$scope$formState.model;
+	    var _$scope$formState = $scope.formState;
+	    var path = _$scope$formState.path;
+	    var model = _$scope$formState.model;
 	
 	    path = _.dropRight(path.split('\.')).join('.');
 	
-	    var _$get = _.get(model, path),
-	        BindType = _$get.BindType;
+	    var _$get = _.get(model, path);
+	
+	    var BindType = _$get.BindType;
 	
 	    var Type = cms.data.types[BindType];
 	    $scope.to.options = _.map(Type.fn, function (v, k) {
@@ -2005,13 +2009,13 @@
 /* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(451);
+	module.exports = (__webpack_require__(2))(335);
 
 /***/ },
 /* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_LOCAL_MODULE_0__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_LOCAL_MODULE_1__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function($) {/**
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_LOCAL_MODULE_0__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_LOCAL_MODULE_1__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function($, jQuery) {/**
 	 * sifter.js
 	 * Copyright (c) 2013 Brian Reavis & contributors
 	 *
@@ -2648,7 +2652,7 @@
 	}));
 	
 	/**
-	 * selectize.js (v0.12.4)
+	 * selectize.js (v0.12.3)
 	 * Copyright (c) 2013–2015 Brian Reavis & contributors
 	 *
 	 * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -2713,7 +2717,7 @@
 		 * removeHighlight fn copied from highlight v5 and
 		 * edited to remove with() and pass js strict mode
 		 */
-		$.fn.removeHighlight = function() {
+		jQuery.fn.removeHighlight = function() {
 			return this.find("span.highlight").each(function() {
 				this.parentNode.firstChild.nodeName;
 				var parent = this.parentNode;
@@ -3779,7 +3783,7 @@
 					self.refreshState();
 		
 					// IE11 bug: element still marked as active
-					dest && dest.focus && dest.focus();
+					dest && dest.focus();
 		
 					self.ignoreFocus = false;
 					self.trigger('blur');
@@ -5840,7 +5844,7 @@
 	
 		return Selectize;
 	}));
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(1)))
 
 /***/ },
 /* 68 */
@@ -7174,157 +7178,157 @@
 /* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(64);
+	module.exports = (__webpack_require__(2))(67);
 
 /***/ },
 /* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(63);
+	module.exports = (__webpack_require__(2))(66);
 
 /***/ },
 /* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(65);
+	module.exports = (__webpack_require__(2))(68);
 
 /***/ },
 /* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(66);
+	module.exports = (__webpack_require__(2))(69);
 
 /***/ },
 /* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(68);
+	module.exports = (__webpack_require__(2))(71);
 
 /***/ },
 /* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(69);
+	module.exports = (__webpack_require__(2))(72);
 
 /***/ },
 /* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(72);
+	module.exports = (__webpack_require__(2))(75);
 
 /***/ },
 /* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(74);
+	module.exports = (__webpack_require__(2))(77);
 
 /***/ },
 /* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(75);
+	module.exports = (__webpack_require__(2))(141);
 
 /***/ },
 /* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(77);
+	module.exports = (__webpack_require__(2))(143);
 
 /***/ },
 /* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(152);
+	module.exports = (__webpack_require__(2))(144);
 
 /***/ },
 /* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(153);
+	module.exports = (__webpack_require__(2))(145);
 
 /***/ },
 /* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(155);
+	module.exports = (__webpack_require__(2))(147);
 
 /***/ },
 /* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(156);
+	module.exports = (__webpack_require__(2))(148);
 
 /***/ },
 /* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(157);
+	module.exports = (__webpack_require__(2))(149);
 
 /***/ },
 /* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(158);
+	module.exports = (__webpack_require__(2))(150);
 
 /***/ },
 /* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(235);
+	module.exports = (__webpack_require__(2))(224);
 
 /***/ },
 /* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(159);
+	module.exports = (__webpack_require__(2))(151);
 
 /***/ },
 /* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(161);
+	module.exports = (__webpack_require__(2))(153);
 
 /***/ },
 /* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(162);
+	module.exports = (__webpack_require__(2))(220);
 
 /***/ },
 /* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(163);
+	module.exports = (__webpack_require__(2))(221);
 
 /***/ },
 /* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(233);
+	module.exports = (__webpack_require__(2))(222);
 
 /***/ },
 /* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(234);
+	module.exports = (__webpack_require__(2))(223);
 
 /***/ },
 /* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(236);
+	module.exports = (__webpack_require__(2))(225);
 
 /***/ },
 /* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(238);
+	module.exports = (__webpack_require__(2))(227);
 
 /***/ },
 /* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(239);
+	module.exports = (__webpack_require__(2))(228);
 
 /***/ },
 /* 99 */
@@ -7362,7 +7366,7 @@
 	    value: true
 	});
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
 	__webpack_require__(102);
 	
@@ -7394,7 +7398,7 @@
 	
 	__webpack_require__(112);
 	
-	var _socket = __webpack_require__(114);
+	var _socket = __webpack_require__(113);
 	
 	var _socket2 = _interopRequireDefault(_socket);
 	
@@ -7467,7 +7471,7 @@
 	    changeEditMode(Enum.EditMode.DATAELEMENT);
 	
 	    function getType(type, ref, cb, content) {
-	        var onfly = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
+	        var onfly = arguments.length <= 4 || arguments[4] === undefined ? true : arguments[4];
 	
 	        var Type = data.types[type];
 	        if (!Type || !Type.template || !ref || !_.find(Type.list, { _id: ref })) {
@@ -7501,7 +7505,7 @@
 	    }
 	
 	    function createElement(type, content, cb) {
-	        var onfly = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+	        var onfly = arguments.length <= 3 || arguments[3] === undefined ? true : arguments[3];
 	
 	        if (!onfly) {
 	            updateElement(type, content, cb);
@@ -7688,7 +7692,7 @@
 	    }
 	
 	    function findField(form, property) {
-	        var deep = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+	        var deep = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
 	
 	        if (!deep) {
 	            if (form[0].isTab) {
@@ -7861,8 +7865,8 @@
 	                    var options = field.templateOptions.options;
 	
 	                    _.each(options, function (_ref10) {
-	                        var name = _ref10.name,
-	                            value = _ref10.value;
+	                        var name = _ref10.name;
+	                        var value = _ref10.value;
 	
 	                        var _path = path + '.children[' + children.length + ']';
 	                        var _query = [_defineProperty({}, property, value)];
@@ -8023,7 +8027,7 @@
 /* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(458);
+	module.exports = (__webpack_require__(2))(342);
 
 /***/ },
 /* 103 */
@@ -8074,7 +8078,7 @@
 /* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(243);
+	module.exports = (__webpack_require__(2))(233);
 
 /***/ },
 /* 105 */
@@ -8272,8 +8276,7 @@
 	/* WEBPACK VAR INJECTION */(function(global) {
 	var rng;
 	
-	var crypto = global.crypto || global.msCrypto; // for IE 11
-	if (crypto && crypto.getRandomValues) {
+	if (global.crypto && crypto.getRandomValues) {
 	  // WHATWG crypto-based RNG - http://wiki.whatwg.org/wiki/Crypto
 	  // Moderately fast, high quality
 	  var _rnds8 = new Uint8Array(16);
@@ -8320,62 +8323,28 @@
 /* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(343);
+	module.exports = (__webpack_require__(2))(332);
 
 /***/ },
 /* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(456);
+	module.exports = (__webpack_require__(2))(340);
 
 /***/ },
 /* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(59);
+	module.exports = (__webpack_require__(2))(62);
 
 /***/ },
 /* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-	
-	// load the styles
-	var content = __webpack_require__(113);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(57)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../css-loader/index.js!./angular-ui-notification.min.css", function() {
-				var newContent = require("!!./../../css-loader/index.js!./angular-ui-notification.min.css");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
+	module.exports = (__webpack_require__(2))(64);
 
 /***/ },
 /* 113 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(56)();
-	// imports
-	
-	
-	// module
-	exports.push([module.id, "/**\n * angular-ui-notification - Angular.js service providing simple notifications using Bootstrap 3 styles with css transitions for animating\n * @author Alex_Crack\n * @version v0.1.0\n * @link https://github.com/alexcrack/angular-ui-notification\n * @license MIT\n */\n.ui-notification{position:fixed;z-index:9999;width:300px;cursor:pointer;-webkit-transition:all ease .5s;-o-transition:all ease .5s;transition:all ease .5s;color:#fff;border-radius:0;background:#337ab7;box-shadow:5px 5px 10px rgba(0,0,0,.3)}.ui-notification.killed{-webkit-transition:opacity ease 1s;-o-transition:opacity ease 1s;transition:opacity ease 1s;opacity:0}.ui-notification>h3{font-size:14px;font-weight:700;display:block;margin:10px 10px 0;padding:0 0 5px;text-align:left;border-bottom:1px solid rgba(255,255,255,.3)}.ui-notification a{color:#fff}.ui-notification a:hover{text-decoration:underline}.ui-notification>.message{margin:10px}.ui-notification.warning{color:#fff;background:#f0ad4e}.ui-notification.error{color:#fff;background:#d9534f}.ui-notification.success{color:#fff;background:#5cb85c}.ui-notification.info{color:#fff;background:#5bc0de}.ui-notification:hover{opacity:.7}", ""]);
-	
-	// exports
-
-
-/***/ },
-/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -8383,10 +8352,10 @@
 	 * Module dependencies.
 	 */
 	
-	var url = __webpack_require__(115);
-	var parser = __webpack_require__(120);
-	var Manager = __webpack_require__(128);
-	var debug = __webpack_require__(117)('socket.io-client');
+	var url = __webpack_require__(114);
+	var parser = __webpack_require__(119);
+	var Manager = __webpack_require__(127);
+	var debug = __webpack_require__(116)('socket.io-client');
 	
 	/**
 	 * Module exports.
@@ -8485,12 +8454,12 @@
 	 * @api public
 	 */
 	
-	exports.Manager = __webpack_require__(128);
-	exports.Socket = __webpack_require__(154);
+	exports.Manager = __webpack_require__(127);
+	exports.Socket = __webpack_require__(153);
 
 
 /***/ },
-/* 115 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -8498,8 +8467,8 @@
 	 * Module dependencies.
 	 */
 	
-	var parseuri = __webpack_require__(116);
-	var debug = __webpack_require__(117)('socket.io-client:url');
+	var parseuri = __webpack_require__(115);
+	var debug = __webpack_require__(116)('socket.io-client:url');
 	
 	/**
 	 * Module exports.
@@ -8572,7 +8541,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 116 */
+/* 115 */
 /***/ function(module, exports) {
 
 	/**
@@ -8617,7 +8586,7 @@
 
 
 /***/ },
-/* 117 */
+/* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -8627,7 +8596,7 @@
 	 * Expose `debug()` as the module.
 	 */
 	
-	exports = module.exports = __webpack_require__(118);
+	exports = module.exports = __webpack_require__(117);
 	exports.log = log;
 	exports.formatArgs = formatArgs;
 	exports.save = save;
@@ -8791,7 +8760,7 @@
 
 
 /***/ },
-/* 118 */
+/* 117 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -8807,7 +8776,7 @@
 	exports.disable = disable;
 	exports.enable = enable;
 	exports.enabled = enabled;
-	exports.humanize = __webpack_require__(119);
+	exports.humanize = __webpack_require__(118);
 	
 	/**
 	 * The currently active debug mode names, and names to skip.
@@ -8994,7 +8963,7 @@
 
 
 /***/ },
-/* 119 */
+/* 118 */
 /***/ function(module, exports) {
 
 	/**
@@ -9125,7 +9094,7 @@
 
 
 /***/ },
-/* 120 */
+/* 119 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -9133,11 +9102,12 @@
 	 * Module dependencies.
 	 */
 	
-	var debug = __webpack_require__(117)('socket.io-parser');
-	var json = __webpack_require__(121);
+	var debug = __webpack_require__(116)('socket.io-parser');
+	var json = __webpack_require__(120);
+	var isArray = __webpack_require__(123);
 	var Emitter = __webpack_require__(124);
 	var binary = __webpack_require__(125);
-	var isBuf = __webpack_require__(127);
+	var isBuf = __webpack_require__(126);
 	
 	/**
 	 * Protocol version.
@@ -9452,21 +9422,16 @@
 	
 	  // look up json data
 	  if (str.charAt(++i)) {
-	    p = tryParse(p, str.substr(i));
+	    try {
+	      p.data = json.parse(str.substr(i));
+	    } catch(e){
+	      return error();
+	    }
 	  }
 	
 	  debug('decoded %s as %j', str, p);
 	  return p;
 	}
-	
-	function tryParse(p, str) {
-	  try {
-	    p.data = json.parse(str);
-	  } catch(e){
-	    return error();
-	  }
-	  return p; 
-	};
 	
 	/**
 	 * Deallocates a parser's resources
@@ -9535,14 +9500,14 @@
 
 
 /***/ },
-/* 121 */
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! JSON v3.3.2 | http://bestiejs.github.io/json3 | Copyright 2012-2014, Kit Cambridge | http://kit.mit-license.org */
 	;(function () {
 	  // Detect the `define` function exposed by asynchronous module loaders. The
 	  // strict `define` check is necessary for compatibility with `r.js`.
-	  var isLoader = "function" === "function" && __webpack_require__(123);
+	  var isLoader = "function" === "function" && __webpack_require__(122);
 	
 	  // A set of types used to distinguish objects from primitives.
 	  var objectTypes = {
@@ -10441,21 +10406,27 @@
 	  }
 	}).call(this);
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(122)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(121)(module), (function() { return this; }())))
+
+/***/ },
+/* 121 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = (__webpack_require__(2))(61);
 
 /***/ },
 /* 122 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = (__webpack_require__(2))(62);
-
-/***/ },
-/* 123 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
+
+/***/ },
+/* 123 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = (__webpack_require__(2))(256);
 
 /***/ },
 /* 124 */
@@ -10637,8 +10608,8 @@
 	 * Module requirements
 	 */
 	
-	var isArray = __webpack_require__(126);
-	var isBuf = __webpack_require__(127);
+	var isArray = __webpack_require__(123);
+	var isBuf = __webpack_require__(126);
 	
 	/**
 	 * Replaces every Buffer | ArrayBuffer in packet with a numbered placeholder.
@@ -10777,12 +10748,6 @@
 
 /***/ },
 /* 126 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = (__webpack_require__(2))(266);
-
-/***/ },
-/* 127 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -10802,7 +10767,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 128 */
+/* 127 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -10810,15 +10775,15 @@
 	 * Module dependencies.
 	 */
 	
-	var eio = __webpack_require__(129);
-	var Socket = __webpack_require__(154);
-	var Emitter = __webpack_require__(155);
-	var parser = __webpack_require__(120);
-	var on = __webpack_require__(157);
-	var bind = __webpack_require__(158);
-	var debug = __webpack_require__(117)('socket.io-client:manager');
-	var indexOf = __webpack_require__(152);
-	var Backoff = __webpack_require__(160);
+	var eio = __webpack_require__(128);
+	var Socket = __webpack_require__(153);
+	var Emitter = __webpack_require__(154);
+	var parser = __webpack_require__(119);
+	var on = __webpack_require__(156);
+	var bind = __webpack_require__(157);
+	var debug = __webpack_require__(116)('socket.io-client:manager');
+	var indexOf = __webpack_require__(151);
+	var Backoff = __webpack_require__(159);
 	
 	/**
 	 * IE6+ hasOwnProperty
@@ -11368,19 +11333,19 @@
 
 
 /***/ },
+/* 128 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	module.exports = __webpack_require__(129);
+
+
+/***/ },
 /* 129 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
 	module.exports = __webpack_require__(130);
-
-
-/***/ },
-/* 130 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	module.exports = __webpack_require__(131);
 	
 	/**
 	 * Exports parser
@@ -11388,25 +11353,25 @@
 	 * @api public
 	 *
 	 */
-	module.exports.parser = __webpack_require__(138);
+	module.exports.parser = __webpack_require__(137);
 
 
 /***/ },
-/* 131 */
+/* 130 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 	
-	var transports = __webpack_require__(132);
+	var transports = __webpack_require__(131);
 	var Emitter = __webpack_require__(124);
-	var debug = __webpack_require__(117)('engine.io-client:socket');
-	var index = __webpack_require__(152);
-	var parser = __webpack_require__(138);
-	var parseuri = __webpack_require__(116);
-	var parsejson = __webpack_require__(153);
-	var parseqs = __webpack_require__(146);
+	var debug = __webpack_require__(116)('engine.io-client:socket');
+	var index = __webpack_require__(151);
+	var parser = __webpack_require__(137);
+	var parseuri = __webpack_require__(115);
+	var parsejson = __webpack_require__(152);
+	var parseqs = __webpack_require__(145);
 	
 	/**
 	 * Module exports.
@@ -11469,7 +11434,6 @@
 	  this.transports = opts.transports || ['polling', 'websocket'];
 	  this.readyState = '';
 	  this.writeBuffer = [];
-	  this.prevBufferLen = 0;
 	  this.policyPort = opts.policyPort || 843;
 	  this.rememberUpgrade = opts.rememberUpgrade || false;
 	  this.binaryType = null;
@@ -11498,16 +11462,6 @@
 	    }
 	  }
 	
-	  // set on handshake
-	  this.id = null;
-	  this.upgrades = null;
-	  this.pingInterval = null;
-	  this.pingTimeout = null;
-	
-	  // set on heartbeat
-	  this.pingIntervalTimer = null;
-	  this.pingTimeoutTimer = null;
-	
 	  this.open();
 	}
 	
@@ -11533,9 +11487,9 @@
 	 */
 	
 	Socket.Socket = Socket;
-	Socket.Transport = __webpack_require__(137);
-	Socket.transports = __webpack_require__(132);
-	Socket.parser = __webpack_require__(138);
+	Socket.Transport = __webpack_require__(136);
+	Socket.transports = __webpack_require__(131);
+	Socket.parser = __webpack_require__(137);
 	
 	/**
 	 * Creates transport of the given type.
@@ -11812,8 +11766,7 @@
 	 */
 	
 	Socket.prototype.onPacket = function (packet) {
-	  if ('opening' === this.readyState || 'open' === this.readyState ||
-	      'closing' === this.readyState) {
+	  if ('opening' === this.readyState || 'open' === this.readyState) {
 	    debug('socket receive: type "%s", data "%s"', packet.type, packet.data);
 	
 	    this.emit('packet', packet);
@@ -12130,17 +12083,17 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 132 */
+/* 131 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies
 	 */
 	
-	var XMLHttpRequest = __webpack_require__(133);
-	var XHR = __webpack_require__(135);
-	var JSONP = __webpack_require__(149);
-	var websocket = __webpack_require__(150);
+	var XMLHttpRequest = __webpack_require__(132);
+	var XHR = __webpack_require__(134);
+	var JSONP = __webpack_require__(148);
+	var websocket = __webpack_require__(149);
 	
 	/**
 	 * Export transports.
@@ -12190,12 +12143,15 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 133 */
+/* 132 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {// browser shim for xmlhttprequest module
+	// browser shim for xmlhttprequest module
 	
-	var hasCORS = __webpack_require__(134);
+	// Indicate to eslint that ActiveXObject is global
+	/* global ActiveXObject */
+	
+	var hasCORS = __webpack_require__(133);
 	
 	module.exports = function (opts) {
 	  var xdomain = opts.xdomain;
@@ -12226,15 +12182,14 @@
 	
 	  if (!xdomain) {
 	    try {
-	      return new global[['Active'].concat('Object').join('X')]('Microsoft.XMLHTTP');
+	      return new ActiveXObject('Microsoft.XMLHTTP');
 	    } catch (e) { }
 	  }
 	};
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 134 */
+/* 133 */
 /***/ function(module, exports) {
 
 	
@@ -12257,18 +12212,18 @@
 
 
 /***/ },
-/* 135 */
+/* 134 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module requirements.
 	 */
 	
-	var XMLHttpRequest = __webpack_require__(133);
-	var Polling = __webpack_require__(136);
+	var XMLHttpRequest = __webpack_require__(132);
+	var Polling = __webpack_require__(135);
 	var Emitter = __webpack_require__(124);
-	var inherit = __webpack_require__(147);
-	var debug = __webpack_require__(117)('engine.io-client:polling-xhr');
+	var inherit = __webpack_require__(146);
+	var debug = __webpack_require__(116)('engine.io-client:polling-xhr');
 	
 	/**
 	 * Module exports.
@@ -12481,10 +12436,6 @@
 	      } catch (e) {}
 	    }
 	
-	    try {
-	      xhr.setRequestHeader('Accept', '*/*');
-	    } catch (e) {}
-	
 	    // ie6 check
 	    if ('withCredentials' in xhr) {
 	      xhr.withCredentials = true;
@@ -12659,10 +12610,9 @@
 	 * emitted.
 	 */
 	
-	Request.requestsCount = 0;
-	Request.requests = {};
-	
 	if (global.document) {
+	  Request.requestsCount = 0;
+	  Request.requests = {};
 	  if (global.attachEvent) {
 	    global.attachEvent('onunload', unloadHandler);
 	  } else if (global.addEventListener) {
@@ -12681,19 +12631,19 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 136 */
+/* 135 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 	
-	var Transport = __webpack_require__(137);
-	var parseqs = __webpack_require__(146);
-	var parser = __webpack_require__(138);
-	var inherit = __webpack_require__(147);
-	var yeast = __webpack_require__(148);
-	var debug = __webpack_require__(117)('engine.io-client:polling');
+	var Transport = __webpack_require__(136);
+	var parseqs = __webpack_require__(145);
+	var parser = __webpack_require__(137);
+	var inherit = __webpack_require__(146);
+	var yeast = __webpack_require__(147);
+	var debug = __webpack_require__(116)('engine.io-client:polling');
 	
 	/**
 	 * Module exports.
@@ -12706,7 +12656,7 @@
 	 */
 	
 	var hasXHR2 = (function () {
-	  var XMLHttpRequest = __webpack_require__(133);
+	  var XMLHttpRequest = __webpack_require__(132);
 	  var xhr = new XMLHttpRequest({ xdomain: false });
 	  return null != xhr.responseType;
 	})();
@@ -12932,14 +12882,14 @@
 
 
 /***/ },
-/* 137 */
+/* 136 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 	
-	var parser = __webpack_require__(138);
+	var parser = __webpack_require__(137);
 	var Emitter = __webpack_require__(124);
 	
 	/**
@@ -13093,22 +13043,22 @@
 
 
 /***/ },
-/* 138 */
+/* 137 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 	
-	var keys = __webpack_require__(139);
-	var hasBinary = __webpack_require__(140);
-	var sliceBuffer = __webpack_require__(141);
-	var after = __webpack_require__(142);
-	var utf8 = __webpack_require__(143);
+	var keys = __webpack_require__(138);
+	var hasBinary = __webpack_require__(139);
+	var sliceBuffer = __webpack_require__(140);
+	var after = __webpack_require__(141);
+	var utf8 = __webpack_require__(142);
 	
 	var base64encoder;
-	if (global && global.ArrayBuffer) {
-	  base64encoder = __webpack_require__(144);
+	if (global.ArrayBuffer) {
+	  base64encoder = __webpack_require__(143);
 	}
 	
 	/**
@@ -13166,7 +13116,7 @@
 	 * Create a blob api even for blob builder when vendor prefixes exist
 	 */
 	
-	var Blob = __webpack_require__(145);
+	var Blob = __webpack_require__(144);
 	
 	/**
 	 * Encodes a packet.
@@ -13320,11 +13270,8 @@
 	 */
 	
 	exports.decodePacket = function (data, binaryType, utf8decode) {
-	  if (data === undefined) {
-	    return err;
-	  }
 	  // String data
-	  if (typeof data == 'string') {
+	  if (typeof data == 'string' || data === undefined) {
 	    if (data.charAt(0) == 'b') {
 	      return exports.decodeBase64Packet(data.substr(1), binaryType);
 	    }
@@ -13709,7 +13656,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 139 */
+/* 138 */
 /***/ function(module, exports) {
 
 	
@@ -13734,7 +13681,7 @@
 
 
 /***/ },
-/* 140 */
+/* 139 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -13742,7 +13689,7 @@
 	 * Module requirements.
 	 */
 	
-	var isArray = __webpack_require__(126);
+	var isArray = __webpack_require__(123);
 	
 	/**
 	 * Module exports.
@@ -13799,7 +13746,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 141 */
+/* 140 */
 /***/ function(module, exports) {
 
 	/**
@@ -13834,7 +13781,7 @@
 
 
 /***/ },
-/* 142 */
+/* 141 */
 /***/ function(module, exports) {
 
 	module.exports = after
@@ -13868,7 +13815,7 @@
 
 
 /***/ },
-/* 143 */
+/* 142 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! https://mths.be/wtf8 v1.0.0 by @mathias */
@@ -14104,10 +14051,10 @@
 	
 	}(this));
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(122)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(121)(module), (function() { return this; }())))
 
 /***/ },
-/* 144 */
+/* 143 */
 /***/ function(module, exports) {
 
 	/*
@@ -14180,7 +14127,7 @@
 
 
 /***/ },
-/* 145 */
+/* 144 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14283,7 +14230,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 146 */
+/* 145 */
 /***/ function(module, exports) {
 
 	/**
@@ -14326,7 +14273,7 @@
 
 
 /***/ },
-/* 147 */
+/* 146 */
 /***/ function(module, exports) {
 
 	
@@ -14338,7 +14285,7 @@
 	};
 
 /***/ },
-/* 148 */
+/* 147 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -14412,7 +14359,7 @@
 
 
 /***/ },
-/* 149 */
+/* 148 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -14420,8 +14367,8 @@
 	 * Module requirements.
 	 */
 	
-	var Polling = __webpack_require__(136);
-	var inherit = __webpack_require__(147);
+	var Polling = __webpack_require__(135);
+	var inherit = __webpack_require__(146);
 	
 	/**
 	 * Module exports.
@@ -14650,19 +14597,19 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 150 */
+/* 149 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 	
-	var Transport = __webpack_require__(137);
-	var parser = __webpack_require__(138);
-	var parseqs = __webpack_require__(146);
-	var inherit = __webpack_require__(147);
-	var yeast = __webpack_require__(148);
-	var debug = __webpack_require__(117)('engine.io-client:websocket');
+	var Transport = __webpack_require__(136);
+	var parser = __webpack_require__(137);
+	var parseqs = __webpack_require__(145);
+	var inherit = __webpack_require__(146);
+	var yeast = __webpack_require__(147);
+	var debug = __webpack_require__(116)('engine.io-client:websocket');
 	var BrowserWebSocket = global.WebSocket || global.MozWebSocket;
 	
 	/**
@@ -14674,7 +14621,7 @@
 	var WebSocket = BrowserWebSocket;
 	if (!WebSocket && typeof window === 'undefined') {
 	  try {
-	    WebSocket = __webpack_require__(151);
+	    WebSocket = __webpack_require__(150);
 	  } catch (e) { }
 	}
 	
@@ -14793,6 +14740,23 @@
 	    self.onError('websocket error', e);
 	  };
 	};
+	
+	/**
+	 * Override `onData` to use a timer on iOS.
+	 * See: https://gist.github.com/mloughran/2052006
+	 *
+	 * @api private
+	 */
+	
+	if ('undefined' !== typeof navigator &&
+	  /iPad|iPhone|iPod/i.test(navigator.userAgent)) {
+	  WS.prototype.onData = function (data) {
+	    var self = this;
+	    setTimeout(function () {
+	      Transport.prototype.onData.call(self, data);
+	    }, 0);
+	  };
+	}
 	
 	/**
 	 * Writes data to socket.
@@ -14931,13 +14895,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 151 */
+/* 150 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 152 */
+/* 151 */
 /***/ function(module, exports) {
 
 	
@@ -14952,7 +14916,7 @@
 	};
 
 /***/ },
-/* 153 */
+/* 152 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14990,7 +14954,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 154 */
+/* 153 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -14998,13 +14962,13 @@
 	 * Module dependencies.
 	 */
 	
-	var parser = __webpack_require__(120);
-	var Emitter = __webpack_require__(155);
-	var toArray = __webpack_require__(156);
-	var on = __webpack_require__(157);
-	var bind = __webpack_require__(158);
-	var debug = __webpack_require__(117)('socket.io-client:socket');
-	var hasBin = __webpack_require__(159);
+	var parser = __webpack_require__(119);
+	var Emitter = __webpack_require__(154);
+	var toArray = __webpack_require__(155);
+	var on = __webpack_require__(156);
+	var bind = __webpack_require__(157);
+	var debug = __webpack_require__(116)('socket.io-client:socket');
+	var hasBin = __webpack_require__(158);
 	
 	/**
 	 * Module exports.
@@ -15415,7 +15379,7 @@
 
 
 /***/ },
-/* 155 */
+/* 154 */
 /***/ function(module, exports) {
 
 	
@@ -15582,7 +15546,7 @@
 
 
 /***/ },
-/* 156 */
+/* 155 */
 /***/ function(module, exports) {
 
 	module.exports = toArray
@@ -15601,7 +15565,7 @@
 
 
 /***/ },
-/* 157 */
+/* 156 */
 /***/ function(module, exports) {
 
 	
@@ -15631,7 +15595,7 @@
 
 
 /***/ },
-/* 158 */
+/* 157 */
 /***/ function(module, exports) {
 
 	/**
@@ -15660,7 +15624,7 @@
 
 
 /***/ },
-/* 159 */
+/* 158 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -15668,7 +15632,7 @@
 	 * Module requirements.
 	 */
 	
-	var isArray = __webpack_require__(126);
+	var isArray = __webpack_require__(123);
 	
 	/**
 	 * Module exports.
@@ -15726,7 +15690,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 160 */
+/* 159 */
 /***/ function(module, exports) {
 
 	
@@ -15817,7 +15781,7 @@
 
 
 /***/ },
-/* 161 */
+/* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -15826,9 +15790,9 @@
 	    value: true
 	});
 	
-	__webpack_require__(162);
+	__webpack_require__(161);
 	
-	var _tpl = __webpack_require__(163);
+	var _tpl = __webpack_require__(162);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -15894,19 +15858,19 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 162 */
+/* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(240);
+	module.exports = (__webpack_require__(2))(229);
 
 /***/ },
-/* 163 */
+/* 162 */
 /***/ function(module, exports) {
 
 	module.exports = "<ul role=\"menu\" class=\"dropdown-menu\" ng-init=\"vm._showType= true\">\n    <li ng-repeat=\"type in vm.types\"\n        dnd-draggable=\"type\"\n        dnd-type=\"type.type\"\n        dnd-dragstart=\"vm.start(type.type)\"\n        dnd-effect-allowed=\"move\"\n        dnd-dragend=\"vm.end()\"\n        ng-show=\"vm._showType\">\n        <a ng-click=\"vm._showType = !vm._showType;\n                    vm.selectType(type.type);\n                    $event.stopPropagation();\">\n            {{type.type}}\n        </a>\n    </li>\n    <li ng-show=\"!vm._showType\"\n        style=\"padding-left: 5px;padding-right: 20px;\">\n        <div class=\"col-xs-10\">\n            <input type=\"text\" class=\"input-xs\" ng-model=\"vm._filter\">\n        </div>\n        <div class=\"col-xs-2\">\n            <button type=\"button\" class=\"btn btn-xs btn-white\"\n                    ng-click=\"vm._showType = !vm._showType;$event.stopPropagation();\">\n                <i class=\"fa fa-times\"></i>\n            </button>\n        </div>\n    </li>\n    <li ng-repeat=\"element in vm.list\"\n        ng-init=\"_element = vm.convert(element)\"\n        dnd-draggable=\"_element\"\n        dnd-type=\"vm._type\"\n        dnd-effect-allowed=\"move\"\n        dnd-dragstart=\"vm.start(vm._type)\"\n        dnd-dragend=\"vm.end()\"\n        ng-show=\"!vm._showType\">\n        <a ng-click=\"\">{{vm.getTitle(element)}}</a>\n    </li>\n</ul>\n"
 
 /***/ },
-/* 164 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -15919,56 +15883,58 @@
 	
 	var _common2 = _interopRequireDefault(_common);
 	
-	__webpack_require__(162);
+	__webpack_require__(161);
 	
 	var _module2 = __webpack_require__(13);
 	
 	var _module3 = _interopRequireDefault(_module2);
 	
-	var _module4 = __webpack_require__(165);
+	var _module4 = __webpack_require__(164);
 	
 	var _module5 = _interopRequireDefault(_module4);
 	
 	__webpack_require__(14);
 	
-	var _element = __webpack_require__(167);
+	var _element = __webpack_require__(166);
 	
 	var _element2 = _interopRequireDefault(_element);
 	
-	var _editor = __webpack_require__(168);
+	var _editor = __webpack_require__(167);
 	
 	var _editor2 = _interopRequireDefault(_editor);
 	
-	var _cmsWrapper = __webpack_require__(170);
+	var _cmsWrapper = __webpack_require__(169);
 	
 	var _cmsWrapper2 = _interopRequireDefault(_cmsWrapper);
 	
-	__webpack_require__(171);
+	__webpack_require__(170);
 	
-	var _fragment = __webpack_require__(172);
+	var _fragment = __webpack_require__(171);
 	
 	var _fragment2 = _interopRequireDefault(_fragment);
 	
-	var _container = __webpack_require__(173);
+	var _container = __webpack_require__(172);
 	
 	var _container2 = _interopRequireDefault(_container);
 	
-	var _containerEdit = __webpack_require__(175);
+	var _containerEdit = __webpack_require__(174);
 	
 	var _containerEdit2 = _interopRequireDefault(_containerEdit);
 	
-	var _cmsFormPath = __webpack_require__(177);
+	var _cmsFormPath = __webpack_require__(176);
 	
 	var _cmsFormPath2 = _interopRequireDefault(_cmsFormPath);
 	
+	__webpack_require__(178);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var _module = angular.module('components.cmsMain', ['dndLists', 'ui.bootstrap', _common2.default, _module3.default, _module5.default, 'ui.bootstrap.contextMenu']).directive('cmsContainer', _container2.default).directive('cmsElement', _element2.default).directive('cmsEditor', _editor2.default).directive('cmsWrapper', _cmsWrapper2.default).directive('cmsFragment', _fragment2.default).directive('cmsFormPath', _cmsFormPath2.default).directive('cmsContainerEdit', _containerEdit2.default);
+	var _module = angular.module('components.cmsMain', ['dndLists', 'ui.bootstrap', _common2.default, _module3.default, _module5.default, 'ui.bootstrap.contextMenu', 'ngFileSaver']).directive('cmsContainer', _container2.default).directive('cmsElement', _element2.default).directive('cmsEditor', _editor2.default).directive('cmsWrapper', _cmsWrapper2.default).directive('cmsFragment', _fragment2.default).directive('cmsFormPath', _cmsFormPath2.default).directive('cmsContainerEdit', _containerEdit2.default);
 	
 	exports.default = _module.name;
 
 /***/ },
-/* 165 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -15981,7 +15947,7 @@
 	
 	var _module3 = _interopRequireDefault(_module2);
 	
-	var _tpl = __webpack_require__(166);
+	var _tpl = __webpack_require__(165);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -16197,13 +16163,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 166 */
+/* 165 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms-wrapper cms\"\n     ng-init=\"_showId = false;\">\n\n    <div style=\"position: absolute;right: 10px;\">\n        <button class=\"btn btn-xs btn-white\"\n                ng-click=\"_showId=!_showId;\"\n                ng-bind=\"_showId?'hide id':'show id'\">\n        </button>\n        <button type=\"button\" class=\"btn btn-xs btn-white\" ng-bind=\"vm.fullScreenText\"\n                ng-click=\"vm.changeScreenSize();\"></button>\n    </div>\n\n    <h3 style=\"font-weight: 300;\">Edit {{vm.cmsType}} {{_showId?'('+vm.cmsModel._id+')':''}}:</h3>\n\n    <form ng-submit=\"vm.onSubmit()\"\n          novalidate\n          class=\"cms-form form-horizontal\">\n\n        <uib-tabset ng-if=\"vm.isTab\">\n            <uib-tab ng-repeat=\"tab in vm.cmsFields\"\n                     heading=\"{{tab.title}}\"\n                     active=\"tab.active\">\n                <br>\n                <formly-form model=\"vm.cmsModel\" fields=\"tab.fields\"\n                             form=\"vm.form\" options=\"vm.options\">\n                </formly-form>\n            </uib-tab>\n        </uib-tabset>\n\n        <div>\n            <br>\n            <formly-form model=\"vm.cmsModel\" fields=\"vm.cmsFields\"\n                         form=\"vm.form\" options=\"vm.options\" ng-if=\"!vm.isTab\">\n            </formly-form>\n        </div>\n\n        <div class=\"form-group\" style=\"margin-top: 25px;\">\n            <div class=\"col-sm-offset-2 col-sm-10\">\n                <button type=\"submit\" class=\"btn btn-primary submit-button\" ng-disabled=\"vm.form.$invalid\">{{'Submit' | translate}}</button>\n                <button type=\"button\" class=\"btn btn-primary\" ng-click=\"vm.onApply()\">{{'Apply' | translate}}</button>\n                <button type=\"button\" class=\"btn btn-primary\" ng-click=\"vm.onAdd()\">{{'Save and add' | translate}}</button>\n                <button type=\"button\" class=\"btn btn-primary\" ng-click=\"vm.onCancel()\">{{'Cancel' | translate}}</button>\n\n                <button type=\"button\" class=\"cms-btn btn-outline btn btn-danger pull-right\" ng-click=\"vm.onDelete()\">Delete</button>\n\n            </div>\n        </div>\n    </form>\n</div>"
 
 /***/ },
-/* 167 */
+/* 166 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -16219,11 +16185,11 @@
 	
 	    function link(scope, element, attr, controller) {
 	        var vm = scope.vm;
-	        var _vm$element = vm.element,
-	            ref = _vm$element.ref,
-	            type = _vm$element.type,
-	            containers = _vm$element.containers,
-	            binding = _vm$element.binding;
+	        var _vm$element = vm.element;
+	        var ref = _vm$element.ref;
+	        var type = _vm$element.type;
+	        var containers = _vm$element.containers;
+	        var binding = _vm$element.binding;
 	
 	        scope.$on('saveContainersFw', function (e, obj) {
 	            if (obj.type === type) obj.cb(vm.element.containers);
@@ -16267,18 +16233,18 @@
 	
 	                        if (bind.choice === 'model') {
 	                            (function () {
-	                                var _bind$model = bind.model,
-	                                    parentKey = _bind$model.parentKey,
-	                                    key = _bind$model.key;
+	                                var _bind$model = bind.model;
+	                                var parentKey = _bind$model.parentKey;
+	                                var key = _bind$model.key;
 	
 	                                scope.$watch('parentModel.' + parentKey, function () {
 	                                    return scope.model[key] = scope.parentModel[parentKey];
 	                                }, true);
 	                            })();
 	                        } else if (bind.choice === 'fn') {
-	                            var _bind$fn = bind.fn,
-	                                _parentKey = _bind$fn.parentKey,
-	                                _key = _bind$fn.key;
+	                            var _bind$fn = bind.fn;
+	                            var _parentKey = _bind$fn.parentKey;
+	                            var _key = _bind$fn.key;
 	
 	                            scope.model[_key] = Types[binding.BindType].fn[parentFn].bind(model);
 	                        } else if (bind.choice === 'scope') {
@@ -16357,10 +16323,10 @@
 	            }
 	
 	            function _render() {
-	                var _Type = Type,
-	                    serverFn = _Type.serverFn,
-	                    ctrl = _Type.controller,
-	                    link = _Type.link;
+	                var _Type = Type;
+	                var serverFn = _Type.serverFn;
+	                var ctrl = _Type.controller;
+	                var link = _Type.link;
 	
 	                var fn = JsonFn.clone(Type.fn);
 	                if (fn) {
@@ -16416,7 +16382,7 @@
 	exports.default = elementDirective;
 
 /***/ },
-/* 168 */
+/* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16425,7 +16391,7 @@
 	    value: true
 	});
 	
-	var _editor = __webpack_require__(169);
+	var _editor = __webpack_require__(168);
 	
 	var _editor2 = _interopRequireDefault(_editor);
 	
@@ -16437,9 +16403,9 @@
 	
 	    function controller(scope) {
 	        var vm = this;
-	        var _vm$cmsEditor = vm.cmsEditor,
-	            ref = _vm$cmsEditor.ref,
-	            type = _vm$cmsEditor.type;
+	        var _vm$cmsEditor = vm.cmsEditor;
+	        var ref = _vm$cmsEditor.ref;
+	        var type = _vm$cmsEditor.type;
 	
 	        var Type = cms.data.types[type];
 	
@@ -16456,17 +16422,17 @@
 	        };
 	
 	        vm.edit = function (cb) {
-	            var _vm$cmsEditor2 = vm.cmsEditor,
-	                ref = _vm$cmsEditor2.ref,
-	                type = _vm$cmsEditor2.type;
+	            var _vm$cmsEditor2 = vm.cmsEditor;
+	            var ref = _vm$cmsEditor2.ref;
+	            var type = _vm$cmsEditor2.type;
 	
 	            formService.edit(ref, type, cb);
 	        };
 	
 	        vm.copy = function (cb) {
-	            var _vm$cmsEditor3 = vm.cmsEditor,
-	                ref = _vm$cmsEditor3.ref,
-	                type = _vm$cmsEditor3.type;
+	            var _vm$cmsEditor3 = vm.cmsEditor;
+	            var ref = _vm$cmsEditor3.ref;
+	            var type = _vm$cmsEditor3.type;
 	
 	            var e = cms.findByRef(type, ref);
 	
@@ -16497,9 +16463,9 @@
 	    function link(scope, element, attr, elementController) {
 	        scope.menu = [];
 	        var vm = scope.vm;
-	        var _vm$cmsEditor4 = vm.cmsEditor,
-	            ref = _vm$cmsEditor4.ref,
-	            type = _vm$cmsEditor4.type;
+	        var _vm$cmsEditor4 = vm.cmsEditor;
+	        var ref = _vm$cmsEditor4.ref;
+	        var type = _vm$cmsEditor4.type;
 	
 	        if (vm.cmsMenu === 'true') {
 	            scope.menu = [['Edit', function () {
@@ -16545,13 +16511,13 @@
 	exports.default = directive;
 
 /***/ },
-/* 169 */
+/* 168 */
 /***/ function(module, exports) {
 
 	module.exports = "<div context-menu=\"menu\"\n     ng-style=\"{display:vm.cmsMenu === 'true'?'inline-block':'block'}\">\n    <div ng-if=\"vm.cmsMenu !== 'true'\" class=\"cms cms-element-wrapper\" ng-style=\"vm.editorIcon\">\n        <div class=\"cms-element-controll-icon label label-primary\" style=\"font-size: 13px\"\n             ng-mouseover=\"vm.showControl()\" ng-show=\"vm.getControlVisible()\">\n            <i class=\"fa fa-circle-o-notch\"></i>\n        </div>\n\n        <div class=\"cms-element-controll\"\n             ng-mouseover=\"vm.__showControl = true\"\n             ng-mouseleave=\"vm.__showControl = false\"\n             ng-show=\"vm._showControl || vm.__showControl\">\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.edit()\">\n                <i class=\"fa fa-pencil-square-o\"></i>\n            </button>\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.removeByDatabase()\">\n                <i class=\"fa fa-trash\"></i>\n            </button>\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.remove()\">\n                <i class=\"fa fa-trash-o\"></i>\n            </button>\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.copy()\">\n                <i class=\"fa fa-files-o\"></i>\n            </button>\n            <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"vm.cmsRefresh()\">\n                <i class=\"fa fa-refresh\"></i>\n            </button>\n        </div>\n\n    </div>\n    <ng-transclude></ng-transclude>\n</div>"
 
 /***/ },
-/* 170 */
+/* 169 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -16582,12 +16548,12 @@
 	
 	        function render() {
 	            if (Type.store[vm.cmsWrapper]) {
-	                var _Type$store$vm$cmsWra = Type.store[vm.cmsWrapper],
-	                    template = _Type$store$vm$cmsWra.template,
-	                    serverFn = _Type$store$vm$cmsWra.serverFn,
-	                    fn = _Type$store$vm$cmsWra.fn,
-	                    serverFnData = _Type$store$vm$cmsWra.serverFnData,
-	                    controller = _Type$store$vm$cmsWra.controller;
+	                var _Type$store$vm$cmsWra = Type.store[vm.cmsWrapper];
+	                var template = _Type$store$vm$cmsWra.template;
+	                var serverFn = _Type$store$vm$cmsWra.serverFn;
+	                var fn = _Type$store$vm$cmsWra.fn;
+	                var serverFnData = _Type$store$vm$cmsWra.serverFnData;
+	                var controller = _Type$store$vm$cmsWra.controller;
 	
 	
 	                _.assign(scope, { fn: {}, model: vm.element, serverFn: {}, serverFnData: serverFnData });
@@ -16603,16 +16569,16 @@
 	
 	                element.html(template);
 	            } else {
-	                var _vm$element = vm.element,
-	                    list = _vm$element.list,
-	                    _element = _vm$element.element,
-	                    _fn = _vm$element.Fn;
+	                var _vm$element = vm.element;
+	                var list = _vm$element.list;
+	                var _element = _vm$element.element;
+	                var _fn = _vm$element.Fn;
 	
 	                var _template = void 0;
 	                if (!list.null) {
-	                    var BindType = list.BindType,
-	                        layout = list.layout,
-	                        query = list.query;
+	                    var BindType = list.BindType;
+	                    var layout = list.layout;
+	                    var query = list.query;
 	                    // resolve data before render
 	
 	                    if (!Types[BindType]._load) {
@@ -16634,10 +16600,10 @@
 	                        _template = '\n                        <br>\n                        <div ng-repeat="element in result track by $index">\n                            <div cms-element="{type:type,ref:element._id}"></div>\n                        </div>\n                        ';
 	                    }
 	                } else if (!_element.null) {
-	                    var _BindType = _element.BindType,
-	                        _layout = _element.layout,
-	                        model = _element.model,
-	                        _query = _element.query;
+	                    var _BindType = _element.BindType;
+	                    var _layout = _element.layout;
+	                    var model = _element.model;
+	                    var _query = _element.query;
 	
 	                    _.assign(scope, { model: model, layout: _layout, type: _BindType });
 	                    _template = '<br><div cms-element="{type:type,ref:vm.element.element.model._id}"></div>';
@@ -16671,13 +16637,13 @@
 	exports.default = directive;
 
 /***/ },
-/* 171 */
+/* 170 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(241);
+	module.exports = (__webpack_require__(2))(230);
 
 /***/ },
-/* 172 */
+/* 171 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -16699,10 +16665,11 @@
 	
 	        var _ref = vm.save ? _.find(layout.SAVE, function (save) {
 	            return save.name === vm.save;
-	        }) : layout.SAVE[0],
-	            containers = _ref.containers,
-	            bind = _ref.bind,
-	            BindType = _ref.BindType;
+	        }) : layout.SAVE[0];
+	
+	        var containers = _ref.containers;
+	        var bind = _ref.bind;
+	        var BindType = _ref.BindType;
 	
 	        containers = angular.copy(containers);
 	        Layout.fn.getTreeWithBinding(containers, bind, vm.model, BindType);
@@ -16728,7 +16695,7 @@
 	exports.default = directive;
 
 /***/ },
-/* 173 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16737,7 +16704,7 @@
 	    value: true
 	});
 	
-	var _container = __webpack_require__(174);
+	var _container = __webpack_require__(173);
 	
 	var _container2 = _interopRequireDefault(_container);
 	
@@ -16797,13 +16764,13 @@
 	exports.default = directive;
 
 /***/ },
-/* 174 */
+/* 173 */
 /***/ function(module, exports) {
 
 	module.exports = "<i class=\"fa fa-circle-o-notch cms-element-controll-icon\"\n   ng-mouseover=\"vm.showControl()\"\n   ng-show=\"!vm._showControl && (vm.editState.editMode === 1)\"></i>\n<div class=\"cms-element-controll\"\n     ng-mouseover=\"vm.__showControl = true\"\n     ng-mouseleave=\"vm.__showControl = false\"\n     ng-show=\"vm._showControl || vm.__showControl\">\n    <button type=\"button\" class=\"btn btn-sm btn-white pull-right\" ng-click=\"\">\n        <i class=\"fa fa-plus\"></i>\n    </button>\n</div>\n<div class=\"{{vm.cmsInline === 'true'?'cms-containers-inline':'cms-containers'}}\"\n     dnd-list=\"vm.elements\"\n     dnd-disable-if=\"vm.elements.length > 0 && vm.elements[0].binding\"\n     dnd-allowed-types=\"vm.allowedTypes\"\n     dnd-horizontal-list=\"{{vm.cmsInline}}\"\n     ng-class=\"{'cms-panel-highlight':vm.highlight()}\">\n    <div ng-repeat=\"element in vm.elements\"\n         dnd-disable-if=\"element.binding || !vm.matchEditMode(element.type)\"\n         dnd-draggable=\"element\"\n         dnd-type=\"element.type\"\n         dnd-moved=\"vm.elements.splice($index, 1);\"\n         dnd-effect-allowed=\"move\"\n         dnd-dragstart=\"vm.start(element.type)\"\n         dnd-dragend=\"vm.end();\"\n         cms-element=\"element\"\n         cms-path=\"{{vm.path}}.elements[{{$index}}]\"\n         class=\"{{vm.cmsInline === 'true'?'cms-element':''}}\"\n    ></div>\n</div>\n"
 
 /***/ },
-/* 175 */
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -16812,7 +16779,7 @@
 	    value: true
 	});
 	
-	var _containerEdit = __webpack_require__(176);
+	var _containerEdit = __webpack_require__(175);
 	
 	var _containerEdit2 = _interopRequireDefault(_containerEdit);
 	
@@ -16899,13 +16866,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 176 */
+/* 175 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms-container-panel panel panel-default ui-widget-content\"\n     ng-show=\"vm.editState.showContainerEdit\"\n     style=\"position: fixed; top: 70px; right: 50px;width: 300px;height: 600px;z-index:1000\">\n    <div class=\"panel-heading\" style=\"padding: 0px 0px 0px 10px;height: 26px;cursor: move\">\n        <div class=\"panel-title\">\n            <h5>Edit panel</h5>\n        </div>\n    </div>\n    <div class=\"panel-body\">\n        <div js-tree=\"vm.treeConfig\" ng-model=\"vm.tree\"\n             tree-events=\"changed:vm.selectNode\" tree=\"vm.treeInstance\"></div>\n    </div>\n</div>"
 
 /***/ },
-/* 177 */
+/* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16913,7 +16880,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	var _merge = __webpack_require__(178);
+	var _merge = __webpack_require__(177);
 	function merge() {
 	    return _merge.apply(undefined, [true].concat(Array.prototype.slice.call(arguments)));
 	}
@@ -16953,10 +16920,16 @@
 	exports.default = directive;
 
 /***/ },
+/* 177 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = (__webpack_require__(2))(341);
+
+/***/ },
 /* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(2))(457);
+	module.exports = (__webpack_require__(2))(59);
 
 /***/ },
 /* 179 */
@@ -17042,8 +17015,9 @@
 	                };
 	                $scope.onFileSelect = function (files) {
 	                    //files: an array of files selected, each file has name, size, and type.
-	                    var _files = _slicedToArray(files, 1),
-	                        file = _files[0];
+	                    var _files = _slicedToArray(files, 1);
+	
+	                    var file = _files[0];
 	
 	                    cms.uploadFile(file, $scope.node.path, function () {
 	                        console.log('upload successful');
@@ -17186,11 +17160,11 @@
 	
 	__webpack_require__(64);
 	
-	var _module2 = __webpack_require__(164);
+	var _module2 = __webpack_require__(163);
 	
 	var _module3 = _interopRequireDefault(_module2);
 	
-	var _module4 = __webpack_require__(165);
+	var _module4 = __webpack_require__(164);
 	
 	var _module5 = _interopRequireDefault(_module4);
 	
@@ -17257,8 +17231,8 @@
 	                $scope.get = _.get;
 	
 	                $scope.refresh = function () {
-	                    var onlyChangePage = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-	                    var changeAdminList = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+	                    var onlyChangePage = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
+	                    var changeAdminList = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 	
 	
 	                    //$timeout(function () {
@@ -17727,8 +17701,8 @@
 	        });
 	
 	        modalInstance.result.then(function (_ref) {
-	            var filename = _ref.filename,
-	                types = _ref.types;
+	            var filename = _ref.filename;
+	            var types = _ref.types;
 	
 	            cms.exportAll(filename, types);
 	        });
@@ -17775,7 +17749,7 @@
 	
 	var _module3 = _interopRequireDefault(_module2);
 	
-	var _module4 = __webpack_require__(161);
+	var _module4 = __webpack_require__(160);
 	
 	var _module5 = _interopRequireDefault(_module4);
 	

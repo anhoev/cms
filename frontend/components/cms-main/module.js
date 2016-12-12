@@ -11,9 +11,10 @@ import fragmentDirective from "./fragment.directive";
 import containerDirective from "./container.directive";
 import containerEditDirective from "./container-edit.directive";
 import cmsFormPathDirective from "./cms-form-path.directive";
+import 'angular-file-saver';
 
 const module = angular
-    .module('components.cmsMain', ['dndLists', 'ui.bootstrap', common, cmsEditable, cmsElementEdit, 'ui.bootstrap.contextMenu'])
+    .module('components.cmsMain', ['dndLists', 'ui.bootstrap', common, cmsEditable, cmsElementEdit, 'ui.bootstrap.contextMenu', 'ngFileSaver'])
     .directive('cmsContainer', containerDirective)
     .directive('cmsElement', elementDirective)
     .directive('cmsEditor', editorDirective)

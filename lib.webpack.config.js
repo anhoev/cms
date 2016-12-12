@@ -38,6 +38,7 @@ module.exports = {
             'angularjs-color-picker',
             'angularjs-color-picker/angularjs-color-picker.css',
             'angular-sanitize',
+            'angular-file-saver',
             'angular-ui-notification',
             'angular-ui-notification/dist/angular-ui-notification.min.css',
             'codemirror/addon/edit/matchbrackets',
