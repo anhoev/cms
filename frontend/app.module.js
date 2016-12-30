@@ -89,23 +89,25 @@ _JsonFn.parse = function (str, date2obj) {
     });
 };
 
-window._transform = {transformResponse: d => {
-    return JsonFn.parse(d);
-}};
+window._transform = {
+    transformResponse: d => {
+        return JsonFn.parse(d);
+    }
+};
 
 import 'bootstrap/dist/js/bootstrap';
 
 import components from './components/components.module';
 import common from './common/common.module';
 
-angular.module('app', [
-        common,
-        components
-    ])
+angular.module('app', [common, components])
+    .config(['$compileProvider', function ($compileProvider) {
+        $compileProvider.debugInfoEnabled(false);
+    }])
     .controller('appCtrl', function () {
     });
 
-angular.element(document).ready(function() {
+angular.element(document).ready(function () {
     angular.bootstrap(document, ['app']);
 });
 

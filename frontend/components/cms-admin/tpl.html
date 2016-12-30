@@ -67,7 +67,7 @@
                         <hr style="margin-top: 10px;margin-bottom: 5px;">
 
                         <div class="cms-admin-heading-form" style="height: 60px;">
-                            <formly-form ng-repeat="query in queries" model="query.model" fields="query.form"
+                            <formly-form ng-repeat="query in queries track by $index" model="query.model" fields="query.form"
                                          form="form"
                                          options="options">
                             </formly-form>

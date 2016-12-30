@@ -59,9 +59,9 @@ class QueryBuilder {
 
         let query;
         if (this._search && this._query) {
-            query = {$and: [{$text: {$search: this._search}}, ...this._query]}
+            query = {$and: [{_textIndex: new RegExp(this._search, "i")}, ...this._query]}
         } else if (this._search) {
-            query = {$text: {$search: this._search}};
+            query = {_textIndex: new RegExp(this._search, "i")};
         } else if (this._query.length > 0) {
             query = {$and: [...this._query]};
         }

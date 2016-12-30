@@ -8,7 +8,7 @@ choco install mongodb -y
 call refreshenv
 mkdir c:\Windows\data
 mkdir c:\Windows\data\db
-C:\"Program Files"\MongoDB\Server\3.2\bin\mongod --install --logpath "c:\Windows\data\log.txt"
+C:\"Program Files"\MongoDB\Server\3.2\bin\mongod --install --logpath "c:\Windows\data\log.txt" --dbpath "c:\Windows\data\db\log.txt"  --auth
 net start MongoDb
 
 choco install jdk8 -y

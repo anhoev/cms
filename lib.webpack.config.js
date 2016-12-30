@@ -76,11 +76,14 @@ module.exports = {
             'printthis',
 
             'selectize/dist/css/selectize.css',
-            'selectize',
+            'selectize/dist/js/standalone/selectize.js',
             //'angular-selectize2/dist/angular-selectize',
 
             'angular-translate',
-            'extend'
+            'extend',
+
+            'socket.io-client',
+            'tinycolor2'
         ]
     },
     output: {

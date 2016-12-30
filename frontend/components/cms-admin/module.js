@@ -57,8 +57,9 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
                     //$timeout(function () {
                     if (!$scope.node) return;
 
-                    $timeout(() => {
+                    setTimeout(() => {
                         $scope.data.list = [];
+                        $scope.$digest();
                     });
 
                     $scope.data.loading = true;
@@ -105,12 +106,13 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
                     cms.loadElements($scope.node.type, (list) => {
                         console.timeEnd('test');
                         $scope.data.loading = false;
-                        $timeout(function () {
+                        setTimeout(function () {
 
                             $scope.data.list.push(...list);
                             if ($scope.showAs.type === 'element') {
                                 $scope.selectElement($scope.data.list[0]._id);
                             }
+                            $scope.$digest();
 
                         })
 
@@ -157,6 +159,11 @@ function directive(cms, $uibModal, $timeout, formService, importService, exportS
                             if (q.form[0].default) q.model = {[q.form[0].key]: q.form[0].default};
                             if (q.form[0].defaultValue) {
                                 q.model = {[q.form[0].key]: q.form[0].defaultValue};
+                                manualQuery = true;
+                            }
+
+                            if (q.defaultValue) {
+                                q.model = {[q.form[0].key]: q.defaultValue};
                                 manualQuery = true;
                             }
 
