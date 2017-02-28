@@ -260,7 +260,7 @@ function listen() {
     cms.use(require('./angular_resolve'));
     cms.use(require('./types'));
     cms.use(require('./types.builder'));
-    cms.use(require('./wrapper'));
+    //cms.use(require('./wrapper'));
     cms.use(require('./container'));
     if (cms.data.security) cms.use(require('./user'));
     cms.use(require('./admin'));

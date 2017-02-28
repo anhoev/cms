@@ -98,6 +98,7 @@
     "deasync": "^0.1.7",
     "es6-error": "^2.0.2",
     "express": "^4.13.3",
+    "express-generator": "^4.14.0",
     "express-restify-mongoose": "^4.1.0",
     "express-session": "^1.13.0",
     "express-unless": "^0.3.0",
