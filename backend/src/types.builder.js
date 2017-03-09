@@ -5,8 +5,9 @@ require('generator-bind').polyfill();
 module.exports = (cms) => {
 
     cms.TypesBuilder = class {
-        constructor() {
+        constructor(session) {
             this.Types = {};
+            this.session = session;
             for (const type in cms.Types) {
                 this.Types[type] = cms.Types[type].webType;
             }
@@ -30,7 +31,9 @@ module.exports = (cms) => {
 
         *getFullList(type) {
             this.setLoaded(type);
-            this.Types[type].list = yield cms.Types[type].Model.find({});
+            let q = cms.Types[type].Model.find({});
+            if (q.session) q = q.session(this.session);
+            this.Types[type].list = yield q;
         }
 
         setServerFnData(type, serverFnData) {

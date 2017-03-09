@@ -394,7 +394,7 @@ module.exports = cms => {
         return $.html();
 
         function* resolve($, containers) {
-            const typesBuilder = new cms.TypesBuilder();
+            const typesBuilder = new cms.TypesBuilder(req.session);
             yield* typesBuilder.init();
             const _html = yield* cms.ng.$compile($('body').html(), $rootScope => {
                 $rootScope.containers = containers;

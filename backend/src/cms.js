@@ -10,7 +10,13 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const restify = require('express-restify-mongoose');
 const Q = require('q');
-const session = require('express-session');
+//const MongoStore = require('connect-mongo')(session);
+const session = require('express-session')({
+    secret: 'best cms system',
+    resave: false, saveUninitialized: true,
+    cookie: {maxAge: 2628000000},
+    expires: 30 * 24 * 60 * 60 * 1000
+});
 const Reflect = require('harmony-reflect');
 require('generator-bind').polyfill();
 const jade = require('jade');
@@ -25,7 +31,11 @@ const request = require('request');
 const server = require('http').Server(_app);
 const _io = require('socket.io')(server);
 
-var download = function (uri, filename, callback) {
+const sharedsession = require("express-socket.io-session");
+
+
+
+const download = function (uri, filename, callback) {
     request.head(uri, function (err, res, body) {
         console.log('content-type:', res.headers['content-type']);
         console.log('content-length:', res.headers['content-length']);
@@ -110,11 +120,10 @@ let io = new Proxy(_io, {
 });
 
 
-app.use(session({
-    secret: 'best cms system',
-    resave: false, saveUninitialized: true,
-    cookie: {maxAge: 2628000000},
-    expires: 30 * 24 * 60 * 60 * 1000
+app.use(session);
+
+io.use(sharedsession(session, {
+    autoSave:true
 }));
 
 app.use(bodyParser.json());

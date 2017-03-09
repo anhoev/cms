@@ -1,8 +1,8 @@
 import QueryBuilder from "../../common/cms/QueryBuilder";
 
-controller.$inject = ['$scope', 'cms', '$timeout'];
+controller.$inject = ['$scope', 'cms', '$timeout', 'formService'];
 
-function controller($scope, cms, $timeout) {
+function controller($scope, cms, $timeout, formService) {
 
     // resolve
     const type = $scope.options.templateOptions.Type;
@@ -76,6 +76,14 @@ function controller($scope, cms, $timeout) {
         }
     })
 
+    $scope.create = function () {
+        formService.add({}, type, () => {
+            if ($scope.config.load) return;
+            cms.loadElements(type, () => {
+                $scope.models = [...Types[type].list];
+            })
+        });
+    }
 }
 
 export default controller;

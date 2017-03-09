@@ -338,10 +338,10 @@
 	
 	    function link(scope, element, attrs, elementController) {
 	        // resolve type and ref
-	        var _elementController$ge = elementController.getElement();
+	        var _elementController$ge = elementController.getElement(),
+	            type = _elementController$ge.type,
+	            ref = _elementController$ge.ref;
 	
-	        var type = _elementController$ge.type;
-	        var ref = _elementController$ge.ref;
 	        var vm = scope.vm;
 	
 	
@@ -382,8 +382,8 @@
 	
 	        // resolve type and ref
 	
-	        var type = vm.type;
-	        var ref = vm.ref;
+	        var type = vm.type,
+	            ref = vm.ref;
 	
 	
 	        var property = vm.property.replace('model.', '');
@@ -434,11 +434,9 @@
 	
 	        // resolve type and ref
 	
-	        var _ref = vm.element ? vm.element : elementController.getElement();
-	
-	        var type = _ref.type;
-	        var ref = _ref.ref;
-	
+	        var _ref = vm.element ? vm.element : elementController.getElement(),
+	            type = _ref.type,
+	            ref = _ref.ref;
 	
 	        vm.showJson = function () {
 	            return false;
@@ -1016,7 +1014,7 @@
 /* 20 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"clearfix\"></div>\n<div>\n    <div dnd-list=\"model[options.key]\"\n         class=\"cms-containers\" style=\"min-height: 0px\">\n        <div class=\"repeatsection\"\n             style=\"position: relative\"\n             ng-repeat=\"element in model[options.key]\"\n             dnd-draggable=\"element\"\n             dnd-moved=\"model[options.key].splice($index, 1);\"\n             dnd-effect-allowed=\"move\"\n             ng-init=\"_fields = copyFields(to.fields)[0];_options = createFormOptions($index)\">\n\n\n\n            <dnd-nodrag style=\"display: block\">\n                <div style=\"position: absolute;right: 0px;z-index: 10;\" ng-style=\"{'margin-top': marginTop}\">\n                    <button type=\"button\" class=\"btn btn-xs btn-white\"\n                            ng-click=\"model[options.key].splice($index, 1)\">\n                        <i class=\"fa fa-trash-o\"></i>\n                    </button>\n                    <button type=\"button\" dnd-handle class=\"btn btn-xs btn-white\" style=\"cursor: move;\">:::</button>\n                </div>\n\n                <formly-field options=\"_fields\"\n                              form-options=\"{}\"\n                              form-state=\"_options.formState\"\n                              model=\"element\"\n                              form=\"form\">\n                </formly-field>\n            </dnd-nodrag>\n        </div>\n    </div>\n\n    <div class=\"form-group\">\n        <div class=\"col-sm-offset-2 col-sm-10\">\n            <div ng-if=\"!choice\">\n                <button type=\"button\" class=\"btn btn-white btn-xs\"\n                        ng-click=\"addNew()\">{{to.btnText}}\n                </button>\n            </div>\n            <div ng-if=\"choice\">\n                <div class=\"btn-group-xs\" uib-dropdown>\n                    <button type=\"button\" class=\"btn btn-white\" uib-dropdown-toggle>\n                        {{to.btnText}} <span class=\"caret\"></span>\n                    </button>\n                    <ul class=\"scrollable-menu\" uib-dropdown-menu role=\"menu\" aria-labelledby=\"btn-append-to-body\"\n                        style=\"z-index: 10000;\">\n                        <li style=\"padding: 0px 20px;\" ng-show=\"choice.length > 7\">\n                            <input type=\"text\" ng-model=\"_choice\" ng-click=\"$event.stopPropagation();\">\n                        </li>\n                        <li role=\"menuitem\" ng-repeat=\"c in choice | filter: _choice track by $index\">\n                            <a ng-click=\"addNewWithChoice(c); _choice = ''\">{{c}}</a>\n                        </li>\n                    </ul>\n                </div>\n            </div>\n        </div>\n    </div>\n\n\n</div>\n"
+	module.exports = "<div class=\"clearfix\"></div>\n<div>\n    <div dnd-list=\"model[options.key]\"\n         class=\"cms-containers\" style=\"min-height: 0px\">\n        <div class=\"repeatsection\"\n             style=\"position: relative\"\n             ng-repeat=\"element in model[options.key]\"\n             dnd-draggable=\"element\"\n             dnd-moved=\"model[options.key].splice($index, 1);\"\n             dnd-effect-allowed=\"move\"\n             ng-init=\"_fields = copyFields(to.fields)[0];_options = createFormOptions($index)\">\n\n\n\n            <dnd-nodrag style=\"display: block\">\n                <div style=\"position: absolute;left: 100%;z-index: 10;\" ng-style=\"{'margin-top': marginTop}\">\n                    <button type=\"button\" class=\"btn btn-xs btn-white\" style=\"opacity: 0.4\"\n                            ng-click=\"model[options.key].splice($index, 1)\">\n                        <i class=\"fa fa-trash-o\"></i>\n                    </button>\n                    <button type=\"button\" dnd-handle class=\"btn btn-xs btn-white\" style=\"cursor: move;\">:::</button>\n                </div>\n\n                <formly-field options=\"_fields\"\n                              form-options=\"{}\"\n                              form-state=\"_options.formState\"\n                              model=\"element\"\n                              form=\"form\">\n                </formly-field>\n            </dnd-nodrag>\n        </div>\n    </div>\n\n    <div class=\"form-group\">\n        <div class=\"col-sm-offset-2 col-sm-10\">\n            <div ng-if=\"!choice\">\n                <button type=\"button\" class=\"btn btn-white btn-xs\"\n                        ng-click=\"addNew()\">{{to.btnText}}\n                </button>\n            </div>\n            <div ng-if=\"choice\">\n                <div class=\"btn-group-xs\" uib-dropdown>\n                    <button type=\"button\" class=\"btn btn-white\" uib-dropdown-toggle>\n                        {{to.btnText}} <span class=\"caret\"></span>\n                    </button>\n\n                    <ul class=\"scrollable-menu\" uib-dropdown-menu role=\"menu\" aria-labelledby=\"btn-append-to-body\"\n                        style=\"z-index: 10000;\">\n                        <li style=\"padding: 0px 20px;\" ng-show=\"choice.length > 7\">\n                            <input type=\"text\" ng-model=\"_choice\" ng-click=\"$event.stopPropagation();\">\n                        </li>\n                        <li role=\"menuitem\" ng-repeat=\"c in choice | filter: _choice track by $index\">\n                            <a ng-click=\"addNewWithChoice(c); _choice = ''\">{{c}}</a>\n                        </li>\n                    </ul>\n                </div>\n            </div>\n        </div>\n    </div>\n\n\n</div>\n"
 
 /***/ },
 /* 21 */
@@ -1123,7 +1121,7 @@
 /* 24 */
 /***/ function(module, exports) {
 
-	module.exports = "<selectize config='config' options='models' ng-model=\"_model\"></selectize>"
+	module.exports = "<div class=\"input-group\">\n    <selectize config='config' options='models' ng-model=\"_model\" class=\"no-border-right\"></selectize>\n\n    <span class=\"input-group-btn\">\n      <button class=\"btn btn-white btn-sm\" type=\"button\" ng-click=\"create()\" style=\"border-color: #ccc;color:#777;\">\n         <i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n      </button>\n   </span>\n\n</div>"
 
 /***/ },
 /* 25 */
@@ -1143,9 +1141,9 @@
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
-	controller.$inject = ['$scope', 'cms', '$timeout'];
+	controller.$inject = ['$scope', 'cms', '$timeout', 'formService'];
 	
-	function controller($scope, cms, $timeout) {
+	function controller($scope, cms, $timeout, formService) {
 	
 	    // resolve
 	    var type = $scope.options.templateOptions.Type;
@@ -1225,6 +1223,15 @@
 	            if ($scope.selectize) $scope.selectize.clear();
 	        }
 	    });
+	
+	    $scope.create = function () {
+	        formService.add({}, type, function () {
+	            if ($scope.config.load) return;
+	            cms.loadElements(type, function () {
+	                $scope.models = [].concat(_toConsumableArray(Types[type].list));
+	            });
+	        });
+	    };
 	}
 	
 	exports.default = controller;
@@ -1557,7 +1564,7 @@
 /* 35 */
 /***/ function(module, exports) {
 
-	module.exports = "<div style=\"min-height: 20px;position: relative;\"\n     ng-repeat=\"element in model[options.key] track by $index\"\n     ng-init=\"itemOptions = copyItemOptions(to.field);_formState = createFormState($index)\">\n    <button type=\"button\" class=\"btn btn-xs btn-white\"\n            style=\"position: absolute;right: 0px;z-index: 10;\"\n            ng-click=\"model[options.key].splice($index, 1)\">\n        <i class=\"fa fa-trash-o\"></i>\n    </button>\n    <formly-field options=\"itemOptions\"\n                  model=\"model[options.key]\"\n                  form=\"form\"\n                  form-state=\"_formState\"\n                  index=\"$index\">\n    </formly-field>\n</div>\n<div class=\"form-group\">\n    <div class=\"col-sm-offset-2 col-sm-10\">\n        <button type=\"button\" class=\"btn btn-white btn-xs\"\n                ng-click=\"addNew()\" style=\"z-index: 1;\">{{to.btnText}}\n        </button>\n    </div>\n</div>"
+	module.exports = "<div style=\"min-height: 20px;position: relative;\"\n     ng-repeat=\"element in model[options.key] track by $index\"\n     ng-init=\"itemOptions = copyItemOptions(to.field);_formState = createFormState($index)\">\n    <button type=\"button\" class=\"btn btn-xs btn-white\"\n            style=\"position: absolute;left: 100%;z-index: 10;opacity: 0.4\"\n            ng-click=\"model[options.key].splice($index, 1)\">\n        <i class=\"fa fa-trash-o\"></i>\n    </button>\n    <formly-field options=\"itemOptions\"\n                  model=\"model[options.key]\"\n                  form=\"form\"\n                  form-state=\"_formState\"\n                  index=\"$index\">\n    </formly-field>\n</div>\n<div class=\"form-group\">\n    <div class=\"col-sm-offset-2 col-sm-10\">\n        <button type=\"button\" class=\"btn btn-white btn-xs\"\n                ng-click=\"addNew()\" style=\"z-index: 1;\">{{to.btnText}}\n        </button>\n    </div>\n</div>"
 
 /***/ },
 /* 36 */
@@ -1639,15 +1646,14 @@
 	
 	function controller($scope) {
 	    var options = $scope.to.options = [];
-	    var _$scope$formState = $scope.formState;
-	    var path = _$scope$formState.path;
-	    var model = _$scope$formState.model;
+	    var _$scope$formState = $scope.formState,
+	        path = _$scope$formState.path,
+	        model = _$scope$formState.model;
 	
 	    path = _.dropRight(path.split('\.')).join('.');
 	
-	    var _$get = _.get(model, path);
-	
-	    var containers = _$get.containers;
+	    var _$get = _.get(model, path),
+	        containers = _$get.containers;
 	
 	    $scope.to.labelProp = 'Type';
 	    var map = {};
@@ -1676,9 +1682,9 @@
 	
 	function controller($scope, cms) {
 	    debugger;
-	    var _$scope$formState = $scope.formState;
-	    var path = _$scope$formState.path;
-	    var model = _$scope$formState.model;
+	    var _$scope$formState = $scope.formState,
+	        path = _$scope$formState.path,
+	        model = _$scope$formState.model;
 	
 	    path = _.dropRight(path.split('\.')).join('.');
 	
@@ -1733,15 +1739,14 @@
 	controller.$inject = ['$scope', 'cms'];
 	
 	function controller($scope, cms) {
-	    var _$scope$formState = $scope.formState;
-	    var path = _$scope$formState.path;
-	    var model = _$scope$formState.model;
+	    var _$scope$formState = $scope.formState,
+	        path = _$scope$formState.path,
+	        model = _$scope$formState.model;
 	
 	    path = _.dropRight(path.split('\.')).join('.');
 	
-	    var _$get = _.get(model, path);
-	
-	    var BindType = _$get.BindType;
+	    var _$get = _.get(model, path),
+	        BindType = _$get.BindType;
 	
 	    var Type = cms.data.types[BindType];
 	    $scope.to.options = _.map(Type.fn, function (v, k) {
@@ -1897,8 +1902,8 @@
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../css-loader/index.js!./angular-ui-switch.css", function() {
-				var newContent = require("!!./../css-loader/index.js!./angular-ui-switch.css");
+			module.hot.accept("!!../css-loader/index.js!./angular-ui-switch.css", function() {
+				var newContent = require("!!../css-loader/index.js!./angular-ui-switch.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -1985,8 +1990,8 @@
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../css-loader/index.js!./select.min.css", function() {
-				var newContent = require("!!./../../css-loader/index.js!./select.min.css");
+			module.hot.accept("!!../../css-loader/index.js!./select.min.css", function() {
+				var newContent = require("!!../../css-loader/index.js!./select.min.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -2346,8 +2351,6 @@
 	    value: true
 	});
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-	
 	__webpack_require__(102);
 	
 	var _Type = __webpack_require__(103);
@@ -2451,7 +2454,7 @@
 	    changeEditMode(Enum.EditMode.DATAELEMENT);
 	
 	    function getType(type, ref, cb, content) {
-	        var onfly = arguments.length <= 4 || arguments[4] === undefined ? true : arguments[4];
+	        var onfly = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
 	
 	        var Type = data.types[type];
 	        if (!Type || !Type.template || !ref || !_.find(Type.list, { _id: ref })) {
@@ -2485,7 +2488,7 @@
 	    }
 	
 	    function createElement(type, content, cb) {
-	        var onfly = arguments.length <= 3 || arguments[3] === undefined ? true : arguments[3];
+	        var onfly = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
 	
 	        if (!onfly) {
 	            updateElement(type, content, cb);
@@ -2647,24 +2650,18 @@
 	
 	    function listColumns(form) {
 	        if (form[0].isTab) {
-	            var _ret = function () {
-	                var _fields = [];
-	                form.forEach(function (_ref4) {
-	                    var fields = _ref4.fields;
+	            var _fields = [];
+	            form.forEach(function (_ref4) {
+	                var fields = _ref4.fields;
 	
-	                    _fields.push.apply(_fields, _toConsumableArray(fields.map(function (field) {
-	                        return {
-	                            value: field.key,
-	                            label: field.templateOptions.label || field.key
-	                        };
-	                    })));
-	                });
-	                return {
-	                    v: _fields
-	                };
-	            }();
-	
-	            if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+	                _fields.push.apply(_fields, _toConsumableArray(fields.map(function (field) {
+	                    return {
+	                        value: field.key,
+	                        label: field.templateOptions.label || field.key
+	                    };
+	                })));
+	            });
+	            return _fields;
 	        }
 	        return form.map(function (field) {
 	            return { value: field.key, label: field.templateOptions.label || field.key };
@@ -2672,7 +2669,7 @@
 	    }
 	
 	    function findField(form, property) {
-	        var deep = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+	        var deep = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 	
 	        if (!deep) {
 	            if (form[0].isTab) {
@@ -2845,8 +2842,8 @@
 	                    var options = field.templateOptions.options;
 	
 	                    _.each(options, function (_ref10) {
-	                        var name = _ref10.name;
-	                        var value = _ref10.value;
+	                        var name = _ref10.name,
+	                            value = _ref10.value;
 	
 	                        var _path = path + '.children[' + children.length + ']';
 	                        var _query = [_defineProperty({}, property, value)];
@@ -3256,7 +3253,8 @@
 	/* WEBPACK VAR INJECTION */(function(global) {
 	var rng;
 	
-	if (global.crypto && crypto.getRandomValues) {
+	var crypto = global.crypto || global.msCrypto; // for IE 11
+	if (crypto && crypto.getRandomValues) {
 	  // WHATWG crypto-based RNG - http://wiki.whatwg.org/wiki/Crypto
 	  // Moderately fast, high quality
 	  var _rnds8 = new Uint8Array(16);
@@ -3734,11 +3732,11 @@
 	
 	    function link(scope, element, attr, controller) {
 	        var vm = scope.vm;
-	        var _vm$element = vm.element;
-	        var ref = _vm$element.ref;
-	        var type = _vm$element.type;
-	        var containers = _vm$element.containers;
-	        var binding = _vm$element.binding;
+	        var _vm$element = vm.element,
+	            ref = _vm$element.ref,
+	            type = _vm$element.type,
+	            containers = _vm$element.containers,
+	            binding = _vm$element.binding;
 	
 	        scope.$on('saveContainersFw', function (e, obj) {
 	            if (obj.type === type) obj.cb(vm.element.containers);
@@ -3781,19 +3779,17 @@
 	                        var bind = _step.value;
 	
 	                        if (bind.choice === 'model') {
-	                            (function () {
-	                                var _bind$model = bind.model;
-	                                var parentKey = _bind$model.parentKey;
-	                                var key = _bind$model.key;
+	                            var _bind$model = bind.model,
+	                                parentKey = _bind$model.parentKey,
+	                                key = _bind$model.key;
 	
-	                                scope.$watch('parentModel.' + parentKey, function () {
-	                                    return scope.model[key] = scope.parentModel[parentKey];
-	                                }, true);
-	                            })();
+	                            scope.$watch('parentModel.' + parentKey, function () {
+	                                return scope.model[key] = scope.parentModel[parentKey];
+	                            }, true);
 	                        } else if (bind.choice === 'fn') {
-	                            var _bind$fn = bind.fn;
-	                            var _parentKey = _bind$fn.parentKey;
-	                            var _key = _bind$fn.key;
+	                            var _bind$fn = bind.fn,
+	                                _parentKey = _bind$fn.parentKey,
+	                                _key = _bind$fn.key;
 	
 	                            scope.model[_key] = Types[binding.BindType].fn[parentFn].bind(model);
 	                        } else if (bind.choice === 'scope') {
@@ -3872,20 +3868,18 @@
 	            }
 	
 	            function _render() {
-	                var _Type = Type;
-	                var serverFn = _Type.serverFn;
-	                var ctrl = _Type.controller;
-	                var link = _Type.link;
+	                var _Type = Type,
+	                    serverFn = _Type.serverFn,
+	                    ctrl = _Type.controller,
+	                    link = _Type.link;
 	
 	                var fn = JsonFn.clone(Type.fn);
 	                if (fn) {
-	                    (function () {
-	                        var _fn = {};
-	                        _.each(fn, function (v, k) {
-	                            _fn[k] = v.bind(scope.model);
-	                        });
-	                        scope.fn = _fn;
-	                    })();
+	                    var _fn = {};
+	                    _.each(fn, function (v, k) {
+	                        _fn[k] = v.bind(scope.model);
+	                    });
+	                    scope.fn = _fn;
 	                }
 	
 	                scope.serverFn = {};
@@ -3952,9 +3946,9 @@
 	
 	    function controller(scope) {
 	        var vm = this;
-	        var _vm$cmsEditor = vm.cmsEditor;
-	        var ref = _vm$cmsEditor.ref;
-	        var type = _vm$cmsEditor.type;
+	        var _vm$cmsEditor = vm.cmsEditor,
+	            ref = _vm$cmsEditor.ref,
+	            type = _vm$cmsEditor.type;
 	
 	        var Type = cms.data.types[type];
 	
@@ -3971,17 +3965,17 @@
 	        };
 	
 	        vm.edit = function (cb) {
-	            var _vm$cmsEditor2 = vm.cmsEditor;
-	            var ref = _vm$cmsEditor2.ref;
-	            var type = _vm$cmsEditor2.type;
+	            var _vm$cmsEditor2 = vm.cmsEditor,
+	                ref = _vm$cmsEditor2.ref,
+	                type = _vm$cmsEditor2.type;
 	
 	            formService.edit(ref, type, cb);
 	        };
 	
 	        vm.copy = function (cb) {
-	            var _vm$cmsEditor3 = vm.cmsEditor;
-	            var ref = _vm$cmsEditor3.ref;
-	            var type = _vm$cmsEditor3.type;
+	            var _vm$cmsEditor3 = vm.cmsEditor,
+	                ref = _vm$cmsEditor3.ref,
+	                type = _vm$cmsEditor3.type;
 	
 	            var e = cms.findByRef(type, ref);
 	
@@ -4012,9 +4006,9 @@
 	    function link(scope, element, attr, elementController) {
 	        scope.menu = [];
 	        var vm = scope.vm;
-	        var _vm$cmsEditor4 = vm.cmsEditor;
-	        var ref = _vm$cmsEditor4.ref;
-	        var type = _vm$cmsEditor4.type;
+	        var _vm$cmsEditor4 = vm.cmsEditor,
+	            ref = _vm$cmsEditor4.ref,
+	            type = _vm$cmsEditor4.type;
 	
 	        if (vm.cmsMenu === 'true') {
 	            scope.menu = [['Edit', function () {
@@ -4097,12 +4091,12 @@
 	
 	        function render() {
 	            if (Type.store[vm.cmsWrapper]) {
-	                var _Type$store$vm$cmsWra = Type.store[vm.cmsWrapper];
-	                var template = _Type$store$vm$cmsWra.template;
-	                var serverFn = _Type$store$vm$cmsWra.serverFn;
-	                var fn = _Type$store$vm$cmsWra.fn;
-	                var serverFnData = _Type$store$vm$cmsWra.serverFnData;
-	                var controller = _Type$store$vm$cmsWra.controller;
+	                var _Type$store$vm$cmsWra = Type.store[vm.cmsWrapper],
+	                    template = _Type$store$vm$cmsWra.template,
+	                    serverFn = _Type$store$vm$cmsWra.serverFn,
+	                    fn = _Type$store$vm$cmsWra.fn,
+	                    serverFnData = _Type$store$vm$cmsWra.serverFnData,
+	                    controller = _Type$store$vm$cmsWra.controller;
 	
 	
 	                _.assign(scope, { fn: {}, model: vm.element, serverFn: {}, serverFnData: serverFnData });
@@ -4118,16 +4112,16 @@
 	
 	                element.html(template);
 	            } else {
-	                var _vm$element = vm.element;
-	                var list = _vm$element.list;
-	                var _element = _vm$element.element;
-	                var _fn = _vm$element.Fn;
+	                var _vm$element = vm.element,
+	                    list = _vm$element.list,
+	                    _element = _vm$element.element,
+	                    _fn = _vm$element.Fn;
 	
 	                var _template = void 0;
 	                if (!list.null) {
-	                    var BindType = list.BindType;
-	                    var layout = list.layout;
-	                    var query = list.query;
+	                    var BindType = list.BindType,
+	                        layout = list.layout,
+	                        query = list.query;
 	                    // resolve data before render
 	
 	                    if (!Types[BindType]._load) {
@@ -4149,10 +4143,10 @@
 	                        _template = '\n                        <br>\n                        <div ng-repeat="element in result track by $index">\n                            <div cms-element="{type:type,ref:element._id}"></div>\n                        </div>\n                        ';
 	                    }
 	                } else if (!_element.null) {
-	                    var _BindType = _element.BindType;
-	                    var _layout = _element.layout;
-	                    var model = _element.model;
-	                    var _query = _element.query;
+	                    var _BindType = _element.BindType,
+	                        _layout = _element.layout,
+	                        model = _element.model,
+	                        _query = _element.query;
 	
 	                    _.assign(scope, { model: model, layout: _layout, type: _BindType });
 	                    _template = '<br><div cms-element="{type:type,ref:vm.element.element.model._id}"></div>';
@@ -4214,11 +4208,10 @@
 	
 	        var _ref = vm.save ? _.find(layout.SAVE, function (save) {
 	            return save.name === vm.save;
-	        }) : layout.SAVE[0];
-	
-	        var containers = _ref.containers;
-	        var bind = _ref.bind;
-	        var BindType = _ref.BindType;
+	        }) : layout.SAVE[0],
+	            containers = _ref.containers,
+	            bind = _ref.bind,
+	            BindType = _ref.BindType;
 	
 	        containers = angular.copy(containers);
 	        Layout.fn.getTreeWithBinding(containers, bind, vm.model, BindType);
@@ -4564,9 +4557,8 @@
 	                };
 	                $scope.onFileSelect = function (files) {
 	                    //files: an array of files selected, each file has name, size, and type.
-	                    var _files = _slicedToArray(files, 1);
-	
-	                    var file = _files[0];
+	                    var _files = _slicedToArray(files, 1),
+	                        file = _files[0];
 	
 	                    cms.uploadFile(file, $scope.node.path, function () {
 	                        console.log('upload successful');
@@ -4780,8 +4772,8 @@
 	                $scope.get = _.get;
 	
 	                $scope.refresh = function () {
-	                    var onlyChangePage = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
-	                    var changeAdminList = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+	                    var onlyChangePage = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	                    var changeAdminList = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 	
 	
 	                    //$timeout(function () {
@@ -5257,8 +5249,8 @@
 	        });
 	
 	        modalInstance.result.then(function (_ref) {
-	            var filename = _ref.filename;
-	            var types = _ref.types;
+	            var filename = _ref.filename,
+	                types = _ref.types;
 	
 	            cms.exportAll(filename, types);
 	        });

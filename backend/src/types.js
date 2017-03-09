@@ -92,7 +92,7 @@ module.exports = (cms) => {
             traverse(this._update).forEach(function (node) {
                 if (!node) return;
                 if (this.key && !_.includes(['$set', '$setOnInsert', '__v', '_id', 'id'], this.key)) {
-                    const _type = schema.path(this.path.filter(p=> p !== '$set' && p !== '$setOnInsert').join('.'));
+                    const _type = schema.path(this.path.filter(p => p !== '$set' && p !== '$setOnInsert').join('.'));
                     if (_type) {
                         const type = _type.instance;
                         if (type === 'ObjectID') {
@@ -190,7 +190,7 @@ module.exports = (cms) => {
                     info: this.info,
                     fn: this.fn,
                     serverFn: this.serverFnForClient,
-                    columns: _.map(_.pickBy(this.Model.schema.paths, k =>['id', '_id', '__v', '_textIndex'].indexOf(k) === -1, true), (v, k) => {
+                    columns: _.map(_.pickBy(this.Model.schema.paths, k => ['id', '_id', '__v', '_textIndex'].indexOf(k) === -1, true), (v, k) => {
                         return v.options && v.options.label ? v.options.label : k;
                     }),
                     store: this.store,
@@ -263,10 +263,11 @@ module.exports = (cms) => {
             const modelQueryTester = new RegExp(`${base}$`);
             const countQueryTester = new RegExp(`${base}\/count$`);
             if (modelQueryTester.test(path)) {
-                const [,method,type] = path.match(modelQueryTester);
+                const [, method, type] = path.match(modelQueryTester);
                 if (method === 'get') {
                     if (Object.keys(cms.Types).indexOf(type) !== -1) {
                         let q = cms.getModel(type).find(params.query);
+                        if (q.session) q = q.session(socket.handshake.session);
                         if (params.populate) {
                             q = q.populate(params.populate);
                         }
@@ -284,6 +285,8 @@ module.exports = (cms) => {
                             model._id = _model._id;
                         }
 
+                        if (Model.session) Model.session(socket.handshake.session, model);
+
                         yield Model.findByIdAndUpdate(model._id, _.pickBy(model, (v, k) => k !== '__v', true), {
                             upsert: true,
                             setDefaultsOnInsert: true
@@ -295,10 +298,12 @@ module.exports = (cms) => {
                 }
             }
             if (countQueryTester.test(path)) {
-                const [,method,modelName] = path.match(countQueryTester);
+                const [, method, modelName] = path.match(countQueryTester);
                 if (method === 'get') {
                     if (Object.keys(cms.Types).indexOf(modelName) !== -1) {
-                        const result = yield cms.Types[modelName].Model.find(params.query).count(params.query);
+                        let q = cms.Types[modelName].Model.find(params.query);
+                        if (q.session) q = q.session(socket.handshake.session);
+                        const result = yield q.count(params.query);
                         socket.emit('message', {result, uuid});
                     }
                 }
@@ -306,7 +311,7 @@ module.exports = (cms) => {
 
             var serverFnPath = /\/cms-types\/([^\/]*)\/([^\/]*)\/([^\/]*)/;
             if (serverFnPath.test(path)) {
-                const [type,id,fn] = path.match(serverFnPath);
+                const [type, id, fn] = path.match(serverFnPath);
                 const args = params;
                 const {Model, serverFn} = cms.Types[type];
                 const obj = yield Model.findById(id).exec();
