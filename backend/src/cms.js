@@ -243,9 +243,7 @@ const cms = {
 global[CMS_KEY] = cms;
 
 ngcompile.prototype.onEnvReady(() => {
-    cms.ng = new ngcompile([
-        {name: 'ui.bootstrap', path: 'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js'}
-    ], null, null, (ng) => {
+    cms.ng = new ngcompile([], null, null, (ng) => {
         cms.data.ngEn.forEach(fn => fn(ng));
     });
 });

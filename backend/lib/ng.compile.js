@@ -2,7 +2,7 @@
 var jsdom = require("jsdom"),
     path = require('path');
 
-var ENVIORMENT_NOT_READY = "Angular enviorment not yet ready";
+var ENVIORMENT_NOT_READY = "Angular environment not yet ready";
 
 function ngCompile(modules, angularPath, settings, cb) {
 
@@ -12,7 +12,7 @@ function ngCompile(modules, angularPath, settings, cb) {
 
     this.modules = modules;
     var _self = this;
-    this.modules.unshift({name: 'ng', path: 'node_modules/angular/angular.js'});
+    this.modules.unshift({name: 'ng', path: path.join(__dirname, '../node_modules/angular/angular.js')});
     this.ready = false;
 
     if (!ngCompile.prototype.envReady) throw new Error(ENVIORMENT_NOT_READY);
