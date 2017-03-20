@@ -242,7 +242,7 @@ const cms = {
 
 global[CMS_KEY] = cms;
 
-ngcompile.prototype.onEnvReady(() => {
+ngcompile.onEnvReady(() => {
     cms.ng = new ngcompile([], null, null, (ng) => {
         cms.data.ngEn.forEach(fn => fn(ng));
     });
