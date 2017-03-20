@@ -12,7 +12,6 @@ function ngCompile(modules, angularPath, settings, cb) {
 
     this.modules = modules;
     var _self = this;
-    this.modules.unshift({name: 'ng', path: path.join(__dirname, '../../node_modules/angular/angular.js')});
     this.ready = false;
 
     if (!ngCompile.prototype.envReady) throw new Error(ENVIORMENT_NOT_READY);
@@ -20,9 +19,13 @@ function ngCompile(modules, angularPath, settings, cb) {
     global['Node'] = class {
     };
     this._modules = [];
+
+    require('angular');
+    global.angular = global.window.angular;
+    _self._modules.push(module.name);
+
     this.modules.forEach(function (module) {
         require(path.resolve(process.cwd(), module.path));
-        if (module.name === "ng") global.angular = global.window.angular;
         _self._modules.push(module.name);
     });
 
