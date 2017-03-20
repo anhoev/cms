@@ -7,6 +7,7 @@ var ENVIORMENT_NOT_READY = "Angular environment not yet ready";
 let envReady = false;
 let envReadyCallback;
 
+
 jsdom.env({
     html: '<p></p>',
     done: (errors, window) => {
@@ -30,7 +31,6 @@ class ngCompile {
         }
 
         this.modules = modules;
-        var _self = this;
         this.ready = false;
 
         if (!envReady) throw new Error(ENVIORMENT_NOT_READY);
@@ -41,11 +41,11 @@ class ngCompile {
 
         require('angular/angular.js');
         global.angular = global.window.angular;
-        _self._modules.push('ng');
+        this._modules.push('ng');
 
-        this.modules.forEach(function (module) {
+        this.modules.forEach((module) => {
             require(path.resolve(process.cwd(), module.path));
-            _self._modules.push(module.name);
+            this._modules.push(module.name);
         });
 
         this.window = global.window;
@@ -53,10 +53,10 @@ class ngCompile {
 
         cb(this);
 
-        window.angular.injector(this._modules).invoke(function ($rootScope, $compile, $interpolate) {
-            _self.services = {$rootScope: $rootScope, $compile: $compile, $interpolate: $interpolate};
-            _self.ready = true;
-            if (typeof _self.readyCallback === "function") _self.readyCallback();
+        window.angular.injector(this._modules).invoke(($rootScope, $compile, $interpolate) => {
+            this.services = {$rootScope: $rootScope, $compile: $compile, $interpolate: $interpolate};
+            this.ready = true;
+            if (typeof this.readyCallback === "function") this.readyCallback();
         });
     }
 
