@@ -22,7 +22,7 @@ function ngCompile(modules, angularPath, settings, cb) {
 
     require('angular/angular.js');
     global.angular = global.window.angular;
-    _self._modules.push(module.name);
+    _self._modules.push('ng');
 
     this.modules.forEach(function (module) {
         require(path.resolve(process.cwd(), module.path));
