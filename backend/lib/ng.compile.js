@@ -20,7 +20,7 @@ function ngCompile(modules, angularPath, settings, cb) {
     };
     this._modules = [];
 
-    require('angular');
+    require('angular/angular.js');
     global.angular = global.window.angular;
     _self._modules.push(module.name);
 
