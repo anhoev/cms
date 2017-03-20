@@ -70,7 +70,7 @@ function config(formlyConfigProvider, size, $rootScopeProvider) {
         name: 'input',
         template: `
         <div>
-          <input ng-if="!formState.readOnly" class="form-control" ng-model="model[options.key]" >
+          <input ng-if="!formState.readOnly" class="form-control" ng-model="model[options.key]" ng-model-options="{debounce: 300}">
           <p ng-if="formState.readOnly" class="form-control-static">{{model[options.key]}}</p>
         </div>
         `,

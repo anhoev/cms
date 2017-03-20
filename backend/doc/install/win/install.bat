@@ -1,6 +1,6 @@
 @powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 choco install git -y
-choco install nodejs.install -version 5.10.1 -y
+choco install nodejs.install -version 6.9.5 -y
 refreshenv
 
 choco install mongodb -y

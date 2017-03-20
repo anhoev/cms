@@ -1,4 +1,5 @@
 "use strict";
+import angular from 'angular';
 import 'ng-file-upload';
 import TypeClass from './Type';
 import QueryBuilder from "./QueryBuilder";
@@ -6,6 +7,9 @@ import 'angular-websocket';
 import Uuid from 'uuid';
 import 'jquery-ui/ui/widgets/draggable';
 import 'jquery-ui/ui/widgets/resizable';
+import 'jquery-ui/themes/base/theme.css';
+import 'jquery-ui/themes/base/draggable.css';
+import 'jquery-ui/themes/base/resizable.css';
 import traverse from 'traverse';
 import 'angular-translate';
 import 'angular-ui-notification';
@@ -237,16 +241,18 @@ function cms($http, Upload) {
         walk(containers);
     }
 
-    function updateElement(type, model, resolve, fail) {
+    function updateElement(type, model, resolve, fail, oneway = false) {
         sendWs({
             path: `post/api/v1/${type}`,
             model
         }, ({result:model}) => {
 
-            var oldModel = _.find(Types[type].list, {_id: model._id});
+            let oldModel = _.find(Types[type].list, {_id: model._id});
             if (oldModel && !angular.equals(oldModel, model)) {
-                for (var member in oldModel) delete oldModel[member];
-                _.assign(oldModel, model);
+                if (!oneway) {
+                    for (let member in oldModel) if (!model[member]) delete oldModel[member];
+                    angular.merge(oldModel, model);
+                }
             } else {
                 Types[type].list.push(model);
             }

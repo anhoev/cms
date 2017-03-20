@@ -287,10 +287,14 @@ module.exports = (cms) => {
 
                         if (Model.session) Model.session(socket.handshake.session, model);
 
-                        yield Model.findByIdAndUpdate(model._id, _.pickBy(model, (v, k) => k !== '__v', true), {
-                            upsert: true,
-                            setDefaultsOnInsert: true
-                        }).exec();
+                        try {
+                            yield Model.findByIdAndUpdate(model._id, _.pickBy(model, (v, k) => k !== '__v', true), {
+                                upsert: true,
+                                setDefaultsOnInsert: true
+                            }).exec();
+                        } catch (e) {
+                            console.warn(e);
+                        }
 
                         let result = yield Model.findById(model._id);
                         socket.emit('message', {result, uuid});

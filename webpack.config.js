@@ -42,10 +42,8 @@ module.exports = {
 			manifest: require('./frontend/build/lib-manifest.json')
 		}),
 		new webpack.ProvidePlugin({
-			$: 'jquery',
-			jQuery: 'jquery',
-			'window.jQuery': 'jquery',
-			'root.jQuery': 'jquery'
+            $: "jquery",
+            jQuery: "jquery"
 		}),
 	]
 };
