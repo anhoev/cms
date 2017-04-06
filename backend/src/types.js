@@ -34,19 +34,26 @@ module.exports = (cms) => {
     app.post('/cms-types/:type', function*(req, res) {
         const withTemplate = req.query.template === 'true';
         const noElement = req.query.element === 'false';
-        const ref = req.query.element;
+        let ref = req.query.element;
+        if (ref === 'false') ref = false;
         const content = req.body;
         const {type} = req.params;
         const {Model, Formatter, FormatterUrl, Form, info, fn, serverFnForClient} = cms.Types[type];
 
         let obj = noElement ? new Model(content) : (ref ? yield Model.findOne({_id: ref}) : yield Model.create(content));
+
+        if (noElement && !ref && Model.session) {
+            Model.session(req.session, obj);
+            yield obj.save();
+        }
+
         try {
             var _autopopulate = Model.schema.s.hooks._pres.find[0].fn;
             if (_autopopulate) {
                 const _query = {
                     p: obj,
                     populate: function (opt) {
-                        this.p = this.p.populate(opt);
+                        if (this.p) this.p = this.p.populate(opt);
                     }
                 }
                 _autopopulate.bind(_query)();
@@ -206,7 +213,7 @@ module.exports = (cms) => {
             },
             get template() {
                 if (!this.Formatter && !this.FormatterUrl) return '';
-                return this.Formatter ? this.Formatter : cms.compile(this.FormatterUrl)();
+                return this.Formatter ? this.Formatter : cms.readFile(this.FormatterUrl);
             }
         };
 
@@ -214,39 +221,11 @@ module.exports = (cms) => {
         return Model;
     }
 
-    cms.filters.serverFn.link = function*(src) {
+    /*cms.filters.serverFn.link = function*(src) {
         if (!src) return '';
         if (src.indexOf('http://') !== -1) return src;
         return `${cms.data.baseUrlPath}${src[0] === '/' ? '' : '/'}${src}`;
-    }
-
-    cms.filters.fn.getWebStyles = function (model) {
-        const _styles = {}
-        if (model) {
-            _.each(model.styles, style => _styles[style.choice] = style[style.choice])
-        } else {
-            _.each(this.styles, style => _styles[style.choice] = style[style.choice])
-        }
-
-        return _styles;
-    }
-
-    cms.filters.fn.getStyles = function (model) {
-        let styles = '';
-        try {
-            const _styles = {}
-            if (model) {
-                model.styles.forEach(style => _styles[style.choice] = style[style.choice])
-            } else {
-                this.styles.forEach(style => _styles[style.choice] = style[style.choice])
-            }
-            _.each(_styles, (v, k) => {
-                styles += `${_.kebabCase(k)}:${v};`;
-            })
-        } catch (e) {
-        }
-        return styles;
-    }
+    }*/
 
     cms.registerSchema = registerSchema;
 

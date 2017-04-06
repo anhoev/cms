@@ -12,6 +12,9 @@ _.unionWith = unionWith;
 import pickBy from 'lodash/pickBy';
 _.pickBy = pickBy;
 
+import sumBy from 'lodash/sumBy';
+_.sumBy = sumBy;
+
 import _moment from 'moment';
 window.moment = _moment;
 

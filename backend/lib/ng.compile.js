@@ -53,11 +53,11 @@ class ngCompile {
 
         cb(this);
 
-        window.angular.injector(this._modules).invoke(($rootScope, $compile, $interpolate) => {
+        window.angular.injector(this._modules).invoke(['$rootScope', '$compile', '$interpolate', ($rootScope, $compile, $interpolate) => {
             this.services = {$rootScope: $rootScope, $compile: $compile, $interpolate: $interpolate};
             this.ready = true;
             if (typeof this.readyCallback === "function") this.readyCallback();
-        });
+        }]);
     }
 
     static onEnvReady(callback) {

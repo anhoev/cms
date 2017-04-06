@@ -330,7 +330,7 @@ function cms($http, Upload) {
     }
 
     function parseAndSaveData(_data) {
-        Object.assign(data, _data);
+        _.assign(data, _data);
         for (let k in data.types) {
             data.types[k] = new TypeClass(data.types[k]);
         }
@@ -531,13 +531,11 @@ run.$inject = ['cms', '$http', '$websocket'];
 function run(cms, $http, $websocket) {
     const data = cms.data;
     try {
-
         cms.parseAndSaveData(JsonFn.parse($('#cms-data').text(), true));
-        data.serverFn = data.setupServerFn(data.serverFn, $http.post);
-        delete data.setupServerFn;
         window.Types = data.types;
         window.Local = data.Local = {};
-
+        data.serverFn = data.setupServerFn(data.serverFn, $http.post);
+        delete data.setupServerFn;
     } catch (e) {
     }
 
@@ -555,13 +553,7 @@ function run(cms, $http, $websocket) {
         new_uri = wsAddress;
     } else {
         let loc = window.location;
-        /*if (loc.protocol === "https:") {
-         new_uri = "wss:";
-         } else {
-         new_uri = "ws:";
-         }*/
         new_uri += "ws://" + loc.host;
-        //new_uri += loc.pathname;
     }
 
     var socket = io.connect(new_uri);
