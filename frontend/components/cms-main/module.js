@@ -12,9 +12,10 @@ import containerDirective from "./container.directive";
 import containerEditDirective from "./container-edit.directive";
 import cmsFormPathDirective from "./cms-form-path.directive";
 import 'angular-file-saver';
+import 'oclazyload';
 
 const module = angular
-    .module('components.cmsMain', ['dndLists', 'ui.bootstrap', common, cmsEditable, cmsElementEdit, 'ui.bootstrap.contextMenu', 'ngFileSaver'])
+    .module('components.cmsMain', ['dndLists', 'ui.bootstrap', common, cmsEditable, cmsElementEdit, 'ui.bootstrap.contextMenu', 'ngFileSaver', 'oc.lazyLoad'])
     .directive('cmsContainer', containerDirective)
     .directive('cmsElement', elementDirective)
     .directive('cmsEditor', editorDirective)

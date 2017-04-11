@@ -11,12 +11,7 @@ const mongoose = require('mongoose');
 const restify = require('express-restify-mongoose');
 const Q = require('q');
 //const MongoStore = require('connect-mongo')(session);
-const session = require('express-session')({
-    secret: 'best cms system',
-    resave: false, saveUninitialized: true,
-    cookie: {maxAge: 2628000000},
-    expires: 30 * 24 * 60 * 60 * 1000
-});
+
 const Reflect = require('harmony-reflect');
 require('generator-bind').polyfill();
 const jade = require('jade');
@@ -30,9 +25,6 @@ const co = require('co');
 const request = require('request');
 const server = require('http').Server(_app);
 const _io = require('socket.io')(server);
-
-const sharedsession = require("express-socket.io-session");
-
 
 
 const download = function (uri, filename, callback) {
@@ -119,10 +111,17 @@ let io = new Proxy(_io, {
     }
 });
 
+const session = require('express-session')({
+    secret: 'best cms system',
+    resave: false, saveUninitialized: true,
+    cookie: {maxAge: 2628000000},
+    expires: 30 * 24 * 60 * 60 * 1000,
+    store: require('mongoose-session')(mongoose)
+});
 
 app.use(session);
 
-io.use(sharedsession(session, {
+io.use(require("express-socket.io-session")(session, {
     autoSave:true
 }));
 

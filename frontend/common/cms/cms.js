@@ -118,7 +118,7 @@ function cms($http, Upload) {
 
     function createElement(type, content, cb, onfly = true) {
         if (!onfly) {
-            updateElement(type, content, cb);
+            updateElement(type, content, cb, null, true);
         } else {
             getType(type, null, cb, content, onfly);
         }
@@ -136,7 +136,7 @@ function cms($http, Upload) {
 
     function updateContainerPage() {
         const url = location.pathname;
-        $http.post(`/cms-container-page${url}`, {containers: data.containers}).then(()=> {
+        $http.post(`/cms-container-page${url}`, {containers: data.containers}).then(() => {
             console.log('Update container page successful');
         });
     }
@@ -145,7 +145,7 @@ function cms($http, Upload) {
 
 
     function countElements(type, cb, paramsBuilder) {
-        sendWs({path: `get/api/v1/${type}/count`, params: paramsBuilder.buildJson()}, ({result:count}) => {
+        sendWs({path: `get/api/v1/${type}/count`, params: paramsBuilder.buildJson()}, ({result: count}) => {
             if (cb) cb(count);
         });
         /*$http.get(`/api/v1/${type}/count?${params}`, _transform).then(res => {
@@ -168,7 +168,7 @@ function cms($http, Upload) {
         sendWs({
                 path: `get/api/v1/${type}`,
                 params: paramsBuilder ? paramsBuilder.buildJson() : {}
-            }, ({result:_list}) => {
+            }, ({result: _list}) => {
                 console.timeEnd("loadElements");
                 if (!paramsBuilder) {
                     data.types[type].list = _list;
@@ -245,7 +245,7 @@ function cms($http, Upload) {
         sendWs({
             path: `post/api/v1/${type}`,
             model
-        }, ({result:model}) => {
+        }, ({result: model}) => {
 
             let oldModel = _.find(Types[type].list, {_id: model._id});
             if (oldModel && !angular.equals(oldModel, model)) {
@@ -253,7 +253,7 @@ function cms($http, Upload) {
                     for (let member in oldModel) if (!model[member]) delete oldModel[member];
                     angular.merge(oldModel, model);
                 }
-            } else {
+            } else if (!oldModel) {
                 Types[type].list.push(model);
             }
 
@@ -292,7 +292,7 @@ function cms($http, Upload) {
         const last = property.split('.').pop();
         traverse(form).forEach(function (node) {
             if (node && node.key === last) {
-                let path = _.reduce(this.parents.filter(({node:{key}}) => !_.isEmpty(key)), (path, parent) => {
+                let path = _.reduce(this.parents.filter(({node: {key}}) => !_.isEmpty(key)), (path, parent) => {
                     path += `.${parent.node.key}`;
                     return path;
                 }, '');
