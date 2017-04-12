@@ -249,7 +249,7 @@ function cms($http, Upload) {
 
             let oldModel = _.find(Types[type].list, {_id: model._id});
             if (oldModel && !angular.equals(oldModel, model)) {
-                if (!oneway) {
+                if (!oneway || !angular.equals(oldModel, model)) {
                     for (let member in oldModel) if (!model[member]) delete oldModel[member];
                     angular.merge(oldModel, model);
                 }
