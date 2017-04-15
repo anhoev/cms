@@ -2730,11 +2730,11 @@
 	
 	            var oldModel = _.find(Types[type].list, { _id: model._id });
 	            if (oldModel && !_angular2.default.equals(oldModel, model)) {
-	                if (!oneway || !_angular2.default.equals(oldModel, model)) {
-	                    for (var member in oldModel) {
-	                        if (!model[member]) delete oldModel[member];
-	                    }_angular2.default.merge(oldModel, model);
-	                }
+	                if (!oneway /*|| !angular.equals(oldModel, model)*/) {
+	                        for (var member in oldModel) {
+	                            if (!model[member]) delete oldModel[member];
+	                        }_angular2.default.merge(oldModel, model);
+	                    }
 	            } else if (!oldModel) {
 	                Types[type].list.push(model);
 	            }

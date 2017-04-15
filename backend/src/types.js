@@ -83,7 +83,7 @@ module.exports = (cms) => {
             name, label, formatter, formatterUrl, initSchema, title, fn = {},
             serverFn = {}, tabs, isViewElement = true, mTemplate, admin = {query: []},
             alwaysLoad = false, restifyOptions,
-            info = {},
+            info = {}, textIndex,
             controller, lean, link
         } = options;
         cms.filters.schema.forEach((fn) => fn(schema, name));
@@ -94,7 +94,8 @@ module.exports = (cms) => {
         if (options.autopopulate) schema.plugin(autopopulate);
 
         schema.add({_textIndex: {type: String, form: false, index: 'text'}});
-        schema.pre('findOneAndUpdate', function (next) {
+
+        if (textIndex) schema.pre('findOneAndUpdate', function (next) {
             let _textIndex = ''
             traverse(this._update).forEach(function (node) {
                 if (!node) return;
@@ -222,10 +223,10 @@ module.exports = (cms) => {
     }
 
     /*cms.filters.serverFn.link = function*(src) {
-        if (!src) return '';
-        if (src.indexOf('http://') !== -1) return src;
-        return `${cms.data.baseUrlPath}${src[0] === '/' ? '' : '/'}${src}`;
-    }*/
+     if (!src) return '';
+     if (src.indexOf('http://') !== -1) return src;
+     return `${cms.data.baseUrlPath}${src[0] === '/' ? '' : '/'}${src}`;
+     }*/
 
     cms.registerSchema = registerSchema;
 
