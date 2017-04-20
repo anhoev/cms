@@ -1,6 +1,6 @@
 'use strict';
 const _ = require('lodash');
-const fs = require('fs');
+const fs = global.fs || require('fs');
 const Path = require('path');
 const rmdir = require('rmdir');
 const cheerio = require('cheerio');
@@ -49,7 +49,7 @@ module.exports = cms => {
         let _templates = [];
 
         function _server(path, urlPath, tree, onlyGetTree = false, getFileContent = false) {
-            const items = fs.readdirSync(path);
+            let items = fs.readdirSync(path);
             let isContainerDirectory = false;
             for (const item of items) {
                 const node = {text: item};
@@ -158,7 +158,7 @@ module.exports = cms => {
             });
 
             cms._server = () => cms.server(path, urlPath, true);
-            cms.app.use(urlPath, cms.express.static(path));
+            cms.app.use(urlPath, cms.express.static(fs.prePath ? fs.prePath + path : path));
             // images
 
             cms.app.get('/cms-site-map', function*(req, res) {
@@ -226,7 +226,7 @@ module.exports = cms => {
 
     cms.app.post('/cms-make-template/', function*(req, res) {
         const {basePath} = cms.data;
-        const {path:_path, name} = req.body;
+        const {path: _path, name} = req.body;
 
         const content = JSON.parse(fs.readFileSync(`${basePath}/${_path}/index.json`, 'utf8'));
         yield* render(content, {useForTemplate: true});
@@ -314,7 +314,7 @@ module.exports = cms => {
 
     cms.app.post('/api/saveimage', function ({body: {url, filename}}, res) {
         if (url) {
-            cms.download(url, `${cms.data.basePath}/.image/${filename}`, function(){
+            cms.download(url, `${cms.data.basePath}/.image/${filename}`, function () {
                 console.log('save image successful');
                 res.send();
             });
@@ -344,7 +344,7 @@ module.exports = cms => {
      * @returns {*|string}
      */
     function* render(content, options) {
-        const {req, res, useForTemplate = false, useForCreatePage = false, adminMode = true, path} =options;
+        const {req, res, useForTemplate = false, useForCreatePage = false, adminMode = true, path} = options;
 
         function getPath(path) {
             let _path;

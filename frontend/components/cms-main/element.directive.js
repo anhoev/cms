@@ -113,14 +113,20 @@ function elementDirective(cms, $compile, $http, $timeout, $controller) {
                 if (fn) {
                     const _fn = {};
                     _.each(fn, (v, k) => {
-                        _fn[k] = v.bind(scope.model);
+                        try {
+                            _fn[k] = v.bind(scope.model);
+                        } catch (e) {
+                        }
                     });
                     scope.fn = _fn;
                 }
 
                 scope.serverFn = {};
                 _.each(serverFn, (fn, k) => {
-                    fn.bind(scope.model)($http.post, scope, type, k);
+                    try {
+                        fn.bind(scope.model)($http.post, scope, type, k);
+                    } catch (e) {
+                    }
                 })
                 if (ctrl) $controller(ctrl, {$scope: scope});
                 if (link) link(scope, element, attr);

@@ -2730,11 +2730,11 @@
 	
 	            var oldModel = _.find(Types[type].list, { _id: model._id });
 	            if (oldModel && !_angular2.default.equals(oldModel, model)) {
-	                if (!oneway /*|| !angular.equals(oldModel, model)*/) {
-	                        for (var member in oldModel) {
-	                            if (!model[member]) delete oldModel[member];
-	                        }_angular2.default.merge(oldModel, model);
-	                    }
+	                if (!oneway) {
+	                    for (var member in oldModel) {
+	                        if (!model[member]) delete oldModel[member];
+	                    }_angular2.default.merge(oldModel, model);
+	                }
 	            } else if (!oldModel) {
 	                Types[type].list.push(model);
 	            }
@@ -4123,14 +4123,18 @@
 	                if (fn) {
 	                    var _fn = {};
 	                    _.each(fn, function (v, k) {
-	                        _fn[k] = v.bind(scope.model);
+	                        try {
+	                            _fn[k] = v.bind(scope.model);
+	                        } catch (e) {}
 	                    });
 	                    scope.fn = _fn;
 	                }
 	
 	                scope.serverFn = {};
 	                _.each(serverFn, function (fn, k) {
-	                    fn.bind(scope.model)($http.post, scope, type, k);
+	                    try {
+	                        fn.bind(scope.model)($http.post, scope, type, k);
+	                    } catch (e) {}
 	                });
 	                if (ctrl) $controller(ctrl, { $scope: scope });
 	                if (link) link(scope, element, attr);
