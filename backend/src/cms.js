@@ -111,12 +111,15 @@ let io = new Proxy(_io, {
     }
 });
 
-const session = require('express-session')({
+const expressSession = require('express-session');
+const MongoStore = require('connect-mongo')(expressSession);
+
+const session = expressSession({
     secret: 'best cms system',
     resave: false, saveUninitialized: true,
     cookie: {maxAge: 2628000000},
     expires: 30 * 24 * 60 * 60 * 1000,
-    store: require('mongoose-session')(mongoose)
+    store: new MongoStore({ mongooseConnection: mongoose.connection })
 });
 
 app.use(session);
