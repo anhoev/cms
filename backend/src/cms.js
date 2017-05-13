@@ -128,8 +128,10 @@ io.use(require("express-socket.io-session")(session, {
     autoSave:true
 }));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json({limit: '5mb'}));
+app.use(bodyParser.urlencoded({extended: true,limit: '5mb'}));
+
+
 app.use(require('method-override')());
 
 const CMS_KEY = Symbol("CMS");
