@@ -3074,7 +3074,7 @@
 	        new_uri += "ws://" + loc.host;
 	    }
 	
-	    var socket = io.connect(new_uri);
+	    var socket = io.connect(new_uri, { timeout: 5000 });
 	
 	    window.socket = cms.socket = socket;
 	
