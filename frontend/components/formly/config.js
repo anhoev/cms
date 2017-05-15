@@ -29,7 +29,7 @@ import recursiveController from './recursive.controller';
 config.$inject = ['formlyConfigProvider', 'size', '$rootScopeProvider'];
 
 function config(formlyConfigProvider, size, $rootScopeProvider) {
-    $rootScopeProvider.digestTtl(20);
+    //$rootScopeProvider.digestTtl(20);
 
     const config = formlyConfigProvider;
 

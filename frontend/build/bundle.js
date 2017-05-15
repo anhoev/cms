@@ -851,7 +851,7 @@
 	config.$inject = ['formlyConfigProvider', 'size', '$rootScopeProvider'];
 	
 	function config(formlyConfigProvider, size, $rootScopeProvider) {
-	    $rootScopeProvider.digestTtl(20);
+	    //$rootScopeProvider.digestTtl(20);
 	
 	    var config = formlyConfigProvider;
 	
@@ -3050,6 +3050,7 @@
 	    var data = cms.data;
 	    try {
 	        cms.parseAndSaveData(JsonFn.parse($('#cms-data').text(), true));
+	        $('#cms-data').remove();
 	        window.Types = data.types;
 	        window.Local = data.Local = {};
 	        data.serverFn = data.setupServerFn(data.serverFn, $http.post);

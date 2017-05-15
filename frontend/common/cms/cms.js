@@ -532,6 +532,7 @@ function run(cms, $http, $websocket) {
     const data = cms.data;
     try {
         cms.parseAndSaveData(JsonFn.parse($('#cms-data').text(), true));
+        $('#cms-data').remove();
         window.Types = data.types;
         window.Local = data.Local = {};
         data.serverFn = data.setupServerFn(data.serverFn, $http.post);
