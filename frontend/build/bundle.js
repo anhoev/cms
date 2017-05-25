@@ -2482,6 +2482,8 @@
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
+	window.Uuid = _uuid3.default;
+	
 	window.io = _socket2.default;
 	
 	window.Enum = {
@@ -2618,7 +2620,7 @@
 	    }
 	
 	    function sendWs(msg, cb) {
-	        var _uuid = _uuid3.default.v1();
+	        var _uuid = Uuid.v1();
 	        data.socketQueue[_uuid] = cb;
 	        socket.send(JsonFn.stringify(_.assign(msg, { uuid: _uuid })));
 	    }
@@ -3723,7 +3725,8 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var _module = angular.module('components.cmsMain', ['dndLists', 'ui.bootstrap', _common2.default, _module3.default, _module5.default, 'ui.bootstrap.contextMenu', 'ngFileSaver', 'oc.lazyLoad']).directive('cmsContainer', _container2.default).directive('cmsElement', _element2.default).directive('cmsEditor', _editor2.default).directive('cmsWrapper', _cmsWrapper2.default).directive('cmsFragment', _fragment2.default).directive('cmsFormPath', _cmsFormPath2.default).directive('cmsContainerEdit', _containerEdit2.default);
+	var _module = angular.module('components.cmsMain', ['dndLists', 'ui.bootstrap', _common2.default, _module3.default, _module5.default, 'ui.bootstrap.contextMenu', 'ngFileSaver', 'oc.lazyLoad']).directive('cmsContainer', _container2.default).directive('cmsElement', _element2.default).directive('cmsEditor', _editor2.default).directive('cmsWrapper', _cmsWrapper2.default).directive('cmsFragment', _fragment2.default).directive('cmsFormPath', _cmsFormPath2.default);
+	//.directive('cmsContainerEdit', containerEditDirective);
 	
 	exports.default = _module.name;
 

@@ -22,6 +22,6 @@ const module = angular
     .directive('cmsWrapper', cmsWrapper)
     .directive('cmsFragment', fragmentDirective)
     .directive('cmsFormPath', cmsFormPathDirective)
-    .directive('cmsContainerEdit', containerEditDirective);
+    //.directive('cmsContainerEdit', containerEditDirective);
 
 export default module.name;
