@@ -238,7 +238,7 @@ const cms = {
     set menu(menu) {
         _.assign(this.data.online.menu, menu);
     },
-    async,
+    asyncFn,
     getModel: function (type) {
         return this.Types[type].Model;
     }
@@ -336,7 +336,7 @@ function clearCache() {
 }
 
 
-function async(fn) {
+function asyncFn(fn) {
     function _async(fn, _this) {
         let result = false, done = false;
         co(fn.bind(_this)).then((_result) => {
