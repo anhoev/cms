@@ -268,7 +268,7 @@ module.exports = (cms) => {
                         if (Model.session) Model.session(socket.handshake.session, model);
 
                         try {
-                            yield Model.findByIdAndUpdate(model._id, _.pickBy(model, (v, k) => k !== '__v', true), {
+                            yield Model.findByIdAndUpdate(model._id, _.omitBy(model, ['__v']), {
                                 upsert: true,
                                 setDefaultsOnInsert: true
                             }).exec();

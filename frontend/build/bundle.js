@@ -354,19 +354,19 @@
 	
 	var _module6 = _interopRequireDefault(_module5);
 	
-	var _module7 = __webpack_require__(149);
+	var _module7 = __webpack_require__(150);
 	
 	var _module8 = _interopRequireDefault(_module7);
 	
-	var _module9 = __webpack_require__(151);
+	var _module9 = __webpack_require__(152);
 	
 	var _module10 = _interopRequireDefault(_module9);
 	
-	var _module11 = __webpack_require__(153);
+	var _module11 = __webpack_require__(154);
 	
 	var _module12 = _interopRequireDefault(_module11);
 	
-	var _module13 = __webpack_require__(161);
+	var _module13 = __webpack_require__(162);
 	
 	var _module14 = _interopRequireDefault(_module13);
 	
@@ -3723,9 +3723,11 @@
 	
 	__webpack_require__(148);
 	
+	__webpack_require__(149);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var _module = angular.module('components.cmsMain', ['dndLists', 'ui.bootstrap', _common2.default, _module3.default, _module5.default, 'ui.bootstrap.contextMenu', 'ngFileSaver', 'oc.lazyLoad']).directive('cmsContainer', _container2.default).directive('cmsElement', _element2.default).directive('cmsEditor', _editor2.default).directive('cmsWrapper', _cmsWrapper2.default).directive('cmsFragment', _fragment2.default).directive('cmsFormPath', _cmsFormPath2.default);
+	var _module = angular.module('components.cmsMain', ['dndLists', 'ui.bootstrap', _common2.default, _module3.default, _module5.default, 'ui.bootstrap.contextMenu', 'ngFileSaver', 'oc.lazyLoad', 'angular.bind.notifier']).directive('cmsContainer', _container2.default).directive('cmsElement', _element2.default).directive('cmsEditor', _editor2.default).directive('cmsWrapper', _cmsWrapper2.default).directive('cmsFragment', _fragment2.default).directive('cmsFormPath', _cmsFormPath2.default);
 	//.directive('cmsContainerEdit', containerEditDirective);
 	
 	exports.default = _module.name;
@@ -4729,6 +4731,262 @@
 
 /***/ },
 /* 148 */
+/***/ function(module, exports) {
+
+	/**
+	 * @license Kasper Lewau
+	 * (c) 2015 Kasper Lewau https://github.com/kasperlewau
+	 * License: MIT
+	 */
+	
+	(function () {
+	
+	  'use strict';
+	
+	  /**
+	   * @ngdoc method
+	   * @name  setupNotifier
+	   * @kind function
+	   * @description
+	   *
+	   * Utility method to setup watcher(s) on the given scope
+	   * and register a $broadcast callback for the watcher(s).
+	   *
+	   * @param {Object} scope - the scope to attach watchers and broadcast from
+	   * @param {Object} notifierMap - key:value mapping of notifiers and expressions to watch.
+	   */
+	  function setupNotifier (scope, notifierMap) {
+	    function handler (notifierKey, newValue, oldValue) {
+	      if (newValue !== oldValue) {
+	        scope.$broadcast('$$rebind::' + notifierKey);
+	      }
+	    }
+	
+	    Object.keys(notifierMap).forEach(function (k) {
+	      scope.$watch(
+	        notifierMap[k],
+	        handler.bind(null, k),
+	        typeof scope[notifierMap[k]] === 'object'
+	      );
+	    });
+	  }
+	
+	  /**
+	   * @ngdoc method
+	   * @name dynamicWatcher
+	   * @kind function
+	   * @description
+	   *
+	   * Utility method that extends a regular oneTimeWatchDelegate function with
+	   * scope listeners for each of the given notifier keys. When an event in the format of
+	   * '$$rebind::[notifierKey]' is caught in the associated $scope, a oneTimeWatchDelegate
+	   * will be called with the original options and reevaluate the given expression.
+	   *
+	   * If the given expr.$$watchDelegate has already been flagged as 'wrapped', we're hitting this
+	   * function again due to some caching behaviour of Angular expressions. In which case,
+	   * we should not register additional $on listeners, nor should we re-wrap the given expression.
+	   * Exit early o/
+	   *
+	   * @param {String|Function} expr - The expression to evaluate. Can be either a string or a function.
+	   * @param {Array} notifierKeys - An array of keys to setup $on listeners for.
+	   *
+	   * @returns {Function} wrap - A decorated oneTimeWatchDelegate function.
+	   */
+	  function dynamicWatcher (expr, notifierKeys) {
+	    if (expr.$$watchDelegate.wrapped) {
+	      return expr.$$watchDelegate;
+	    }
+	
+	    function setupListeners (scope, cb) {
+	      notifierKeys.forEach(function (nk) {
+	        scope.$on('$$rebind::' + nk, cb);
+	      });
+	    }
+	
+	    function wrapDelegate (watchDelegate, scope, listener, objectEquality, parsedExpression) {
+	      var delegateCall = watchDelegate.bind(this, scope, listener, objectEquality, parsedExpression);
+	      setupListeners(scope, delegateCall);
+	      delegateCall();
+	    }
+	
+	    var delegate     = wrapDelegate.bind(this, expr.$$watchDelegate);
+	    delegate.wrapped = true;
+	
+	    return delegate;
+	  }
+	
+	  /**
+	   * Decorate the $parse service to allow to use our custom bind-notifier
+	   * syntax in the given application.
+	   *
+	   * It parses out all the leading notifiers and the last expression to be reevaluated
+	   * whenever the notifiers trigger it.
+	   *
+	   * @example Single Notifiers
+	   * ng-bind=":notifier:expression"
+	   * ng-repeat="x in :notifier:expression"
+	   * <span>{{:notifier:expression}}</span>
+	   *
+	   * @example Multiple Notifiers
+	   * ng-bind=":n1:n2:n3:expression"
+	   * ng-repeat="x in :n1:n2:n3:expression"
+	   * <span>{{:n1:n2:n3:expression}}</span>
+	   *
+	   * @example Object literals
+	   * ng-class=":n1:{ x: xExpr, y: yExpr }"
+	   * ng-bind=":n1:'string' | translate: { translate-value: 'x' }"
+	   */
+	  ParseDecorator.$inject = ['$provide'];
+	  function ParseDecorator ($provide) {
+	
+	    $parseDecorator.$inject = ['$delegate', 'bindNotifierRegex', 'bindNotifierKeyRegex'];
+	    function $parseDecorator ($delegate, bindNotifierRegex, bindNotifierKeyRegex) {
+	      function wrapParse (parse, exp, interceptor) {
+	        var parts, part, expression, rawExpression, notifiers;
+	
+	        if (typeof exp !== 'string' || !bindNotifierRegex.test(exp)) {
+	          return parse.call(this, exp, interceptor);
+	        }
+	
+	        parts = exp.split(':');
+	        notifiers = [];
+	
+	        while (parts.length) {
+	          part = parts.shift();
+	          if (part) {
+	            if (!bindNotifierKeyRegex.test(part)) {
+	              rawExpression = [part].concat(parts).join(':');
+	              break;
+	            }
+	            notifiers.push(part);
+	          }
+	        }
+	
+	        if (!rawExpression) {
+	          rawExpression = notifiers.splice(-1, 1)[0];
+	        }
+	
+	        expression = parse.call(this, '::' + rawExpression, interceptor);
+	        expression.$$watchDelegate = dynamicWatcher(expression, notifiers);
+	
+	        return expression;
+	      }
+	
+	      return wrapParse.bind(null, $delegate);
+	    }
+	
+	    $provide.decorator('$parse', $parseDecorator);
+	  }
+	
+	  /**
+	   * @ngdoc directive
+	   * @name bindNotifier
+	   * @restrict A
+	   * @priority 0
+	   * @description
+	   *
+	   * Adds the ability to notify all notifier-bindings within the newly
+	   * created child scope.
+	   *
+	   * Expects an object of the following format:
+	   *
+	   * { n1: expr1, n2: expr2 }
+	   *
+	   * where multiple keys can be supplied so as to allow for multiple
+	   * namespaces within the given scope. bind-notifier directives can be nested
+	   * at will.
+	   */
+	  function bindNotifierDirective () {
+	    return {
+	      restrict: 'A',
+	      scope: true,
+	      compile: function (element, attrs) {
+	        var notifierMap = {};
+	        var keyValues   = attrs.bindNotifier.replace(/[\{\}\s]/g, '').split(',');
+	
+	        keyValues.forEach(function (kv) {
+	          var split = kv.split(':');
+	          notifierMap[split[0]] = split[1];
+	        });
+	
+	        return function (scope) {
+	          setupNotifier(scope, notifierMap);
+	        };
+	      }
+	    };
+	  }
+	
+	  /**
+	   * @ngdoc factory
+	   * @name  $NotifierFactory
+	   * @kind function
+	   * @description
+	   *
+	   * Factory method, returning a $Notifier constructor fn.
+	   * Injected into controllers/directives for setting up
+	   * namespaced bindings without manual $broadcast work and/or
+	   * the usage of a notifier directive.
+	   *
+	   * @param {Object} scope - the scope to latch onto.
+	   * @param {Object} notifierMap - key:value mapping of notifiers and expressions to watch.
+	   *
+	   * @throws {Error} Throws an error if no scope was given.
+	   * @throws {Error} Throws an error if no notifierMap object was given.
+	   *
+	   * @returns {Function} $Notifier - $Notifier constructor function.
+	   *
+	   * @example
+	   *
+	    .controller('someCtrl', function ($scope, $Notifier) {
+	      scope.v1 = 'a';
+	      scope.v2 = 'b';
+	
+	      new $Notifier($scope, {
+	        v1NameSpace: 'v1',
+	        v2NameSpace: 'v2'
+	      });
+	    });
+	   *
+	   */
+	  function $NotifierFactory () {
+	    return function $Notifier (scope, notifierMap) {
+	      if (!scope)       { throw new Error('No $scope given'); }
+	      if (!notifierMap) { throw new Error('No notifier object given'); }
+	
+	      setupNotifier(scope, notifierMap);
+	    };
+	  }
+	
+	  /**
+	   * @ngdoc module
+	   * @name angular.bind.notifier
+	   * @module angular.bind.notifier
+	   * @description
+	   *
+	   * Third party Angular module filling the gap between static/dynamic
+	   * data binding by introducing a new pub/sub based syntax.
+	   *
+	   * The syntax builds upon the one-time binding syntax introduced in Angular 1.3
+	   * with the ability to set up a notification system (or, namespace) said
+	   * binds. This is done by passing in the namespace(s) between the first and second
+	   * one-time-bind colon's (::).
+	   *
+	   * Useful when model data is so seldomly updated that a regular
+	   * two-way binding is not warranted due to the internal $watcher required.
+	   */
+	  angular
+	    .module('angular.bind.notifier', [])
+	    .constant('bindNotifierKeyRegex', /^[a-zA-Z0-9][\w-]*$/)
+	    .constant('bindNotifierRegex', /^[\s]*:([a-zA-Z0-9][\w-]*):(.+\n?)+$/)
+	    .factory('$Notifier', $NotifierFactory)
+	    .directive('bindNotifier', bindNotifierDirective)
+	    .config(ParseDecorator);
+	
+	}());
+
+
+/***/ },
+/* 149 */
 /***/ function(module, exports) {
 
 	/**
@@ -6087,7 +6345,7 @@
 	}
 
 /***/ },
-/* 149 */
+/* 150 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6110,7 +6368,7 @@
 	
 	__webpack_require__(67);
 	
-	var _tpl = __webpack_require__(150);
+	var _tpl = __webpack_require__(151);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -6233,13 +6491,13 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 150 */
+/* 151 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms-wrapper animated fadeInRight cms-sidebar cms\">\n    <button type=\"button\" class=\"btn btn-sm btn-white cms-close-position\"\n            ng-click=\"cancel()\">\n        <i class=\"fa fa-times\"></i>\n    </button>\n\n    <div class=\"col-xs-6 col-sm-4 pull-right cms-controll-panel-right\">\n        <div ng-show=\"node\">\n            <h4>Information: </h4>\n            <h5 style=\"word-break: break-all;\">Name: {{node.text}}</h5>\n            <h5 style=\"word-break: break-all;\">Type: {{node.type}}</h5>\n            <h5 style=\"word-break: break-all;\">Path: {{node.path}}</h5>\n            <br>\n\n            <div class=\"btn-group\">\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        ng-click=\"open()\">\n                    Open page\n                </button>\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        ng-click=\"deletePage()\">\n                    Delete\n                </button>\n            </div>\n            <form role=\"form\" ng-submit=\"makeTemplate(templateName);templateName = '';\">\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        type=\"submit\" style=\"position: absolute;right: 15px;\"\n                        ng-disabled=\"!templateName\">\n                    Make template page\n                </button>\n                <input ng-model=\"templateName\" type=\"text\" class=\"form-control input-xs\" placeholder=\"template name\">\n            </form>\n            <form role=\"form\" ng-submit=\"createPage(template.selected, pageName);pageName = '';\">\n                <ui-select class=\"cms-select\" ng-model=\"template.selected\" theme=\"bootstrap\" ng-disabled=\"disabled\"\n                           style=\"min-width: 60px;\">\n                    <ui-select-match placeholder=\"Select a template page\">{{$select.selected}}</ui-select-match>\n                    <ui-select-choices repeat=\"_template in templates\">\n                        {{_template}}\n                    </ui-select-choices>\n                </ui-select>\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        type=\"submit\" style=\"position: absolute;right: 15px;\"\n                        ng-disabled=\"!pageName || !template.selected\">\n                    Create new page\n                </button>\n                <input ng-model=\"pageName\" type=\"text\" class=\"form-control input-xs\" placeholder=\"page name\">\n            </form>\n\n            <form role=\"form\" ng-submit=\"renamePage(newPageName);newPageName = '';\">\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        type=\"submit\" style=\"position: absolute;right: 15px;\"\n                        ng-disabled=\"!newPageName\">\n                    Rename\n                </button>\n                <input ng-model=\"newPageName\" type=\"text\" class=\"form-control input-xs\" placeholder=\"page name\">\n            </form>\n\n            <form role=\"form\" ng-submit=\"onFileSelect(files);\">\n                <button class=\"btn btn-xs btn-white cms-btn-bottom\"\n                        type=\"submit\" style=\"position: absolute;right: 15px;\">\n                    Up\n                </button>\n                <input type=\"file\" ngf-select ng-model=\"files\"\n                       ngf-multiple=\"true\" name=\"file\" class=\"form-control input-xs\"\n                       placeholder=\"file upload\">\n            </form>\n\n        </div>\n    </div>\n\n    <h2>Sitemaps:</h2>\n\n    <div js-tree=\"treeConfig\" ng-model=\"tree\"\n         tree-events=\"changed:selectNode\"></div>\n</div>\n"
 
 /***/ },
-/* 151 */
+/* 152 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6248,7 +6506,7 @@
 	    value: true
 	});
 	
-	var _tpl = __webpack_require__(152);
+	var _tpl = __webpack_require__(153);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -6287,13 +6545,13 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 152 */
+/* 153 */
 /***/ function(module, exports) {
 
 	module.exports = "<div style=\"margin-top: 7px;cursor: pointer;\">\n    <ui-select data-ng-model=\"vm.editState.editMode\" theme=\"bootstrap\" on-select=\"vm.onSelect($item)\">\n        <ui-select-match placeholder=\"\">\n            {{$select.selected.label}}&nbsp;&nbsp;&nbsp;\n        </ui-select-match>\n        <ui-select-choices data-repeat=\"item.value as item in vm.modes | filterBy: ['label']: $select.search\">\n            <div ng-bind-html=\"item.label | highlight: $select.search\"></div>\n        </ui-select-choices>\n    </ui-select>\n</div>\n"
 
 /***/ },
-/* 153 */
+/* 154 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6322,19 +6580,19 @@
 	
 	var _module5 = _interopRequireDefault(_module4);
 	
-	var _cmsList = __webpack_require__(154);
+	var _cmsList = __webpack_require__(155);
 	
 	var _cmsList2 = _interopRequireDefault(_cmsList);
 	
-	var _importService2 = __webpack_require__(156);
+	var _importService2 = __webpack_require__(157);
 	
 	var _importService3 = _interopRequireDefault(_importService2);
 	
-	var _exportService2 = __webpack_require__(158);
+	var _exportService2 = __webpack_require__(159);
 	
 	var _exportService3 = _interopRequireDefault(_exportService2);
 	
-	var _tpl = __webpack_require__(160);
+	var _tpl = __webpack_require__(161);
 	
 	var _tpl2 = _interopRequireDefault(_tpl);
 	
@@ -6626,7 +6884,7 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 154 */
+/* 155 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6635,7 +6893,7 @@
 	    value: true
 	});
 	
-	var _cmsList = __webpack_require__(155);
+	var _cmsList = __webpack_require__(156);
 	
 	var _cmsList2 = _interopRequireDefault(_cmsList);
 	
@@ -6663,13 +6921,13 @@
 	exports.default = directive;
 
 /***/ },
-/* 155 */
+/* 156 */
 /***/ function(module, exports) {
 
 	module.exports = ""
 
 /***/ },
-/* 156 */
+/* 157 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6678,7 +6936,7 @@
 	    value: true
 	});
 	
-	var _importService = __webpack_require__(157);
+	var _importService = __webpack_require__(158);
 	
 	var _importService2 = _interopRequireDefault(_importService);
 	
@@ -6798,13 +7056,13 @@
 	exports.default = service;
 
 /***/ },
-/* 157 */
+/* 158 */
 /***/ function(module, exports) {
 
 	module.exports = "<div style=\"padding: 20px\">\n    <div class=\"panel panel-default\">\n        <div class=\"panel-body\">\n            <div js-tree=\"treeConfig\" ng-model=\"tree\"\n                 tree=\"treeInstance\"\n                 tree-events=\"changed:selectNode\"></div>\n        </div>\n    </div>\n    <br><br>\n    <button type=\"button\" class=\"btn btn-primary submit-button\" ng-click=\"choose()\">Choose</button>\n    <button type=\"button\" class=\"btn btn-primary\" ng-click=\"cancel()\">Cancel</button>\n</div>\n"
 
 /***/ },
-/* 158 */
+/* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6813,7 +7071,7 @@
 	    value: true
 	});
 	
-	var _exportService = __webpack_require__(159);
+	var _exportService = __webpack_require__(160);
 	
 	var _exportService2 = _interopRequireDefault(_exportService);
 	
@@ -6877,19 +7135,19 @@
 	exports.default = service;
 
 /***/ },
-/* 159 */
+/* 160 */
 /***/ function(module, exports) {
 
 	module.exports = "<div style=\"padding: 20px\">\n\n    <div class=\"panel panel-default\">\n        <div class=\"panel-body\">\n            <form role=\"form\" class=\"form-horizontal\">\n                <div class=\"form-group\">\n                    <label class=\"col-sm-12\">Filename:</label>\n                    <div class=\"col-sm-12\"><input type=\"text\" ng-model=\"filename\" class=\"form-control\"></div>\n                </div>\n                <div class=\"form-group\">\n                    <label class=\"col-sm-12\">Select Types:</label>\n                    <div class=\"cms-neutral\">\n                        <formly-form model=\"data\" fields=\"fields\" form=\"form\" options=\"options\"></formly-form>\n                    </div>\n                </div>\n            </form>\n        </div>\n    </div>\n\n\n    <br><br>\n    <button type=\"button\" class=\"btn btn-primary submit-button\" ng-click=\"choose()\">Choose</button>\n    <button type=\"button\" class=\"btn btn-primary\" ng-click=\"cancel()\">Cancel</button>\n</div>\n"
 
 /***/ },
-/* 160 */
+/* 161 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms-wrapper animated fadeInRight cms-sidebar cms\">\n    <button type=\"button\" class=\"btn btn-sm btn-white cms-close-position\"\n            ng-click=\"cancel()\">\n        <i class=\"fa fa-times\"></i>\n    </button>\n\n    <br>\n    <div class=\"row\">\n        <div class=\"col-xs-3 cms-panel\">\n            <div class=\"panel panel-primary\">\n                <div class=\"panel-heading\">Types</div>\n                <div class=\"panel-body\">\n                    <div js-tree=\"treeConfig\" ng-model=\"tree\"\n                         tree-events=\"changed:selectNode\" tree=\"treeInstance\"></div>\n                </div>\n            </div>\n        </div>\n        <div class=\"col-xs-9 cms-panel\">\n            <div class=\"panel panel-primary\">\n                <div class=\"panel-heading\">\n                    <div class=\"cms-admin-right-panel\">\n                        <label style=\"color: white\"> {{'Show' | translate}} : </label>\n\n                        <ui-select style=\"min-width: 50px;margin-left: 10px;margin-right: 10px;\"\n                                   class=\"cms-select\" data-ng-model=\"page.limit\" theme=\"bootstrap\"\n                                   on-select=\"refresh()\">\n                            <ui-select-match placeholder=\"\">{{$select.selected}}&nbsp;&nbsp;</ui-select-match>\n                            <ui-select-choices data-repeat=\"item in [10,25,50,100,200]\">{{item}}</ui-select-choices>\n                        </ui-select>\n\n                        <ui-select style=\"min-width: 60px;margin-left: 10px;margin-right: 10px;\"\n                                   class=\"cms-select\" data-ng-model=\"showAs.type\" theme=\"bootstrap\"\n                                   on-select=\"refresh()\">\n                            <ui-select-match placeholder=\"\">\n                                {{$select.selected.label}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</ui-select-match>\n                            <ui-select-choices\n                                    data-repeat=\"item.value as item in [{value:'list',label:'List'},{value:'table',label:'Table'},{value:'element',label:'Element'}]\">\n                                {{item.label}}\n                            </ui-select-choices>\n                        </ui-select>\n\n                        <div class=\"btn-group btn-group-xs\" style=\"margin-top: -12px;margin-right: 10px;\">\n                            <button type=\"button\" class=\"btn btn-white\" ng-click=\"setting()\">{{'Setting' | translate}}\n                            </button>\n                            <button type=\"button\" class=\"btn btn-white dropdown-toggle\" data-toggle=\"dropdown\">\n                                <span class=\"caret\"></span>\n                            </button>\n                            <ul class=\"dropdown-menu\" role=\"menu\" style=\"z-index: 10000 !important;\">\n                                <li><a href ng-click=\"deleteAll()\">{{'DeleteAll' | translate}}</a></li>\n                                <li><a href ng-click=\"import()\">Import</a></li>\n                                <li><a href ng-click=\"export()\">Export</a></li>\n\n                            </ul>\n                        </div>\n\n                        <button class=\"btn btn-white btn-xs\" ng-click=\"add()\">\n                            {{'Add' | translate}}\n                        </button>\n\n                    </div>\n\n                    <input type=\"text\" class=\"form-control input-xs\"\n                           style=\"margin-left: 10px;width: 100px;display: inline-block;\"\n                           ng-model=\"search.text\" ng-model-options=\"{debounce: 300}\" placeholder=\"search ...\">\n\n                    <div ng-if=\"queries && queries.length > 0\">\n                        <hr style=\"margin-top: 10px;margin-bottom: 5px;\">\n\n                        <div class=\"cms-admin-heading-form\" style=\"height: 60px;\">\n                            <formly-form ng-repeat=\"query in queries track by $index\" model=\"query.model\" fields=\"query.form\"\n                                         form=\"form\"\n                                         options=\"options\">\n                            </formly-form>\n                        </div>\n                    </div>\n\n                </div>\n                <div class=\"panel-body\" ng-if=\"node\">\n\n                    <div style=\"width: 100%;overflow-x: auto\" ng-if=\"showAs.type === 'table'\">\n                        <table class=\"table cms-admin-table\">\n                            <thead>\n                            <tr>\n                                <th ng-repeat=\"col in node.columns track by $index\" ng-bind=\"col.label\"></th>\n                                <th>Edit</th>\n                            </tr>\n                            </thead>\n                            <tbody>\n                            <tr ng-repeat=\"element in data.list track by $index\">\n                                <td ng-repeat=\"col in node.columns track by $index\">\n                                <span cms-direct-editable=\"model.{{col.value}}\"\n                                      cms-value=\"element[col.value]\"\n                                      cms-ref=\"{{element._id}}\"\n                                      cms-type=\"{{node.type}}\"></span>\n                                </td>\n                                <td>\n                                    <div cms-editor=\"{ref: element._id, type: node.type}\"\n                                         cms-remove=\"remove(element)\"></div>\n                                </td>\n                            </tr>\n                            </tbody>\n                        </table>\n                    </div>\n\n                    <div ng-show=\"data.loading\">\n                        <img src=\"/build/images/ajax-loader.gif\">\n                    </div>\n\n                    <div class=\"cms-panel-list-content\" ng-if=\"showAs.type === 'list'\">\n                        <div ng-repeat=\"element in data.list track by $index\"\n                             ng-class=\"elementClass\"\n                             cms-element=\"{ref: element._id, type: node.type, containers: {}}\"\n                             dnd-moved=\"remove(element)\"\n                             inline=\"false\"></div>\n                    </div>\n\n                    <div class=\"\" ng-if=\"showAs.type === 'element'\">\n                        <button class=\"btn cms-btn btn-primary btn-outline btn-xs\" style=\"margin-right: 10px;\"\n                                ng-repeat=\"e in data.list track by $index\"\n                                ng-click=\"selectElement(e._id);\" ng-show=\"data.list.length > 1\">\n                            {{getTitle(node.type, e._id)}}\n                        </button>\n                        <div ng-show=\"data.list.length > 1\">\n                            <br><br>\n                        </div>\n\n                        <div ng-if=\"element._id\"\n                             cms-element=\"{ref: element._id, type: node.type, containers: {}}\"\n                             inline=\"false\"></div>\n                    </div>\n\n                    <div class=\"clearfix\"></div>\n\n                    <ul uib-pagination\n                        ng-show=\"page.size > 1\"\n                        total-items=\"page.size\"\n                        ng-model=\"page.currentPage\"\n                        class=\"pagination-sm\"\n                        items-per-page=\"page.limit\"\n                        ng-change=\"refresh(true)\"\n                        max-size=\"10\"\n                        boundary-link-numbers=\"true\"></ul>\n                </div>\n            </div>\n        </div>\n    </div>\n\n</div>\n"
 
 /***/ },
-/* 161 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6902,11 +7160,11 @@
 	
 	var _common2 = _interopRequireDefault(_common);
 	
-	var _cmsNav = __webpack_require__(162);
+	var _cmsNav = __webpack_require__(163);
 	
 	var _cmsNav2 = _interopRequireDefault(_cmsNav);
 	
-	var _module2 = __webpack_require__(153);
+	var _module2 = __webpack_require__(154);
 	
 	var _module3 = _interopRequireDefault(_module2);
 	
@@ -6914,11 +7172,11 @@
 	
 	var _module5 = _interopRequireDefault(_module4);
 	
-	var _module6 = __webpack_require__(149);
+	var _module6 = __webpack_require__(150);
 	
 	var _module7 = _interopRequireDefault(_module6);
 	
-	var _module8 = __webpack_require__(151);
+	var _module8 = __webpack_require__(152);
 	
 	var _module9 = _interopRequireDefault(_module8);
 	
@@ -6929,7 +7187,7 @@
 	exports.default = _module.name;
 
 /***/ },
-/* 162 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -6938,7 +7196,7 @@
 	    value: true
 	});
 	
-	var _cmsNav = __webpack_require__(163);
+	var _cmsNav = __webpack_require__(164);
 	
 	var _cmsNav2 = _interopRequireDefault(_cmsNav);
 	
@@ -6988,7 +7246,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 163 */
+/* 164 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"cms\">\n    <nav role=\"navigation\" class=\"navbar navbar-fixed-top navbar-default cms-menu\">\n        <div class=\"container\">\n            <div class=\"navbar-header\">\n                <button type=\"button\" data-toggle=\"collapse\" data-target=\"#dropdown_menu\" aria-expanded=\"false\"\n                        aria-controls=\"navbar\" class=\"navbar-toggle collapsed\"><span\n                        class=\"sr-only\">Toggle navigation</span><span class=\"icon-bar\"></span><span\n                        class=\"icon-bar\"></span><span\n                        class=\"icon-bar\"></span></button>\n                <a href=\"#\" class=\"navbar-brand\">Cms Mon</a></div>\n            <div id=\"dropdown_menu\" class=\"collapse navbar-collapse\">\n                <ul class=\"nav navbar-nav\">\n                    <li class=\"dropdown cms-types-dropdown\">\n                        <a href=\"#\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\"\n                                            class=\"dropdown-toggle\">Types<span class=\"caret\"></span></a>\n                        <ul role=\"menu\" cms-types=\"\" class=\"dropdown-menu\"></ul>\n                    </li>\n                    <li><a cms-admin>Admin</a></li>\n                    <li><a href=\"#\" cms-sitemap>Sitemap</a></li>\n                </ul>\n                <ul class=\"nav navbar-nav navbar-right\">\n                    <li>\n                        <div cms-edit-state></div>\n                    </li>\n                    <li><button class=\"btn btn-default navbar-btn\"\n                                style=\"margin-left: 10px\"\n                                ng-click=\"vm.toggleContainer()\">Container</button></li>\n                </ul>\n            </div>\n        </div>\n    </nav>\n</div>"

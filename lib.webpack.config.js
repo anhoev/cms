@@ -9,6 +9,7 @@ module.exports = {
             'jquery',
             'angular',
             'angular-i18n/de-de',
+            'angular-bind-notifier',
             'lodash',
             'lodash/unionWith',
             'lodash/pickBy',

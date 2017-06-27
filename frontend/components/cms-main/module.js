@@ -12,10 +12,11 @@ import containerDirective from "./container.directive";
 import containerEditDirective from "./container-edit.directive";
 import cmsFormPathDirective from "./cms-form-path.directive";
 import 'angular-file-saver';
+import 'angular-bind-notifier';
 import 'oclazyload';
 
 const module = angular
-    .module('components.cmsMain', ['dndLists', 'ui.bootstrap', common, cmsEditable, cmsElementEdit, 'ui.bootstrap.contextMenu', 'ngFileSaver', 'oc.lazyLoad'])
+    .module('components.cmsMain', ['dndLists', 'ui.bootstrap', common, cmsEditable, cmsElementEdit, 'ui.bootstrap.contextMenu', 'ngFileSaver', 'oc.lazyLoad', 'angular.bind.notifier'])
     .directive('cmsContainer', containerDirective)
     .directive('cmsElement', elementDirective)
     .directive('cmsEditor', editorDirective)
@@ -23,5 +24,20 @@ const module = angular
     .directive('cmsFragment', fragmentDirective)
     .directive('cmsFormPath', cmsFormPathDirective)
     //.directive('cmsContainerEdit', containerEditDirective);
+    .directive('noApplyClick', function ($parse) {
+        return {
+            compile : function ($element, attr) {
+                const fn = $parse(attr['noApplyClick']);
+                return function (scope, element, attr) {
+                    element.on('click', function (event) {
+                        fn(scope, {
+                            $event : event,
+                            $element : element
+                        });
+                    });
+                };
+            }
+        };
+    })
 
 export default module.name;
