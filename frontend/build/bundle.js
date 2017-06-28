@@ -3077,7 +3077,7 @@
 	        new_uri += "ws://" + loc.host;
 	    }
 	
-	    var socket = io.connect(new_uri, { timeout: 5000 });
+	    var socket = io.connect(new_uri, { timeout: 10000, 'pingInterval': 20000, 'pingTimeout': 20000 });
 	
 	    window.socket = cms.socket = socket;
 	
@@ -3727,8 +3727,23 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var _module = angular.module('components.cmsMain', ['dndLists', 'ui.bootstrap', _common2.default, _module3.default, _module5.default, 'ui.bootstrap.contextMenu', 'ngFileSaver', 'oc.lazyLoad', 'angular.bind.notifier']).directive('cmsContainer', _container2.default).directive('cmsElement', _element2.default).directive('cmsEditor', _editor2.default).directive('cmsWrapper', _cmsWrapper2.default).directive('cmsFragment', _fragment2.default).directive('cmsFormPath', _cmsFormPath2.default);
+	var _module = angular.module('components.cmsMain', ['dndLists', 'ui.bootstrap', _common2.default, _module3.default, _module5.default, 'ui.bootstrap.contextMenu', 'ngFileSaver', 'oc.lazyLoad', 'angular.bind.notifier']).directive('cmsContainer', _container2.default).directive('cmsElement', _element2.default).directive('cmsEditor', _editor2.default).directive('cmsWrapper', _cmsWrapper2.default).directive('cmsFragment', _fragment2.default).directive('cmsFormPath', _cmsFormPath2.default)
 	//.directive('cmsContainerEdit', containerEditDirective);
+	.directive('noApplyClick', function ($parse) {
+	    return {
+	        compile: function compile($element, attr) {
+	            var fn = $parse(attr['noApplyClick']);
+	            return function (scope, element, attr) {
+	                element.on('click', function (event) {
+	                    fn(scope, {
+	                        $event: event,
+	                        $element: element
+	                    });
+	                });
+	            };
+	        }
+	    };
+	});
 	
 	exports.default = _module.name;
 
