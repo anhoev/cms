@@ -93,34 +93,36 @@ module.exports = (cms) => {
 
         if (options.autopopulate) schema.plugin(autopopulate);
 
-        schema.add({_textIndex: {type: String, form: false, index: 'text'}});
 
-        if (textIndex) schema.pre('findOneAndUpdate', function (next) {
-            let _textIndex = ''
-            traverse(this._update).forEach(function (node) {
-                if (!node) return;
-                if (this.key && !_.includes(['$set', '$setOnInsert', '__v', '_id', 'id'], this.key)) {
-                    const _type = schema.path(this.path.filter(p => p !== '$set' && p !== '$setOnInsert').join('.'));
-                    if (_type) {
-                        const type = _type.instance;
-                        if (type === 'ObjectID') {
+        if (textIndex) {
+            schema.add({_textIndex: {type: String, form: false, index: 'text'}});
+            schema.pre('findOneAndUpdate', function (next) {
+                let _textIndex = ''
+                traverse(this._update).forEach(function (node) {
+                    if (!node) return;
+                    if (this.key && !_.includes(['$set', '$setOnInsert', '__v', '_id', 'id'], this.key)) {
+                        const _type = schema.path(this.path.filter(p => p !== '$set' && p !== '$setOnInsert').join('.'));
+                        if (_type) {
+                            const type = _type.instance;
+                            if (type === 'ObjectID') {
+                                this.block();
+                                _textIndex += node[cms.Types[_type.options.ref].info.title] + ' ';
+                            } else if (type === 'Number') {
+                                _textIndex += node + ' ';
+                            } else if (type === 'String') {
+                                _textIndex += node + ' ';
+                            }
+                        } else {
                             this.block();
-                            _textIndex += node[cms.Types[_type.options.ref].info.title] + ' ';
-                        } else if (type === 'Number') {
-                            _textIndex += node + ' ';
-                        } else if (type === 'String') {
-                            _textIndex += node + ' ';
                         }
-                    } else {
+                    } else if (this.key) {
                         this.block();
                     }
-                } else if (this.key) {
-                    this.block();
-                }
-            })
-            this._update._textIndex = _textIndex;
-            next();
-        });
+                })
+                this._update._textIndex = _textIndex;
+                next();
+            });
+        }
 
 
         // schema.index({'$**': 'text'});
@@ -268,7 +270,7 @@ module.exports = (cms) => {
                         if (Model.session) Model.session(socket.handshake.session, model);
 
                         try {
-                            yield Model.findByIdAndUpdate(model._id, _.omitBy(model, ['__v']), {
+                            yield Model.findByIdAndUpdate(model._id, _.pickBy(model, (v, k) => k !== '__v', true), {
                                 upsert: true,
                                 setDefaultsOnInsert: true
                             }).exec();
