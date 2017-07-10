@@ -381,7 +381,7 @@ module.exports = cms => {
                     }
                 </script>
             `);
-            injectCmsToHtml($);
+            if (!content.disableInjectLib) injectCmsToHtml($);
             cms.filters.page.forEach(fn => fn($, content));
         } else {
             $('body').html(_html);

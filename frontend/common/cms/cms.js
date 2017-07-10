@@ -1,9 +1,7 @@
 "use strict";
-import angular from 'angular';
 import 'ng-file-upload';
 import TypeClass from './Type';
 import QueryBuilder from "./QueryBuilder";
-import 'angular-websocket';
 import _Uuid from 'uuid';
 window.Uuid = _Uuid;
 import 'jquery-ui/ui/widgets/draggable';
@@ -25,7 +23,7 @@ window.Enum = {
 }
 
 const modelModule = angular
-    .module('common.data', ['ngFileUpload', 'ngWebSocket', 'pascalprecht.translate', 'ui-notification'])
+    .module('cms', ['ngFileUpload', 'pascalprecht.translate', 'ui-notification'])
     .config(config)
     .factory('cms', cms)
     .run(run);
@@ -528,8 +526,9 @@ function cms($http, Upload) {
         getTitle
     }
 }
-run.$inject = ['cms', '$http', '$websocket'];
-function run(cms, $http, $websocket) {
+
+run.$inject = ['cms', '$http'];
+function run(cms, $http) {
     const data = cms.data;
     try {
         cms.parseAndSaveData(JsonFn.parse($('#cms-data').text(), true));
@@ -550,9 +549,9 @@ function run(cms, $http, $websocket) {
     $('body').addClass('cms-admin-mode');
 
     let new_uri = '';
-    const {wsAddress} = cms.data.online;
-    if (wsAddress) {
-        new_uri = wsAddress;
+
+    if (cms.data && cms.data.online && cms.data.online.wsAddress) {
+        new_uri = cms.data.online.wsAddress;
     } else {
         let loc = window.location;
         new_uri += "ws://" + loc.host;
@@ -567,6 +566,7 @@ function run(cms, $http, $websocket) {
         if (!_data.uuid) return;
         cms.data.socketQueue[_data.uuid](_data)
     });
+
 }
 
 export default modelModule.name;
