@@ -129,7 +129,7 @@
     "moment": "^2.10.6",
     "moment-timezone": "^0.5.12",
     "mongoose": "^4.11.6",
-    "mongoose-autopopulate": "^0.4.0",
+    "mongoose-autopopulate": "^0.6.0",
     "multer": "^1.1.0",
     "ng-file-upload": "^11.2.2",
     "node-cache": "^3.0.0",
