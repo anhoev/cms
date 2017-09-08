@@ -29,7 +29,7 @@ module.exports = cms => {
             .on('file', function (p, s) {
                 if (_.endsWith(p, 'index.html')) {
                     const _p = p.replace('index.html', '');
-                    if (_p === '' || _.startsWith(path, p)) _path = p;
+                    if (_p === '' || _.startsWith(path, p)) _path = `${path}/${p}`;
                 }
             })
             .on('done', function () {
@@ -44,9 +44,11 @@ module.exports = cms => {
             text: 'root', children: [],
             state: {opened: true},
             path: '',
-            pageTemplate: 'index.html'
+            pageTemplate: path  + '/index.html'
         };
         let _templates = [];
+        const convertUrl = {};
+        const listUrl = [];
 
         function _server(path, urlPath, tree, onlyGetTree = false, getFileContent = false) {
             let items = fs.readdirSync(path);
@@ -62,12 +64,11 @@ module.exports = cms => {
                 if (item === 'index.json') {
                     isContainerDirectory = true;
                     if (!onlyGetTree) {
-                        cms.app.get([urlPath, `${urlPath}/index.html`], function*(req, res) {
-                            const content = JSON.parse(cms.readFile(`${path}/index.json`));
-                            let adminMode = req.session.adminMode || !cms.data.security ? true : false;
-                            const html = yield* render(content, {req, res, adminMode, path: urlPath});
-                            res.send(html);
-                        })
+                        convertUrl[urlPath] = path;
+                        if (urlPath[0] !== '/') convertUrl['/' + urlPath] = path;
+                        convertUrl[`${urlPath}/index.html`] = path;
+                        if (urlPath[0] !== '/') convertUrl[`/${urlPath}/index.html`] = path;
+                        listUrl.push(urlPath, `${urlPath}/index.html`);
                     }
                     if (getFileContent) tree.push(node);
                 } else {
@@ -79,7 +80,7 @@ module.exports = cms => {
                             node.type = 'containerDirectory';
                             node.icon = 'fa fa-html5';
                             // node.icon = 'glyphicon glyphicon-leaf';
-                            cms.resolvePageTemplate(`${path}/index.json`, (p) => {
+                            cms.resolvePageTemplate(`${path}/${item}`, (p) => {
                                 node.pageTemplate = p;
                             });
                         }
@@ -104,6 +105,14 @@ module.exports = cms => {
         cms.data.templates = _templates;
 
         if (_server(path, urlPath, _tree.children, onlyGetTree)) _tree.type = 'containerDirectory';
+
+        cms.app.get(listUrl, function* (req, res) {
+            let _path = req.originalUrl;
+            const content = JSON.parse(cms.readFile(`${convertUrl[_path]}/index.json`));
+            let adminMode = req.session.adminMode || !cms.data.security ? true : false;
+            const html = yield* render(content, {req, res, adminMode, path: _path});
+            res.send(html);
+        })
 
         // make directories
         {
@@ -161,7 +170,7 @@ module.exports = cms => {
             cms.app.use(urlPath, cms.express.static(fs.prePath ? fs.prePath + path : path));
             // images
 
-            cms.app.get('/cms-site-map', function*(req, res) {
+            cms.app.get('/cms-site-map', function* (req, res) {
                 cms._server();
                 res.send({tree: cms.data.tree, templates: cms.data.templates, baseUrlPath: cms.data.baseUrlPath});
             })
@@ -179,7 +188,7 @@ module.exports = cms => {
             res.send();
         })
 
-        cms.app.get('/cms-mobile', function*(req, res) {
+        cms.app.get('/cms-mobile', function* (req, res) {
             const noTree = req.query.tree === 'false';
             const _tree = {
                 text: 'root', children: [],
@@ -212,7 +221,7 @@ module.exports = cms => {
         });
     }
 
-    cms.app.post('/cms-container-page/*', function*(req, res) {
+    cms.app.post('/cms-container-page/*', function* (req, res) {
         const {basePath, baseUrlPath} = cms.data;
         let _path = req.url.replace('/cms-container-page', '').replace(baseUrlPath, '');
         _path = `${basePath}${_path[0] === '/' ? '' : '/'}${_path}`;
@@ -224,7 +233,7 @@ module.exports = cms => {
         res.send();
     })
 
-    cms.app.post('/cms-make-template/', function*(req, res) {
+    cms.app.post('/cms-make-template/', function* (req, res) {
         const {basePath} = cms.data;
         const {path: _path, name} = req.body;
 
@@ -235,7 +244,7 @@ module.exports = cms => {
         res.send();
     })
 
-    cms.app.post('/cms-create-page/', function*(req, res) {
+    cms.app.post('/cms-create-page/', function* (req, res) {
         const {basePath} = cms.data;
         const {templatePage, path} = req.body;
 
@@ -247,7 +256,7 @@ module.exports = cms => {
         res.send();
     })
 
-    cms.app.post('/cms-delete-page/', function*({body: {path}}, res) {
+    cms.app.post('/cms-delete-page/', function* ({body: {path}}, res) {
         rmdir(`${cms.data.basePath}/${path}`, (e) => {
             if (e) throw e;
             cms.clearCache();
@@ -255,7 +264,7 @@ module.exports = cms => {
         });
     })
 
-    cms.app.post('/cms-rename-page/', function*({body: {path, name}}, res) {
+    cms.app.post('/cms-rename-page/', function* ({body: {path, name}}, res) {
         const arr = path.split('/');
         arr.pop();
         arr.push(name);
@@ -264,7 +273,7 @@ module.exports = cms => {
         res.send();
     })
 
-    cms.app.post('/cms-export/', function*({body: {types, filename}}, res) {
+    cms.app.post('/cms-export/', function* ({body: {types, filename}}, res) {
 
         const Types = {};
         // all
@@ -280,7 +289,7 @@ module.exports = cms => {
         res.send();
     })
 
-    cms.app.post('/cms-import/', function*({body: {types, url}}, res) {
+    cms.app.post('/cms-import/', function* ({body: {types, url}}, res) {
         const errorList = [];
         if (!types) types = Object.keys(cms.Types);
 
@@ -356,7 +365,7 @@ module.exports = cms => {
                 }
             })
 
-            return `${cms.data.basePath}/${_path}`;
+            return `${_path}`;
         }
 
         const html = cms.compile(content.path ? cms.resolvePath(content.path) : getPath(path))();
