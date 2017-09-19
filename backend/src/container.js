@@ -107,7 +107,7 @@ module.exports = cms => {
         if (_server(path, urlPath, _tree.children, onlyGetTree)) _tree.type = 'containerDirectory';
 
         cms.app.get(listUrl, function* (req, res) {
-            let _path = req.originalUrl;
+            let _path = req._parsedUrl.pathname;
             const content = JSON.parse(cms.readFile(`${convertUrl[_path]}/index.json`));
             let adminMode = req.session.adminMode || !cms.data.security ? true : false;
             const html = yield* render(content, {req, res, adminMode, path: _path});
