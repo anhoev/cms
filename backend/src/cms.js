@@ -20,7 +20,6 @@ const fs = require('fs');
 const cache = new NodeCache({useClones: false, stdTTL: 20 * 60});
 const ngcompile = require('../lib/ng.compile');
 const Path = require('path');
-const deasync = require('deasync');
 const co = require('co');
 const request = require('request');
 const server = require('http').Server(_app);
@@ -238,7 +237,6 @@ const cms = {
     set menu(menu) {
         _.assign(this.data.online.menu, menu);
     },
-    asyncFn,
     getModel: function (type) {
         return this.Types[type].Model;
     }
@@ -333,21 +331,4 @@ function readFile(path) {
 
 function clearCache() {
     cms.cache.del(cms.cache.keys());
-}
-
-
-function asyncFn(fn) {
-    function _async(fn, _this) {
-        let result = false, done = false;
-        co(fn.bind(_this)).then((_result) => {
-            result = _result;
-            done = true;
-        }, () => done = true);
-        deasync.loopWhile(() => !done);
-        return result;
-    }
-
-    return function () {
-        return _async(fn, this);
-    }
 }
