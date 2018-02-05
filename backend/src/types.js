@@ -11,10 +11,10 @@ const traverse = require('traverse');
 module.exports = (cms) => {
     const {app, Q} = cms;
 
-    app.get('/cms-types', function*(req, res) {
+    app.get('/cms-types', function* (req, res) {
         res.send(_.map(cms.Types, (v, type) => ({type})));
     })
-    app.post('/cms-types/:type/:id/:fn', function*(req, res) {
+    app.post('/cms-types/:type/:id/:fn', function* (req, res) {
         const {type, id, fn} = req.params;
         const args = _.map(JsonFn.clone(req.body, true), v => v);
         const {Model, serverFn} = cms.Types[type];
@@ -23,7 +23,7 @@ module.exports = (cms) => {
         res.send(isNaN(result) ? result : result + '');
     })
 
-    app.delete('/cms-types/:type', function*(req, res) {
+    app.delete('/cms-types/:type', function* (req, res) {
         const {type} = req.params;
         const {Model} = cms.Types[type];
         Model.remove({});
@@ -31,7 +31,7 @@ module.exports = (cms) => {
         res.send(result);
     })
 
-    app.post('/cms-types/:type', function*(req, res) {
+    app.post('/cms-types/:type', function* (req, res) {
         const withTemplate = req.query.template === 'true';
         const noElement = req.query.element === 'false';
         let ref = req.query.element;
@@ -84,11 +84,14 @@ module.exports = (cms) => {
             serverFn = {}, tabs, isViewElement = true, mTemplate, admin = {query: []},
             alwaysLoad = false, restifyOptions,
             info = {}, textIndex,
-            controller, lean, link
+            controller, lean, link, schemaOptions
         } = options;
         cms.filters.schema.forEach((fn) => fn(schema, name));
         if (!(schema instanceof cms.mongoose.Schema)) {
-            schema = new cms.mongoose.Schema(schema, {toObject: {virtuals: true}, toJSON: {virtuals: true}});
+            schema = new cms.mongoose.Schema(schema, _.assign({
+                toObject: {virtuals: true},
+                toJSON: {virtuals: true}
+            }, schemaOptions));
         }
 
         if (options.autopopulate) schema.plugin(autopopulate);
@@ -209,7 +212,7 @@ module.exports = (cms) => {
                     link: this.link
                 }
             },
-            getWebTypeWithData: function*() {
+            getWebTypeWithData: function* () {
                 const Type = this.webType;
                 Type.list = yield this.Model.find({});
                 return Type;
@@ -240,7 +243,7 @@ module.exports = (cms) => {
             console.warn(e);
         })
 
-        socket.on('message', function*({path, params = {}, uuid, model}) {
+        socket.on('message', function* ({path, params = {}, uuid, model}) {
             const base = '([^\/]*)\/api\/v1\/([^\/]*)';
             const modelQueryTester = new RegExp(`${base}$`);
             const countQueryTester = new RegExp(`${base}\/count$`);

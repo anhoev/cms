@@ -90,7 +90,6 @@
     "body-parser": "^1.14.1",
     "bootstrap": "^3.3.6",
     "bootstrap-sass": "^3.3.5",
-    "bufferutil": "^1.2.1",
     "cachedfs": "^0.3.3",
     "cheerio": "^0.19.0",
     "co": "^4.6.0",
