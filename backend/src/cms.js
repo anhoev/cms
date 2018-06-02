@@ -110,25 +110,12 @@ let io = new Proxy(_io, {
     }
 });
 
-const expressSession = require('express-session');
-const MongoStore = require('connect-mongo')(expressSession);
-
-const session = expressSession({
-    secret: 'best cms system',
-    resave: false, saveUninitialized: true,
-    cookie: {maxAge: 2628000000},
-    expires: 30 * 24 * 60 * 60 * 1000,
-    store: new MongoStore({ mongooseConnection: mongoose.connection })
-});
-
-app.use(session);
-
 io.use(require("express-socket.io-session")(session, {
-    autoSave:true
+    autoSave: true
 }));
 
 app.use(bodyParser.json({limit: '5mb'}));
-app.use(bodyParser.urlencoded({extended: true,limit: '5mb'}));
+app.use(bodyParser.urlencoded({extended: true, limit: '5mb'}));
 
 
 app.use(require('method-override')());
@@ -145,6 +132,20 @@ const WebType = {APPLICATION: 'APPLICATION', WEB: 'WEB'};
 
 // todo : use class for cms
 const cms = {
+    useSession: function () {
+        const expressSession = require('express-session');
+        const MongoStore = require('connect-mongo')(expressSession);
+
+        const session = expressSession({
+            secret: 'best cms system',
+            resave: false, saveUninitialized: true,
+            cookie: {maxAge: 2628000000},
+            expires: 30 * 24 * 60 * 60 * 1000,
+            store: new MongoStore({mongooseConnection: mongoose.connection})
+        });
+
+        app.use(session);
+    },
     io,
     readFile,
     download,
