@@ -110,10 +110,6 @@ let io = new Proxy(_io, {
     }
 });
 
-io.use(require("express-socket.io-session")(session, {
-    autoSave: true
-}));
-
 app.use(bodyParser.json({limit: '5mb'}));
 app.use(bodyParser.urlencoded({extended: true, limit: '5mb'}));
 
@@ -145,6 +141,10 @@ const cms = {
         });
 
         app.use(session);
+
+        io.use(require("express-socket.io-session")(session, {
+            autoSave: true
+        }));
     },
     io,
     readFile,
