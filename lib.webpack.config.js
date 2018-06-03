@@ -2,6 +2,7 @@ const webpack = require('webpack');
 
 module.exports = {
     //context: __dirname + "/frontend",
+    context: __dirname,
     entry: {
         // create two library bundles, one with jQuery and
         // another with Angular and related libraries
@@ -68,42 +69,44 @@ module.exports = {
             'codemirror/addon/tern/tern.js',
             'angular-ui-codemirror',
             'angular-drag-and-drop-lists',
-            'angular-ui-bootstrap',
             'angular-bootstrap-contextmenu',
             'bootstrap/dist/js/bootstrap',
             'angular-websocket',
             'traverse',
             'moment',
             'printthis',
-
             'selectize/dist/css/selectize.css',
             'selectize/dist/js/standalone/selectize.js',
             //'angular-selectize2/dist/angular-selectize',
-
             'angular-translate',
             'extend',
-
             'socket.io-client',
             'tinycolor2'
         ]
     },
     output: {
-        path: './frontend',
-        filename: 'build/[name].bundle.js',
+        path: __dirname + './frontend/build',
+        filename: '[name].bundle.js',
         library: '[name]_lib',
     },
     module: {
         loaders: [
             {
                 test: /\.js$/,
-                exclude: /node_modules/,
-                loader: 'babel'
+                use: [{
+                    loader: 'babel-loader',
+                    options: {
+                        presets: [
+                            ['es2015', {modules: false}]
+                        ]
+                    }
+                }]
             },
             {
                 test: /\.html$/,
                 loader: 'raw'
             },
-            {test: /\.json$/, loader: "json"},
+            {test: /\.json$/, loader: "json-loader"},
             {
                 test: /\.css$/,
                 loader: 'style-loader!css-loader'
@@ -111,17 +114,17 @@ module.exports = {
             {test: /\.(png|gif)$/, loader: "url-loader?limit=100000"},
             {
                 test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "url-loader?limit=10000&name=build/fonts/[name].[ext]"
+                loader: "url-loader?limit=10000&name=frontend/build/fonts/[name].[ext]"
             },
             {
                 test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "url-loader?name=build/fonts/[name].[ext]"
+                loader: "url-loader?name=frontend/build/fonts/[name].[ext]"
             }
         ]
     },
     plugins: [
         new webpack.DllPlugin({
-            path: 'frontend/build/[name]-manifest.json',
+            path: __dirname + '/frontend/build/[name]-manifest.json',
             name: '[name]_lib'
         }),
         new webpack.optimize.UglifyJsPlugin({
