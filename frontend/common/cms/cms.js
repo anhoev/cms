@@ -557,7 +557,7 @@ function run(cms, $http) {
         new_uri += "ws://" + loc.host;
     }
 
-    var socket = io.connect(new_uri, {timeout: 5000, 'pingInterval': 3000, 'pingTimeout': 3000});
+    var socket = window.io.connect(new_uri, {timeout: 5000, 'pingInterval': 3000, 'pingTimeout': 3000});
 
     window.socket = cms.socket = socket;
 
