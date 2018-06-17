@@ -9,6 +9,7 @@ const cms = require('../src/cms');
 const resolvePath = cms.resolvePath = (p) => `backend/mobile/${p}`;
 cms.data.security = false;
 cms.listen(8888);
+cms.useSession();
 cms.mongoose.connect('mongodb://localhost/mobile10');
 
 cms.use(require('./mobile'));
