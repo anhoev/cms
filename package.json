@@ -143,7 +143,7 @@
     "request": "^2.75.0",
     "rmdir": "^1.1.0",
     "select2": "^4.0.0",
-    "socket.io": "^1.7.2",
+    "socket.io": "^2.1.1",
     "style-loader": "^0.13.0",
     "tern": "^0.17.0",
     "tether": "^1.1.1",
