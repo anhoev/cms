@@ -108,7 +108,7 @@
     "extend": "^3.0.0",
     "file-loader": "^0.8.5",
     "filewalker": "^0.1.3",
-    "font-awesome": "^4.4.0",
+    "font-awesome": "^4.6.3",
     "font-awesome-webpack": "0.0.4",
     "generator-bind": "^1.0.1",
     "gm": "^1.23.0",
