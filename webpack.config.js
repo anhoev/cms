@@ -36,12 +36,12 @@ module.exports = {
             },
             {test: /\.(png|gif)$/, loader: "url-loader?limit=100000"},
             {
-                test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "url-loader?limit=10000&name=build/fonts/[name].[ext]"
+                test: /\.(woff|woff2|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+                loader: "url-loader?name=fonts/[name].[ext]"
             },
             {
                 test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "url-loader?name=build/fonts/[name].[ext]"
+                loader: "url-loader?name=fonts/[name].[ext]"
             }
         ]
     },
