@@ -12,7 +12,7 @@ cms.listen(8888);
 cms.useSession();
 cms.mongoose.connect('mongodb://localhost/mobile10');
 
-cms.use(require('./mobile'));
+cms.use(require('./test'));
 
 cms.server('backend/mobile/en', '');
 

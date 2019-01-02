@@ -2,70 +2,83 @@
 const path = require('path');
 
 module.exports = (cms) => {
-    const {mongoose, utils:{makeSelect, makeMultiSelect, makeTypeSelect, makeStyles, makeCustomSelect}} = cms;
+   const {mongoose, utils: {makeSelect, makeMultiSelect, makeTypeSelect, makeStyles, makeCustomSelect}} = cms;
 
-    const Config = cms.registerSchema({
-        type: {type: String, form: {type: 'select-type'}},
-        dynamicQuery: [{
-            field: [makeCustomSelect(String, function (template, options, scope) {
-                scope.$watch('model.type', () => {
-                    let {path, model, fields} = scope.formState;
-                    const {type} = model;
-                    if (type) scope.to.options = _.map(Types[type].paths, v => ({name: v.path, value: v.path}));
-                })
-                return template;
-            })]
-        }],
-        showFields: makeCustomSelect([String], function (template, options, scope) {
-            scope.$watch('model.type', (type) => {
-                if (type) {
-                    var fields = cms.listColumns(Types[type].form);
-                    scope.to.options = _.map(fields, v => ({name: v.label, value: v.value}));
-                    if (_.isEmpty(scope.model[options.key])) {
-                        scope.model[options.key].push(...fields.map(v => v.value));
-                    }
-                }
-            });
-            return template;
-        }, false, true),
-        showAs: {type: String, form: makeSelect('list', 'table', 'element')},
-        query: [{
-            choice: String,
-            builtIn: makeCustomSelect(String, function (template, options, scope) {
-                scope.$watch('model.type', () => {
-                    let {path, model, fields} = scope.formState;
-                    const {type} = model;
-                    if (type) scope.to.options = _.map(Types[type].paths, v => ({name: v.path, value: v.path}));
-                })
-                return template;
-            }),
-            dynamic: {type: String, form: {type: 'code'}}
-        }],
-        sort: [{
-            choice: String,
-            builtIn: {
-                path: makeCustomSelect(String, function (template, options, scope) {
-                    scope.$watch('model.type', () => {
-                        let {path, model, fields} = scope.formState;
-                        const {type} = model;
-                        if (type) scope.to.options = _.map(Types[type].paths, v => ({name: v.path, value: v.path}));
-                    })
-                    return template;
-                }),
-                defaultValue: {
-                    type: Number,
-                    form: {
-                        type: 'select',
-                        templateOptions: {options: [{name: 'Up', value: 1}, {name: 'Down', value: 0}]}
-                    }
-                }
+   const pathForm = {
+      inputType: 'select', options: (formState) => {
+         const type = formState.rootModel.type;
+         if (!type) return [];
+         const {paths} = cms.Types[type];
+         return paths.map(v => v.path);
+      }
+   };
+
+   const Config = cms.registerSchema({
+      type: {
+         type: String, flex: 'md12', form: {
+            inputType: 'select', options: (formState) => {
+               return Object.keys(cms.Types);
+            }
+         }
+      },
+      dynamicQuery: [{
+         type: String, form: pathForm
+      }],
+      showFields: {
+         type: [String], flex: 'md12', form: {
+            type: 'input', inputType: 'multiSelect', options: (formState) => {
+               const type = formState.rootModel.type;
+               if (!type) return [];
+               const fields = cms.Types[type].form;
+               const options = _.map(fields, v => ({text: v.label, value: v.key}));
+
+               if (_.isEmpty(formState.model[formState.field.key])) {
+                  formState.model[formState.field.key].push(...fields.map(v => v.key));
+               }
+
+               return options;
+            }
+         }
+      },
+      showAs: {type: String, form: {inputType: 'select', options: ['list', 'table', 'element']}},
+      query: [{
+         choice: String,
+         builtIn: {
+            type: String, form: pathForm
+         },
+         dynamic: {type: String}
+      }],
+      sort: [{
+         choice: String,
+         builtIn: {
+            path: {type: String, form: pathForm},
+            orientation: {
+               type: Number,
+               form: {
+                  inputType: 'select',
+                  options: [{text: 'Up', value: 1}, {text: 'Down', value: 0}]
+               }
+            }
+         },
+         dynamic: {type: String}
+      }],
+      labelMapping: {
+         type: [{
+            path: {
+               type: String, form: pathForm
             },
-            dynamic: {type: String, form: {type: 'code'}}
-        }],
-    }, {
-        name: 'Config',
-        formatter: `<h4>Config</h4>`,
-        title: 'type',
-        alwaysLoad: true
-    });
+            label: String
+         }],
+         form: {type: 'tableArray'}
+      },
+   }, {
+      name: 'Config',
+      formatter: `<h4>Config</h4>`,
+      title: 'type',
+      alwaysLoad: true,
+      tabs: {
+         Advance: ['query', 'sort'],
+         Label: ['labelMapping']
+      }
+   });
 }
