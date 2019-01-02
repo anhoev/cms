@@ -2,6 +2,15 @@ const dirTree = require('directory-tree');
 const path = require('path');
 const fs = require('fs');
 
+function findFileItem(directoryTree) {
+  return directoryTree.children.map(item => {
+    return {
+      name: item.name.replace(item.extension, ''),
+      content: fs.readFileSync(item.path, 'utf-8')
+    };
+  });
+}
+
 module.exports = (cms) => {
   cms.io.on('connection', function (socket) {
     socket.on('loadPlugin', function (fn) {
@@ -26,10 +35,9 @@ module.exports = (cms) => {
       fn();
     });
     socket.on('loadDistPlugin', function (fn) {
-      const tree = dirTree(path.join(__dirname, './public/plugins/dist'), {}, (item) => {
-        item.path = path.relative(path.join(__dirname, './public'), item.path);
-      });
-      fn(tree);
+      const tree = dirTree(path.join(__dirname, './public/plugins/dist'), {});
+      const array = findFileItem(tree);
+      fn(array);
     });
   });
 };
