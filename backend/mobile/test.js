@@ -3,7 +3,7 @@ const Path = require('path');
 const jsonfn = require('../src/jsonfn')
 
 module.exports = (cms) => {
-   const {mongoose, utils: {makeSelect, makeMultiSelect, makeTypeSelect, makeStyles, makeCustomSelect}} = cms;
+   const {mongoose} = cms;
 
 
    let schema = {

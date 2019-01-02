@@ -14,7 +14,7 @@ cms.mongoose.connect('mongodb://localhost/mobile10');
 
 cms.use(require('./test'));
 
-cms.server('backend/mobile/en', '');
+//cms.server('backend/mobile/en', '');
 
 cms.menu = {
     bodyPaddingTop: '120px'

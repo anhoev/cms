@@ -18,7 +18,6 @@ const jade = require('jade');
 const NodeCache = require("node-cache");
 const fs = require('fs');
 const cache = new NodeCache({useClones: false, stdTTL: 20 * 60});
-const ngcompile = require('../lib/ng.compile');
 const Path = require('path');
 const co = require('co');
 const request = require('request');
@@ -245,12 +244,6 @@ const cms = {
 
 global[CMS_KEY] = cms;
 
-ngcompile.onEnvReady(() => {
-    cms.ng = new ngcompile([], null, null, (ng) => {
-        cms.data.ngEn.forEach(fn => fn(ng));
-    });
-});
-
 function onerror(req, res, e) {
     if (e.handler) return e.handler(req, res);
     cms.data.handlers.forEach(handler => handler(req, res, e));
@@ -265,20 +258,8 @@ function onerror(req, res, e) {
 module.exports = cms;
 
 function listen() {
-    cms.use(require('./form'));
     cms.use(require('./query'));
-    cms.use(require('./angular_resolve'));
     cms.use(require('./types'));
-    cms.use(require('./types.builder'));
-    //cms.use(require('./wrapper'));
-    cms.use(require('./container'));
-    if (cms.data.security) cms.use(require('./user'));
-    cms.use(require('./admin'));
-    cms.use(require('./category'));
-    cms.use(require('./element.filter'));
-    cms.use(require('./error.handler'));
-    cms.use(require('./utils'));
-    cms.use(require('./serverFn'));
     cms.use(require('./config'));
     _.each(cms.routers, r => app.use(r));
     //app.listen(...arguments);

@@ -1,1 +1,0 @@
-{"path":"page.jade","containers":[{"name":"cats","elements":[{"type":"Cat","ref":"56942258c75152b52dc013f1","containers":[]}]},{"name":"dogs","elements":[{"type":"Dog","ref":"569037db1cb94503048f6634","containers":[{"name":"_cats","elements":[]}]}]},{"name":"users","elements":[]}]}

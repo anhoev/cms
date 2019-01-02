@@ -1,9 +1,0 @@
-div
-    uib-tabset
-        uib-tab(
-        ng-repeat='tab in model.tab track by $index'
-        heading='{{tab.text}}'
-        active='tab.active')
-            div(cms-container= 'buttons_tab_{{$index}}'
-            cms-container-types='Button,Alert,Dropdown'
-            style='width:400px')

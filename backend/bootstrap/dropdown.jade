@@ -1,8 +1,0 @@
-.dropdown
-    button.btn.btn-default.dropdown-toggle(type="button",data-toggle="dropdown")
-        span(ng-bind="model.text")
-        | &nbsp;
-        span.caret
-    ul.dropdown-menu(role="menu",aria-labelledby="dropdownMenu1")
-        li(role="presentation" ng-repeat="o in model.option track by $index")
-            a(role="menuitem",tabindex="-1",ng-click="", ng-bind="o")

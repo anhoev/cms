@@ -1,5 +1,0 @@
-div(role="alert",ng-attr-class="alert alert-{{model.type}} {{model.dismissible?'alert-dismissible':''}}")
-    span.glyphicon(ng-show="model.icon",ng-attr-class="glyphicon glyphicon-{{model.icon}}",aria-hidden="true")
-    button.close(ng-show="model.dismissible",type="button",data-dismiss="alert" aria-label="Close")
-        span(aria-hidden="true")  &times;
-    span(cms-editable="model.text")
