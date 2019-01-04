@@ -2,7 +2,7 @@
     <h3 class="a">Loaded component 13123123</h3>
 </template>
 
-<script lang="es6">
+<script>
   import _ from 'lodash';
 
   export default {

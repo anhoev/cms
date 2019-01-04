@@ -1,8 +1,23 @@
 <template>
-    <h3 class="a">Loaded component</h3>
+    <div>
+        <h3 class="a">Loaded component</h3>
+
+          if (err) {
+            return alert(err.message);
+          }
+          if (err) {
+            return alert(err.message);
+          }
+          if (err) {
+            return alert(err.message);
+          }
+          if (err) {
+            return alert(err.message);
+          }
+    </div>
 </template>
 
-<script lang="es6">
+<script>
   import _ from 'lodash';
 
   export default {

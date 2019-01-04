@@ -20,19 +20,27 @@ module.exports = (cms) => {
       fn(tree);
     });
     socket.on('save', function (url, content, fn) {
-      const relativeUrl = path.join(__dirname, './public', url);
-      fs.writeFileSync(relativeUrl, content, 'utf-8');
-      fn();
+      try {
+        const relativeUrl = path.join(__dirname, './public', url);
+        fs.writeFileSync(relativeUrl, content, 'utf-8');
+        fn();
+      } catch (e) {
+        fn(e.stack);
+      }
     });
     socket.on('compile', function (url, content, fn) {
-      const relativeUrl = path.join(__dirname, './public', url);
-      const writeUrl = path.join(path.dirname(relativeUrl), 'dist', path.basename(relativeUrl));
-      const distDirectory = path.join(path.dirname(relativeUrl), 'dist');
-      if (!fs.existsSync(distDirectory)) {
-        fs.mkdirSync(distDirectory);
+      try {
+        const relativeUrl = path.join(__dirname, './public', url);
+        const writeUrl = path.join(path.dirname(relativeUrl), 'dist', path.basename(relativeUrl));
+        const distDirectory = path.join(path.dirname(relativeUrl), 'dist');
+        if (!fs.existsSync(distDirectory)) {
+          fs.mkdirSync(distDirectory);
+        }
+        fs.writeFileSync(writeUrl, content, 'utf-8');
+        fn();
+      } catch (e) {
+        fn(e);
       }
-      fs.writeFileSync(writeUrl, content, 'utf-8');
-      fn();
     });
     socket.on('loadDistPlugin', function (fn) {
       const tree = dirTree(path.join(__dirname, './public/plugins/dist'), {});
