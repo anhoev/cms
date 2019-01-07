@@ -1,6 +1,6 @@
 <template>
 
-    <h3 class="a">Loaded component</h3>
+    <h3 class="a">Loaded component 13123123</h3>
 
 </template>
     <script>

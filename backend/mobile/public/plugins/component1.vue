@@ -1,20 +1,5 @@
 <template>
-    <div>
-        <h3 class="a">Loaded component</h3>
-
-          if (err) {
-            return alert(err.message);
-          }
-          if (err) {
-            return alert(err.message);
-          }
-          if (err) {
-            return alert(err.message);
-          }
-          if (err) {
-            return alert(err.message);
-          }
-    </div>
+    <h3 class="a">Loaded component 13123123</h3>
 </template>
 
 <script>
@@ -24,7 +9,7 @@
     mounted() {
       const a = { a: 1, b: 2 };
       console.log(_.pick(a, ['a']));
-    }
+    },
   };
 </script>
 
