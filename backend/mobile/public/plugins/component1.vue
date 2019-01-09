@@ -1,42 +1,52 @@
 <template>
-    <h3 class="a">Loaded component</h3>
+  <h3 class="a">
+    Loaded component 13123123
+    <p>hello</p>
+    <vue-json-pretty
+      :path="'res'"
+      :data="{ key: 'value' }"
+      @click="handleClick">
+    </vue-json-pretty>
+  </h3>
 </template>
 
-<script lang="es6">
+<script>
   import _ from 'lodash';
-
+  import BigNumber from 'bignumber.js'
+  import VueJsonPretty from 'vue-json-pretty'
   export default {
+    components: {VueJsonPretty},
     mounted() {
-      const a = { a: 1, b: 2 };
-      console.log(_.pick(a, ['a']));
-    }
+      const a = {a: 1, b: 2};
+      console.log(new BigNumber(1).toNumber());
+    },
   };
 </script>
 
 <style scoped>
-    .a {
-        color: #3e3e3e;
-    }
+.a {
+	color: #3e3e3e;
+}
 
-    .b {
-        color: #000
-    }
+.b {
+	color: #000
+}
 
-    .c {
-        color: #000
-    }
+.c {
+	color: #000
+}
 </style>
 
 <style>
-    .d {
-        color: #3e3e3e;
-    }
+.d {
+	color: #3e3e3e;
+}
 
-    .e {
-        color: #000
-    }
+.e {
+	color: #000
+}
 
-    .f {
-        color: #000
-    }
+.f {
+	color: #000
+}
 </style>
