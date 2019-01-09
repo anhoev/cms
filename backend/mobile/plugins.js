@@ -1,6 +1,7 @@
 const dirTree = require('directory-tree');
 const path = require('path');
 const fs = require('fs');
+const axios = require('axios').default;
 
 function findFileItem(directoryTree) {
   return directoryTree.children.map(item => {
@@ -74,5 +75,77 @@ module.exports = (cms) => {
         fn(e);
       }
     });
+    socket.on('loadModules', function (fn) {
+
+      const pathToModules = path.join(__dirname, './public/plugins/modules');
+      if (!fs.existsSync(pathToModules)) {
+        return fn([]);
+      }
+      const dir = fs.readdirSync(pathToModules);
+      const pathToMap = dir.map(item => {
+        const name = item.split('.');
+        name.pop();
+        return {
+          name: item,
+          module: name.join('.'),
+          url: 'plugins/modules/' + item
+        };
+      });
+      fn(pathToMap);
+    });
+    socket.on('addModules', function (name, fn) {
+      axios.get(`https://unpkg.com/${name}`)
+           .then(response => {
+             const moduleDirectory = path.join(__dirname, './public/plugins', 'modules');
+             if (!fs.existsSync(moduleDirectory)) {
+               fs.mkdirSync(moduleDirectory);
+             }
+             fs.writeFileSync(path.join(moduleDirectory, `${name}.js`), response.data, 'utf-8');
+             fn();
+           })
+           .catch(err => {
+             fn(err);
+           });
+    });
+    socket.on('loadComponents', function (fn) {
+      const pathToComponent = path.join(__dirname, './public/plugins/components');
+      if (!fs.existsSync(pathToComponent)) {
+        return fn([]);
+      }
+      const dir = fs.readdirSync(pathToComponent);
+      const pathToMap = dir.map(item => {
+        const name = item.split('.');
+        name.pop();
+        return {
+          name: item,
+          module: name.join('.'),
+          url: 'plugins/components/' + item
+        };
+      });
+      fn(pathToMap);
+    });
+    socket.on('addComponents', function (name, fn) {
+      axios.get(`https://unpkg.com/${name}`)
+           .then(response => {
+             const moduleDirectory = path.join(__dirname, './public/plugins', 'components');
+             if (!fs.existsSync(moduleDirectory)) {
+               fs.mkdirSync(moduleDirectory);
+             }
+             fs.writeFileSync(path.join(moduleDirectory, `${name}.js`), response.data, 'utf-8');
+             fn();
+           })
+           .catch(err => {
+             fn(err);
+           });
+    });
+  });
+  cms.app.get('/package', function (req, res) {
+    axios.get(`https://www.npmjs.com/search/suggestions?q=${req.query.q}`)
+         .then(response => {
+           res.status(200).json(response.data);
+         })
+         .catch(err => {
+           res.status(400).json(err.response.data);
+         });
   });
 };

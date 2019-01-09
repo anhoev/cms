@@ -1,6 +1,9 @@
 <template>
 
-    <h3 class="a">Loaded component 13123123</h3>
+  <h3 class="a">
+    Loaded component 13123123
+    <p>hello</p>
+  </h3>
 
 </template>
     <script>
@@ -29,31 +32,31 @@ exports.default = _default;
 </script> 
 <style scoped>
 
-    .a {
-        color: #3e3e3e;
-    }
+.a {
+	color: #3e3e3e;
+}
 
-    .b {
-        color: #000
-    }
+.b {
+	color: #000
+}
 
-    .c {
-        color: #000
-    }
+.c {
+	color: #000
+}
 
 </style>
 <style>
 
-    .d {
-        color: #3e3e3e;
-    }
+.d {
+	color: #3e3e3e;
+}
 
-    .e {
-        color: #000
-    }
+.e {
+	color: #000
+}
 
-    .f {
-        color: #000
-    }
+.f {
+	color: #000
+}
 
 </style>
