@@ -206,7 +206,7 @@ module.exports = cms => {
                key,
                type: 'array',
                label: label || key,
-               field: field.caster
+               fields: [field.caster]
             }, field.options.form);
          }
       }
@@ -222,8 +222,8 @@ module.exports = cms => {
          if (form.fields.find(f => f.key === 'choice')) {
             if (form.type === 'array') form.type = 'choiceArray';
             if (form.type === 'object') form.type = 'choice';
-            form.choices = form.fields.filter(f => f.key !== 'choice');
-            delete form.fields;
+            //delete form.fields;
+            form.fields = form.fields.filter(f => f.key !== 'choice');
          }
       };
    }
