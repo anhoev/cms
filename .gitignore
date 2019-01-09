@@ -3,5 +3,6 @@
 
 node_modules/
 backend/config/config.js
+backend/mobile/public
 
 webpack
