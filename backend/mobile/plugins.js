@@ -102,12 +102,8 @@ module.exports = (cms) => {
     });
     socket.on('rename', function (url, newName, fn) {
       try {
-        let newFileName = newName;
-        if (!isFileWithExtension(newFileName, 'vue')) {
-          newFileName = newName + '.vue';
-        }
         const oldUrl = path.join(__dirname, './public', url);
-        const newUrl = path.join(__dirname, './public', url, '../', `/${newFileName}`);
+        const newUrl = path.join(__dirname, './public', url, '../', `/${newName}`);
         fs.renameSync(oldUrl, newUrl);
         fn();
       } catch (e) {
@@ -116,11 +112,7 @@ module.exports = (cms) => {
     });
     socket.on('addNewFile', function (fileName, fn) {
       try {
-        let newFileName = fileName;
-        if (!isFileWithExtension(newFileName, 'vue')) {
-          newFileName = fileName + '.vue';
-        }
-        const newUrl = path.join(__dirname, './public', newFileName);
+        const newUrl = path.join(__dirname, './public', fileName);
         fs.writeFileSync(newUrl, '', 'utf-8');
         fn();
       } catch (e) {
