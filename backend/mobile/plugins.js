@@ -12,6 +12,13 @@ function findFileItem(directoryTree) {
   });
 }
 
+function isFileWithExtension(name, extensions) {
+  if (name.length < extensions.length) {
+    return false;
+  }
+  return name.indexOf(`.${extensions}`) === name.length - extensions.length - 1;
+}
+
 function onEachRead(item) {
   item.path = path.relative(path.join(__dirname, './public'), item.path);
 }
@@ -46,9 +53,37 @@ module.exports = (cms) => {
       }
     });
     socket.on('loadDistPlugin', function (fn) {
+      const pathToModules = path.join(__dirname, './public/plugins/modules');
+      let modules = [];
+      if (fs.existsSync(pathToModules)) {
+        const dir = fs.readdirSync(pathToModules);
+        modules = dir.map(item => {
+          const name = item.split('.');
+          name.pop();
+          return {
+            name: item,
+            module: name.join('.'),
+            url: 'plugins/modules/' + item
+          };
+        });
+      }
+      const pathToComponent = path.join(__dirname, './public/plugins/components');
+      let components = [];
+      if (fs.existsSync(pathToComponent)) {
+        const dir = fs.readdirSync(pathToComponent);
+        components = dir.map(item => {
+          const name = item.split('.');
+          name.pop();
+          return {
+            name: item,
+            module: name.join('.'),
+            url: 'plugins/components/' + item
+          };
+        });
+      }
       const tree = dirTree(path.join(__dirname, './public/plugins/dist'), {});
-      const array = findFileItem(tree);
-      fn(array);
+      const plugins = findFileItem(tree);
+      fn({ plugins: plugins, modules: modules, components: components });
     });
     socket.on('delete', function (url, fn) {
       try {
@@ -67,9 +102,26 @@ module.exports = (cms) => {
     });
     socket.on('rename', function (url, newName, fn) {
       try {
+        let newFileName = newName;
+        if (!isFileWithExtension(newFileName, 'vue')) {
+          newFileName = newName + '.vue';
+        }
         const oldUrl = path.join(__dirname, './public', url);
-        const newUrl = path.join(__dirname, './public', url, '../', `/${newName}`);
+        const newUrl = path.join(__dirname, './public', url, '../', `/${newFileName}`);
         fs.renameSync(oldUrl, newUrl);
+        fn();
+      } catch (e) {
+        fn(e);
+      }
+    });
+    socket.on('addNewFile', function (fileName, fn) {
+      try {
+        let newFileName = fileName;
+        if (!isFileWithExtension(newFileName, 'vue')) {
+          newFileName = fileName + '.vue';
+        }
+        const newUrl = path.join(__dirname, './public', newFileName);
+        fs.writeFileSync(newUrl, '', 'utf-8');
         fn();
       } catch (e) {
         fn(e);
