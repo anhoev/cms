@@ -181,7 +181,7 @@ module.exports = (cms) => {
     type: {type: String, form: {inputType: 'select', options: ['frontend', 'backend']}},
     slot: [String],
   }, {
-    //name: 'PluginFile',
+    name: 'PluginFile',
     title: 'name',
     autopopulate: true,
     schemaOptions: {strict: false}
