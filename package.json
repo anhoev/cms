@@ -151,7 +151,7 @@
     "tern": "^0.17.0",
     "tether": "^1.1.1",
     "tls": "0.0.1",
-    "traverse": "^0.6.6",
+    "traverse": "github:anhoev/js-traverse",
     "url-loader": "^0.5.7",
     "utf-8-validate": "^1.2.1",
     "uuid": "^2.0.1",

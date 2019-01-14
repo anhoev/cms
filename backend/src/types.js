@@ -268,6 +268,10 @@ module.exports = (cms) => {
     });
 
     socket.on('registerSchema', async function (schema, options, fn) {
+      if (cms.Types[options.name]) {
+        delete cms.mongoose.connection.models[options.name];
+        delete cms.Types[options.name];
+      }
       cms.registerSchema(jsonfn.parse(schema), options);
       fn();
     });
