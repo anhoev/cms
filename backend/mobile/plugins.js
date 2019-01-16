@@ -1,6 +1,7 @@
 const dirTree = require('directory-tree');
 const path = require('path');
 const fs = require('fs');
+const fsExtra = require('fs-extra');
 const axios = require('axios').default;
 
 function findFileItem(directoryTree) {
@@ -21,6 +22,24 @@ function isFileWithExtension(name, extensions) {
 
 function onEachRead(item) {
   item.path = path.relative(path.join(__dirname, './public'), item.path);
+}
+
+function copyOrMoveFile(filePath, destPath, type) {
+  // const moduleDirectory = path.join(__dirname, );
+  const relative = path.relative('plugins', destPath);
+  if (!!relative && !relative.startsWith('..') && !path.isAbsolute(relative)) {
+    const oldUrl = path.join(__dirname, './public', filePath);
+    const newURl = path.join(__dirname, './public', destPath);
+    if (type === 'move') {
+      fsExtra.moveSync(oldUrl, newURl);
+    } else {
+      fsExtra.copySync(oldUrl, newURl);
+
+    }
+  } else {
+    // Not in plugin folder
+    throw { message: 'Cannot copy file here' };
+  }
 }
 
 module.exports = (cms) => {
@@ -110,10 +129,14 @@ module.exports = (cms) => {
         fn(e);
       }
     });
-    socket.on('addNewFile', function (fileName, fn) {
+    socket.on('addNew', function (fileName, type, fn) {
       try {
         const newUrl = path.join(__dirname, './public', fileName);
-        fs.writeFileSync(newUrl, '', 'utf-8');
+        if (type === 'file') {
+          fs.writeFileSync(newUrl, '', 'utf-8');
+        } else {
+          fs.mkdirSync(newUrl);
+        }
         fn();
       } catch (e) {
         fn(e);
@@ -181,6 +204,22 @@ module.exports = (cms) => {
            .catch(err => {
              fn(err);
            });
+    });
+    socket.on('copyFile', (oldPath, newPath, fn) => {
+      try {
+        copyOrMoveFile(oldPath, newPath, 'copy');
+        fn();
+      } catch (e) {
+        fn(e);
+      }
+    });
+    socket.on('moveFile', (oldPath, newPath, fn) => {
+      try {
+        copyOrMoveFile(oldPath, newPath, 'move');
+        fn();
+      } catch (e) {
+        fn(e);
+      }
     });
   });
   cms.app.get('/package', function (req, res) {
