@@ -49,11 +49,7 @@ module.exports = cms => {
          // control
          {
 
-            if (!this.key) {
-               return this.after(function (_node) {
-                  this.update(_.compact(_.map(_node, v => v)), true);
-               })
-            }
+            if (!this.key) return;
 
             if (node && _.includes(['_id', '__v', 'id', '_textIndex'], node.path)) {
                this.delete();
@@ -61,8 +57,8 @@ module.exports = cms => {
             }
             if (!node.fieldGroup && !node.instance && (!_.includes(['schema', 'field', 'fields', 'fieldGroup'], this.key))) return this.block();
 
-            if (this.key === 'fieldGroup' || this.key === 'fields') this.after(function (_node) {
-               this.update(_.compact(_.map(_node, v => v)), true);
+            if (this.key === 'fields') this.after(function (_node) {
+               this.update(_.map(_node, v => v), true);
             })
 
          }
@@ -88,7 +84,7 @@ module.exports = cms => {
                }
             } else if (node.instance === 'NestedObject' || node.instance === 'Embedded' || node.instance === 'Mixed') {
                this.update(convertNestedObjectField(node, {key: this.key, label: label || this.key}));
-               if (!(node.options && node.options.form)) this.after(function (_node) {
+               this.after(function (_node) {
                   nestedConvert(_node);
                   this.update(_node, true);
                })
@@ -101,7 +97,7 @@ module.exports = cms => {
          if (node.instance && this.key !== 'choice') {
             const result = _.reduce(_.drop(this.parents, 1).concat(this), (result, {node: _node, key, parent: {node: parentNode, key: parentKey, keys: parentKeys}}) => {
                if (key) {
-                  if (!parentKey || parentKey === 'fieldGroup' || parentKey === 'fields') {
+                  if (!parentKey || (parentKey === 'fields' && key !== 'fields')) {
                      result.pathInForm += `.${parentKeys.indexOf(key)}`;
                   } else {
                      result.pathInForm += `.${key}`;
@@ -214,12 +210,12 @@ module.exports = cms => {
       function convertNestedObjectField(field, {key, label}) {
          const {schema:{paths:fields}} = field;
          const defaultOptions = {form: {key: key, label: label ? label : key, type: 'object'}};
-         if (field.options && field.options.form) return merge(defaultOptions.form, field.options.form);
+         if (field.options && field.options.form) return merge(defaultOptions.form, field.options.form, {fields});
          return merge(defaultOptions.form, {fields});
       }
 
       function nestedConvert(form) {
-         if (form.fields.find(f => f.key === 'choice')) {
+         if (form.fields.find(f => (f.key === 'choice' && !f.fields))) {
             if (form.type === 'array') form.type = 'choiceArray';
             if (form.type === 'object') form.type = 'choice';
             //delete form.fields;

@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const Path = require('path');
 const jsonfn = require('../src/jsonfn')
+const convertFormToSchema = require('./formUtils').convertFormToSchema;
 
 module.exports = async function (cms) {
   const {mongoose} = cms;
@@ -101,6 +102,7 @@ module.exports = async function (cms) {
     flex: {type: String, form: {inputType: 'select', options: ['md2', 'md3', 'md4', 'md5', 'md6', 'md12']}},
     choiceKey: String,
     choiceKeyOutside: Boolean,
+    noPanel: Boolean,
     options: {
       type: {
         choice: String,
@@ -114,10 +116,29 @@ module.exports = async function (cms) {
         onlyValue: {
           type: [{String}],
           form: {type: 'input@multiSelect'}
+        },
+        code: {
+          type: String,
+          form: {type: 'editor', height: '200px'}
         }
       },
       form: {type: 'choice', choiceKeyOutside: true, choiceKey: 'optionsType'}
     },
+    dynamicFields: {
+      type: {
+        queryString: String,
+        code: {
+          type: String,
+          form: {type: 'editor', height: '200px'}
+        }
+      },
+      form: {type: 'choice', choiceKeyOutside: true, choiceKey: 'dynamicFieldsType'}
+    },
+    getText: {
+      type: String,
+      form: {type: 'editor', height: '200px'}
+    },
+    children: String
   }, _with);
 
   const w = (obj) => {
@@ -135,71 +156,21 @@ module.exports = async function (cms) {
   };
 
   let buildFormSchema = {
-    name: {type: String, flex: 'md6'},
-    type: {type: String, form: {type: 'input@select', options: ['Collection'], flex: 'md6'}},
-    /*field: {
-       choice: String,
-       String: _.merge({} ,fieldSchema, {type: { default: 'input'}}),
-       Number: _.merge({} ,fieldSchema, {type: {default: 'input:number'}}),
-    },*/
+    name: {type: String, flex: 'md3'},
+    class: {type: String, flex: 'md3'},
+    alwaysLoad: {type: Boolean, flex: 'md3'},
+    type: {type: String, form: {type: 'input@select', options: ['Collection', ''], flex: 'md3'}},
     fields: {
       type: [{
         choice: String,
-        /*String: fieldSchema,
-        Number: fieldSchema,
-        Boolean: fieldSchema,
-        Object: _.omit(fieldSchema, ['flex']),
-        Array: _.omit(fieldSchema, ['flex']),
-        StringSelect: {
-          type: {
-            key: String,
-            label: String,
-            flex: {type: String, form: {inputType: 'select', options: ['md2', 'md3', 'md4', 'md5', 'md6', 'md12']}},
-            options: {
-              type: [{
-                value: String,
-                text: String
-              }],
-              form: {type: 'tableArray'}
-            }
-          }
-        },
-        StringMultiSelect: {
-          type: {
-            key: String,
-            label: String,
-            flex: {type: String, form: {inputType: 'select', options: ['md2', 'md3', 'md4', 'md5', 'md6', 'md12']}},
-            options: {
-              type: [{
-                value: String,
-                text: String
-              }],
-              form: {type: 'tableArray'}
-            }
-          }
-        },
-        Choice: {
-          type: {
-            key: String,
-            label: String,
-            flex: {type: String, form: {inputType: 'select', options: ['md2', 'md3', 'md4', 'md5', 'md6', 'md12']}},
-          }
-        },
-        ChoiceArray: {
-          type: {
-            key: String,
-            label: String,
-            flex: {type: String, form: {inputType: 'select', options: ['md2', 'md3', 'md4', 'md5', 'md6', 'md12']}},
-          }
-        },*/
-        string: w({
+        string: _.merge(w({
           'input': ['label', 'flex'],
           'input@select': ['label', 'flex', 'options']
-        }),
-        number: w({
+        }), {type: {form: {form: {dynamicFields: '.string'}}}}),
+        number: _.merge(w({
           'input@number': ['label', 'flex'],
           'input@select': ['label', 'flex', 'options']
-        }),
+        }), {type: {form: {form: {dynamicFields: '.number'}}}}),
         boolean: w({
           'input@switch': ['label', 'flex']
         }),
@@ -210,9 +181,22 @@ module.exports = async function (cms) {
             mixed: Boolean
           }
         }, _.assign(w({
-          'object': ['label', 'flex'],
+          'object': ['label', 'flex', 'noPanel'],
           'choice': ['label', 'flex', 'choiceKey', 'choiceKeyOutside'],
-        })), {type: {form: {form: {type: 'choice'}}}}),
+          'object@dynamic': ['label', 'flex', 'noPanel', 'dynamicFields'],
+        })), {type: {form: {form: {type: 'choice', dynamicFields: '.object'}}}}),
+        mixed: _.merge({
+          type: {
+            key: String,
+            default: String,
+            mixed: Boolean
+          }
+        }, _.assign(w({
+          'object': ['label', 'flex', 'noPanel'],
+          'choice': ['label', 'flex', 'choiceKey', 'choiceKeyOutside'],
+          'object@dynamic': ['label', 'flex', 'noPanel', 'dynamicFields'],
+          'tree': ['label', 'children', 'getText']
+        })), {type: {form: {form: {type: 'choice', dynamicFields: '.object'}}}}),
         array: w({
           'array': ['label', 'flex'],
           'tableArray': ['label', 'flex'],
@@ -236,12 +220,23 @@ module.exports = async function (cms) {
     title: 'name',
     autopopulate: true,
     schemaOptions: {strict: false},
+    alwaysLoad: true,
     tabs: {
-      Advance: ['name', 'tabs', 'type']
+      Advance: ['name', 'class', 'alwaysLoad', 'tabs', 'type']
     }
   });
 
-  const PluginFile = cms.registerSchema({
+  const forms = await BuildForm.find({}).lean();
+  forms.filter(f => f.type === 'Collection').forEach(form => {
+    cms.registerSchema(convertFormToSchema(form), {
+      name: form.name, title: 'name',
+      alwaysLoad: form.alwaysLoad,
+      tabs: _({...form.tabs}).keyBy('key').mapValues(v => v.fields).value(),
+      form: form.fields
+    })
+  })
+
+  /*const PluginFile = cms.registerSchema({
     path: 'String',
     type: {type: String, form: {inputType: 'select', options: ['frontend', 'backend']}},
     slot: [String],
@@ -250,7 +245,7 @@ module.exports = async function (cms) {
     title: 'name',
     autopopulate: true,
     schemaOptions: {strict: false}
-  });
+  });*/
 
   cms.Types.BuildForm.webType.form;
 }

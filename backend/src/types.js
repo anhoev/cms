@@ -84,7 +84,7 @@ module.exports = (cms) => {
       serverFn = {}, tabs, isViewElement = true, mTemplate, admin = {query: []},
       alwaysLoad = false, restifyOptions,
       info = {}, textIndex,
-      controller, lean, link, schemaOptions
+      controller, lean, link, schemaOptions, form
     } = options;
     if (cms.Types[name]) return;
 
@@ -147,6 +147,7 @@ module.exports = (cms) => {
       schema,
       Model,
       label,
+      _form: form,
       clear() {
         this.Form = null;
         this.Paths = null;
@@ -193,7 +194,7 @@ module.exports = (cms) => {
       mTemplate,
       lean,
       get webType() {
-        if (!this.Form) {
+        if (!this.Form || !this.Paths) {
           _.assign(this, cms.utils.initType(schema, tabs, name));
         }
 
@@ -201,7 +202,7 @@ module.exports = (cms) => {
           onlySchema: !this.Model,
           template: this.template,
           label: this.label,
-          form: this.Form,
+          form: this._form || this.Form,
           tabs: tabs,
           queries: this.Queries,
           paths: this.Paths,
@@ -268,11 +269,13 @@ module.exports = (cms) => {
     });
 
     socket.on('registerSchema', async function (schema, options, fn) {
+      options = jsonfn.parse(options);
+      schema = jsonfn.parse(schema);
       if (cms.Types[options.name]) {
         delete cms.mongoose.connection.models[options.name];
         delete cms.Types[options.name];
       }
-      cms.registerSchema(jsonfn.parse(schema), options);
+      cms.registerSchema(schema, options);
       fn();
     });
 
