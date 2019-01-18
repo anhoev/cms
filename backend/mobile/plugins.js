@@ -224,6 +224,25 @@ module.exports = (cms) => {
         fn(e);
       }
     });
+    socket.on('exportModel', (name, content, collection, plugins, filePath, fn) => {
+      try {
+        const writePath = path.join(__dirname, './plugins', plugins, filePath);
+        fsExtra.outputJsonSync(writePath + `/${name}.${collection}.json`, content);
+        fn();
+      } catch (e) {
+        fn(e);
+      }
+    });
+    socket.on('importModel', (collection, filePath, fn) => {
+      const content = fs.readFileSync(path.join(__dirname, './plugins', filePath), 'utf-8');
+      cms.getModel(collection).create(JSON.parse(content))
+         .then(res => {
+           fn(null, res);
+         })
+         .catch(err => {
+           fn(err);
+         });
+    });
   });
   cms.app.get('/package', function (req, res) {
     axios.get(`https://www.npmjs.com/search/suggestions?q=${req.query.q}`)
