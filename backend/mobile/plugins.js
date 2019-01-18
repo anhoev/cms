@@ -45,9 +45,11 @@ function copyOrMoveFile(filePath, destPath, type) {
 module.exports = (cms) => {
   cms.io.on('connection', function (socket) {
     socket.on('loadPlugin', function (fn) {
-      const tree = dirTree(path.join(__dirname, './plugins'), {}, onEachRead, onEachRead);
+      const tree = dirTree(path.join(__dirname, './plugins'), {
+        exclude: [{ test: (filePath) => /^\./.test(path.basename(filePath)) }]
+      }, onEachRead, onEachRead);
       console.log(tree);
-      fn(tree.children);
+      fn(tree ? tree.children : []);
     });
     socket.on('save', function (url, content, fn) {
       try {
