@@ -1,0 +1,3 @@
+[submodule "core-modules"]
+	path = backend/mobile/plugins/core-plugins
+	url = https://github.com/anhoev/gform
