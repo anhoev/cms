@@ -29,7 +29,7 @@ cms.app.use(function (req, res, next) {
   // Pass to next layer of middleware
   next();
 });
-cms.app.use(cms.express.static(path.join(__dirname, 'public')));
+cms.app.use(cms.express.static(path.join(__dirname, 'plugins')));
 cms.mongoose.connect('mongodb://localhost/mobile10');
 
 cms.use(require('./test'));
