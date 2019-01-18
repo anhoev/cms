@@ -3,6 +3,7 @@
 
 node_modules/
 backend/config/config.js
-backend/mobile/plugins
+backend/mobile/plugins/*
+!backend/mobile/plugins/core-plugin
 
 webpack
