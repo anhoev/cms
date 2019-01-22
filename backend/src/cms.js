@@ -260,7 +260,7 @@ module.exports = cms;
 function listen() {
     cms.use(require('./query'));
     cms.use(require('./types'));
-    cms.use(require('./config'));
+    //cms.use(require('./config'));
     _.each(cms.routers, r => app.use(r));
     //app.listen(...arguments);
     server.listen(...arguments);

@@ -138,7 +138,11 @@ module.exports = async function (cms) {
       type: String,
       form: {type: 'editor', height: '200px'}
     },
-    children: String
+    children: String,
+    expansion: {
+      type: [{String}],
+      form: {type: 'input@multiSelect'}
+    }
   }, _with);
 
   const w = (obj) => {
@@ -197,12 +201,12 @@ module.exports = async function (cms) {
           'object@dynamic': ['label', 'flex', 'noPanel', 'dynamicFields'],
           'tree': ['label', 'children', 'getText']
         })), {type: {form: {form: {type: 'choice', dynamicFields: '.object'}}}}),
-        array: w({
+        array: _.merge(w({
           'array': ['label', 'flex'],
-          'tableArray': ['label', 'flex'],
+          'tableArray': ['label', 'flex', 'expansion'],
           'choiceArray': ['label', 'flex'],
           'input@multiSelect': ['label', 'flex', 'options'],
-        })
+        }), {type: {form: {form: {dynamicFields: '.array'}}}}),
       }],
       form: {type: 'tree', children: 'fields', choiceKey: 'schemaType'}
     },
@@ -231,7 +235,7 @@ module.exports = async function (cms) {
     cms.registerSchema(convertFormToSchema(form), {
       name: form.name, title: 'name',
       alwaysLoad: form.alwaysLoad,
-      tabs: _({...form.tabs}).keyBy('key').mapValues(v => v.fields).value(),
+      tabs: _({...form.tabs}).keyBy('name').mapValues(v => v.fields).value(),
       form: form.fields
     })
   })

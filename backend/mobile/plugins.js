@@ -38,7 +38,7 @@ function copyOrMoveFile(filePath, destPath, type) {
     }
   } else {
     // Not in plugin folder
-    throw { message: 'Cannot copy file here' };
+    throw {message: 'Cannot copy file here'};
   }
 }
 
@@ -46,14 +46,14 @@ module.exports = (cms) => {
   cms.io.on('connection', function (socket) {
     socket.on('loadPlugin', function (fn) {
       const tree = dirTree(path.join(__dirname, './plugins'), {
-        exclude: [{ test: (filePath) => /^\./.test(path.basename(filePath)) }]
+        exclude: [{test: (filePath) => /^\./.test(path.basename(filePath))}]
       }, onEachRead, onEachRead);
       console.log(tree);
       fn(tree ? tree.children : []);
     });
     socket.on('save', function (url, content, fn) {
       try {
-        const relativeUrl = path.join(__dirname, './public', url);
+        const relativeUrl = path.join(__dirname, './plugins', url);
         fs.writeFileSync(relativeUrl, content, 'utf-8');
         fn();
       } catch (e) {
@@ -62,7 +62,7 @@ module.exports = (cms) => {
     });
     socket.on('compile', function (url, content, fn) {
       try {
-        const relativeUrl = path.join(__dirname, url);
+        const relativeUrl = path.join(__dirname, 'plugins', url);
         const writeUrl = path.join(path.dirname(relativeUrl), 'dist', path.basename(relativeUrl));
         const distDirectory = path.join(path.dirname(relativeUrl), 'dist');
         if (!fs.existsSync(distDirectory)) {
@@ -75,7 +75,7 @@ module.exports = (cms) => {
       }
     });
     socket.on('loadDistPlugin', function (fn) {
-      const pathToModules = path.join(__dirname, './plugins/test-plugins/modules');
+      const pathToModules = path.join(__dirname, './plugins/test-plugin/modules');
       let modules = [];
       if (fs.existsSync(pathToModules)) {
         const dir = fs.readdirSync(pathToModules);
@@ -85,11 +85,11 @@ module.exports = (cms) => {
           return {
             name: item,
             module: name.join('.'),
-            url: 'test-plugins/modules/' + item
+            url: 'test-plugin/modules/' + item
           };
         });
       }
-      const pathToComponent = path.join(__dirname, './plugins/test-plugins/components');
+      const pathToComponent = path.join(__dirname, './plugins/test-plugin/components');
       let components = [];
       if (fs.existsSync(pathToComponent)) {
         const dir = fs.readdirSync(pathToComponent);
@@ -99,13 +99,13 @@ module.exports = (cms) => {
           return {
             name: item,
             module: name.join('.'),
-            url: 'test-plugins/components/' + item
+            url: 'test-plugin/components/' + item
           };
         });
       }
-      const tree = dirTree(path.join(__dirname, './plugins/test-plugins/dist'), {});
+      const tree = dirTree(path.join(__dirname, './plugins/test-plugin/dist'), {});
       const plugins = findFileItem(tree);
-      fn({ plugins: plugins, modules: modules, components: components });
+      fn({plugins: plugins, modules: modules, components: components});
     });
     socket.on('delete', function (url, fn) {
       try {
@@ -119,7 +119,7 @@ module.exports = (cms) => {
           fn();
         }
       } catch (e) {
-        fn(Object.assign({}, e, { message: 'Cannot delete folder with files' }));
+        fn(Object.assign({}, e, {message: 'Cannot delete folder with files'}));
       }
     });
     socket.on('rename', function (url, newName, fn) {
@@ -147,7 +147,7 @@ module.exports = (cms) => {
     });
     socket.on('loadModules', function (fn) {
 
-      const pathToModules = path.join(__dirname, './plugins/test-plugins/modules');
+      const pathToModules = path.join(__dirname, './plugins/test-plugin/modules');
       if (!fs.existsSync(pathToModules)) {
         return fn([]);
       }
@@ -158,27 +158,27 @@ module.exports = (cms) => {
         return {
           name: item,
           module: name.join('.'),
-          url: 'test-plugins/modules/' + item
+          url: 'test-plugin/modules/' + item
         };
       });
       fn(pathToMap);
     });
     socket.on('addModules', function (name, fn) {
       axios.get(`https://unpkg.com/${name}`)
-           .then(response => {
-             const moduleDirectory = path.join(__dirname, './plugins', 'test-plugins/modules');
-             if (!fs.existsSync(moduleDirectory)) {
-               fs.mkdirSync(moduleDirectory);
-             }
-             fs.writeFileSync(path.join(moduleDirectory, `${name}.js`), response.data, 'utf-8');
-             fn();
-           })
-           .catch(err => {
-             fn(err);
-           });
+      .then(response => {
+        const moduleDirectory = path.join(__dirname, './plugins', 'test-plugin/modules');
+        if (!fs.existsSync(moduleDirectory)) {
+          fs.mkdirSync(moduleDirectory);
+        }
+        fs.writeFileSync(path.join(moduleDirectory, `${name}.js`), response.data, 'utf-8');
+        fn();
+      })
+      .catch(err => {
+        fn(err);
+      });
     });
     socket.on('loadComponents', function (fn) {
-      const pathToComponent = path.join(__dirname, './plugins/test-plugins/components');
+      const pathToComponent = path.join(__dirname, './plugins/test-plugin/components');
       if (!fs.existsSync(pathToComponent)) {
         return fn([]);
       }
@@ -189,24 +189,24 @@ module.exports = (cms) => {
         return {
           name: item,
           module: name.join('.'),
-          url: 'test-plugins/components/' + item
+          url: 'test-plugin/components/' + item
         };
       });
       fn(pathToMap);
     });
     socket.on('addComponents', function (name, fn) {
       axios.get(`https://unpkg.com/${name}`)
-           .then(response => {
-             const moduleDirectory = path.join(__dirname, './plugins', 'test-plugins/components');
-             if (!fs.existsSync(moduleDirectory)) {
-               fs.mkdirSync(moduleDirectory);
-             }
-             fs.writeFileSync(path.join(moduleDirectory, `${name}.js`), response.data, 'utf-8');
-             fn();
-           })
-           .catch(err => {
-             fn(err);
-           });
+      .then(response => {
+        const moduleDirectory = path.join(__dirname, './plugins', 'test-plugin/components');
+        if (!fs.existsSync(moduleDirectory)) {
+          fs.mkdirSync(moduleDirectory);
+        }
+        fs.writeFileSync(path.join(moduleDirectory, `${name}.js`), response.data, 'utf-8');
+        fn();
+      })
+      .catch(err => {
+        fn(err);
+      });
     });
     socket.on('copyFile', (oldPath, newPath, fn) => {
       try {
@@ -236,21 +236,21 @@ module.exports = (cms) => {
     socket.on('importModel', (collection, filePath, fn) => {
       const content = fs.readFileSync(path.join(__dirname, './plugins', filePath), 'utf-8');
       cms.getModel(collection).create(JSON.parse(content))
-         .then(res => {
-           fn(null, res);
-         })
-         .catch(err => {
-           fn(err);
-         });
+      .then(res => {
+        fn(null, res);
+      })
+      .catch(err => {
+        fn(err);
+      });
     });
   });
   cms.app.get('/package', function (req, res) {
     axios.get(`https://www.npmjs.com/search/suggestions?q=${req.query.q}`)
-         .then(response => {
-           res.status(200).json(response.data);
-         })
-         .catch(err => {
-           res.status(400).json(err.response.data);
-         });
+    .then(response => {
+      res.status(200).json(response.data);
+    })
+    .catch(err => {
+      res.status(400).json(err.response.data);
+    });
   });
 };
