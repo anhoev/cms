@@ -5,7 +5,7 @@
 'use strict';
 const _ = require('lodash');
 const cms = require('../src/cms');
-const plugins = require('./plugins');
+const plugins = require('./plugin.socket');
 const path = require('path');
 cms.data.security = false;
 cms.listen(8888);
