@@ -8,11 +8,12 @@ const _ = require('lodash');
 
 class CmsPlugin {
 
-  static initAllPlugin(paths) {
+  static initAllPlugin(paths = 'plugins') {
     const dirPath = path.join(__dirname, paths);
     const dirContent = fs.readdirSync(dirPath, { withFileTypes: true })
                          .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
-    return dirContent.reduce((acc, item) => Object.assign(acc, { [item]: new CmsPlugin(item) }), {});
+    const result = dirContent.reduce((acc, item) => Object.assign(acc, { [item]: new CmsPlugin(path.join(dirPath, item)) }), {});
+    return result;
     // return {
     //   testPlugin: new ClassPluginTest('test-plugin'),
     //   corePlugin: new ClassPluginTest('core-plugin')
@@ -20,10 +21,20 @@ class CmsPlugin {
   }
 
   static getAllPlugin() {
-    const dirPath = path.join(__dirname, paths);
+    const dirPath = path.join(__dirname, 'plugins');
     const dirContent = fs.readdirSync(dirPath, { withFileTypes: true })
                          .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
     return dirContent;
+  }
+
+  static convertInternalPathToFilePathStatic(internalPath, pluginName) {
+    const pluginPath = path.join(__dirname, 'plugins', pluginName);
+    return path.join(pluginPath, internalPath);
+  }
+
+  static convertFilePathToInternalPathStatic(_filePath, pluginName) {
+    const pluginPath = path.join(__dirname, 'plugins', pluginName);
+    return path.relative(pluginPath, _filePath);
   }
 
   constructor(pluginPath, pluginName, resolveUrlPath) {
@@ -48,11 +59,11 @@ class CmsPlugin {
   }
 
   convertFilePathToInternalPath(_filePath) {
-    return path.relative(this.pluginPath, _filePath);
+    return CmsPlugin.convertFilePathToInternalPathStatic(_filePath, this.pluginName);
   }
 
   convertInternalPathToFilePath(internalPath) {
-    return path.join(this.pluginPath, internalPath);
+    return CmsPlugin.convertInternalPathToFilePathStatic(internalPath, this.pluginName);
   }
 
   loadDirTree(internalPath = '') {
@@ -110,8 +121,8 @@ class CmsPlugin {
     fileHelper.rename(this.convertInternalPathToFilePath(oldPath), newName);
   }
 
-  copyFile(oldPath, newPath, options = { type: 'copy' }) {
-    fileHelper.copyFile(this.convertInternalPathToFilePath(oldPath), this.convertInternalPathToFilePath(newPath), options);
+  copyFile(oldPath, newPath, options = { type: 'copy', toPlugin: '' }) {
+    fileHelper.copyFile(this.convertInternalPathToFilePath(oldPath), CmsPlugin.convertInternalPathToFilePathStatic(newPath, options.toPlugin), options);
   }
 
   exportModel(name, content, collection, internalFilePath) {

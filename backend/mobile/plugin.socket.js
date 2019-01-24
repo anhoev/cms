@@ -7,10 +7,8 @@ module.exports = (cms) => {
   const pluginsFolder = path.resolve(__dirname, 'plugins');
   const testPlugin = new Plugin(path.join(pluginsFolder, 'test-plugin'));
 
-  const allPlugins = {
-    'core-plugin': new Plugin(path.join(pluginsFolder, 'core-plugin')),
-    'test-plugin': new Plugin(path.join(pluginsFolder, 'test-plugin'))
-  };
+
+  const allPlugins = Plugin.initAllPlugin();
 
   function findFileItem(directoryTree) {
     return directoryTree &&
@@ -30,7 +28,7 @@ module.exports = (cms) => {
 
   cms.io.on('connection', function (socket) {
     socket.on('loadPlugin', function (fn) {
-      fn(Object.keys(allPlugins).map(item => allPlugins[item].loadDirTree()));
+      fn(Object.keys(allPlugins).map(item => getPlugin(item).loadDirTree()));
     });
     socket.on('save', function (pluginName, _path, content, fn) {
       try {
@@ -111,17 +109,17 @@ module.exports = (cms) => {
         .then(() => fn())
         .catch(err => fn(err));
     });
-    socket.on('copyFile', (pluginName, oldPath, newPath, fn) => {
+    socket.on('copyFile', (pluginName, { path: _path, name, toPlugin }, fn) => {
       try {
-        getPlugin(pluginName).copyFile(oldPath, newPath, { type: 'copy' });
+        getPlugin(pluginName).copyFile(_path, name, { type: 'copy', toPlugin });
         fn();
       } catch (e) {
         fn(e);
       }
     });
-    socket.on('moveFile', (pluginName, oldPath, newPath, fn) => {
+    socket.on('moveFile', (pluginName, { path: _path, name, toPlugin }, fn) => {
       try {
-        getPlugin(pluginName).copyFile(oldPath, newPath, { type: 'move' });
+        getPlugin(pluginName).copyFile(_path, name, { type: 'move', toPlugin });
         fn();
       } catch (e) {
         fn(e);
