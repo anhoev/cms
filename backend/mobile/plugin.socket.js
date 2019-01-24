@@ -4,21 +4,22 @@ const axios = require('axios').default;
 const Plugin = require('./CmsPlugin');
 
 module.exports = (cms) => {
-  const corePlugin = new Plugin('test-plugin');
+  const pluginsFolder = path.resolve(__dirname, 'plugins');
+  const testPlugin = new Plugin(path.join(pluginsFolder, 'test-plugin'));
 
   const allPlugins = {
-    'core-plugin': new Plugin('core-plugin'),
-    'test-plugin': new Plugin('test-plugin')
+    'core-plugin': new Plugin(path.join(pluginsFolder, 'core-plugin')),
+    'test-plugin': new Plugin(path.join(pluginsFolder, 'test-plugin'))
   };
 
   function findFileItem(directoryTree) {
     return directoryTree &&
       directoryTree
-        .filter(item => fs.statSync(corePlugin.resolvePluginPathToFilePath(item.path)).isFile())
+        .filter(item => fs.statSync(testPlugin.convertInternalPathToFilePath(item.path)).isFile())
         .map(item => {
           return {
             name: item.name.replace(item.extension, ''),
-            content: fs.readFileSync(corePlugin.resolvePluginPathToFilePath(item.path), 'utf-8')
+            content: fs.readFileSync(testPlugin.convertInternalPathToFilePath(item.path), 'utf-8')
           };
         });
   }

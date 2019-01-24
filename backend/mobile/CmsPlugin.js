@@ -19,41 +19,45 @@ class CmsPlugin {
     // };
   }
 
-  constructor(name) {
-    this.pluginPath = path.join(name);
-    this.name = name;
-    this.basePath = path.join(__dirname, './plugins');
+  constructor(pluginPath, pluginName, resolveUrlPath) {
+    //this.pluginPath = path.join(name);
+    this.pluginPath = pluginPath;
+    this.pluginName = pluginName ? pluginName : path.basename(pluginPath);
+    if (resolveUrlPath) {
+      this.resolveUrlPath = resolveUrlPath;
+    } else {
+      this.resolveUrlPath = function(internalPath) {
+        const pluginsFolderPath = path.join(path.dirname(pluginPath), '../');
+        return path.relative(pluginsFolderPath, internalPath);
+      }
+    }
     this.onEachRead = this.onEachRead.bind(this);
   }
 
   onEachRead(item) {
-    item.url = this.pluginPathToUrl(item.path);
-    item.path = this.filePathToPluginPath(item.path);
-    item.pluginName = this.name;
+    item.url = this.resolveUrlPath(item.path);
+    item.path = this.convertFilePathToInternalPath(item.path);
+    item.pluginName = this.pluginName;
   }
 
-  pluginPathToUrl(_path) {
-    return path.relative(this.basePath, _path);
+  convertFilePathToInternalPath(_filePath) {
+    return path.relative(this.pluginPath, _filePath);
   }
 
-  filePathToPluginPath(_filePath) {
-    return path.relative(path.join(this.basePath, this.pluginPath), _filePath);
+  convertInternalPathToFilePath(internalPath) {
+    return path.join(this.pluginPath, internalPath);
   }
 
-  resolvePluginPathToFilePath(_path) {
-    return path.join(this.basePath, this.pluginPath, _path);
-  }
-
-  loadDirTree(_path = '') {
-    _path = this.resolvePluginPathToFilePath(_path);
-    const tree = dirTree(_path, {
+  loadDirTree(internalPath = '') {
+    const dirPath = this.convertInternalPathToFilePath(internalPath);
+    const tree = dirTree(dirPath, {
       exclude: [{ test: (filePath) => /^\./.test(path.basename(filePath)) }]
     }, this.onEachRead, this.onEachRead);
     return tree;
   }
 
-  loadModules(_path) {
-    const pathToModules = this.resolvePluginPathToFilePath(_path);
+  loadModules(internalPath) {
+    const pathToModules = this.convertInternalPathToFilePath(internalPath);
     if (!fileHelper.existsSync(pathToModules)) {
       return [];
     }
@@ -61,17 +65,17 @@ class CmsPlugin {
     const pathToMap = dir
       .filter(item => {
         // remove all item which is not file
-        const itemPluginPath = path.join(_path, item);
-        return fs.statSync(this.resolvePluginPathToFilePath(itemPluginPath)).isFile();
+        const itemPluginPath = path.join(internalPath, item);
+        return fs.statSync(this.convertInternalPathToFilePath(itemPluginPath)).isFile();
       })
       .map(item => {
         const name = item.split('.');
         name.pop();
-        const modulePath = path.join(this.pluginPath, _path, item);
+        const modulePath = path.join(this.pluginPath, internalPath, item);
         return {
           name: item,
           module: path.basename(item),
-          url: this.pluginPathToUrl(modulePath)
+          url: this.convertInternalPathToUrl(modulePath)
         };
       });
     return pathToMap;
@@ -81,7 +85,7 @@ class CmsPlugin {
     return new Promise((resolve, reject) => {
       axios.get(`https://unpkg.com/${name}`)
            .then(response => {
-             let moduleDirectory = this.resolvePluginPathToFilePath(type);
+             let moduleDirectory = this.convertInternalPathToFilePath(type);
              fileHelper.addNew(path.join(moduleDirectory, `${name}.js`), response.data);
              resolve();
            })
@@ -92,25 +96,25 @@ class CmsPlugin {
   }
 
   removeFile(_path) {
-    fileHelper.delete(this.resolvePluginPathToFilePath(_path));
+    fileHelper.delete(this.convertInternalPathToFilePath(_path));
   }
 
   renameFile(oldPath, newName) {
-    fileHelper.rename(this.resolvePluginPathToFilePath(oldPath), newName);
+    fileHelper.rename(this.convertInternalPathToFilePath(oldPath), newName);
   }
 
   copyFile(oldPath, newPath, options = { type: 'copy' }) {
-    fileHelper.copyFile(this.resolvePluginPathToFilePath(oldPath), this.resolvePluginPathToFilePath(newPath), options);
+    fileHelper.copyFile(this.convertInternalPathToFilePath(oldPath), this.convertInternalPathToFilePath(newPath), options);
   }
 
-  exportModel(name, content, collection, filePath) {
-    const writePath = path.join(filePath, `/${name}.${collection}.json`);
-    fileHelper.addNew(this.resolvePluginPathToFilePath(writePath), JSON.stringify(content));
+  exportModel(name, content, collection, internalFilePath) {
+    const writePath = path.join(internalFilePath, `/${name}.${collection}.json`);
+    fileHelper.addNew(this.convertInternalPathToFilePath(writePath), JSON.stringify(content));
   }
 
-  importModel(collection, filePath) {
+  importModel(collection, internalFilePath) {
     return new Promise((resolve, reject) => {
-      const content = fileHelper.readFile(this.resolvePluginPathToFilePath(filePath), 'utf-8');
+      const content = fileHelper.readFile(this.convertInternalPathToFilePath(internalFilePath), 'utf-8');
       cms.getModel(collection).create(JSON.parse(content))
          .then(res => {
            resolve(res);
@@ -121,8 +125,8 @@ class CmsPlugin {
     });
   }
 
-  addNewFile(_path, content, type) {
-    fileHelper.addNew(this.resolvePluginPathToFilePath(_path), content, type);
+  addNewFile(internalPath, content, type) {
+    fileHelper.addNew(this.convertInternalPathToFilePath(internalPath), content, type);
   }
 }
 
