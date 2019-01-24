@@ -141,6 +141,9 @@ module.exports = (cms) => {
         .then(res => fn(null, res))
         .catch(err => fn(err));
     });
+    socket.on('getListPlugin', (fn) => {
+      fn(null, Plugin.getAllPlugin());
+    });
   });
   cms.app.get('/package', function (req, res) {
     axios.get(`https://www.npmjs.com/search/suggestions?q=${req.query.q}`)
