@@ -19,20 +19,27 @@ class CmsPlugin {
     // };
   }
 
+  static getAllPlugin() {
+    const dirPath = path.join(__dirname, paths);
+    const dirContent = fs.readdirSync(dirPath, { withFileTypes: true })
+                         .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
+    return dirContent;
+  }
+
   constructor(pluginPath, pluginName, resolveUrlPath) {
     //this.pluginPath = path.join(name);
     this.pluginPath = pluginPath;
     this.pluginName = pluginName ? pluginName : path.basename(pluginPath);
     if (resolveUrlPath) {
       this.resolveUrlPath = resolveUrlPath;
-    } else {
-      this.resolveUrlPath = function(internalPath) {
-        const pluginsFolderPath = path.join(path.dirname(pluginPath), '../');
-        return path.relative(pluginsFolderPath, internalPath);
-      }
     }
     this.onEachRead = this.onEachRead.bind(this);
   }
+
+  resolveUrlPath(internalPath) {
+    const pluginsFolderPath = path.join(path.dirname(this.pluginPath), '../');
+    return path.relative(pluginsFolderPath, internalPath);
+  };
 
   onEachRead(item) {
     item.url = this.resolveUrlPath(item.path);
@@ -75,7 +82,7 @@ class CmsPlugin {
         return {
           name: item,
           module: path.basename(item),
-          url: this.convertInternalPathToUrl(modulePath)
+          url: this.resolveUrlPath(modulePath)
         };
       });
     return pathToMap;
@@ -112,17 +119,14 @@ class CmsPlugin {
     fileHelper.addNew(this.convertInternalPathToFilePath(writePath), JSON.stringify(content));
   }
 
-  importModel(collection, internalFilePath) {
-    return new Promise((resolve, reject) => {
-      const content = fileHelper.readFile(this.convertInternalPathToFilePath(internalFilePath), 'utf-8');
-      cms.getModel(collection).create(JSON.parse(content))
-         .then(res => {
-           resolve(res);
-         })
-         .catch(err => {
-           reject(err);
-         });
-    });
+  async importModel(collection, filePath, replace = false) {
+    const content = fileHelper.readFile(this.convertInternalPathToFilePath(filePath), 'utf-8');
+    if (replace) {
+      const document = JSON.parse(content);
+      const { _id, ...other } = document;
+      return await cms.getModel(collection).findOneAndUpdate({ _id: _id }, other);
+    }
+    return await cms.getModel(collection).create(JSON.parse(content));
   }
 
   addNewFile(internalPath, content, type) {

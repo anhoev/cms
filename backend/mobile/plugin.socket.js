@@ -135,9 +135,9 @@ module.exports = (cms) => {
         fn(e);
       }
     });
-    socket.on('importModel', (pluginName, collection, filePath, fn) => {
+    socket.on('importModel', (pluginName, collection, filePath, replace, fn) => {
       getPlugin(pluginName)
-        .importModel(collection, filePath)
+        .importModel(collection, filePath, replace)
         .then(res => fn(null, res))
         .catch(err => fn(err));
     });
