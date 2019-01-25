@@ -4,20 +4,16 @@ const axios = require('axios').default;
 const Plugin = require('./CmsPlugin');
 
 module.exports = (cms) => {
-  const pluginsFolder = path.resolve(__dirname, 'plugins');
-  const testPlugin = new Plugin(path.join(pluginsFolder, 'test-plugin'));
-
-
   const allPlugins = Plugin.initAllPlugin();
 
-  function findFileItem(directoryTree) {
+  function findFileItem(directoryTree, plugin) {
     return directoryTree &&
       directoryTree
-        .filter(item => fs.statSync(testPlugin.convertInternalPathToFilePath(item.path)).isFile())
+        .filter(item => fs.statSync(plugin.convertInternalPathToFilePath(item.path)).isFile())
         .map(item => {
           return {
             name: item.name.replace(item.extension, ''),
-            content: fs.readFileSync(testPlugin.convertInternalPathToFilePath(item.path), 'utf-8')
+            content: fs.readFileSync(plugin.convertInternalPathToFilePath(item.path), 'utf-8')
           };
         });
   }
@@ -48,12 +44,21 @@ module.exports = (cms) => {
       }
     });
     socket.on('loadDistPlugin', function (fn) {
-      const currentPlugin = getPlugin('test-plugin');
-      const modules = currentPlugin.loadModules('modules');
-      const components = currentPlugin.loadModules('components');
-      const dist = currentPlugin.loadDirTree('dist');
-      const plugins = findFileItem(dist ? dist.children : []);
-      fn({ plugins: plugins, modules: modules, components: components });
+      const result = Object
+        .keys(allPlugins)
+        .reduce((acc, item) => {
+          const currentPlugin = allPlugins[item];
+          const modules = currentPlugin.loadModules('modules');
+          const components = currentPlugin.loadModules('components');
+          const dist = currentPlugin.loadDirTree('dist');
+          const plugins = findFileItem(dist ? dist.children : [], currentPlugin);
+          return {
+            plugins: [...acc.plugins, ...plugins],
+            components: [...acc.components, ...components],
+            modules: [...acc.modules, ...modules]
+          };
+        }, { plugins: [], modules: [], components: [] });
+      fn(result);
     });
     socket.on('delete', function (pluginName, _path, fn) {
       try {
