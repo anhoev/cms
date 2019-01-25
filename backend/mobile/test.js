@@ -216,7 +216,7 @@ module.exports = async function (cms) {
           'choice': ['label', 'flex', 'choiceKey', 'choiceKeyOutside'],
           'object@dynamic': ['label', 'flex', 'noPanel', 'dynamicFields'],
           'tree': ['label', 'children', 'getText']
-        })), {type: {form: {form: {type: 'choice', dynamicFields: '.object'}}}}),
+        })), {type: {form: {form: {type: 'choice', dynamicFields: '.mixed'}}}}),
         array: _.merge(w({
           'array': ['label', 'flex'],
           'tableArray': ['label', 'flex', 'expansion'],
