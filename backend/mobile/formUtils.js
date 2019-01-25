@@ -1,5 +1,6 @@
 const traverse = require('traverse');
 const _ = require('lodash');
+const objectId = require('mongoose/lib/schema/objectid');
 module.exports = {
   convertFormToSchema: function (buildForm) {
     let form = _.cloneDeep(buildForm.fields);
@@ -14,6 +15,13 @@ module.exports = {
         }
         let _node = {type: convertMap[node.schemaType] || {}}
         if (node.schemaType === 'object' && node.fields) _node = _.keyBy({...node.fields}, 'key');
+        if (node.schemaType === 'objectId') {
+          _node = {
+            type: objectId,
+            ref: node.ref,
+            autopopulate: node.autopopulate
+          }
+        }
         if (node.schemaType === 'array') {
           _node = [_.keyBy({...node.fields}, 'key')];
           if (node.fields.length === 1) {

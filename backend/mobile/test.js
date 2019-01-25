@@ -99,6 +99,8 @@ module.exports = async function (cms) {
 
   const makeSchema = (_with) => _.pick({
     label: String,
+    ref: String,
+    labelProp: String,
     flex: {type: String, form: {inputType: 'select', options: ['md2', 'md3', 'md4', 'md5', 'md6', 'md12']}},
     choiceKey: String,
     choiceKeyOutside: Boolean,
@@ -178,6 +180,20 @@ module.exports = async function (cms) {
         boolean: w({
           'input@switch': ['label', 'flex']
         }),
+        objectId: _.merge({
+          type: {
+            key: String,
+            default: String,
+            ref: String,
+            autopopulate: Boolean
+          }
+        }, w({
+          'ref-select': ['label', 'flex', 'labelProp']
+        }), {type: {form: {form: {dynamicFields: '.ref'}}}}),
+        date: _.merge(w({
+          'input@date': ['label', 'flex'],
+          'input@datetime-local': ['label', 'flex']
+        }), {type: {form: {form: {dynamicFields: '.date'}}}}),
         object: _.merge({
           type: {
             key: String,
@@ -236,7 +252,8 @@ module.exports = async function (cms) {
       name: form.name, title: 'name',
       alwaysLoad: form.alwaysLoad,
       tabs: _({...form.tabs}).keyBy('name').mapValues(v => v.fields).value(),
-      form: form.fields
+      form: form.fields,
+      autopopulate: true
     })
   })
 
@@ -251,5 +268,6 @@ module.exports = async function (cms) {
     schemaOptions: {strict: false}
   });*/
 
+  //console.log(jsonfn.stringify({type: mongoose.Schema.Types.ObjectId}));
   cms.Types.BuildForm.webType.form;
 }
