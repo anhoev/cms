@@ -120,8 +120,8 @@ module.exports = async function (cms) {
           form: {type: 'input@multiSelect'}
         },
         code: {
-          type: String,
-          form: {type: 'editor', height: '200px', codeType: 'method'}
+          type: {},
+          form: {type: 'editor', height: '200px'}
         }
       },
       form: {type: 'choice', choiceKeyOutside: true, choiceKey: 'optionsType'}
@@ -130,15 +130,15 @@ module.exports = async function (cms) {
       type: {
         queryString: String,
         code: {
-          type: String,
-          form: {type: 'editor', height: '200px', codeType: 'method'}
+          type: {},
+          form: {type: 'editor', height: '200px'}
         }
       },
       form: {type: 'choice', choiceKeyOutside: true, choiceKey: 'dynamicFieldsType'}
     },
     getText: {
-      type: String,
-      form: {type: 'editor', height: '200px', codeType: 'method'}
+      type: {},
+      form: {type: 'editor', height: '200px'}
     },
     children: String,
     expansion: {
