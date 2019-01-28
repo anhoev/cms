@@ -121,7 +121,7 @@ module.exports = async function (cms) {
         },
         code: {
           type: String,
-          form: {type: 'editor', height: '200px'}
+          form: {type: 'editor', height: '200px', codeType: 'method'}
         }
       },
       form: {type: 'choice', choiceKeyOutside: true, choiceKey: 'optionsType'}
@@ -131,14 +131,14 @@ module.exports = async function (cms) {
         queryString: String,
         code: {
           type: String,
-          form: {type: 'editor', height: '200px'}
+          form: {type: 'editor', height: '200px', codeType: 'method'}
         }
       },
       form: {type: 'choice', choiceKeyOutside: true, choiceKey: 'dynamicFieldsType'}
     },
     getText: {
       type: String,
-      form: {type: 'editor', height: '200px'}
+      form: {type: 'editor', height: '200px', codeType: 'method'}
     },
     children: String,
     expansion: {
