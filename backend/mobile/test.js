@@ -102,6 +102,7 @@ module.exports = async function (cms) {
     ref: String,
     labelProp: String,
     flex: {type: String, form: {inputType: 'select', options: ['md2', 'md3', 'md4', 'md5', 'md6', 'md12']}},
+    addable: Boolean,
     choiceKey: String,
     choiceKeyOutside: Boolean,
     noPanel: Boolean,
@@ -162,23 +163,24 @@ module.exports = async function (cms) {
   };
 
   let buildFormSchema = {
-    name: {type: String, flex: 'md3'},
-    class: {type: String, flex: 'md3'},
-    alwaysLoad: {type: Boolean, flex: 'md3'},
-    type: {type: String, form: {type: 'input@select', options: ['Collection', ''], flex: 'md3'}},
+    name: {type: String, flex: 'md4'},
+    class: {type: String, flex: 'md4'},
+    alwaysLoad: {type: Boolean, flex: 'md4'},
+    type: {type: String, form: {type: 'input@select', options: ['Collection', ''], flex: 'md6'}},
+    title: {type: String, flex: 'md6'},
     fields: {
       type: [{
         choice: String,
         string: _.merge(w({
-          'input': ['label', 'flex'],
-          'input@select': ['label', 'flex', 'options']
+          'input': ['label', 'flex', 'addable'],
+          'input@select': ['label', 'flex', 'options', 'addable']
         }), {type: {form: {form: {dynamicFields: '.string'}}}}),
         number: _.merge(w({
-          'input@number': ['label', 'flex'],
-          'input@select': ['label', 'flex', 'options']
+          'input@number': ['label', 'flex', 'addable'],
+          'input@select': ['label', 'flex', 'options', 'addable']
         }), {type: {form: {form: {dynamicFields: '.number'}}}}),
         boolean: w({
-          'input@switch': ['label', 'flex']
+          'input@switch': ['label', 'flex', 'addable']
         }),
         objectId: _.merge({
           type: {
@@ -188,11 +190,11 @@ module.exports = async function (cms) {
             autopopulate: Boolean
           }
         }, w({
-          'ref-select': ['label', 'flex', 'labelProp']
+          'ref-select': ['label', 'flex', 'labelProp', 'addable']
         }), {type: {form: {form: {dynamicFields: '.ref'}}}}),
         date: _.merge(w({
-          'input@date': ['label', 'flex'],
-          'input@datetime-local': ['label', 'flex']
+          'input@date': ['label', 'flex', 'addable'],
+          'input@datetime-local': ['label', 'flex', 'addable']
         }), {type: {form: {form: {dynamicFields: '.date'}}}}),
         object: _.merge({
           type: {
@@ -201,9 +203,9 @@ module.exports = async function (cms) {
             mixed: Boolean
           }
         }, _.assign(w({
-          'object': ['label', 'flex', 'noPanel'],
+          'object': ['label', 'flex', 'noPanel', 'addable'],
           'choice': ['label', 'flex', 'choiceKey', 'choiceKeyOutside'],
-          'object@dynamic': ['label', 'flex', 'noPanel', 'dynamicFields'],
+          'object@dynamic': ['label', 'flex', 'noPanel', 'addable', 'dynamicFields'],
         })), {type: {form: {form: {type: 'choice', dynamicFields: '.object'}}}}),
         mixed: _.merge({
           type: {
@@ -212,9 +214,9 @@ module.exports = async function (cms) {
             mixed: Boolean
           }
         }, _.assign(w({
-          'object': ['label', 'flex', 'noPanel'],
+          'object': ['label', 'flex', 'noPanel', 'addable'],
           'choice': ['label', 'flex', 'choiceKey', 'choiceKeyOutside'],
-          'object@dynamic': ['label', 'flex', 'noPanel', 'dynamicFields'],
+          'object@dynamic': ['label', 'flex', 'noPanel', 'addable', 'dynamicFields'],
           'tree': ['label', 'children', 'getText']
         })), {type: {form: {form: {type: 'choice', dynamicFields: '.mixed'}}}}),
         array: _.merge(w({
@@ -242,14 +244,15 @@ module.exports = async function (cms) {
     schemaOptions: {strict: false},
     alwaysLoad: true,
     tabs: {
-      Advance: ['name', 'class', 'alwaysLoad', 'tabs', 'type']
+      Advance: ['name', 'class', 'alwaysLoad', 'tabs', 'type', 'title']
     }
   });
 
   const forms = await BuildForm.find({}).lean();
   forms.filter(f => f.type === 'Collection').forEach(form => {
     cms.registerSchema(convertFormToSchema(form), {
-      name: form.name, title: 'name',
+      name: form.name,
+      title: form.title,
       alwaysLoad: form.alwaysLoad,
       tabs: _({...form.tabs}).keyBy('name').mapValues(v => v.fields).value(),
       form: form.fields,
