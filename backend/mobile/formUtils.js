@@ -14,7 +14,23 @@ module.exports = {
           'boolean': Boolean
         }
         let _node = {type: convertMap[node.schemaType] || {}}
-        if (node.schemaType === 'object' && node.fields) _node = _.keyBy({...node.fields}, 'key');
+        if (node.schemaType === 'object' && node.fields) {
+          if (node.type === 'choice') {
+            _node = {};
+            _node[node.choiceKey || 'choice'] = {schemaType: 'string'}
+            const normalFields = node.fields.filter(f => f.schemaType !== 'object');
+            const objectFields = node.fields.filter(f => f.schemaType === 'object');
+            _.assign(_node, _.keyBy({...normalFields}, 'key'));
+            const fields = objectFields.reduce((fields, f) => {
+              if (f.fields) fields.push(...f.fields);
+              return fields;
+            }, []);
+            _.assign(_node, _.keyBy({...fields}, 'key'));
+          } else {
+            _node = _.keyBy({...node.fields}, 'key');
+          }
+        }
+
         if (node.schemaType === 'objectId') {
           _node = {
             type: objectId,

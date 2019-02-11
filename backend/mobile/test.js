@@ -177,10 +177,11 @@ module.exports = async function (cms) {
         }), {type: {form: {form: {dynamicFields: '.string'}}}}),
         number: _.merge(w({
           'input@number': ['label', 'flex', 'addable'],
-          'input@select': ['label', 'flex', 'options', 'addable']
+          'input@select:number': ['label', 'flex', 'options', 'addable']
         }), {type: {form: {form: {dynamicFields: '.number'}}}}),
         boolean: w({
-          'input@switch': ['label', 'flex', 'addable']
+          'input@switch': ['label', 'flex', 'addable'],
+          'input@checkbox': ['label', 'flex', 'addable']
         }),
         objectId: _.merge({
           type: {
@@ -220,10 +221,10 @@ module.exports = async function (cms) {
           'tree': ['label', 'children', 'getText']
         })), {type: {form: {form: {type: 'choice', dynamicFields: '.mixed'}}}}),
         array: _.merge(w({
-          'array': ['label', 'flex'],
-          'tableArray': ['label', 'flex', 'expansion'],
-          'choiceArray': ['label', 'flex'],
-          'input@multiSelect': ['label', 'flex', 'options'],
+          'array': ['label', 'flex', 'addable'],
+          'tableArray': ['label', 'flex', 'expansion', 'addable'],
+          'choiceArray': ['label', 'flex', 'addable'],
+          'input@multiSelect': ['label', 'flex', 'options', 'addable'],
         }), {type: {form: {form: {dynamicFields: '.array'}}}}),
       }],
       form: {type: 'tree', children: 'fields', choiceKey: 'schemaType'}
