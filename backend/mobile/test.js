@@ -65,30 +65,6 @@ module.exports = async function (cms) {
     autopopulate: true
   });
 
-  const Child = cms.registerSchema({
-    name: String
-  }, {
-    name: 'Child',
-    label: 'Child',
-    title: 'name',
-    autopopulate: true,
-    alwaysLoad: true
-  });
-
-  const Parent = cms.registerSchema({
-    name: String,
-    child: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Child',
-      autopopulate: true,
-      label: 'Child'
-    }
-  }, {
-    name: 'Parent',
-    title: 'name',
-    autopopulate: true
-  });
-
   const fieldSchema = {
     key: String,
     label: String,
@@ -103,6 +79,10 @@ module.exports = async function (cms) {
     labelProp: String,
     flex: {type: String, form: {inputType: 'select', options: ['md2', 'md3', 'md4', 'md5', 'md6', 'md12']}},
     addable: Boolean,
+    isVisible: {
+      type: {},
+      form: {type: 'editor', height: '100px', flex: 'md12', addable: true}
+    },
     choiceKey: String,
     choiceKeyOutside: Boolean,
     noPanel: Boolean,
@@ -172,16 +152,16 @@ module.exports = async function (cms) {
       type: [{
         choice: String,
         string: _.merge(w({
-          'input': ['label', 'flex', 'addable'],
-          'input@select': ['label', 'flex', 'options', 'addable']
+          'input': ['label', 'flex', 'addable', 'isVisible'],
+          'input@select': ['label', 'flex', 'options', 'addable', 'isVisible']
         }), {type: {form: {form: {dynamicFields: '.string'}}}}),
         number: _.merge(w({
-          'input@number': ['label', 'flex', 'addable'],
-          'input@select:number': ['label', 'flex', 'options', 'addable']
+          'input@number': ['label', 'flex', 'addable', 'isVisible'],
+          'input@select:number': ['label', 'flex', 'options', 'addable', 'isVisible']
         }), {type: {form: {form: {dynamicFields: '.number'}}}}),
         boolean: w({
-          'input@switch': ['label', 'flex', 'addable'],
-          'input@checkbox': ['label', 'flex', 'addable']
+          'input@switch': ['label', 'flex', 'addable', 'isVisible'],
+          'input@checkbox': ['label', 'flex', 'addable', 'isVisible']
         }),
         objectId: _.merge({
           type: {
@@ -191,11 +171,11 @@ module.exports = async function (cms) {
             autopopulate: Boolean
           }
         }, w({
-          'ref-select': ['label', 'flex', 'labelProp', 'addable']
+          'ref-select': ['label', 'flex', 'labelProp', 'addable', 'isVisible']
         }), {type: {form: {form: {dynamicFields: '.ref'}}}}),
         date: _.merge(w({
-          'input@date': ['label', 'flex', 'addable'],
-          'input@datetime-local': ['label', 'flex', 'addable']
+          'input@date': ['label', 'flex', 'addable', 'isVisible'],
+          'input@datetime-local': ['label', 'flex', 'addable', 'isVisible']
         }), {type: {form: {form: {dynamicFields: '.date'}}}}),
         object: _.merge({
           type: {
@@ -204,9 +184,9 @@ module.exports = async function (cms) {
             mixed: Boolean
           }
         }, _.assign(w({
-          'object': ['label', 'flex', 'noPanel', 'addable'],
-          'choice': ['label', 'flex', 'choiceKey', 'choiceKeyOutside'],
-          'object@dynamic': ['label', 'flex', 'noPanel', 'addable', 'dynamicFields'],
+          'object': ['label', 'flex', 'noPanel', 'addable', 'isVisible'],
+          'choice': ['label', 'flex', 'choiceKey', 'choiceKeyOutside', 'isVisible'],
+          'object@dynamic': ['label', 'flex', 'noPanel', 'addable', 'dynamicFields', 'isVisible'],
         })), {type: {form: {form: {type: 'choice', dynamicFields: '.object'}}}}),
         mixed: _.merge({
           type: {
@@ -215,16 +195,16 @@ module.exports = async function (cms) {
             mixed: Boolean
           }
         }, _.assign(w({
-          'object': ['label', 'flex', 'noPanel', 'addable'],
-          'choice': ['label', 'flex', 'choiceKey', 'choiceKeyOutside'],
-          'object@dynamic': ['label', 'flex', 'noPanel', 'addable', 'dynamicFields'],
+          'object': ['label', 'flex', 'noPanel', 'addable', 'isVisible'],
+          'choice': ['label', 'flex', 'choiceKey', 'choiceKeyOutside', 'isVisible'],
+          'object@dynamic': ['label', 'flex', 'noPanel', 'addable', 'dynamicFields', 'isVisible'],
           'tree': ['label', 'children', 'getText']
         })), {type: {form: {form: {type: 'choice', dynamicFields: '.mixed'}}}}),
         array: _.merge(w({
-          'array': ['label', 'flex', 'addable'],
-          'tableArray': ['label', 'flex', 'expansion', 'addable'],
-          'choiceArray': ['label', 'flex', 'addable'],
-          'input@multiSelect': ['label', 'flex', 'options', 'addable'],
+          'array': ['label', 'flex', 'addable', 'isVisible'],
+          'tableArray': ['label', 'flex', 'expansion', 'addable', 'isVisible'],
+          'choiceArray': ['label', 'flex', 'addable', 'isVisible'],
+          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible'],
         }), {type: {form: {form: {dynamicFields: '.array'}}}}),
       }],
       form: {type: 'tree', children: 'fields', choiceKey: 'schemaType'}
