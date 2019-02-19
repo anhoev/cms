@@ -249,7 +249,7 @@ module.exports = async function (cms) {
           schema.post('findOneAndRemove', { query: true, document: true }, function (docs) {
             cms.io.emit('reloadCms', { collection: form.name, type: 'remove', docs: docs });
           });
-          schema.post(/$/, { query: true, document: true }, function (docs) {
+          schema.post('save', { query: true, document: true }, function (docs) {
             if (docs.isNew) {
               cms.io.emit('reloadCms', { collection: form.name, type: 'create', docs: docs });
             }
