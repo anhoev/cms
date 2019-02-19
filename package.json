@@ -134,7 +134,7 @@
     "method-override": "^2.3.5",
     "moment": "^2.10.6",
     "moment-timezone": "^0.5.12",
-    "mongoose": "~5.0.10",
+    "mongoose": "5.4.13",
     "mongoose-autopopulate": "^0.7.0",
     "multer": "^1.1.0",
     "ng-file-upload": "^11.2.2",
