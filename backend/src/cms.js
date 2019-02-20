@@ -261,6 +261,7 @@ function onerror(req, res, e) {
 module.exports = cms;
 
 function listen() {
+  cms.use(require('./schemaExtensionMethod'));
   cms.use(require('./query'));
   cms.use(require('./types'));
   //cms.use(require('./config'));

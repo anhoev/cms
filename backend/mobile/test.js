@@ -243,18 +243,34 @@ module.exports = async function (cms) {
       autopopulate: true,
       initSchema(schema) {
         if (form.alwaysLoad) {
-          schema.post('findOneAndUpdate', function (docs) {
-            cms.io.emit('reloadCms', { collection: form.name, type: 'update', docs: docs });
-          });
-          schema.post('findOneAndRemove', { query: true, document: true }, function (docs) {
-            cms.io.emit('reloadCms', { collection: form.name, type: 'remove', docs: docs });
-          });
-          schema.post('save', { query: true, document: true }, function (docs) {
-            if (docs.isNew) {
-              cms.io.emit('reloadCms', { collection: form.name, type: 'create', docs: docs });
+          schema.onPostSave(function (docs) {
+            if (docs) {
+              cms.io.emit('reloadCms', { collection: form.name, type: 'update', docs: docs });
+            } else {
+              cms.io.emit('reloadCms', { collection: form.name, type: 'reload' });
             }
-            // cms.io.emit('reloadCms', { collection: form.name, type: 'remove', docs: docs });
           });
+
+          schema.onPostRemove(function (docs) {
+            if (docs) {
+              cms.io.emit('reloadCms', { collection: form.name, type: 'remove', docs: docs });
+            } else {
+              cms.io.emit('reloadCms', { collection: form.name, type: 'reload' });
+            }
+          });
+
+          // schema.post('findOneAndUpdate', function (docs) {
+          //   cms.io.emit('reloadCms', { collection: form.name, type: 'update', docs: docs });
+          // });
+          // schema.post('findOneAndRemove', { query: true, document: true }, function (docs) {
+          //   cms.io.emit('reloadCms', { collection: form.name, type: 'remove', docs: docs });
+          // });
+          // schema.post('save', { query: true, document: true }, function (docs) {
+          //   if (docs.isNew) {
+          //     cms.io.emit('reloadCms', { collection: form.name, type: 'create', docs: docs });
+          //   }
+          //   // cms.io.emit('reloadCms', { collection: form.name, type: 'remove', docs: docs });
+          // });
         }
       }
     });
