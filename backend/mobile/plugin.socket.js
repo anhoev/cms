@@ -147,14 +147,17 @@ module.exports = (cms) => {
     socket.on('getListPlugin', (fn) => {
       fn(null, Plugin.getAllPlugin());
     });
+    socket.on('subscribeCollection', function (room) {
+      socket.join(`collectionSubscription${room}`);
+    });
   });
   cms.app.get('/package', function (req, res) {
     axios.get(`https://www.npmjs.com/search/suggestions?q=${req.query.q}`)
-         .then(response => {
-           res.status(200).json(response.data);
-         })
-         .catch(err => {
-           res.status(400).json(err.response.data);
-         });
+      .then(response => {
+        res.status(200).json(response.data);
+      })
+      .catch(err => {
+        res.status(400).json(err.response.data);
+      });
   });
 };

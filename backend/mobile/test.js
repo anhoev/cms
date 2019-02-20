@@ -242,36 +242,52 @@ module.exports = async function (cms) {
       form: form.fields,
       autopopulate: true,
       initSchema(schema) {
-        if (form.alwaysLoad) {
-          schema.onPostSave(function (doc) {
-            if (doc) {
-              cms.io.emit('changeCollectionList', { collection: form.name, type: 'update', doc: doc });
-            } else {
-              cms.io.emit('changeCollectionList', { collection: form.name, type: 'reload' });
-            }
-          });
+        schema.onPostSave(function (doc) {
+          if (doc) {
+            cms.io.to(`collectionSubscription${form.name}`)
+              .emit('changeCollectionList', {
+                collection: form.name,
+                type: 'update',
+                doc: doc
+              });
+          } else {
+            cms.io.to(`collectionSubscription${form.name}`)
+              .emit('changeCollectionList', {
+                collection: form.name,
+                type: 'reload'
+              });
+          }
+        });
 
-          schema.onPostRemove(function (doc) {
-            if (doc) {
-              cms.io.emit('changeCollectionList', { collection: form.name, type: 'remove', doc: doc });
-            } else {
-              cms.io.emit('changeCollectionList', { collection: form.name, type: 'reload' });
-            }
-          });
+        schema.onPostRemove(function (doc) {
+          if (doc) {
+            cms.io.to(`collectionSubscription${form.name}`)
+              .emit('changeCollectionList', {
+                collection: form.name,
+                type: 'remove',
+                doc: doc
+              });
+          } else {
+            cms.io.to(`collectionSubscription${form.name}`)
+              .emit('changeCollectionList', {
+                collection: form.name,
+                type: 'reload'
+              });
+          }
+        });
 
-          // schema.post('findOneAndUpdate', function (docs) {
-          //   cms.io.emit('reloadCms', { collection: form.name, type: 'update', docs: docs });
-          // });
-          // schema.post('findOneAndRemove', { query: true, document: true }, function (docs) {
-          //   cms.io.emit('reloadCms', { collection: form.name, type: 'remove', docs: docs });
-          // });
-          // schema.post('save', { query: true, document: true }, function (docs) {
-          //   if (docs.isNew) {
-          //     cms.io.emit('reloadCms', { collection: form.name, type: 'create', docs: docs });
-          //   }
-          //   // cms.io.emit('reloadCms', { collection: form.name, type: 'remove', docs: docs });
-          // });
-        }
+        // schema.post('findOneAndUpdate', function (docs) {
+        //   cms.io.emit('reloadCms', { collection: form.name, type: 'update', docs: docs });
+        // });
+        // schema.post('findOneAndRemove', { query: true, document: true }, function (docs) {
+        //   cms.io.emit('reloadCms', { collection: form.name, type: 'remove', docs: docs });
+        // });
+        // schema.post('save', { query: true, document: true }, function (docs) {
+        //   if (docs.isNew) {
+        //     cms.io.emit('reloadCms', { collection: form.name, type: 'create', docs: docs });
+        //   }
+        //   // cms.io.emit('reloadCms', { collection: form.name, type: 'remove', docs: docs });
+        // });
       }
     });
   });
