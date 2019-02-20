@@ -245,17 +245,17 @@ module.exports = async function (cms) {
         if (form.alwaysLoad) {
           schema.onPostSave(function (doc) {
             if (doc) {
-              cms.io.emit('reloadCms', { collection: form.name, type: 'update', doc: doc });
+              cms.io.emit('changeCollectionList', { collection: form.name, type: 'update', doc: doc });
             } else {
-              cms.io.emit('reloadCms', { collection: form.name, type: 'reload' });
+              cms.io.emit('changeCollectionList', { collection: form.name, type: 'reload' });
             }
           });
 
           schema.onPostRemove(function (doc) {
             if (doc) {
-              cms.io.emit('reloadCms', { collection: form.name, type: 'remove', doc: doc });
+              cms.io.emit('changeCollectionList', { collection: form.name, type: 'remove', doc: doc });
             } else {
-              cms.io.emit('reloadCms', { collection: form.name, type: 'reload' });
+              cms.io.emit('changeCollectionList', { collection: form.name, type: 'reload' });
             }
           });
 
