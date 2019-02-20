@@ -45,7 +45,10 @@ const util = {
       cbWithDoc(docs);
     });
     schema[when]('deleteOne', function (docs) {
-      cbWithDoc(docs);
+      cbWithDoc();
+    });
+    schema[when]('deleteMany', function (docs) {
+      cbWithDoc();
     });
   },
   onPreSave(schema, callback) {

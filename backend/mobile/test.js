@@ -243,17 +243,17 @@ module.exports = async function (cms) {
       autopopulate: true,
       initSchema(schema) {
         if (form.alwaysLoad) {
-          schema.onPostSave(function (docs) {
-            if (docs) {
-              cms.io.emit('reloadCms', { collection: form.name, type: 'update', docs: docs });
+          schema.onPostSave(function (doc) {
+            if (doc) {
+              cms.io.emit('reloadCms', { collection: form.name, type: 'update', doc: doc });
             } else {
               cms.io.emit('reloadCms', { collection: form.name, type: 'reload' });
             }
           });
 
-          schema.onPostRemove(function (docs) {
-            if (docs) {
-              cms.io.emit('reloadCms', { collection: form.name, type: 'remove', docs: docs });
+          schema.onPostRemove(function (doc) {
+            if (doc) {
+              cms.io.emit('reloadCms', { collection: form.name, type: 'remove', doc: doc });
             } else {
               cms.io.emit('reloadCms', { collection: form.name, type: 'reload' });
             }
