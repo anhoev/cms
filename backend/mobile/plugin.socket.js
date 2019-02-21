@@ -150,6 +150,12 @@ module.exports = (cms) => {
     socket.on('subscribeCollection', function (room) {
       socket.join(`collectionSubscription${room}`);
     });
+    socket.on('subscribePluginChange', function (room) {
+      socket.join(`pluginSubscription${room}`);
+    });
+    socket.on('unsubscribePluginChange', function (room) {
+      socket.leave(`pluginSubscription${room}`);
+    });
   });
   cms.app.get('/package', function (req, res) {
     axios.get(`https://www.npmjs.com/search/suggestions?q=${req.query.q}`)
