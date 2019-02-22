@@ -7,6 +7,22 @@ const babelPluginTransformModulesCommonJs = require('@babel/plugin-transform-mod
 const babelPluginSyntaxDynamicImport = require('@babel/plugin-syntax-dynamic-import');
 const babelPluginSyntaxImportMeta = require('@babel/plugin-syntax-import-meta');
 
+const langProcessor = {};
+
+langProcessor.es6 = function (script) {
+  return transform(script, {
+    // Enables an access to `this` of the Component
+    // so that this transform can obtain the proper information
+    // of the instance of Component
+    moduleId: this.name,
+    plugins: [
+      babelPluginSyntaxImportMeta,
+      babelPluginSyntaxDynamicImport,
+      babelPluginTransformModulesCommonJs
+    ]
+  }).code;
+};
+
 function Component(name) {
   this.name = name;
   this.template = null;
@@ -144,22 +160,6 @@ StyleContext.prototype = {
   getOuter: function () {
     return this.elt.outerHTML;
   }
-};
-
-langProcessor = {};
-
-langProcessor.es6 = function (script) {
-  return transform(script, {
-    // Enables an access to `this` of the Component
-    // so that this transform can obtain the proper information
-    // of the instance of Component
-    moduleId: this.name,
-    plugins: [
-      babelPluginSyntaxImportMeta,
-      babelPluginSyntaxDynamicImport,
-      babelPluginTransformModulesCommonJs
-    ]
-  }).code;
 };
 
 function compile(_path) {
