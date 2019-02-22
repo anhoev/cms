@@ -199,6 +199,10 @@ StyleContext.prototype = {
 
 function compile(_path) {
   const content = fs.readFileSync(path.join(_path), 'utf-8');
+  return compileContent(content);
+}
+
+function compileContent(content) {
   const component = new Component('test');
   return component.load(content).normalize().then(c => {
     let newVue = '';
@@ -214,4 +218,5 @@ function compile(_path) {
 // test
 // compile('plugins/test-plugin/test2.vue').then(a => console.log(a));
 
-module.exports = compile;
+module.exports.compile = compile;
+module.exports.compileContent = compileContent;

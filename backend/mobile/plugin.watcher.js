@@ -6,6 +6,8 @@ const chokidar = require('chokidar');
 const compileVue = require('./compiles');
 const Plugin = require('./CmsPlugin');
 
+const { compile } = compileVue;
+
 module.exports = cms => {
   chokidar.watch(path.join(__dirname, 'plugins'), { ignored: /(^|[\/\\])\../, ignoreInitial: true })
     .on('change', (_path) => {
@@ -13,7 +15,7 @@ module.exports = cms => {
         // not in dist, do the compile
         const ext = path.extname(_path);
         if (ext === '.vue') {
-          compileVue(_path).then((content) => {
+          compile(_path).then((content) => {
             const fileName = path.basename(_path);
             const destPath = path.join(_path, '../dist', fileName);
             FileHelper.addNew(destPath, content);
@@ -35,7 +37,7 @@ module.exports = cms => {
         if (ext === '.vue') {
           const fileName = path.basename(_path);
           const destPath = path.join(_path, '../dist', fileName);
-          compileVue(_path).then((content) => {
+          compile(_path).then((content) => {
             FileHelper.addNew(destPath, content);
           });
         }
