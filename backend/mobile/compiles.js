@@ -211,6 +211,7 @@ function compile(_path) {
   });
 }
 
-compile('plugins/test-plugin/test2.vue').then(a => console.log(a));
+// test
+// compile('plugins/test-plugin/test2.vue').then(a => console.log(a));
 
 module.exports = compile;
