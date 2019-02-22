@@ -232,7 +232,7 @@ module.exports = async function (cms) {
     },
     initSchema(schema) {
       schema.onPostSave(function (form) {
-        if (form) {
+        if (form && form.type === 'Collection') {
           form = jsonfn.clone(form, true, true);
           if (cms.Types[form.name]) {
             delete cms.mongoose.connection.models[form.name];
