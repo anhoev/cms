@@ -229,31 +229,43 @@ module.exports = async function (cms) {
     alwaysLoad: true,
     tabs: {
       Advance: ['name', 'class', 'alwaysLoad', 'tabs', 'type', 'title']
+    },
+    initSchema(schema) {
+      schema.onPostSave(function (form) {
+        if (form && form.type === 'Collection') {
+          form = jsonfn.clone(form, true, true);
+          if (cms.Types[form.name]) {
+            delete cms.mongoose.connection.models[form.name];
+            delete cms.Types[form.name];
+          }
+          initSchema(form);
+          cms.io.emit('reloadSchema');
+        }
+      });
     }
   });
 
-  const forms = await BuildForm.find({}).lean();
-  forms.filter(f => f.type === 'Collection').forEach(form => {
-    cms.registerSchema(convertFormToSchema(form), {
-      name: form.name,
-      title: form.title,
-      alwaysLoad: form.alwaysLoad,
-      tabs: _({ ...form.tabs }).keyBy('name').mapValues(v => v.fields).value(),
-      form: form.fields,
+  function initSchema(schemaForm) {
+    cms.registerSchema(convertFormToSchema(schemaForm), {
+      name: schemaForm.name,
+      title: schemaForm.title,
+      alwaysLoad: schemaForm.alwaysLoad,
+      tabs: _({ ...schemaForm.tabs }).keyBy('name').mapValues(v => v.fields).value(),
+      form: schemaForm.fields,
       autopopulate: true,
       initSchema(schema) {
         schema.onPostSave(function (doc) {
           if (doc) {
-            cms.io.to(`collectionSubscription${form.name}`)
+            cms.io.to(`collectionSubscription${schemaForm.name}`)
               .emit('changeCollectionList', {
-                collection: form.name,
+                collection: schemaForm.name,
                 type: 'update',
                 doc: doc
               });
           } else {
-            cms.io.to(`collectionSubscription${form.name}`)
+            cms.io.to(`collectionSubscription${schemaForm.name}`)
               .emit('changeCollectionList', {
-                collection: form.name,
+                collection: schemaForm.name,
                 type: 'reload'
               });
           }
@@ -261,35 +273,27 @@ module.exports = async function (cms) {
 
         schema.onPostRemove(function (doc) {
           if (doc) {
-            cms.io.to(`collectionSubscription${form.name}`)
+            cms.io.to(`collectionSubscription${schemaForm.name}`)
               .emit('changeCollectionList', {
-                collection: form.name,
+                collection: schemaForm.name,
                 type: 'remove',
                 doc: doc
               });
           } else {
-            cms.io.to(`collectionSubscription${form.name}`)
+            cms.io.to(`collectionSubscription${schemaForm.name}`)
               .emit('changeCollectionList', {
-                collection: form.name,
+                collection: schemaForm.name,
                 type: 'reload'
               });
           }
         });
-
-        // schema.post('findOneAndUpdate', function (docs) {
-        //   cms.io.emit('reloadCms', { collection: form.name, type: 'update', docs: docs });
-        // });
-        // schema.post('findOneAndRemove', { query: true, document: true }, function (docs) {
-        //   cms.io.emit('reloadCms', { collection: form.name, type: 'remove', docs: docs });
-        // });
-        // schema.post('save', { query: true, document: true }, function (docs) {
-        //   if (docs.isNew) {
-        //     cms.io.emit('reloadCms', { collection: form.name, type: 'create', docs: docs });
-        //   }
-        //   // cms.io.emit('reloadCms', { collection: form.name, type: 'remove', docs: docs });
-        // });
       }
     });
+  }
+
+  const forms = await BuildForm.find({}).lean();
+  forms.filter(f => f.type === 'Collection').forEach(form => {
+    initSchema(form);
   });
 
   /*const PluginFile = cms.registerSchema({
