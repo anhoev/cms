@@ -6,6 +6,7 @@ const { transform } = require('@babel/core');
 const babelPluginTransformModulesCommonJs = require('@babel/plugin-transform-modules-commonjs');
 const babelPluginSyntaxDynamicImport = require('@babel/plugin-syntax-dynamic-import');
 const babelPluginSyntaxImportMeta = require('@babel/plugin-syntax-import-meta');
+const sass = require('sass.js');
 
 const langProcessor = {};
 
@@ -21,6 +22,18 @@ langProcessor.es6 = function (script) {
       babelPluginTransformModulesCommonJs
     ]
   }).code;
+};
+
+langProcessor.scss = function (scssText) {
+  return new Promise(function (resolve, reject) {
+    sass.compile(scssText, function (result) {
+      if (result.status === 0) {
+        resolve(result.text);
+      } else {
+        reject(result);
+      }
+    });
+  });
 };
 
 function Component(name) {
@@ -159,7 +172,26 @@ StyleContext.prototype = {
   },
   getOuter: function () {
     return this.elt.outerHTML;
-  }
+  },
+  withBase: function (callback) {
+
+    var tmpBaseElt;
+    if (this.component.baseURI) {
+
+      // firefox and chrome need the <base> to be set while inserting or modifying <style> in a document.
+      tmpBaseElt = document.createElement('base');
+      tmpBaseElt.href = this.component.baseURI;
+
+      var headElt = this.component.getHead();
+      headElt.insertBefore(tmpBaseElt, headElt.firstChild);
+    }
+
+    callback.call(this);
+
+    if (tmpBaseElt) {
+      this.component.getHead().removeChild(tmpBaseElt);
+    }
+  },
 };
 
 function compile(_path) {
@@ -175,5 +207,7 @@ function compile(_path) {
     return newVue;
   });
 }
+
+compile('plugins/test-plugin/test2.vue').then(a => console.log(a));
 
 module.exports = compile;
