@@ -88,6 +88,9 @@ Component.prototype = {
 
           var lang = eltCx.elt.getAttribute('lang');
           eltCx.elt.removeAttribute('lang');
+          if (!langProcessor[lang.toLowerCase()]) {
+            return content;
+          }
           return langProcessor[lang.toLowerCase()].call(this, content === null ? eltCx.getContent() : content);
         } else if (eltCx.elt.tagName.toLowerCase() === 'script' && langProcessor.hasOwnProperty('es6')) {
           return langProcessor['es6'].call(this, content === null ? eltCx.getContent() : content);
@@ -191,7 +194,7 @@ StyleContext.prototype = {
     if (tmpBaseElt) {
       this.component.getHead().removeChild(tmpBaseElt);
     }
-  },
+  }
 };
 
 function compile(_path) {
