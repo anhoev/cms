@@ -12,7 +12,6 @@ function Component(name) {
   this.template = null;
   this.script = null;
   this.styles = [];
-  this._scopeId = '';
 }
 
 Component.prototype = {
@@ -163,44 +162,6 @@ langProcessor.es6 = function (script) {
   }).code;
 };
 
-function _normalizeSection(eltCx) {
-
-  var p;
-
-  if (eltCx === null || !eltCx.elt.hasAttribute('src')) {
-
-    p = Promise.resolve(null);
-  } else {
-
-    p = httpVueLoader.httpRequest(eltCx.elt.getAttribute('src'))
-      .then(function (content) {
-
-        eltCx.elt.removeAttribute('src');
-        return content;
-      });
-  }
-
-  return p
-    .then(function (content) {
-
-      if (eltCx !== null && eltCx.elt.hasAttribute('lang')) {
-
-        var lang = eltCx.elt.getAttribute('lang');
-        eltCx.elt.removeAttribute('lang');
-        return langProcessor[lang.toLowerCase()].call(this, content === null ? eltCx.getContent() : content);
-      } else if (eltCx.elt.tagName.toLowerCase() === 'script' && httpVueLoader.langProcessor.hasOwnProperty('es6')) {
-        return langProcessor['es6'].call(this, content === null ? eltCx.getContent() : content);
-      }
-      return content;
-    }.bind(this))
-    .then(function (content) {
-
-      if (content !== null) {
-        eltCx.setContent(content);
-      }
-    });
-}
-
 function compile(_path) {
   const content = fs.readFileSync(path.join(_path), 'utf-8');
   const component = new Component('test');
@@ -214,7 +175,5 @@ function compile(_path) {
     return newVue;
   });
 }
-
-// compile('plugins/hello.txt');
 
 module.exports = compile;
