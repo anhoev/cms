@@ -6,11 +6,13 @@
 const _ = require('lodash');
 const cms = require('../src/cms');
 const plugins = require('./plugin.socket');
+const watcher = require('./plugin.watcher');
 const path = require('path');
 cms.data.security = false;
 cms.listen(8888);
 cms.useSession();
 cms.use(plugins);
+cms.use(watcher);
 cms.app.use(function (req, res, next) {
 
   // Website you wish to allow to connect
