@@ -208,7 +208,7 @@ function compileContent(content) {
 }
 
 // test
-compile('plugins/test-plugin/test2.vue').then(a => console.log(a));
+// compile('plugins/test-plugin/test2.vue').then(a => console.log(a));
 
 module.exports.compile = compile;
 module.exports.compileContent = compileContent;
