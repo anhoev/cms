@@ -154,6 +154,9 @@ module.exports = async function (cms) {
     fields: {
       type: [{
         choice: String,
+        virtual: _.merge(w({
+          //'computed': ['label', 'flex', 'addable', 'isVisible']
+        }), { type: { form: { form: { dynamicFields: '.mixed' } } } }),
         string: _.merge(w({
           'input': ['label', 'flex', 'addable', 'isVisible'],
           'input@select': ['label', 'flex', 'options', 'addable', 'isVisible']
@@ -212,6 +215,7 @@ module.exports = async function (cms) {
       }],
       form: { type: 'tree', children: 'fields', choiceKey: 'schemaType' }
     },
+    extensions: { type: [{ choice: String }], form: { type: 'choiceArray', choiceKey: 'extensionType', dynamicFields: '.form-extension' } },
     tabs: {
       type: [{
         name: String,
@@ -228,7 +232,8 @@ module.exports = async function (cms) {
     schemaOptions: { strict: false },
     alwaysLoad: true,
     tabs: {
-      Advance: ['name', 'class', 'alwaysLoad', 'tabs', 'type', 'title']
+      Advance: ['name', 'class', 'alwaysLoad', 'tabs', 'type', 'title'],
+      Extension: ['extensions']
     },
     initSchema(schema) {
       schema.onPostSave(function (form) {
@@ -257,34 +262,34 @@ module.exports = async function (cms) {
         schema.onPostSave(function (doc) {
           if (doc) {
             cms.io.to(`collectionSubscription${schemaForm.name}`)
-              .emit('changeCollectionList', {
-                collection: schemaForm.name,
-                type: 'update',
-                doc: doc
-              });
+            .emit('changeCollectionList', {
+              collection: schemaForm.name,
+              type: 'update',
+              doc: doc
+            });
           } else {
             cms.io.to(`collectionSubscription${schemaForm.name}`)
-              .emit('changeCollectionList', {
-                collection: schemaForm.name,
-                type: 'reload'
-              });
+            .emit('changeCollectionList', {
+              collection: schemaForm.name,
+              type: 'reload'
+            });
           }
         });
 
         schema.onPostRemove(function (doc) {
           if (doc) {
             cms.io.to(`collectionSubscription${schemaForm.name}`)
-              .emit('changeCollectionList', {
-                collection: schemaForm.name,
-                type: 'remove',
-                doc: doc
-              });
+            .emit('changeCollectionList', {
+              collection: schemaForm.name,
+              type: 'remove',
+              doc: doc
+            });
           } else {
             cms.io.to(`collectionSubscription${schemaForm.name}`)
-              .emit('changeCollectionList', {
-                collection: schemaForm.name,
-                type: 'reload'
-              });
+            .emit('changeCollectionList', {
+              collection: schemaForm.name,
+              type: 'reload'
+            });
           }
         });
       }
