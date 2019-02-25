@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const axios = require('axios').default;
 const Plugin = require('./CmsPlugin');
+const { compileContent } = require('./compiles');
 
 module.exports = (cms) => {
   const allPlugins = Plugin.initAllPlugin();
@@ -34,15 +35,15 @@ module.exports = (cms) => {
         fn(e.stack);
       }
     });
-    socket.on('compile', function (pluginName, _path, content, fn) {
-      try {
-        const writePath = path.join(path.dirname(_path), 'dist', path.basename(_path));
-        getPlugin(pluginName).addNewFile(writePath, content);
-        fn();
-      } catch (e) {
-        fn(e);
-      }
-    });
+    // socket.on('compile', function (pluginName, _path, content, fn) {
+    //   try {
+    //     const writePath = path.join(path.dirname(_path), 'dist', path.basename(_path));
+    //     getPlugin(pluginName).addNewFile(writePath, content);
+    //     fn();
+    //   } catch (e) {
+    //     fn(e);
+    //   }
+    // });
     socket.on('loadDistPlugin', function (fn) {
       const result = Object
         .keys(allPlugins)
@@ -143,6 +144,11 @@ module.exports = (cms) => {
         .importModel(collection, filePath, replace)
         .then(res => fn(null, res))
         .catch(err => fn(err));
+    });
+    socket.on('compileContent', (contentIn, fn) => {
+      compileContent(contentIn)
+        .then((contentOut) => fn(null, contentOut))
+        .catch(() => fn({ err: 'Compile error' }));
     });
     socket.on('getListPlugin', (fn) => {
       fn(null, Plugin.getAllPlugin());
