@@ -7,6 +7,7 @@ const babelPluginTransformModulesCommonJs = require('@babel/plugin-transform-mod
 const babelPluginSyntaxDynamicImport = require('@babel/plugin-syntax-dynamic-import');
 const babelPluginSyntaxImportMeta = require('@babel/plugin-syntax-import-meta');
 const sass = require('sass.js');
+const axios = require('axios').default;
 
 const langProcessor = {};
 
@@ -36,19 +37,17 @@ langProcessor.scss = function (scssText) {
   });
 };
 
-function Component(name) {
-  this.name = name;
-  this.template = null;
-  this.script = null;
-  this.styles = [];
-}
+class Component {
+  constructor(name) {
+    this.name = name;
+    this.template = null;
+    this.script = null;
+    this.styles = [];
+  }
 
-Component.prototype = {
-  load: function (content) {
-
+  load(content) {
     const frag = JSDOM.fragment(content);
     for (let it = frag.firstChild; it; it = it.nextSibling) {
-
       switch (it.nodeName) {
         case 'TEMPLATE':
           this.template = new TemplateContext(this, it);
@@ -62,9 +61,9 @@ Component.prototype = {
       }
     }
     return this;
-  },
+  }
 
-  _normalizeSection: function (eltCx) {
+  _normalizeSection(eltCx) {
 
     var p;
 
@@ -73,7 +72,7 @@ Component.prototype = {
       p = Promise.resolve(null);
     } else {
 
-      p = httpVueLoader.httpRequest(eltCx.elt.getAttribute('src'))
+      p = axios.get(eltCx.elt.getAttribute('src'))
         .then(function (content) {
 
           eltCx.elt.removeAttribute('src');
@@ -103,9 +102,9 @@ Component.prototype = {
           eltCx.setContent(content);
         }
       });
-  },
+  }
 
-  normalize: function () {
+  normalize() {
 
     return Promise.all(Array.prototype.concat(
       this._normalizeSection(this.template),
@@ -117,85 +116,77 @@ Component.prototype = {
         return this;
       }.bind(this));
   }
-};
-
-
-function TemplateContext(component, elt) {
-
-  this.component = component;
-  this.elt = elt;
 }
 
-TemplateContext.prototype = {
-  getContent: function () {
+class TemplateContext {
+  constructor(component, elt) {
+    this.component = component;
+    this.elt = elt;
+  }
+
+  getContent() {
     return this.elt.innerHTML;
-  },
-  getOuter: function () {
+  }
+
+  getOuter() {
 
     return this.elt.outerHTML;
-  },
-  setContent: function (content) {
+  }
+
+  setContent(content) {
     this.elt.innerHTML = content;
   }
-};
-
-function ScriptContext(component, elt) {
-
-  this.component = component;
-  this.elt = elt;
-  this.module = { exports: {} };
 }
 
-ScriptContext.prototype = {
+class ScriptContext {
+  constructor(component, elt) {
+    this.component = component;
+    this.elt = elt;
+    this.module = { exports: {} };
+  }
 
-  getContent: function () {
-
+  getContent() {
     return this.elt.textContent;
-  },
-  setContent: function (content) {
+  }
 
+  setContent(content) {
     this.elt.textContent = content;
   }
-};
-
-function StyleContext(component, elt) {
-
-  this.component = component;
-  this.elt = elt;
 }
 
-StyleContext.prototype = {
-  getContent: function () {
-    return this.elt.textContent;
-  },
-  setContent: function (content) {
-    this.withBase(function () {
-      this.elt.textContent = content;
-    });
-  },
-  getOuter: function () {
-    return this.elt.outerHTML;
-  },
-  withBase: function (callback) {
-
-    var tmpBaseElt;
-    if (this.component.baseURI) {
-
-      // firefox and chrome need the <base> to be set while inserting or modifying <style> in a document.
-      tmpBaseElt = document.createElement('base');
-      tmpBaseElt.href = this.component.baseURI;
-
-      var headElt = this.component.getHead();
-      headElt.insertBefore(tmpBaseElt, headElt.firstChild);
-    }
-
-    callback.call(this);
-
-    if (tmpBaseElt) {
-      this.component.getHead().removeChild(tmpBaseElt);
-    }
+class StyleContext {
+  constructor(component, elt) {
+    this.component = component;
+    this.elt = elt;
   }
-};
+
+  getContent() {
+    return this.elt.textContent;
+  }
+
+  setContent(content) {
+    this.elt.textContent = content;
+  }
+
+  getOuter() {
+    return this.elt.outerHTML;
+  }
+}
+
+class Compiler {
+  constructor(str) {
+    this.str = str;
+  }
+
+  append(s) {
+    this.str = this.str + s;
+    return this;
+  }
+
+  toString() {
+    return this.str;
+  }
+}
 
 function compile(_path) {
   const content = fs.readFileSync(path.join(_path), 'utf-8');
@@ -203,20 +194,21 @@ function compile(_path) {
 }
 
 function compileContent(content) {
+  const compiler = new Compiler('');
   const component = new Component('test');
   return component.load(content).normalize().then(c => {
-    let newVue = '';
-    newVue += `${c.template.getOuter()}`;
-    /* eslint-disable */
-    newVue += '<script>\n' + c.script.getContent() + '\n<' + '/script> \n';
-    newVue += c.styles.reduce((acc, item) => acc + `<style${item.elt.hasAttribute('scoped') ? ' scoped' : ''}>${item.getContent()}</style>
-`, '');
-    return newVue;
+    compiler.append(c.template.getOuter()).append('\n').append('<script>\n' + c.script.getContent() + '\n<' + '/script> \n')
+      .append((function () {
+        const style = new Compiler('');
+        c.styles.reduce((acc, item) => acc.append(`<style${item.elt.hasAttribute('scoped') ? ' scoped' : ''}>${item.getContent()}</style>`).append('\n'), style);
+        return style;
+      })());
+    return compiler.toString();
   });
 }
 
 // test
-// compile('plugins/test-plugin/test2.vue').then(a => console.log(a));
+compile('plugins/test-plugin/test2.vue').then(a => console.log(a));
 
 module.exports.compile = compile;
 module.exports.compileContent = compileContent;
