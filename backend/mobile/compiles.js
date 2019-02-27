@@ -91,7 +91,7 @@ class Component {
             return content;
           }
           return langProcessor[lang.toLowerCase()].call(this, content === null ? eltCx.getContent() : content);
-        } else if (eltCx.elt.tagName.toLowerCase() === 'script' && langProcessor.hasOwnProperty('es6')) {
+        } else if (eltCx !== null && eltCx.elt.tagName.toLowerCase() === 'script' && langProcessor.hasOwnProperty('es6')) {
           return langProcessor['es6'].call(this, content === null ? eltCx.getContent() : content);
         }
         return content;
@@ -197,12 +197,19 @@ function compileContent(content) {
   const compiler = new Compiler('');
   const component = new Component('test');
   return component.load(content).normalize().then(c => {
-    compiler.append(c.template.getOuter()).append('\n').append('<script>\n' + c.script.getContent() + '\n<' + '/script> \n')
-      .append((function () {
+    if (c.template) {
+      compiler.append(c.template.getOuter()).append('\n');
+    }
+    if (c.script) {
+      compiler.append('<script>\n' + c.script.getContent() + '\n<' + '/script> \n');
+    }
+    if (c.styles) {
+      compiler.append((function () {
         const style = new Compiler('');
         c.styles.reduce((acc, item) => acc.append(`<style${item.elt.hasAttribute('scoped') ? ' scoped' : ''}>${item.getContent()}</style>`).append('\n'), style);
         return style;
       })());
+    }
     return compiler.toString();
   });
 }

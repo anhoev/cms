@@ -15,18 +15,19 @@ module.exports = cms => {
         // not in dist, do the compile
         const ext = path.extname(_path);
         if (ext === '.vue') {
-          compile(_path).then((content) => {
-            const fileName = path.basename(_path);
-            const destPath = path.join(_path, '../dist', fileName);
-            FileHelper.addNew(destPath, content);
-            const componentName = path.parse(fileName).name;
-            const staticPath = Plugin.convertFilePathToInternalPathStatic(destPath, '');
-            cms.io.to(`pluginSubscription${componentName}`).emit(`changePlugin${componentName}`, {
-              type: 'change',
-              path: path.join('plugins', staticPath),
-              component: componentName
-            });
-          });
+          compile(_path)
+            .then((content) => {
+              const fileName = path.basename(_path);
+              const destPath = path.join(_path, '../dist', fileName);
+              FileHelper.addNew(destPath, content);
+              const componentName = path.parse(fileName).name;
+              const staticPath = Plugin.convertFilePathToInternalPathStatic(destPath, '');
+              cms.io.to(`pluginSubscription${componentName}`).emit(`changePlugin${componentName}`, {
+                type: 'change',
+                path: path.join('plugins', staticPath),
+                component: componentName
+              });
+            }).catch(err => console.log(err));
         }
       }
     })
@@ -37,9 +38,13 @@ module.exports = cms => {
         if (ext === '.vue') {
           const fileName = path.basename(_path);
           const destPath = path.join(_path, '../dist', fileName);
-          compile(_path).then((content) => {
-            FileHelper.addNew(destPath, content);
-          });
+          compile(_path)
+            .then((content) => {
+              FileHelper.addNew(destPath, content);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         }
       }
     });
