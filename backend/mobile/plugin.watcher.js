@@ -9,7 +9,7 @@ const Plugin = require('./CmsPlugin');
 const { compile } = compileVue;
 
 module.exports = cms => {
-  chokidar.watch(path.join(__dirname, 'plugins'), { ignored: /(^|[\/\\])\../, ignoreInitial: true })
+  chokidar.watch(path.join(__dirname, 'plugins'), { ignored: /(^|[\/\\])\../, ignoreInitial: false })
     .on('change', (_path) => {
       if (!/\/dist\//.test(_path)) {
         // not in dist, do the compile
@@ -20,6 +20,7 @@ module.exports = cms => {
               const fileName = path.basename(_path);
               const destPath = path.join(_path, '../dist', fileName);
               FileHelper.addNew(destPath, content);
+              console.log(`compiled to: ${destPath}`);
               const componentName = path.parse(fileName).name;
               const staticPath = Plugin.convertFilePathToInternalPathStatic(destPath, '');
               cms.io.to(`pluginSubscription${componentName}`).emit(`changePlugin${componentName}`, {
@@ -40,12 +41,23 @@ module.exports = cms => {
           const destPath = path.join(_path, '../dist', fileName);
           compile(_path)
             .then((content) => {
+              console.log(`compiled to: ${destPath}`);
               FileHelper.addNew(destPath, content);
             })
             .catch((err) => {
               console.log(err);
             });
         }
+      }
+    })
+    .on('unlink', _path => {
+      const ext = path.extname(_path);
+      if (ext === '.vue') {
+        const fileName = path.basename(_path);
+        const destPath = path.join(_path, '../dist', fileName);
+        FileHelper.delete(destPath);
+        console.log(`delete compiled file: ${destPath}`);
+
       }
     });
 };
