@@ -86,9 +86,18 @@ module.exports = async function (cms) {
       type: {},
       form: { type: 'editor', height: '100px', flex: 'md12', addable: true }
     },
+    itemText: {
+      type: {},
+      form: { type: 'editor', height: '100px', flex: 'md12', addable: true }
+    },
+    itemValue: {
+      type: {},
+      form: { type: 'editor', height: '100px', flex: 'md12', addable: true }
+    },
     choiceKey: String,
     choiceKeyOutside: Boolean,
     noPanel: Boolean,
+    returnObject: Boolean,
     options: {
       type: {
         choice: String,
@@ -204,13 +213,14 @@ module.exports = async function (cms) {
           'object': ['label', 'flex', 'noPanel', 'addable', 'isVisible'],
           'choice': ['label', 'flex', 'choiceKey', 'choiceKeyOutside', 'isVisible'],
           'object@dynamic': ['label', 'flex', 'noPanel', 'addable', 'dynamicFields', 'isVisible'],
-          'tree': ['label', 'children', 'getText']
+          'tree': ['label', 'children', 'getText'],
+          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue']
         })), { type: { form: { form: { type: 'choice', dynamicFields: '.mixed' } } } }),
         array: _.merge(w({
           'array': ['label', 'flex', 'addable', 'isVisible'],
           'tableArray': ['label', 'flex', 'expansion', 'addable', 'isVisible'],
           'choiceArray': ['label', 'flex', 'addable', 'isVisible'],
-          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible']
+          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue']
         }), { type: { form: { form: { dynamicFields: '.array' } } } })
       }],
       form: { type: 'tree', children: 'fields', choiceKey: 'schemaType' }
@@ -225,7 +235,7 @@ module.exports = async function (cms) {
     }
   };
 
-  const BuildForm = cms.registerSchema(buildFormSchema, {
+  const FormBuilderInfo = {
     name: 'BuildForm',
     title: 'name',
     autopopulate: true,
@@ -234,7 +244,61 @@ module.exports = async function (cms) {
     tabs: {
       Advance: ['name', 'class', 'alwaysLoad', 'tabs', 'type', 'title'],
       Extension: ['extensions']
-    },
+    }
+  };
+
+  function onInitCollection(schema, collectionName) {
+    schema.onPostSave(function (doc) {
+      if (doc) {
+        cms.io.to(`collectionSubscription${collectionName}`)
+        .emit('changeCollectionList', {
+          collection: collectionName,
+          type: 'update',
+          doc: doc
+        });
+      } else {
+        cms.io.to(`collectionSubscription${collectionName}`)
+        .emit('changeCollectionList', {
+          collection: collectionName,
+          type: 'reload'
+        });
+      }
+    });
+
+    schema.onPostRemove(function (doc) {
+      if (doc) {
+        cms.io.to(`collectionSubscription${collectionName}`)
+        .emit('changeCollectionList', {
+          collection: collectionName,
+          type: 'remove',
+          doc: doc
+        });
+      } else {
+        cms.io.to(`collectionSubscription${collectionName}`)
+        .emit('changeCollectionList', {
+          collection: collectionName,
+          type: 'reload'
+        });
+      }
+    });
+  }
+
+  function initSchema(schemaForm) {
+    cms.registerSchema(convertFormToSchema(schemaForm), {
+      name: schemaForm.name,
+      title: schemaForm.title,
+      alwaysLoad: schemaForm.alwaysLoad,
+      tabs: _({ ...schemaForm.tabs }).keyBy('name').mapValues(v => v.fields).value(),
+      form: schemaForm.fields,
+      autopopulate: true,
+      initSchema(schema) {
+        onInitCollection(schema, schemaForm.name);
+      }
+    });
+  }
+
+  const BuildForm = cms.registerSchema(buildFormSchema, {
+    ...FormBuilderInfo,
     initSchema(schema) {
       schema.onPostSave(function (form) {
         if (form && form.type === 'Collection') {
@@ -247,54 +311,11 @@ module.exports = async function (cms) {
           cms.io.emit('reloadSchema');
         }
       });
+      // Init collection subscription for form builder
+      onInitCollection(schema, FormBuilderInfo.name);
     }
   });
 
-  function initSchema(schemaForm) {
-    cms.registerSchema(convertFormToSchema(schemaForm), {
-      name: schemaForm.name,
-      title: schemaForm.title,
-      alwaysLoad: schemaForm.alwaysLoad,
-      tabs: _({ ...schemaForm.tabs }).keyBy('name').mapValues(v => v.fields).value(),
-      form: schemaForm.fields,
-      autopopulate: true,
-      initSchema(schema) {
-        schema.onPostSave(function (doc) {
-          if (doc) {
-            cms.io.to(`collectionSubscription${schemaForm.name}`)
-            .emit('changeCollectionList', {
-              collection: schemaForm.name,
-              type: 'update',
-              doc: doc
-            });
-          } else {
-            cms.io.to(`collectionSubscription${schemaForm.name}`)
-            .emit('changeCollectionList', {
-              collection: schemaForm.name,
-              type: 'reload'
-            });
-          }
-        });
-
-        schema.onPostRemove(function (doc) {
-          if (doc) {
-            cms.io.to(`collectionSubscription${schemaForm.name}`)
-            .emit('changeCollectionList', {
-              collection: schemaForm.name,
-              type: 'remove',
-              doc: doc
-            });
-          } else {
-            cms.io.to(`collectionSubscription${schemaForm.name}`)
-            .emit('changeCollectionList', {
-              collection: schemaForm.name,
-              type: 'reload'
-            });
-          }
-        });
-      }
-    });
-  }
 
   const forms = await BuildForm.find({}).lean();
   forms.filter(f => f.type === 'Collection').forEach(form => {
