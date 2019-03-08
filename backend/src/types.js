@@ -7,40 +7,45 @@ require('generator-bind').polyfill();
 const JsonFn = require('json-fn');
 const autopopulate = require('mongoose-autopopulate');
 const traverse = require('traverse');
+const authService = require('../mobile/auth.service');
+
+const readAllowMethod = ['find', 'findOne', 'findById', 'skip', 'limit', 'count', 'countDocuments', 'estimatedDocumentCount'];
 
 module.exports = (cms) => {
-  const {app, Q} = cms;
+  const { app, Q } = cms;
 
   app.get('/cms-types', function* (req, res) {
-    res.send(_.map(cms.Types, (v, type) => ({type})));
-  })
+    res.send(_.map(cms.Types, (v, type) => ({ type })));
+  });
   app.post('/cms-types/:type/:id/:fn', function* (req, res) {
-    const {type, id, fn} = req.params;
+    const { type, id, fn } = req.params;
     const args = _.map(JsonFn.clone(req.body, true), v => v);
-    const {Model, serverFn} = cms.Types[type];
+    const { Model, serverFn } = cms.Types[type];
     const obj = yield Model.findById(id).exec();
     const result = obj ? yield* serverFn[fn].bind(obj)(...args) : yield* serverFn[fn](...args);
     res.send(isNaN(result) ? result : result + '');
-  })
+  });
 
   app.delete('/cms-types/:type', function* (req, res) {
-    const {type} = req.params;
-    const {Model} = cms.Types[type];
+    const { type } = req.params;
+    const { Model } = cms.Types[type];
     Model.remove({});
     const result = yield Model.remove({}).exec();
     res.send(result);
-  })
+  });
 
   app.post('/cms-types/:type', function* (req, res) {
     const withTemplate = req.query.template === 'true';
     const noElement = req.query.element === 'false';
     let ref = req.query.element;
-    if (ref === 'false') ref = false;
+    if (ref === 'false') {
+      ref = false;
+    }
     const content = req.body;
-    const {type} = req.params;
-    const {Model, Formatter, FormatterUrl, Form, info, fn, serverFnForClient} = cms.Types[type];
+    const { type } = req.params;
+    const { Model, Formatter, FormatterUrl, Form, info, fn, serverFnForClient } = cms.Types[type];
 
-    let obj = noElement ? new Model(content) : (ref ? yield Model.findOne({_id: ref}) : yield Model.create(content));
+    let obj = noElement ? new Model(content) : (ref ? yield Model.findOne({ _id: ref }) : yield Model.create(content));
 
     if (noElement && !ref && Model.session) {
       Model.session(req.session, obj);
@@ -53,16 +58,18 @@ module.exports = (cms) => {
         const _query = {
           p: obj,
           populate: function (opt) {
-            if (this.p) this.p = this.p.populate(opt);
+            if (this.p) {
+              this.p = this.p.populate(opt);
+            }
           }
-        }
+        };
         _autopopulate.bind(_query)();
 
         yield _query.p.execPopulate();
       }
     } catch (e) {
     }
-    let result = {info, fn, serverFn: serverFnForClient};
+    let result = { info, fn, serverFn: serverFnForClient };
     result.data = obj;
 
     if (withTemplate) {
@@ -76,35 +83,41 @@ module.exports = (cms) => {
     }
 
     res.send(JsonFn.stringify(result));
-  })
+  });
 
   function registerSchema(schema, options) {
     const {
       name, label, formatter, formatterUrl, initSchema, title, fn = {},
-      serverFn = {}, tabs, isViewElement = true, mTemplate, admin = {query: []},
+      serverFn = {}, tabs, isViewElement = true, mTemplate, admin = { query: [] },
       alwaysLoad = false, restifyOptions,
       info = {}, textIndex,
       controller, lean, link, schemaOptions, form
     } = options;
-    if (cms.Types[name]) return;
+    if (cms.Types[name]) {
+      return;
+    }
 
     cms.filters.schema.forEach((fn) => fn(schema, name));
     if (!(schema instanceof cms.mongoose.Schema)) {
       schema = new cms.mongoose.Schema(schema, _.assign({
-        toObject: {virtuals: true},
-        toJSON: {virtuals: true}
+        toObject: { virtuals: true },
+        toJSON: { virtuals: true }
       }, schemaOptions));
     }
 
-    if (options.autopopulate) schema.plugin(autopopulate);
+    if (options.autopopulate) {
+      schema.plugin(autopopulate);
+    }
 
 
     if (textIndex) {
-      schema.add({_textIndex: {type: String, form: false, index: 'text'}});
+      schema.add({ _textIndex: { type: String, form: false, index: 'text' } });
       schema.pre('findOneAndUpdate', function (next) {
-        let _textIndex = ''
+        let _textIndex = '';
         traverse(this._update).forEach(function (node) {
-          if (!node) return;
+          if (!node) {
+            return;
+          }
           if (this.key && !_.includes(['$set', '$setOnInsert', '__v', '_id', 'id'], this.key)) {
             const _type = schema.path(this.path.filter(p => p !== '$set' && p !== '$setOnInsert').join('.'));
             if (_type) {
@@ -123,7 +136,7 @@ module.exports = (cms) => {
           } else if (this.key) {
             this.block();
           }
-        })
+        });
         this._update._textIndex = _textIndex;
         next();
       });
@@ -132,11 +145,13 @@ module.exports = (cms) => {
 
     // schema.index({'$**': 'text'});
 
-    if (initSchema) initSchema(schema);
+    if (initSchema) {
+      initSchema(schema);
+    }
     let Model;
     if (name) {
       Model = cms.mongoose.model(name, schema);
-      cms.restify.serve(app, Model, _.assign(restifyOptions, {lean: false}));
+      cms.restify.serve(app, Model, _.assign(restifyOptions, { lean: false }));
     }
 
     _.merge(fn, cms.filters.fn);
@@ -171,23 +186,25 @@ module.exports = (cms) => {
           _.each(serverFn, (fn, k) => {
             this._serverFnForClient[k] = function (post, scope, type, fnName) {
               const model = this;
-              if (!scope.serverFnData) scope.serverFnData = [];
+              if (!scope.serverFnData) {
+                scope.serverFnData = [];
+              }
               scope.serverFn[fnName] = function () {
                 const getFnData = args => _.find(scope.serverFnData,
-                  v => JSON.stringify({args: v.args, k: v.k}) === JSON.stringify({args, k: fnName}));
+                  v => JSON.stringify({ args: v.args, k: v.k }) === JSON.stringify({ args, k: fnName }));
                 const data = getFnData(arguments);
                 if (data && data.result) {
                   return data.result;
                 }
                 if (!data) {
-                  scope.serverFnData.push({args: arguments, k: fnName});
+                  scope.serverFnData.push({ args: arguments, k: fnName });
                   const args = arguments;
-                  post(`/cms-types/${type}/${model._id}/${fnName}`, arguments).then(res => getFnData(args).result = res.data)
+                  post(`/cms-types/${type}/${model._id}/${fnName}`, arguments).then(res => getFnData(args).result = res.data);
                   return scope.serverFnData.length - 1;
                 }
               };
-            }
-          })
+            };
+          });
         }
         return this._serverFnForClient;
       },
@@ -217,7 +234,7 @@ module.exports = (cms) => {
           controller: this.controller,
           lean: this.lean,
           link: this.link
-        }
+        };
       },
       getWebTypeWithData: function* () {
         const Type = this.webType;
@@ -225,7 +242,9 @@ module.exports = (cms) => {
         return Type;
       },
       get template() {
-        if (!this.Formatter && !this.FormatterUrl) return '';
+        if (!this.Formatter && !this.FormatterUrl) {
+          return '';
+        }
         return this.Formatter ? this.Formatter : cms.readFile(this.FormatterUrl);
       }
     };
@@ -249,20 +268,23 @@ module.exports = (cms) => {
 
     socket.on('error', function (e) {
       console.warn(e);
-    })
+    });
 
     socket.on('getTypes', async function (types, fn) {
       if (types === '*') {
         const Types = {};
         for (const type in cms.Types) {
-          Types[type] = cms.Types[type].webType;
-          if (Types[type].info.alwaysLoad) {
-            Types[type].list.push(...await cms.getModel(type).find({}));
+          const permission = authService.getCollectionPermission(socket.request.user, type);
+          if (permission) {
+            Types[type] = cms.Types[type].webType;
+            if (Types[type].info.alwaysLoad) {
+              Types[type].list.push(...await cms.getModel(type).find({}));
+            }
           }
         }
         fn(jsonfn.stringify(Types));
       }
-    })
+    });
 
     socket.on('getForm', async function (name, fn) {
       fn(cms.Types[name].webType.form);
@@ -279,27 +301,39 @@ module.exports = (cms) => {
       fn();
     });
 
-    socket.on('interface', async function ({name, chain}, fn) {
+    socket.on('interface', async function ({ name, chain }, fn) {
+      const permission = authService.getCollectionPermission(socket.request.user, name);
+      if (permission === 'read') {
+        const allChainMethod = chain.map(item => item.fn);
+        const isAllow = allChainMethod.every(item => readAllowMethod.includes(item));
+        if (!isAllow) {
+          return;
+        }
+      }
       let step = cms.getModel(name);
       if (chain[0].fn === 'new') {
         return fn(new step(...chain[0].args));
       }
-      for (const {fn, args} of chain) step = step[fn](...args);
+      for (const { fn, args } of chain) step = step[fn](...args);
       let result = await step;
-      fn(result)
+      fn(result);
     });
 
     socket.on('find', async function (type, params = {}, fn) {
       if (Object.keys(cms.Types).indexOf(type) !== -1) {
         let q = cms.getModel(type).find(params.query);
-        if (params.populate) q = q.populate(params.populate);
+        if (params.populate) {
+          q = q.populate(params.populate);
+        }
         q = q.sort(params.sort).skip(params.skip).limit(params.limit);
-        if (params.lean) q = q.lean();
+        if (params.lean) {
+          q = q.lean();
+        }
         fn(await q);
       }
     });
 
-    socket.on('message', function* ({path, params = {}, uuid, model}) {
+    socket.on('message', function* ({ path, params = {}, uuid, model }) {
       const base = '([^\/]*)\/api\/v1\/([^\/]*)';
       const modelQueryTester = new RegExp(`${base}$`);
       const countQueryTester = new RegExp(`${base}\/count$`);
@@ -308,14 +342,18 @@ module.exports = (cms) => {
         if (method === 'get') {
           if (Object.keys(cms.Types).indexOf(type) !== -1) {
             let q = cms.getModel(type).find(params.query);
-            if (q.session) q = q.session(socket.handshake.session);
+            if (q.session) {
+              q = q.session(socket.handshake.session);
+            }
             if (params.populate) {
               q = q.populate(params.populate);
             }
             q = q.sort(params.sort).skip(params.skip).limit(params.limit);
-            if (params.lean) q = q.lean();
+            if (params.lean) {
+              q = q.lean();
+            }
             const result = yield q;
-            socket.emit('message', {result, uuid});
+            socket.emit('message', { result, uuid });
           }
         } else if (method === 'post') {
           if (Object.keys(cms.Types).indexOf(type) !== -1) {
@@ -326,7 +364,9 @@ module.exports = (cms) => {
               model._id = _model._id;
             }
 
-            if (Model.session) Model.session(socket.handshake.session, model);
+            if (Model.session) {
+              Model.session(socket.handshake.session, model);
+            }
 
             try {
               yield Model.findByIdAndUpdate(model._id, _.pickBy(model, (v, k) => k !== '__v', true), {
@@ -338,7 +378,7 @@ module.exports = (cms) => {
             }
 
             let result = yield Model.findById(model._id);
-            socket.emit('message', {result, uuid});
+            socket.emit('message', { result, uuid });
           }
         }
       }
@@ -347,9 +387,11 @@ module.exports = (cms) => {
         if (method === 'get') {
           if (Object.keys(cms.Types).indexOf(modelName) !== -1) {
             let q = cms.Types[modelName].Model.find(params.query);
-            if (q.session) q = q.session(socket.handshake.session);
+            if (q.session) {
+              q = q.session(socket.handshake.session);
+            }
             const result = yield q.count(params.query);
-            socket.emit('message', {result, uuid});
+            socket.emit('message', { result, uuid });
           }
         }
       }
@@ -358,11 +400,11 @@ module.exports = (cms) => {
       if (serverFnPath.test(path)) {
         const [type, id, fn] = path.match(serverFnPath);
         const args = params;
-        const {Model, serverFn} = cms.Types[type];
+        const { Model, serverFn } = cms.Types[type];
         const obj = yield Model.findById(id).exec();
         const result = yield* serverFn[fn].bind(obj)(...args);
-        socket.emit('message', {result: isNaN(result) ? result : result + '', uuid});
+        socket.emit('message', { result: isNaN(result) ? result : result + '', uuid });
       }
     });
   });
-}
+};
