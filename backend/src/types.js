@@ -11,6 +11,28 @@ const authService = require('../mobile/auth.service');
 
 const readAllowMethod = ['find', 'findOne', 'findById', 'skip', 'limit', 'count', 'countDocuments', 'estimatedDocumentCount'];
 
+function addQueryCondition(model, method, queryCondition) {
+
+  if (!Array.isArray(queryCondition)) {
+    return model;
+  }
+  if (/^find/.test(method)) {
+    console.log(queryCondition);
+    // find method;
+    queryCondition.forEach(item => {
+      console.log({ [item.key]: item.value });
+      try {
+        const value = JSON.parse(item.value);
+        model = model[method]({ [item.key]: value });
+      } catch (e) {
+        model = model[method]({ [item.key]: item.value });
+      }
+    });
+  }
+  return model;
+
+}
+
 module.exports = (cms) => {
   const { app, Q } = cms;
 
@@ -311,6 +333,8 @@ module.exports = (cms) => {
         }
       }
       let step = cms.getModel(name);
+      const queryCondition = authService.getQueryCondition(socket.request.user, name);
+      step = addQueryCondition(step, chain[0].fn, queryCondition);
       if (chain[0].fn === 'new') {
         return fn(new step(...chain[0].args));
       }

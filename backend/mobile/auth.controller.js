@@ -10,7 +10,7 @@ module.exports = (cms) => {
       .then(user => {
         if (user) {
           if (user.password === password) {
-            const payload = _.pick(user.toObject(), ['username', '_id', 'collectionPermission', 'role']);
+            const payload = _.pick(user.toObject(), ['username', '_id', 'collectionPermission', 'role', 'queryCondition']);
             const token = jwt.sign(payload, config.secretKey, { expiresIn: config.expireIn });
             res.status(200).json({ token });
           } else {
