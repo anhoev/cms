@@ -8,7 +8,10 @@ module.exports = cms => {
       if (err) {
         return next(err);
       }
-      const __User = cms.getModel('__User');
+      const __User = cms.getModel('_User');
+      if (_.isEmpty(__User)) {
+        return next();
+      }
       __User.findOne({ username: user.username })
         .then(_u => {
           if (_u) {
