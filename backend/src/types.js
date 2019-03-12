@@ -17,7 +17,7 @@ function addQueryCondition(model, method, queryCondition) {
     return model;
   }
   if (/^find/.test(method)) {
-    console.log(queryCondition);
+    // console.log(queryCondition);
     // find method;
     queryCondition.forEach(item => {
       console.log({ [item.key]: item.value });
