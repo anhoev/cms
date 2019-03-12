@@ -14,7 +14,7 @@ function getCollectionPermission(user, collection) {
 
 function getQueryCondition(user, collection) {
   if (user.role === 'admin') {
-    return 'all';
+    return [];
   }
   const { collectionPermission } = user;
   if (!Array.isArray(collectionPermission)) {

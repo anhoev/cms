@@ -220,6 +220,75 @@ module.exports = async function (cms) {
       form: { type: 'tableArray' }
     }
   };
+  const UserFormSchema = {
+    'fields': [
+      {
+        '_id': '5c7f96606b260709bce4acf5',
+        'schemaType': 'string',
+        'key': 'username',
+        'type': 'input'
+      },
+      {
+        '_id': '5c7f96606b260709bce4acf4',
+        'schemaType': 'string',
+        'key': 'password',
+        'type': 'input'
+      },
+      {
+        "schemaType": "string",
+        "key": "role",
+      },
+      {
+        '_id': '5c809dd69d35ec189a548118',
+        'schemaType': 'array',
+        'key': 'collectionPermission',
+        'type': 'tableArray',
+        'fields': [
+          {
+            'schemaType': 'string',
+            'key': 'collectionName',
+            'type': 'input@select',
+            'optionsType': 'code',
+            'options': {
+              '_code_type_': 'commonJs',
+              '_code_': 'module.exports = function getOptions() { \n  return Object.keys(cms.Types); \n}'
+            }
+          },
+          {
+            'schemaType': 'string',
+            'key': 'permission',
+            'type': 'input@select',
+            'optionsType': 'onlyValue',
+            'options': [
+              'read',
+              'write',
+              'all'
+            ]
+          },
+          {
+            'schemaType': 'array',
+            'key': 'queryCondition',
+            'type': 'tableArray',
+            'fields': [
+              {
+                'schemaType': 'string',
+                'key': 'key',
+                'type': 'input'
+              },
+              {
+                'schemaType': 'string',
+                'key': 'value',
+                'type': 'input'
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    'tabs': [],
+    'name': '_User',
+    'type': 'Collection'
+  };
 
   const FormBuilderInfo = {
     name: 'BuildForm',
@@ -301,6 +370,28 @@ module.exports = async function (cms) {
     }
   });
 
+  const UserModel = cms.registerSchema(convertFormToSchema(UserFormSchema), {
+    name: UserFormSchema.name,
+    title: UserFormSchema.title,
+    alwaysLoad: false,
+    tabs: _({ ...UserFormSchema.tabs }).keyBy('name').mapValues(v => v.fields).value(),
+    form: UserFormSchema.fields,
+    autopopulate: true,
+    async initSchema(schema) {
+      onInitCollection(schema, UserFormSchema.name);
+
+    }
+  });
+
+
+  if (await UserModel.countDocuments() === 0) {
+    const newUser = new UserModel({
+      'username': 'admin',
+      'password': 'admin',
+      'role': 'admin'
+    });
+    newUser.save();
+  }
 
   const forms = await BuildForm.find({}).lean();
   forms.filter(f => f.type === 'Collection').forEach(form => {

@@ -5,7 +5,7 @@ const config = require('./jwt/jwt.config');
 module.exports = (cms) => {
   cms.app.post('/authenticate', function (req, res) {
     const { username, password } = req.body;
-    const model = cms.getModel('__User');
+    const model = cms.getModel('_User');
     model.findOne({ username })
       .then(user => {
         if (user) {
