@@ -12,6 +12,7 @@ module.exports = (cms) => {
           if (user.password === password) {
             const payload = _.pick(user.toObject(), ['username', '_id', 'collectionPermission', 'role', 'queryCondition']);
             const token = jwt.sign(payload, config.secretKey, { expiresIn: config.expireIn });
+            res.cookie('token', token);
             res.status(200).json({ token });
           } else {
             res.status(400).json({ message: 'Password invalid' });

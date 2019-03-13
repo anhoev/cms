@@ -9,30 +9,6 @@ const autopopulate = require('mongoose-autopopulate');
 const traverse = require('traverse');
 const authService = require('../mobile/auth.service');
 
-const readAllowMethod = ['find', 'findOne', 'findById', 'skip', 'limit', 'count', 'countDocuments', 'estimatedDocumentCount'];
-
-function addQueryCondition(model, method, queryCondition) {
-
-  if (!Array.isArray(queryCondition)) {
-    return model;
-  }
-  if (/^find/.test(method)) {
-    // console.log(queryCondition);
-    // find method;
-    queryCondition.forEach(item => {
-      console.log({ [item.key]: item.value });
-      try {
-        const value = JSON.parse(item.value);
-        model = model[method]({ [item.key]: value });
-      } catch (e) {
-        model = model[method]({ [item.key]: item.value });
-      }
-    });
-  }
-  return model;
-
-}
-
 module.exports = (cms) => {
   const { app, Q } = cms;
 
@@ -295,15 +271,26 @@ module.exports = (cms) => {
     socket.on('getTypes', async function (types, fn) {
       if (types === '*') {
         const Types = {};
-        for (const type in cms.Types) {
-          const permission = authService.getCollectionPermission(socket.request.user, type);
-          if (permission) {
-            Types[type] = cms.Types[type].webType;
-            if (Types[type].info.alwaysLoad) {
-              Types[type].list.push(...await cms.getModel(type).find({}));
-            }
-          }
-        }
+        await Promise.all(Object.keys(cms.Types).map(type => {
+          return new Promise((resolve) => {
+            let calledNext = false;
+            cms.middleware.collection({ name: type, socket }, async function (err) {
+              if (calledNext) {
+                return console.warn('next function can only be call once');
+              }
+              calledNext = true;
+              if (err) {
+                return resolve();
+              }
+              Types[type] = cms.Types[type].webType;
+              if (Types[type].info.alwaysLoad) {
+                const list = await cms.getModel(type).find({});
+                Types[type].list.push(...list);
+              }
+              resolve();
+            });
+          });
+        }));
         fn(jsonfn.stringify(Types));
       }
     });
@@ -324,23 +311,24 @@ module.exports = (cms) => {
     });
 
     socket.on('interface', async function ({ name, chain }, fn) {
-      const permission = authService.getCollectionPermission(socket.request.user, name);
-      if (permission === 'read') {
-        const allChainMethod = chain.map(item => item.fn);
-        const isAllow = allChainMethod.every(item => readAllowMethod.includes(item));
-        if (!isAllow) {
+      let calledNext = false;
+      const model = cms.getModel(name);
+      cms.middleware.interface({ name, chain, socket, model }, async function (err, result) {
+        if (calledNext) {
+          return console.warn('next function can only be call once');
+        }
+        calledNext = true;
+        if (err) {
           return;
         }
-      }
-      let step = cms.getModel(name);
-      const queryCondition = authService.getQueryCondition(socket.request.user, name);
-      step = addQueryCondition(step, chain[0].fn, queryCondition);
-      if (chain[0].fn === 'new') {
-        return fn(new step(...chain[0].args));
-      }
-      for (const { fn, args } of chain) step = step[fn](...args);
-      let result = await step;
-      fn(result);
+        if (result.chain[0].fn === 'new') {
+          return fn(new result.model(...result.chain[0].args));
+        }
+        for (const { fn, args } of result.chain) result.model = result.model[fn](...args);
+        let response = await result.model;
+        fn(response);
+      });
+
     });
 
     socket.on('find', async function (type, params = {}, fn) {

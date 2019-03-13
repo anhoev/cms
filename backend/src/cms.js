@@ -23,7 +23,7 @@ const co = require('co');
 const request = require('request');
 const server = require('http').Server(_app);
 const _io = require('socket.io')(server);
-
+const env = process.argv.slice(2);
 
 const download = function (uri, filename, callback) {
   request.head(uri, function (err, res, body) {
@@ -240,6 +240,49 @@ const cms = {
   getModel: function (type) {
     const cType = this.Types[type];
     return cType ? cType.Model : {};
+  },
+  middleware: {
+    socket(a, fn) {
+      fn(null, a);
+    },
+    express(a, fn) {
+      fn(null, a);
+    },
+    interface(a, fn) {
+      fn(null, a);
+    },
+    collection(a, fn) {
+      fn(null, a);
+    },
+    static(req, res, next) {
+      next();
+    },
+    api: []
+  },
+  useMiddleWare(type, func) {
+    if (env[0] === 'safemode') {
+      console.log('Running on safe mode');
+      return;
+    }
+    switch (type) {
+      case 'socket':
+        cms.io.use(func(cms));
+        break;
+      case 'express':
+        cms.middleware.express = func(cms);
+        break;
+      case 'interface':
+        cms.middleware.interface = func(cms);
+        break;
+      case 'collection':
+        cms.middleware.collection = func(cms);
+        break;
+      case 'static':
+        cms.middleware.static = func(cms);
+        break;
+      case 'api':
+        cms.use(func);
+    }
   }
 };
 

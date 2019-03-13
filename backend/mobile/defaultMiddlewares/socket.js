@@ -1,12 +1,12 @@
 const jwt = require('jsonwebtoken');
-const config = require('./jwt.config');
+const config = require('../jwt/jwt.config');
 
 module.exports = cms => {
   function socketVerifyService(socket, next) {
     let token = socket.handshake.query.token;
     jwt.verify(token, config.secretKey, (err, user) => {
       if (err) {
-        return next(err);
+        return next({ data: { to: '/login', message: err.message } });
       }
       const __User = cms.getModel('_User');
       if (_.isEmpty(__User)) {
@@ -18,11 +18,11 @@ module.exports = cms => {
             socket.request.user = user;
             next();
           } else {
-            next('invalid token');
+            next({ data: { to: '/login', message: 'invalid token' } });
           }
         })
         .catch(err => {
-          next('internal_error');
+          next({ data: { to: '/login', message: 'internal_error' } });
         });
     });
   }

@@ -1,7 +1,8 @@
 const _ = require('lodash');
-const Path = require('path');
+const path = require('path');
 const jsonfn = require('../src/jsonfn');
 const convertFormToSchema = require('./formUtils').convertFormToSchema;
+const Plugin = require('./CmsPlugin');
 
 module.exports = async function (cms) {
   const { mongoose } = cms;
@@ -235,8 +236,8 @@ module.exports = async function (cms) {
         'type': 'input'
       },
       {
-        "schemaType": "string",
-        "key": "role",
+        'schemaType': 'string',
+        'key': 'role'
       },
       {
         '_id': '5c809dd69d35ec189a548118',
@@ -370,34 +371,64 @@ module.exports = async function (cms) {
     }
   });
 
-  const UserModel = cms.registerSchema(convertFormToSchema(UserFormSchema), {
-    name: UserFormSchema.name,
-    title: UserFormSchema.title,
-    alwaysLoad: false,
-    tabs: _({ ...UserFormSchema.tabs }).keyBy('name').mapValues(v => v.fields).value(),
-    form: UserFormSchema.fields,
-    autopopulate: true,
-    async initSchema(schema) {
-      onInitCollection(schema, UserFormSchema.name);
+  // const UserModel = cms.registerSchema(convertFormToSchema(UserFormSchema), {
+  //   name: UserFormSchema.name,
+  //   title: UserFormSchema.title,
+  //   alwaysLoad: false,
+  //   tabs: _({ ...UserFormSchema.tabs }).keyBy('name').mapValues(v => v.fields).value(),
+  //   form: UserFormSchema.fields,
+  //   autopopulate: true,
+  //   async initSchema(schema) {
+  //     onInitCollection(schema, UserFormSchema.name);
+  //
+  //   }
+  // });
 
-    }
-  });
-
-
-  if (await UserModel.countDocuments() === 0) {
-    const newUser = new UserModel({
-      'username': 'admin',
-      'password': 'admin',
-      'role': 'admin'
-    });
-    newUser.save();
-  }
+  // if (await UserModel.countDocuments() === 0) {
+  //   const newUser = new UserModel({
+  //     'username': 'admin',
+  //     'password': 'admin',
+  //     'role': 'admin'
+  //   });
+  //   newUser.save();
+  // }
 
   const forms = await BuildForm.find({}).lean();
   forms.filter(f => f.type === 'Collection').forEach(form => {
     initSchema(form);
   });
-
+  const model = cms.getModel('PluginFile');
+  if (model.find) {
+    await model.find({ 'loader.type': /backend/i }).then(items => {
+      items.forEach((item) => {
+        console.log(item.loader);
+        if (item.loader) {
+          switch (item.loader.type) {
+            case 'backend-middleware-socket': {
+              cms.useMiddleWare('socket', require(Plugin.convertInternalPathToFilePathStatic(item.path, item.plugin)));
+              break;
+            }
+            case 'backend-middleware-interface': {
+              cms.useMiddleWare('interface', require(Plugin.convertInternalPathToFilePathStatic(item.path, item.plugin)));
+              break;
+            }
+            case 'backend-middleware-collection': {
+              cms.useMiddleWare('collection', require(Plugin.convertInternalPathToFilePathStatic(item.path, item.plugin)));
+              break;
+            }
+            case 'backend-middleware-static': {
+              cms.useMiddleWare('static', require(Plugin.convertInternalPathToFilePathStatic(item.path, item.plugin)));
+              break;
+            }
+            case 'backend-api': {
+              cms.useMiddleWare('api', require(Plugin.convertInternalPathToFilePathStatic(item.path, item.plugin)));
+            }
+          }
+        }
+      });
+    });
+  }
+  cms.app.use('/plugins', cms.middleware.static, cms.express.static(path.join(__dirname, 'plugins')));
   /*const PluginFile = cms.registerSchema({
     path: 'String',
     type: {type: String, form: {inputType: 'select', options: ['frontend', 'backend']}},
@@ -410,5 +441,5 @@ module.exports = async function (cms) {
   });*/
 
   //console.log(jsonfn.stringify({type: mongoose.Schema.Types.ObjectId}));
-  cms.Types.BuildForm.webType.form;
+  // cms.Types.BuildForm.webType.form;
 };
