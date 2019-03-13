@@ -1,9 +1,0 @@
-<ui-select data-ng-model="model[options.key]" theme="bootstrap" on-select="onSelect()" append-to-body="true">
-    <ui-select-match allow-clear="true" placeholder="{{to.placeholder}}">
-        {{getLabel? getLabel($select.selected): $select.selected[to.labelProp]}}
-    </ui-select-match>
-    <ui-select-choices data-repeat="item in to.options | filterBy: [to.labelProp]: $select.search">
-        <div ng-bind-html="getLabel? getLabel(item): item[to.labelProp] | highlight: $select.search"></div>
-    </ui-select-choices>
-</ui-select>
-
