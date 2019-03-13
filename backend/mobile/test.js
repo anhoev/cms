@@ -210,6 +210,9 @@ module.exports = async function (cms) {
             mixed: Boolean
           }
         }, _.assign(w({
+          'array': ['label', 'flex', 'addable', 'isVisible'],
+          'tableArray': ['label', 'flex', 'expansion', 'addable', 'isVisible'],
+          'choiceArray': ['label', 'flex', 'addable', 'isVisible'],
           'object': ['label', 'flex', 'noPanel', 'addable', 'isVisible'],
           'choice': ['label', 'flex', 'choiceKey', 'choiceKeyOutside', 'isVisible'],
           'object@dynamic': ['label', 'flex', 'noPanel', 'addable', 'dynamicFields', 'isVisible'],
@@ -284,17 +287,21 @@ module.exports = async function (cms) {
   }
 
   function initSchema(schemaForm) {
-    cms.registerSchema(convertFormToSchema(schemaForm), {
-      name: schemaForm.name,
-      title: schemaForm.title,
-      alwaysLoad: schemaForm.alwaysLoad,
-      tabs: _({ ...schemaForm.tabs }).keyBy('name').mapValues(v => v.fields).value(),
-      form: schemaForm.fields,
-      autopopulate: true,
-      initSchema(schema) {
-        onInitCollection(schema, schemaForm.name);
-      }
-    });
+    try {
+      cms.registerSchema(convertFormToSchema(schemaForm), {
+        name: schemaForm.name,
+        title: schemaForm.title,
+        alwaysLoad: schemaForm.alwaysLoad,
+        tabs: _({ ...schemaForm.tabs }).keyBy('name').mapValues(v => v.fields).value(),
+        form: schemaForm.fields,
+        autopopulate: true,
+        initSchema(schema) {
+          onInitCollection(schema, schemaForm.name);
+        }
+      });
+    } catch (e) {
+      console.warn(e);
+    }
   }
 
   const BuildForm = cms.registerSchema(buildFormSchema, {
