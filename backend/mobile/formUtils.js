@@ -8,12 +8,19 @@ module.exports = {
       if (!node || typeof node !== 'object') return this.block();
       if (!this.parent) this.update(_.keyBy({...node}, 'key'));
       if (node.schemaType) {
+        if (node.schemaType === 'virtual') {
+          return this.delete();
+        }
+
         const convertMap = {
           'string': String,
           'number': Number,
           'boolean': Boolean
         }
         let _node = {type: convertMap[node.schemaType] || {}}
+        if (node.unique) {
+          _node.unique = true;
+        }
         if (node.schemaType === 'object' && node.fields) {
           if (node.type === 'choice') {
             _node = {};

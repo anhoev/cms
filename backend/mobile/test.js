@@ -87,9 +87,18 @@ module.exports = async function (cms) {
       type: {},
       form: { type: 'editor', height: '100px', flex: 'md12', addable: true }
     },
+    itemText: {
+      type: {},
+      form: { type: 'editor', height: '100px', flex: 'md12', addable: true }
+    },
+    itemValue: {
+      type: {},
+      form: { type: 'editor', height: '100px', flex: 'md12', addable: true }
+    },
     choiceKey: String,
     choiceKeyOutside: Boolean,
     noPanel: Boolean,
+    returnObject: Boolean,
     options: {
       type: {
         choice: String,
@@ -141,6 +150,7 @@ module.exports = async function (cms) {
       type: {
         key: String,
         default: String,
+        unique: { type: Boolean, form: { addable: true } },
         form: { type: _.assign({ choice: String }, _obj), form: { choiceKey: 'type', choiceKeyOutside: true } }
       }
     });
@@ -155,6 +165,9 @@ module.exports = async function (cms) {
     fields: {
       type: [{
         choice: String,
+        virtual: _.merge(w({
+          //'computed': ['label', 'flex', 'addable', 'isVisible']
+        }), { type: { form: { form: { dynamicFields: '.mixed' } } } }),
         string: _.merge(w({
           'input': ['label', 'flex', 'addable', 'isVisible'],
           'input@select': ['label', 'flex', 'options', 'addable', 'isVisible']
@@ -199,20 +212,25 @@ module.exports = async function (cms) {
             mixed: Boolean
           }
         }, _.assign(w({
+          'array': ['label', 'flex', 'addable', 'isVisible'],
+          'tableArray': ['label', 'flex', 'expansion', 'addable', 'isVisible'],
+          'choiceArray': ['label', 'flex', 'addable', 'isVisible'],
           'object': ['label', 'flex', 'noPanel', 'addable', 'isVisible'],
           'choice': ['label', 'flex', 'choiceKey', 'choiceKeyOutside', 'isVisible'],
           'object@dynamic': ['label', 'flex', 'noPanel', 'addable', 'dynamicFields', 'isVisible'],
-          'tree': ['label', 'children', 'getText']
+          'tree': ['label', 'children', 'getText'],
+          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue']
         })), { type: { form: { form: { type: 'choice', dynamicFields: '.mixed' } } } }),
         array: _.merge(w({
           'array': ['label', 'flex', 'addable', 'isVisible'],
           'tableArray': ['label', 'flex', 'expansion', 'addable', 'isVisible'],
           'choiceArray': ['label', 'flex', 'addable', 'isVisible'],
-          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible']
+          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue']
         }), { type: { form: { form: { dynamicFields: '.array' } } } })
       }],
       form: { type: 'tree', children: 'fields', choiceKey: 'schemaType' }
     },
+    extensions: { type: [{ choice: String }], form: { type: 'choiceArray', choiceKey: 'extensionType', dynamicFields: '.form-extension' } },
     tabs: {
       type: [{
         name: String,
@@ -221,76 +239,7 @@ module.exports = async function (cms) {
       form: { type: 'tableArray' }
     }
   };
-  const UserFormSchema = {
-    'fields': [
-      {
-        '_id': '5c7f96606b260709bce4acf5',
-        'schemaType': 'string',
-        'key': 'username',
-        'type': 'input'
-      },
-      {
-        '_id': '5c7f96606b260709bce4acf4',
-        'schemaType': 'string',
-        'key': 'password',
-        'type': 'input'
-      },
-      {
-        'schemaType': 'string',
-        'key': 'role'
-      },
-      {
-        '_id': '5c809dd69d35ec189a548118',
-        'schemaType': 'array',
-        'key': 'collectionPermission',
-        'type': 'tableArray',
-        'fields': [
-          {
-            'schemaType': 'string',
-            'key': 'collectionName',
-            'type': 'input@select',
-            'optionsType': 'code',
-            'options': {
-              '_code_type_': 'commonJs',
-              '_code_': 'module.exports = function getOptions() { \n  return Object.keys(cms.Types); \n}'
-            }
-          },
-          {
-            'schemaType': 'string',
-            'key': 'permission',
-            'type': 'input@select',
-            'optionsType': 'onlyValue',
-            'options': [
-              'read',
-              'write',
-              'all'
-            ]
-          },
-          {
-            'schemaType': 'array',
-            'key': 'queryCondition',
-            'type': 'tableArray',
-            'fields': [
-              {
-                'schemaType': 'string',
-                'key': 'key',
-                'type': 'input'
-              },
-              {
-                'schemaType': 'string',
-                'key': 'value',
-                'type': 'input'
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    'tabs': [],
-    'name': '_User',
-    'type': 'Collection'
-  };
-
+ 
   const FormBuilderInfo = {
     name: 'BuildForm',
     title: 'name',
@@ -298,7 +247,8 @@ module.exports = async function (cms) {
     schemaOptions: { strict: false },
     alwaysLoad: true,
     tabs: {
-      Advance: ['name', 'class', 'alwaysLoad', 'tabs', 'type', 'title']
+      Advance: ['name', 'class', 'alwaysLoad', 'tabs', 'type', 'title'],
+      Extension: ['extensions']
     }
   };
 
@@ -339,17 +289,21 @@ module.exports = async function (cms) {
   }
 
   function initSchema(schemaForm) {
-    cms.registerSchema(convertFormToSchema(schemaForm), {
-      name: schemaForm.name,
-      title: schemaForm.title,
-      alwaysLoad: schemaForm.alwaysLoad,
-      tabs: _({ ...schemaForm.tabs }).keyBy('name').mapValues(v => v.fields).value(),
-      form: schemaForm.fields,
-      autopopulate: true,
-      initSchema(schema) {
-        onInitCollection(schema, schemaForm.name);
-      }
-    });
+    try {
+      cms.registerSchema(convertFormToSchema(schemaForm), {
+        name: schemaForm.name,
+        title: schemaForm.title,
+        alwaysLoad: schemaForm.alwaysLoad,
+        tabs: _({ ...schemaForm.tabs }).keyBy('name').mapValues(v => v.fields).value(),
+        form: schemaForm.fields,
+        autopopulate: true,
+        initSchema(schema) {
+          onInitCollection(schema, schemaForm.name);
+        }
+      });
+    } catch (e) {
+      console.warn(e);
+    }
   }
 
   const BuildForm = cms.registerSchema(buildFormSchema, {
@@ -371,28 +325,6 @@ module.exports = async function (cms) {
     }
   });
 
-  // const UserModel = cms.registerSchema(convertFormToSchema(UserFormSchema), {
-  //   name: UserFormSchema.name,
-  //   title: UserFormSchema.title,
-  //   alwaysLoad: false,
-  //   tabs: _({ ...UserFormSchema.tabs }).keyBy('name').mapValues(v => v.fields).value(),
-  //   form: UserFormSchema.fields,
-  //   autopopulate: true,
-  //   async initSchema(schema) {
-  //     onInitCollection(schema, UserFormSchema.name);
-  //
-  //   }
-  // });
-
-  // if (await UserModel.countDocuments() === 0) {
-  //   const newUser = new UserModel({
-  //     'username': 'admin',
-  //     'password': 'admin',
-  //     'role': 'admin'
-  //   });
-  //   newUser.save();
-  // }
-
   const forms = await BuildForm.find({}).lean();
   forms.filter(f => f.type === 'Collection').forEach(form => {
     initSchema(form);
@@ -401,7 +333,6 @@ module.exports = async function (cms) {
   if (model.find) {
     await model.find({ 'loader.type': /backend/i }).then(items => {
       items.forEach((item) => {
-        console.log(item.loader);
         if (item.loader) {
           switch (item.loader.type) {
             case 'backend-middleware-socket': {

@@ -21,7 +21,7 @@ function getPluginFolder(_path) {
 const distRegex = new RegExp(`${path.sep}dist${path.sep}`);
 
 module.exports = cms => {
-  chokidar.watch(path.join(__dirname, 'plugins'), { ignored: /(^|[\/\\])\../, ignoreInitial: false })
+  chokidar.watch(path.join(__dirname, 'plugins'), { ignored: /(^|[\/\\])\../, ignoreInitial: true })
     .on('change', (_path) => {
       if (!distRegex.test(_path)) {
         // not in dist, do the compile

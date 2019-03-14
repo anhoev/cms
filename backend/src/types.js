@@ -7,7 +7,6 @@ require('generator-bind').polyfill();
 const JsonFn = require('json-fn');
 const autopopulate = require('mongoose-autopopulate');
 const traverse = require('traverse');
-const authService = require('../mobile/auth.service');
 
 module.exports = (cms) => {
   const { app, Q } = cms;
@@ -225,9 +224,9 @@ module.exports = (cms) => {
           info: this.info,
           fn: this.fn,
           serverFn: this.serverFnForClient,
-          columns: _.map(_.pickBy(this.schema.paths, k => ['id', '_id', '__v', '_textIndex'].indexOf(k) === -1, true), (v, k) => {
-            return v.options && v.options.label ? v.options.label : k;
-          }),
+          // columns: _.map(_.pickBy(this.schema.paths, k => ['id', '_id', '__v', '_textIndex'].indexOf(k) === -1, true), (v, k) => {
+          //   return v.options && v.options.label ? v.options.label : k;
+          // }),
           store: this.store,
           controller: this.controller,
           lean: this.lean,
@@ -271,22 +270,19 @@ module.exports = (cms) => {
     socket.on('getTypes', async function (types, fn) {
       if (types === '*') {
         const Types = {};
-        await Promise.all(Object.keys(cms.Types).map(type => {
+        await Promise.all(Object.keys(cms.Types).map(collection => {
           return new Promise((resolve) => {
             let calledNext = false;
-            cms.middleware.collection({ name: type, socket }, async function (err) {
+            cms.middleware.collection({ name: collection, socket, collection: cms.Types[collection].webType }, async function (err, result) {
               if (calledNext) {
                 return console.warn('next function can only be call once');
               }
               calledNext = true;
               if (err) {
+                // resolve without set collection to Types
                 return resolve();
               }
-              Types[type] = cms.Types[type].webType;
-              if (Types[type].info.alwaysLoad) {
-                const list = await cms.getModel(type).find({});
-                Types[type].list.push(...list);
-              }
+              Types[collection] = result.collection;
               resolve();
             });
           });
@@ -314,21 +310,25 @@ module.exports = (cms) => {
       let calledNext = false;
       const model = cms.getModel(name);
       cms.middleware.interface({ name, chain, socket, model }, async function (err, result) {
-        if (calledNext) {
-          return console.warn('next function can only be call once');
+        try {
+          if (calledNext) {
+            return console.warn('next function can only be call once');
+          }
+          calledNext = true;
+          if (err) {
+            return;
+          }
+          if (result.chain[0].fn === 'new') {
+            return fn(null, new result.model(...result.chain[0].args));
+          }
+          for (const { fn, args } of result.chain) result.model = result.model[fn](...args);
+          let response = await result.model;
+          fn(null, response);
+        } catch (e) {
+          fn(e);
         }
-        calledNext = true;
-        if (err) {
-          return;
-        }
-        if (result.chain[0].fn === 'new') {
-          return fn(new result.model(...result.chain[0].args));
-        }
-        for (const { fn, args } of result.chain) result.model = result.model[fn](...args);
-        let response = await result.model;
-        fn(response);
-      });
 
+      });
     });
 
     socket.on('find', async function (type, params = {}, fn) {
