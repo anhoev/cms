@@ -209,11 +209,7 @@ module.exports = (cms) => {
       lean,
       get webType() {
         if (!this._form && (!this.Form || !this.Paths)) {
-          try {
-            _.assign(this, cms.utils.initType(schema, tabs, name));
-          } catch (e) {
-            console.error('init schema error: ', name);
-          }
+          _.assign(this, cms.utils.initType(schema, tabs, name));
         }
 
         return {
@@ -276,19 +272,14 @@ module.exports = (cms) => {
         const Types = {};
         await Promise.all(Object.keys(cms.Types).map(collection => {
           return new Promise((resolve) => {
-            let calledNext = false;
-            cms.middleware.collection({ name: collection, socket, collection: cms.Types[collection].webType }, async function (err, result) {
-              if (calledNext) {
-                return console.warn('next function can only be call once');
-              }
-              calledNext = true;
+            cms.middleware.collection({ name: collection, socket, collection: cms.Types[collection].webType }, _.once(async function (err, result) {
               if (err) {
                 // resolve without set collection to Types
                 return resolve();
               }
               Types[collection] = result.collection;
               resolve();
-            });
+            }));
           });
         }));
         fn(jsonfn.stringify(Types));
@@ -311,14 +302,9 @@ module.exports = (cms) => {
     });
 
     socket.on('interface', async function ({ name, chain }, fn) {
-      let calledNext = false;
       const model = cms.getModel(name);
-      cms.middleware.interface({ name, chain, socket, model }, async function (err, result) {
+      cms.middleware.interface({ name, chain, socket, model }, _.once(async function (err, result) {
         try {
-          if (calledNext) {
-            return console.warn('next function can only be call once');
-          }
-          calledNext = true;
           if (err) {
             return;
           }
@@ -332,7 +318,7 @@ module.exports = (cms) => {
           fn(e);
         }
 
-      });
+      }));
     });
 
     socket.on('find', async function (type, params = {}, fn) {
