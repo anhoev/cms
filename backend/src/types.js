@@ -208,8 +208,12 @@ module.exports = (cms) => {
       mTemplate,
       lean,
       get webType() {
-        if (!this.Form || !this.Paths) {
-          _.assign(this, cms.utils.initType(schema, tabs, name));
+        if (!this._form && (!this.Form || !this.Paths)) {
+          try {
+            _.assign(this, cms.utils.initType(schema, tabs, name));
+          } catch (e) {
+            console.error('init schema error: ', name);
+          }
         }
 
         return {
