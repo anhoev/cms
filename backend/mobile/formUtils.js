@@ -18,6 +18,9 @@ module.exports = {
           'boolean': Boolean
         }
         let _node = {type: convertMap[node.schemaType] || {}}
+        if (node.unique) {
+          _node.unique = true;
+        }
         if (node.schemaType === 'object' && node.fields) {
           if (node.type === 'choice') {
             _node = {};

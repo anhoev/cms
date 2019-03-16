@@ -4,16 +4,16 @@
 
 'use strict';
 const _ = require('lodash');
+const cookieParser = require('cookie-parser');
 const cms = require('../src/cms');
 const plugins = require('./plugin.socket');
 const watcher = require('./plugin.watcher');
-const authenticate = require('./auth.controller');
-const path = require('path');
 cms.data.security = false;
 cms.listen(8888);
 cms.useSession();
+cms.app.use(cookieParser());
 cms.use(plugins);
-cms.use(authenticate);
+// cms.use(authenticate);
 cms.use(watcher);
 cms.app.use(function (req, res, next) {
 
@@ -33,7 +33,9 @@ cms.app.use(function (req, res, next) {
   // Pass to next layer of middleware
   next();
 });
-cms.app.use('/plugins', cms.express.static(path.join(__dirname, 'plugins')));
+
+
+
 cms.mongoose.connect('mongodb://localhost/mobile10');
 
 cms.use(require('./test'));

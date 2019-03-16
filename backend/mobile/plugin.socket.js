@@ -7,9 +7,6 @@ const { compileContent } = require('./compiles');
 module.exports = (cms) => {
   const allPlugins = Plugin.initAllPlugin();
 
-  const socketService = require('./jwt/jwt.service')(cms);
-  cms.io.use(socketService.socketVerifyService);
-
   function findFileItem(directoryTree, plugin) {
     return directoryTree &&
       directoryTree

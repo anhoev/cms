@@ -7,31 +7,6 @@ require('generator-bind').polyfill();
 const JsonFn = require('json-fn');
 const autopopulate = require('mongoose-autopopulate');
 const traverse = require('traverse');
-const authService = require('../mobile/auth.service');
-
-const readAllowMethod = ['find', 'findOne', 'findById', 'skip', 'limit', 'count', 'countDocuments', 'estimatedDocumentCount'];
-
-function addQueryCondition(model, method, queryCondition) {
-
-  if (!Array.isArray(queryCondition)) {
-    return model;
-  }
-  if (/^find/.test(method)) {
-    // console.log(queryCondition);
-    // find method;
-    queryCondition.forEach(item => {
-      console.log({ [item.key]: item.value });
-      try {
-        const value = JSON.parse(item.value);
-        model = model[method]({ [item.key]: value });
-      } catch (e) {
-        model = model[method]({ [item.key]: item.value });
-      }
-    });
-  }
-  return model;
-
-}
 
 module.exports = (cms) => {
   const { app, Q } = cms;
@@ -233,7 +208,7 @@ module.exports = (cms) => {
       mTemplate,
       lean,
       get webType() {
-        if (!this.Form || !this.Paths) {
+        if (!this._form && (!this.Form || !this.Paths)) {
           _.assign(this, cms.utils.initType(schema, tabs, name));
         }
 
@@ -249,9 +224,9 @@ module.exports = (cms) => {
           info: this.info,
           fn: this.fn,
           serverFn: this.serverFnForClient,
-          columns: _.map(_.pickBy(this.schema.paths, k => ['id', '_id', '__v', '_textIndex'].indexOf(k) === -1, true), (v, k) => {
-            return v.options && v.options.label ? v.options.label : k;
-          }),
+          // columns: _.map(_.pickBy(this.schema.paths, k => ['id', '_id', '__v', '_textIndex'].indexOf(k) === -1, true), (v, k) => {
+          //   return v.options && v.options.label ? v.options.label : k;
+          // }),
           store: this.store,
           controller: this.controller,
           lean: this.lean,
@@ -295,15 +270,18 @@ module.exports = (cms) => {
     socket.on('getTypes', async function (types, fn) {
       if (types === '*') {
         const Types = {};
-        for (const type in cms.Types) {
-          const permission = authService.getCollectionPermission(socket.request.user, type);
-          if (permission) {
-            Types[type] = cms.Types[type].webType;
-            if (Types[type].info.alwaysLoad) {
-              Types[type].list.push(...await cms.getModel(type).find({}));
-            }
-          }
-        }
+        await Promise.all(Object.keys(cms.Types).map(collection => {
+          return new Promise((resolve) => {
+            cms.middleware.collection({ name: collection, socket, collection: cms.Types[collection].webType }, _.once(async function (err, result) {
+              if (err) {
+                // resolve without set collection to Types
+                return resolve();
+              }
+              Types[collection] = result.collection;
+              resolve();
+            }));
+          });
+        }));
         fn(jsonfn.stringify(Types));
       }
     });
@@ -324,23 +302,23 @@ module.exports = (cms) => {
     });
 
     socket.on('interface', async function ({ name, chain }, fn) {
-      const permission = authService.getCollectionPermission(socket.request.user, name);
-      if (permission === 'read') {
-        const allChainMethod = chain.map(item => item.fn);
-        const isAllow = allChainMethod.every(item => readAllowMethod.includes(item));
-        if (!isAllow) {
-          return;
+      const model = cms.getModel(name);
+      cms.middleware.interface({ name, chain, socket, model }, _.once(async function (err, result) {
+        try {
+          if (err) {
+            return;
+          }
+          if (result.chain[0].fn === 'new') {
+            return fn(null, new result.model(...result.chain[0].args));
+          }
+          for (const { fn, args } of result.chain) result.model = result.model[fn](...args);
+          let response = await result.model;
+          fn(null, response);
+        } catch (e) {
+          fn(e);
         }
-      }
-      let step = cms.getModel(name);
-      const queryCondition = authService.getQueryCondition(socket.request.user, name);
-      step = addQueryCondition(step, chain[0].fn, queryCondition);
-      if (chain[0].fn === 'new') {
-        return fn(new step(...chain[0].args));
-      }
-      for (const { fn, args } of chain) step = step[fn](...args);
-      let result = await step;
-      fn(result);
+
+      }));
     });
 
     socket.on('find', async function (type, params = {}, fn) {

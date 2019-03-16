@@ -11,7 +11,7 @@ class CmsPlugin {
   static initAllPlugin(paths = 'plugins') {
     const dirPath = path.join(__dirname, paths);
     const dirContent = fs.readdirSync(dirPath, { withFileTypes: true })
-                         .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
+      .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
     const result = dirContent.reduce((acc, item) => Object.assign(acc, { [item]: new CmsPlugin(path.join(dirPath, item)) }), {});
     return result;
     // return {
@@ -23,7 +23,7 @@ class CmsPlugin {
   static getAllPlugin() {
     const dirPath = path.join(__dirname, 'plugins');
     const dirContent = fs.readdirSync(dirPath, { withFileTypes: true })
-                         .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
+      .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
     return dirContent;
   }
 
@@ -102,14 +102,14 @@ class CmsPlugin {
   addUnpkgModules(name, type = 'modules') {
     return new Promise((resolve, reject) => {
       axios.get(`https://unpkg.com/${name}`)
-           .then(response => {
-             let moduleDirectory = this.convertInternalPathToFilePath(type);
-             fileHelper.addNew(path.join(moduleDirectory, `${name}.js`), response.data);
-             resolve();
-           })
-           .catch(err => {
-             reject(err);
-           });
+        .then(response => {
+          let moduleDirectory = this.convertInternalPathToFilePath(type);
+          fileHelper.addNew(path.join(moduleDirectory, `${name}.js`), response.data);
+          resolve();
+        })
+        .catch(err => {
+          reject(err);
+        });
     });
   }
 
@@ -127,7 +127,7 @@ class CmsPlugin {
 
   exportModel(name, content, collection, internalFilePath) {
     const writePath = path.join(internalFilePath, `/${name}.${collection}.json`);
-    fileHelper.addNew(this.convertInternalPathToFilePath(writePath), JSON.stringify(content));
+    fileHelper.addNew(this.convertInternalPathToFilePath(writePath), JSON.stringify(content, null, 2));
   }
 
   async importModel(collection, filePath, replace = false) {

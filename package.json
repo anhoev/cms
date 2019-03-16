@@ -13,7 +13,8 @@
   "scripts": {
     "pretest": "npm install",
     "test": "./node_modules/.bin/karma start tests/karma.conf.js",
-    "start": "node ./backend/mobile/index.js"
+    "start": "node ./backend/mobile/index.js",
+    "safe": "node ./backend/mobile/index.js safemode"
   },
   "dependencies": {
     "@babel/core": "^7.3.3",
@@ -26,6 +27,7 @@
     "chokidar": "^2.1.2",
     "co": "^4.6.0",
     "connect-mongo": "^2.0.3",
+    "cookie-parser": "latest",
     "directory-tree": "^2.2.1",
     "express": "^4.16.4",
     "express-restify-mongoose": "^5.0.0",
@@ -38,10 +40,11 @@
     "harmony-reflect": "^1.6.1",
     "jade": "^1.11.0",
     "jsdom": "^13.2.0",
-    "json-fn": "^1.1.1",
+    "json-fn": "github:anhoev/jsonfn",
     "jsonwebtoken": "^8.5.0",
     "lodash": "^4.17.11",
     "method-override": "^3.0.0",
+    "minimist": "^1.2.0",
     "mongoose": "^5.4.14",
     "mongoose-autopopulate": "^0.9.1",
     "node-cache": "^4.2.0",

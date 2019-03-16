@@ -10,7 +10,7 @@ const Plugin = require('./CmsPlugin');
 const { compile } = compileVue;
 
 function getPluginName(_path) {
-  return path.relative(path.join(__dirname, 'plugins'), _path).split('\/')[0];
+  return path.relative(path.join(__dirname, 'plugins'), _path).split(path.sep).shift();
 }
 
 function getPluginFolder(_path) {
@@ -18,10 +18,12 @@ function getPluginFolder(_path) {
   return path.join(__dirname, 'plugins', pluginName);
 }
 
+const distRegex = new RegExp(`${path.sep}dist${path.sep}`);
+
 module.exports = cms => {
-  chokidar.watch(path.join(__dirname, 'plugins'), { ignored: /(^|[\/\\])\../, ignoreInitial: false })
+  chokidar.watch(path.join(__dirname, 'plugins'), { ignored: /(^|[\/\\])\../, ignoreInitial: true })
     .on('change', (_path) => {
-      if (!/\/dist\//.test(_path)) {
+      if (!distRegex.test(_path)) {
         // not in dist, do the compile
         const ext = path.extname(_path);
         if (ext === '.vue') {
@@ -44,7 +46,7 @@ module.exports = cms => {
       }
     })
     .on('add', (_path) => {
-      if (!/\/dist\//.test(_path)) {
+      if (!distRegex.test(_path)) {
         // not in dist, do the compile
         const ext = path.extname(_path);
         if (ext === '.vue') {
@@ -63,7 +65,7 @@ module.exports = cms => {
       }
     })
     .on('unlink', async _path => {
-      if (!/\/dist\//.test(_path)) {
+      if (!distRegex.test(_path)) {
         const ext = path.extname(_path);
         if (ext === '.vue') {
           const fileName = path.basename(_path);

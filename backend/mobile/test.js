@@ -1,7 +1,8 @@
 const _ = require('lodash');
-const Path = require('path');
+const path = require('path');
 const jsonfn = require('../src/jsonfn');
 const convertFormToSchema = require('./formUtils').convertFormToSchema;
+const Plugin = require('./CmsPlugin');
 
 module.exports = async function (cms) {
   const { mongoose } = cms;
@@ -149,6 +150,7 @@ module.exports = async function (cms) {
       type: {
         key: String,
         default: String,
+        unique: { type: Boolean, form: { addable: true } },
         form: { type: _.assign({ choice: String }, _obj), form: { choiceKey: 'type', choiceKeyOutside: true } }
       }
     });
@@ -237,76 +239,7 @@ module.exports = async function (cms) {
       form: { type: 'tableArray' }
     }
   };
-  const UserFormSchema = {
-    'fields': [
-      {
-        '_id': '5c7f96606b260709bce4acf5',
-        'schemaType': 'string',
-        'key': 'username',
-        'type': 'input'
-      },
-      {
-        '_id': '5c7f96606b260709bce4acf4',
-        'schemaType': 'string',
-        'key': 'password',
-        'type': 'input'
-      },
-      {
-        "schemaType": "string",
-        "key": "role",
-      },
-      {
-        '_id': '5c809dd69d35ec189a548118',
-        'schemaType': 'array',
-        'key': 'collectionPermission',
-        'type': 'tableArray',
-        'fields': [
-          {
-            'schemaType': 'string',
-            'key': 'collectionName',
-            'type': 'input@select',
-            'optionsType': 'code',
-            'options': {
-              '_code_type_': 'commonJs',
-              '_code_': 'module.exports = function getOptions() { \n  return Object.keys(cms.Types); \n}'
-            }
-          },
-          {
-            'schemaType': 'string',
-            'key': 'permission',
-            'type': 'input@select',
-            'optionsType': 'onlyValue',
-            'options': [
-              'read',
-              'write',
-              'all'
-            ]
-          },
-          {
-            'schemaType': 'array',
-            'key': 'queryCondition',
-            'type': 'tableArray',
-            'fields': [
-              {
-                'schemaType': 'string',
-                'key': 'key',
-                'type': 'input'
-              },
-              {
-                'schemaType': 'string',
-                'key': 'value',
-                'type': 'input'
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    'tabs': [],
-    'name': '_User',
-    'type': 'Collection'
-  };
-
+ 
   const FormBuilderInfo = {
     name: 'BuildForm',
     title: 'name',
@@ -323,34 +256,34 @@ module.exports = async function (cms) {
     schema.onPostSave(function (doc) {
       if (doc) {
         cms.io.to(`collectionSubscription${collectionName}`)
-        .emit('changeCollectionList', {
-          collection: collectionName,
-          type: 'update',
-          doc: doc
-        });
+          .emit('changeCollectionList', {
+            collection: collectionName,
+            type: 'update',
+            doc: doc
+          });
       } else {
         cms.io.to(`collectionSubscription${collectionName}`)
-        .emit('changeCollectionList', {
-          collection: collectionName,
-          type: 'reload'
-        });
+          .emit('changeCollectionList', {
+            collection: collectionName,
+            type: 'reload'
+          });
       }
     });
 
     schema.onPostRemove(function (doc) {
       if (doc) {
         cms.io.to(`collectionSubscription${collectionName}`)
-        .emit('changeCollectionList', {
-          collection: collectionName,
-          type: 'remove',
-          doc: doc
-        });
+          .emit('changeCollectionList', {
+            collection: collectionName,
+            type: 'remove',
+            doc: doc
+          });
       } else {
         cms.io.to(`collectionSubscription${collectionName}`)
-        .emit('changeCollectionList', {
-          collection: collectionName,
-          type: 'reload'
-        });
+          .emit('changeCollectionList', {
+            collection: collectionName,
+            type: 'reload'
+          });
       }
     });
   }
@@ -392,34 +325,41 @@ module.exports = async function (cms) {
     }
   });
 
-  const UserModel = cms.registerSchema(convertFormToSchema(UserFormSchema), {
-    name: UserFormSchema.name,
-    title: UserFormSchema.title,
-    alwaysLoad: false,
-    tabs: _({ ...UserFormSchema.tabs }).keyBy('name').mapValues(v => v.fields).value(),
-    form: UserFormSchema.fields,
-    autopopulate: true,
-    async initSchema(schema) {
-      onInitCollection(schema, UserFormSchema.name);
-
-    }
-  });
-
-
-  if (await UserModel.countDocuments() === 0) {
-    const newUser = new UserModel({
-      'username': 'admin',
-      'password': 'admin',
-      'role': 'admin'
-    });
-    newUser.save();
-  }
-
   const forms = await BuildForm.find({}).lean();
   forms.filter(f => f.type === 'Collection').forEach(form => {
     initSchema(form);
   });
-
+  const model = cms.getModel('PluginFile');
+  if (model.find) {
+    await model.find({ 'loader.type': /backend/i }).then(items => {
+      items.forEach((item) => {
+        if (item.loader) {
+          switch (item.loader.type) {
+            case 'backend-middleware-socket': {
+              cms.useMiddleWare('socket', require(Plugin.convertInternalPathToFilePathStatic(item.path, item.plugin)));
+              break;
+            }
+            case 'backend-middleware-interface': {
+              cms.useMiddleWare('interface', require(Plugin.convertInternalPathToFilePathStatic(item.path, item.plugin)));
+              break;
+            }
+            case 'backend-middleware-collection': {
+              cms.useMiddleWare('collection', require(Plugin.convertInternalPathToFilePathStatic(item.path, item.plugin)));
+              break;
+            }
+            case 'backend-middleware-static': {
+              cms.useMiddleWare('static', require(Plugin.convertInternalPathToFilePathStatic(item.path, item.plugin)));
+              break;
+            }
+            case 'backend-api': {
+              cms.useMiddleWare('api', require(Plugin.convertInternalPathToFilePathStatic(item.path, item.plugin)));
+            }
+          }
+        }
+      });
+    });
+  }
+  cms.app.use('/plugins', cms.middleware.static, cms.express.static(path.join(__dirname, 'plugins')));
   /*const PluginFile = cms.registerSchema({
     path: 'String',
     type: {type: String, form: {inputType: 'select', options: ['frontend', 'backend']}},
@@ -432,5 +372,5 @@ module.exports = async function (cms) {
   });*/
 
   //console.log(jsonfn.stringify({type: mongoose.Schema.Types.ObjectId}));
-  cms.Types.BuildForm.webType.form;
+  // cms.Types.BuildForm.webType.form;
 };
