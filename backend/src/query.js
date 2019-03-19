@@ -68,7 +68,7 @@ module.exports = cms => {
         if (this.key === 'fields') {
           this.after(function (_node) {
             this.update(_.map(_node, v => v), true);
-          })
+          });
         }
 
       }
@@ -83,21 +83,21 @@ module.exports = cms => {
             this.after(function (_node) {
               nestedConvert(_node);
               this.update(_node, true);
-            })
+            });
           } else if (form.field) {
             this.after(function (_node) {
               delete _node.field.key;
               delete _node.field.label;
               //_node.field.label = label || _node.key;
               this.update(_node, true);
-            })
+            });
           }
         } else if (node.instance === 'NestedObject' || node.instance === 'Embedded' || node.instance === 'Mixed') {
           this.update(convertNestedObjectField(node, { key: this.key, label: label || this.key }));
           this.after(function (_node) {
             nestedConvert(_node);
             this.update(_node, true);
-          })
+          });
         } else if (node.instance) {
           this.update(convertSingleField(node, { key: this.key, label: label || this.key }));
         }
@@ -160,7 +160,7 @@ module.exports = cms => {
             };
 
             Queries.push({ path: `${_path}.${q.path}`, form: q.form, fn });
-          })
+          });
         }
         Queries.push(query);
       }
@@ -259,4 +259,4 @@ module.exports = cms => {
       }
     };
   }
-}
+};

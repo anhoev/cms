@@ -2,10 +2,53 @@ const path = require('path');
 const fs = require('fs');
 const axios = require('axios').default;
 const Plugin = require('./CmsPlugin');
+const _ = require('lodash');
 const { compileContent } = require('./compiles');
+const fileHelper = require('./files.helper');
 
 module.exports = (cms) => {
   const allPlugins = Plugin.initAllPlugin();
+
+  function compareContentWithDb(pluginName, path, name) {
+    return new Promise((resolve => {
+      const filePath = Plugin.convertInternalPathToFilePathStatic(path, pluginName);
+      fs.readFile(filePath, 'utf8', (err, fileData) => {
+        const colectionName = name.split('.')[1];
+        fileData = JSON.parse(fileData);
+        const { _id } = fileData;
+        const Model = cms.getModel(colectionName);
+        if (_.isEmpty(Model)) {
+          return resolve(false);
+        }
+        const fileModelData = new Model(fileData);
+        Model.findById(_id)
+          .then(dbData => {
+            if (!dbData) {
+              return resolve(false);
+            }
+            const dbModelData = new Model(dbData);
+            resolve(_.isEqual(dbModelData.toObject(), fileModelData.toObject()) || JSON.stringify(fileData) === JSON.stringify(dbData.toObject()));
+          });
+
+      });
+    }));
+  }
+
+  async function compareAll(data, parent) {
+    if (data.type === 'directory') {
+      if (data.children.length === 0 && parent) {
+        // remove blank folder
+        parent.children = parent.children.filter(item => item !== data);
+      }
+      return await Promise.all(data.children.map(item => compareAll(item, data)));
+    }
+    if (data.type === 'file') {
+      const isEqual = await compareContentWithDb(data.pluginName, data.path, data.name);
+      if (!isEqual) {
+        data.equal = false;
+      }
+    }
+  }
 
   function findFileItem(directoryTree, plugin) {
     return directoryTree &&
@@ -26,6 +69,15 @@ module.exports = (cms) => {
   cms.io.on('connection', function (socket) {
     socket.on('loadPlugin', function (fn) {
       fn(Object.keys(allPlugins).map(item => getPlugin(item).loadDirTree()));
+    });
+    socket.on('loadImportableFile', function (name, fn) {
+      const plugin = getPlugin(name);
+      if (plugin) {
+        const result = plugin.loadDirTree('', { extensions: /\.json/ });
+        compareAll(result).then(() => {
+          fn(result);
+        });
+      }
     });
     socket.on('save', function (pluginName, _path, content, fn) {
       try {
@@ -130,6 +182,15 @@ module.exports = (cms) => {
       } catch (e) {
         fn(e);
       }
+    });
+    socket.on('reexportModel', (item, fn) => {
+      getPlugin(item.pluginName).reexportModel(item.path, item.name)
+        .then(() => {
+          fn();
+        })
+        .catch((e) => {
+          fn(e);
+        });
     });
     socket.on('exportModel', (name, content, collection, plugins, filePath, fn) => {
       try {

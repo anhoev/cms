@@ -270,19 +270,18 @@ module.exports = (cms) => {
     socket.on('getTypes', async function (types, fn) {
       if (types === '*') {
         const Types = {};
-        await Promise.all(Object.keys(cms.Types).map(collection => {
-          return new Promise((resolve) => {
-            cms.middleware.collection({ name: collection, socket, collection: cms.Types[collection].webType }, _.once(async function (err, result) {
-              if (err) {
-                // resolve without set collection to Types
-                return resolve();
-              }
-              Types[collection] = result.collection;
-              resolve();
-            }));
-          });
+        for (let collectionName in cms.Types) {
+          Types[collectionName] = cms.Types[collectionName].webType;
+          const collection = Types[collectionName];
+          if (collection.info.alwaysLoad && collection.list.length === 0) {
+            const list = await cms.getModel(collectionName).find({});
+            collection.list.push(...list);
+          }
+        }
+        cms.middleware.collection({ collections: Types, socket }, _.once(function (err, result) {
+          fn(jsonfn.stringify(result.collections));
         }));
-        fn(jsonfn.stringify(Types));
+        // fn(jsonfn.stringify(Types));
       }
     });
 
@@ -306,7 +305,7 @@ module.exports = (cms) => {
       cms.middleware.interface({ name, chain, socket, model }, _.once(async function (err, result) {
         try {
           if (err) {
-            return;
+            fn(err);
           }
           if (result.chain[0].fn === 'new') {
             return fn(null, new result.model(...result.chain[0].args));

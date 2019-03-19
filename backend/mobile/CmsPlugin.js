@@ -66,11 +66,12 @@ class CmsPlugin {
     return CmsPlugin.convertInternalPathToFilePathStatic(internalPath, this.pluginName);
   }
 
-  loadDirTree(internalPath = '') {
+  loadDirTree(internalPath = '', options, onEachFile = this.onEachRead) {
     const dirPath = this.convertInternalPathToFilePath(internalPath);
     const tree = dirTree(dirPath, {
-      exclude: [{ test: (filePath) => /^\./.test(path.basename(filePath)) }]
-    }, this.onEachRead, this.onEachRead);
+      exclude: [{ test: (filePath) => /^\./.test(path.basename(filePath)) }],
+      ...options
+    }, onEachFile, onEachFile);
     return tree;
   }
 
@@ -135,7 +136,7 @@ class CmsPlugin {
     if (replace) {
       const document = JSON.parse(content);
       const { _id, ...other } = document;
-      return await cms.getModel(collection).findOneAndUpdate({ _id: _id }, other);
+      return await cms.getModel(collection).findOneAndReplace({ _id: _id }, document);
     }
     return await cms.getModel(collection).create(JSON.parse(content));
   }
@@ -143,6 +144,31 @@ class CmsPlugin {
   addNewFile(internalPath, content, type) {
     fileHelper.addNew(this.convertInternalPathToFilePath(internalPath), content, type);
   }
+
+  reexportModel(_path, fileName) {
+    const filePath = this.convertInternalPathToFilePath(_path);
+    const directoryPath = path.dirname(_path);
+    const content = fileHelper.readFile(filePath);
+    const { _id } = JSON.parse(content);
+    const [documentName, collectionName] = fileName.split('.');
+    const Model = cms.getModel(collectionName);
+    return new Promise((resolve, reject) => {
+      Model.findById(_id)
+        .then(item => {
+          if (item) {
+            this.exportModel(documentName, item.toObject(), collectionName, directoryPath);
+            resolve();
+          } else {
+            reject('non exist in db');
+          }
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+
+  }
+
 }
 
 module.exports = CmsPlugin;
