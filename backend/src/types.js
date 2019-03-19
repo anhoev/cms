@@ -208,7 +208,7 @@ module.exports = (cms) => {
       mTemplate,
       lean,
       get webType() {
-        if (!this._form && (!this.Form || !this.Paths)) {
+        if (!this.Form || !this.Paths) {
           _.assign(this, cms.utils.initType(schema, tabs, name));
         }
 

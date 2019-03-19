@@ -183,7 +183,7 @@ module.exports = cms => {
         }
         return merge(defaultOptions.form, {
           type: 'refSelect',
-          Type: field.options.ref, labelProp: cms.Types[field.options.ref].info.title
+          Type: field.options.ref, labelProp: cms.Types[field.options.ref] ? cms.Types[field.options.ref].info.title : ''
         }, field.options.form);
       }
       if (field.instance === 'String') {
