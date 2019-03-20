@@ -7,7 +7,8 @@ const { compileContent } = require('./compiles');
 const fileHelper = require('./files.helper');
 
 module.exports = (cms) => {
-  const allPlugins = Plugin.initAllPlugin();
+  const allPlugins = Plugin.initAllPlugin('plugins', cms.config.plugins);
+  cms.allPlugins = allPlugins;
 
   function compareContentWithDb(pluginName, path, name) {
     return new Promise((resolve => {
@@ -29,7 +30,6 @@ module.exports = (cms) => {
             const dbModelData = new Model(dbData);
             resolve(_.isEqual(dbModelData.toObject(), fileModelData.toObject()) || JSON.stringify(fileData) === JSON.stringify(dbData.toObject()));
           });
-
       });
     }));
   }
@@ -45,7 +45,7 @@ module.exports = (cms) => {
     if (data.type === 'file') {
       const isEqual = await compareContentWithDb(data.pluginName, data.path, data.name);
       if (!isEqual) {
-        data.equal = false;
+        data.isDiffWithDb = true;
       }
     }
   }

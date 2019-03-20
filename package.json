@@ -14,7 +14,9 @@
     "pretest": "npm install",
     "test": "./node_modules/.bin/karma start tests/karma.conf.js",
     "start": "node ./backend/mobile/index.js",
-    "safe": "node ./backend/mobile/index.js safemode"
+    "safe": "node ./backend/mobile/index.js --mode=safemode --config=./config/test.json",
+    "mobile10": "node ./backend/mobile/index.js --config=./config/mobile10.json",
+    "mobile11": "node ./backend/mobile/index.js --config=./config/test.json"
   },
   "dependencies": {
     "@babel/core": "^7.3.3",
@@ -53,6 +55,7 @@
     "sass.js": "^0.10.13",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
-    "traverse": "^0.6.6"
+    "traverse": "^0.6.6",
+    "yargs": "^13.2.2"
   }
 }
