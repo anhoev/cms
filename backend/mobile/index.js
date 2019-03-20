@@ -7,10 +7,11 @@
 const _ = require('lodash');
 const cookieParser = require('cookie-parser');
 const cms = require('../src/cms');
+const path = require('path');
 const argv = require('yargs').argv;
 cms.config = {};
 if (argv.config) {
-  const config = require(`../../${argv.config}`);
+  const config = require(path.join('../..', argv.config));
   if (config) {
     cms.config = config;
     console.log(`running with database: ${config.database}`);

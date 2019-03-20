@@ -142,7 +142,7 @@ class CmsPlugin {
     if (replace) {
       const document = JSON.parse(content);
       const { _id, ...other } = document;
-      return await cms.getModel(collection).findOneAndUpdate({ _id: _id }, document);
+      return await cms.getModel(collection).findOneAndUpdate({ _id: _id }, document, { upsert: true, new: true });
     }
     return await cms.getModel(collection).create(JSON.parse(content));
   }
