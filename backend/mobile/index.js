@@ -3,9 +3,22 @@
  */
 
 'use strict';
+
 const _ = require('lodash');
 const cookieParser = require('cookie-parser');
 const cms = require('../src/cms');
+const path = require('path');
+const argv = require('yargs').argv;
+cms.config = {};
+if (argv.config) {
+  const config = require(path.join('../..', argv.config));
+  if (config) {
+    cms.config = config;
+    console.log(`running with database: ${config.database}`);
+    console.log(`enabled plugins: ${config.plugins}`);
+  }
+}
+
 const plugins = require('./plugin.socket');
 const watcher = require('./plugin.watcher');
 cms.data.security = false;
@@ -15,6 +28,7 @@ cms.app.use(cookieParser());
 cms.use(plugins);
 // cms.use(authenticate);
 cms.use(watcher);
+
 cms.app.use(function (req, res, next) {
 
   // Website you wish to allow to connect
@@ -34,8 +48,8 @@ cms.app.use(function (req, res, next) {
   next();
 });
 
+const database = cms.config.database || 'mobile10';
 
-
-cms.mongoose.connect('mongodb://localhost/mobile10');
+cms.mongoose.connect(`mongodb://localhost/${database}`);
 
 cms.use(require('./test'));

@@ -8,11 +8,17 @@ const _ = require('lodash');
 
 class CmsPlugin {
 
-  static initAllPlugin(paths = 'plugins') {
+  static initAllPlugin(paths = 'plugins', plugins) {
     const dirPath = path.join(__dirname, paths);
     const dirContent = fs.readdirSync(dirPath, { withFileTypes: true })
       .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
-    const result = dirContent.reduce((acc, item) => Object.assign(acc, { [item]: new CmsPlugin(path.join(dirPath, item)) }), {});
+    let result = dirContent.reduce((acc, item) => {
+      if (!Array.isArray(plugins) || !plugins.length > 0 || plugins.includes(item)) {
+        return Object.assign(acc, { [item]: new CmsPlugin(path.join(dirPath, item)) });
+      }
+      return acc;
+    }, {});
+
     return result;
     // return {
     //   testPlugin: new ClassPluginTest('test-plugin'),
@@ -136,7 +142,7 @@ class CmsPlugin {
     if (replace) {
       const document = JSON.parse(content);
       const { _id, ...other } = document;
-      return await cms.getModel(collection).findOneAndReplace({ _id: _id }, document);
+      return await cms.getModel(collection).findOneAndUpdate({ _id: _id }, document, { upsert: true, new: true });
     }
     return await cms.getModel(collection).create(JSON.parse(content));
   }

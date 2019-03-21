@@ -23,7 +23,8 @@ const co = require('co');
 const request = require('request');
 const server = require('http').Server(_app);
 const _io = require('socket.io')(server);
-const env = process.argv.slice(2);
+const argv = require('yargs').argv;
+const env = argv.mode;
 
 const download = function (uri, filename, callback) {
   request.head(uri, function (err, res, body) {
@@ -260,7 +261,7 @@ const cms = {
     api: []
   },
   useMiddleWare(type, func) {
-    if (env[0] === 'safemode') {
+    if (env === 'safemode') {
       console.log('Running on safe mode');
       return;
     }
