@@ -1,10 +1,16 @@
 [submodule "backend/mobile/plugins/core-plugin"]
 	path = backend/mobile/plugins/core-plugin
 	url = https://github.com/anhoev/core-plugin/
+	branch = master
 [submodule "backend/mobile/plugins/permission-plugin"]
 	path = backend/mobile/plugins/permission-plugin
 	url = https://github.com/anhoev/permission-plugin
+	branch = master
 
 [submodule "backend/mobile/plugins/digital-signage-plugin"]
 	path = backend/mobile/plugins/digital-signage-plugin
 	url = https://github.com/anhoev/digital-signage-plugin
+[submodule "backoffice"]
+	path = backoffice
+	url = https://github.com/anhoev/backoffice
+	branch = develop
