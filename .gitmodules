@@ -5,3 +5,6 @@
 	path = backend/mobile/plugins/permission-plugin
 	url = https://github.com/anhoev/permission-plugin
 
+[submodule "backend/mobile/plugins/digital-signage-plugin"]
+	path = backend/mobile/plugins/digital-signage-plugin
+	url = https://github.com/anhoev/digital-signage-plugin

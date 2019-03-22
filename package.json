@@ -16,7 +16,8 @@
     "start": "node ./backend/mobile/index.js",
     "safe": "node ./backend/mobile/index.js --mode=safemode --config=./config/test.json",
     "mobile10": "node ./backend/mobile/index.js --config=./config/mobile10.json",
-    "mobile11": "node ./backend/mobile/index.js --config=./config/test.json"
+    "mobile11": "node ./backend/mobile/index.js --config=./config/test.json",
+    "digital-signage": "node ./backend/mobile/index.js --config=./config/digital-signage.json"
   },
   "dependencies": {
     "@babel/core": "^7.3.3",

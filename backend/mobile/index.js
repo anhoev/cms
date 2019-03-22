@@ -6,6 +6,7 @@
 
 const _ = require('lodash');
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const cms = require('../src/cms');
 const path = require('path');
 const argv = require('yargs').argv;
@@ -25,6 +26,7 @@ cms.data.security = false;
 cms.listen(8888);
 cms.useSession();
 cms.app.use(cookieParser());
+cms.app.use(bodyParser.urlencoded({ extended: false }));
 cms.use(plugins);
 // cms.use(authenticate);
 cms.use(watcher);
@@ -32,7 +34,7 @@ cms.use(watcher);
 cms.app.use(function (req, res, next) {
 
   // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+  res.setHeader('Access-Control-Allow-Origin', '*');
 
   // Request methods you wish to allow
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
