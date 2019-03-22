@@ -16,7 +16,8 @@
     "start": "node ./backend/mobile/index.js",
     "safe": "node ./backend/mobile/index.js --mode=safemode --config=./config/test.json",
     "mobile10": "node ./backend/mobile/index.js --config=./config/mobile10.json",
-    "mobile11": "node ./backend/mobile/index.js --config=./config/test.json"
+    "mobile11": "node ./backend/mobile/index.js --config=./config/test.json",
+    "submodule-update" : "git submodule update --init --recursive  && git submodule foreach -q --recursive 'git checkout $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master)'"
   },
   "dependencies": {
     "@babel/core": "^7.3.3",
