@@ -1,0 +1,8 @@
+{
+  "database": "digitalsinage",
+  "plugins": [
+    "core-plugin",
+    "digital-signage-plugin",
+    "permission-plugin"
+  ]
+}

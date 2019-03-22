@@ -288,6 +288,7 @@ const cms = {
 };
 
 global[CMS_KEY] = cms;
+global['cms'] = cms;
 
 function onerror(req, res, e) {
   if (e.handler) {

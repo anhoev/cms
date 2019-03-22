@@ -75,7 +75,7 @@ class CmsPlugin {
   loadDirTree(internalPath = '', options, onEachFile = this.onEachRead) {
     const dirPath = this.convertInternalPathToFilePath(internalPath);
     const tree = dirTree(dirPath, {
-      exclude: [{ test: (filePath) => /^\./.test(path.basename(filePath)) }],
+      exclude: [{ test: (filePath) => /^\.|node_modules/.test(path.basename(filePath)) }],
       ...options
     }, onEachFile, onEachFile);
     return tree;
