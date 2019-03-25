@@ -3,6 +3,9 @@ const axios = require('axios');
 const path = require('path');
 const fs = require('fs');
 const argv = require('yargs').argv;
+const startApp = require('./backend/mobile/index');
+const connectDb = require('./backend/mobile/database');
+
 const defaultConfig = {
   'database': {
     'host': 'localhost',
@@ -12,8 +15,8 @@ const defaultConfig = {
 };
 
 function initApp(config) {
-  require('./backend/mobile/index')(config.plugins);
-  require('./backend/mobile/database')(config.database);
+  startApp(config.plugins);
+  connectDb(config.database);
 }
 
 if (argv.config) {
