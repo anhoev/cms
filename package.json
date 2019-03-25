@@ -13,13 +13,12 @@
   "scripts": {
     "pretest": "npm install",
     "test": "./node_modules/.bin/karma start tests/karma.conf.js",
-    "start": "node ./backend/mobile/index.js",
-    "safe": "node ./backend/mobile/index.js --mode=safemode --config=./config/test.json",
-    "mobile10": "node ./backend/mobile/index.js --config=./config/mobile10.json",
-    "mobile11": "node ./backend/mobile/index.js --config=./config/test.json",
-    "digital-signage": "node ./backend/mobile/index.js --config=./config/digital-signage.json",
-    "submodule-update" : "git submodule foreach -q --recursive 'git checkout $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master)'",
-    "submodule-ci-update" : "git submodule update --init --recursive"
+    "start": "node ./index.js",
+    "safe": "node ./index.js --mode=safemode",
+    "digital-signage": "node ./index.js --config=./config/digital-signage.json",
+    "start:test": "export PATH_ENV=https://raw.githubusercontent.com/anhoev/cms_configs/master/digital_signage.json && node ./index.js",
+    "submodule-update": "git submodule foreach -q --recursive 'git checkout $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master)'",
+    "submodule-ci-update": "git submodule update --init --recursive"
   },
   "dependencies": {
     "@babel/core": "^7.3.3",
@@ -31,6 +30,7 @@
     "cheerio": "^1.0.0-rc.2",
     "chokidar": "^2.1.2",
     "co": "^4.6.0",
+    "connect-history-api-fallback": "^1.6.0",
     "connect-mongo": "^2.0.3",
     "cookie-parser": "latest",
     "directory-tree": "^2.2.1",

@@ -362,7 +362,6 @@ module.exports = async function (cms) {
       });
     });
   }
-  cms.app.use('/plugins', cms.middleware.static, cms.express.static(path.join(__dirname, 'plugins')));
   /*const PluginFile = cms.registerSchema({
     path: 'String',
     type: {type: String, form: {inputType: 'select', options: ['frontend', 'backend']}},

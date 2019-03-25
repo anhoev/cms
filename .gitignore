@@ -7,5 +7,7 @@ backend/mobile/plugins/*
 !backend/mobile/plugins/core-plugin
 !backend/mobile/plugins/digital-signage-plugin
 backend/mobile/upload/
+config/
+dist/
 
 webpack

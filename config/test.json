@@ -1,7 +1,0 @@
-{
-  "database": "mobile11",
-  "plugins": [
-    "core-plugin",
-    "permission-plugin"
-  ]
-}
