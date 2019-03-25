@@ -11,7 +11,6 @@ const cms = require('../src/cms');
 const plugins = require('./plugin.socket');
 const watcher = require('./plugin.watcher');
 const path = require('path');
-const history = require('connect-history-api-fallback');
 
 module.exports = function (enabledPlugins) {
   cms.config = {};
@@ -49,6 +48,5 @@ module.exports = function (enabledPlugins) {
 
   cms.use(require('./test'));
   cms.app.use('/plugins', cms.middleware.static, cms.express.static(path.join(__dirname, 'plugins')));
-  cms.app.use('/', history(), cms.express.static(path.join(__dirname, '../../dist')));
 
 };
