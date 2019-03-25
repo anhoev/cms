@@ -7,5 +7,6 @@ backend/mobile/plugins/*
 !backend/mobile/plugins/core-plugin
 backend/mobile/upload/
 config/
+dist/
 
 webpack
