@@ -6,5 +6,6 @@ backend/config/config.js
 backend/mobile/plugins/*
 !backend/mobile/plugins/core-plugin
 backend/mobile/upload/
+config/
 
 webpack
