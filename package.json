@@ -17,7 +17,7 @@
     "safe": "node ./backend/mobile/index.js --mode=safemode --config=./config/test.json",
     "mobile10": "node ./backend/mobile/index.js --config=./config/mobile10.json",
     "mobile11": "node ./backend/mobile/index.js --config=./config/test.json",
-    "digital-signage": "node ./backend/mobile/index.js --config=./config/digital-signage.json"
+    "digital-signage": "node ./backend/mobile/index.js --config=./config/digital-signage.json",
     "submodule-update" : "git submodule foreach -q --recursive 'git checkout $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master)'",
     "submodule-ci-update" : "git submodule update --init --recursive"
   },
