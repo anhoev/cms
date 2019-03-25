@@ -3,6 +3,7 @@ const path = require('path');
 const jsonfn = require('../src/jsonfn');
 const convertFormToSchema = require('./formUtils').convertFormToSchema;
 const Plugin = require('./CmsPlugin');
+const history = require('connect-history-api-fallback');
 
 module.exports = async function (cms) {
   const { mongoose } = cms;
@@ -362,17 +363,5 @@ module.exports = async function (cms) {
       });
     });
   }
-  /*const PluginFile = cms.registerSchema({
-    path: 'String',
-    type: {type: String, form: {inputType: 'select', options: ['frontend', 'backend']}},
-    slot: [String],
-  }, {
-    name: 'PluginFile',
-    title: 'name',
-    autopopulate: true,
-    schemaOptions: {strict: false}
-  });*/
-
-  //console.log(jsonfn.stringify({type: mongoose.Schema.Types.ObjectId}));
-  // cms.Types.BuildForm.webType.form;
+  cms.app.use('/', history(), cms.express.static(path.join(__dirname, '../../dist')));
 };
