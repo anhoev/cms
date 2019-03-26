@@ -25,6 +25,7 @@ const server = require('http').Server(_app);
 const _io = require('socket.io')(server);
 const argv = require('yargs').argv;
 const env = argv.mode;
+const path = require('path');
 
 const download = function (uri, filename, callback) {
   request.head(uri, function (err, res, body) {
@@ -128,6 +129,7 @@ const WebType = { APPLICATION: 'APPLICATION', WEB: 'WEB' };
 
 // todo : use class for cms
 const cms = {
+  storage: path.join(__dirname, '../..', 'storage'),
   useSession: function () {
     const expressSession = require('express-session');
     const MongoStore = require('connect-mongo')(expressSession);
