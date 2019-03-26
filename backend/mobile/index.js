@@ -28,7 +28,7 @@ module.exports = function (enabledPlugins) {
   cms.app.use(bodyParser.urlencoded({ extended: false }));
   cms.use(plugins);
   // cms.use(authenticate);
-  // cms.use(watcher);
+  cms.use(watcher);
 
   cms.app.use(function (req, res, next) {
 
