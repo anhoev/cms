@@ -12,5 +12,5 @@
     branch = master
 [submodule "backoffice"]
 	path = backoffice
-	url = https://github.com/anhoev/backoffice
+	url = git@github.com:anhoev/backoffice.git
 	branch = develop
