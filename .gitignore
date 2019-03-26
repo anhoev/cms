@@ -5,6 +5,7 @@ node_modules/
 backend/config/config.js
 backend/mobile/plugins/*
 !backend/mobile/plugins/core-plugin
+storage/
 !backend/mobile/plugins/digital-signage-plugin
 backend/mobile/upload/
 config/
