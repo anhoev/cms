@@ -10,7 +10,7 @@ class CmsPlugin {
 
   static initAllPlugin(paths = 'plugins', plugins) {
     const dirPath = path.join(__dirname, paths);
-    const dirContent = fs.readdirSync(dirPath, { withFileTypes: true })
+    const dirContent = fs.readdirSync(dirPath)
       .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
     let result = dirContent.reduce((acc, item) => {
       if (!Array.isArray(plugins) || !plugins.length > 0 || plugins.includes(item)) {
@@ -28,7 +28,7 @@ class CmsPlugin {
 
   static getAllPlugin() {
     const dirPath = path.join(__dirname, 'plugins');
-    const dirContent = fs.readdirSync(dirPath, { withFileTypes: true })
+    const dirContent = fs.readdirSync(dirPath)
       .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
     return dirContent;
   }
