@@ -19,13 +19,16 @@ module.exports = function (enabledPlugins) {
     cms.config.plugins = enabledPlugins;
   }
   cms.data.security = false;
-  cms.listen(8888);
+  const port = 8888;
+  cms.listen(port, () => {
+    console.log(`App running port: ${port}`)
+  });
   cms.useSession();
   cms.app.use(cookieParser());
   cms.app.use(bodyParser.urlencoded({ extended: false }));
   cms.use(plugins);
-// cms.use(authenticate);
-  cms.use(watcher);
+  // cms.use(authenticate);
+  // cms.use(watcher);
 
   cms.app.use(function (req, res, next) {
 
