@@ -30,5 +30,6 @@ export default async function () {
   // cms.use(watcher);
 
   cms.use(require('../../mobile/test'));
+  cms.app.use(cors());
   cms.app.use('/plugins', cms.middleware.static, cms.express.static(path.join(__dirname, 'plugins')));
 };
