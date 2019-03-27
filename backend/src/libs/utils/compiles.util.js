@@ -1,14 +1,14 @@
-const jsdom = require('jsdom');
-const { JSDOM } = jsdom;
 const fs = require('fs');
 const path = require('path');
-const { transform } = require('@babel/core');
-const babelPluginTransformModulesCommonJs = require('@babel/plugin-transform-modules-commonjs');
-const babelPluginSyntaxDynamicImport = require('@babel/plugin-syntax-dynamic-import');
-const babelPluginSyntaxImportMeta = require('@babel/plugin-syntax-import-meta');
+const jsdom = require('jsdom');
 const sass = require('sass.js');
 const axios = require('axios').default;
+const {transform} = require('@babel/core');
+const babelPluginSyntaxImportMeta = require('@babel/plugin-syntax-import-meta');
+const babelPluginSyntaxDynamicImport = require('@babel/plugin-syntax-dynamic-import');
+const babelPluginTransformModulesCommonJs = require('@babel/plugin-transform-modules-commonjs');
 
+const {JSDOM} = jsdom;
 const langProcessor = {};
 
 langProcessor.es6 = function (script) {
@@ -142,7 +142,7 @@ class ScriptContext {
   constructor(component, elt) {
     this.component = component;
     this.elt = elt;
-    this.module = { exports: {} };
+    this.module = {exports: {}};
   }
 
   getContent() {
@@ -188,12 +188,12 @@ class Compiler {
   }
 }
 
-export function compile(_path) {
+function compile(_path) {
   const content = fs.readFileSync(path.join(_path), 'utf-8');
   return compileContent(content);
 }
 
-export function compileContent(content) {
+function compileContent(content) {
   const compiler = new Compiler('');
   const component = new Component('test');
   return component.load(content).normalize().then(c => {
@@ -213,3 +213,6 @@ export function compileContent(content) {
     return compiler.toString();
   });
 }
+
+module.exports.compile = compile;
+module.exports.compileContent = compileContent;

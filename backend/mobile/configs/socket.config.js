@@ -1,8 +1,8 @@
-import co from 'co';
-import JsonFn from 'json-fn';
-import socket from 'socket.io';
+const co = require('co');
+const JsonFn = require('json-fn');
+const socket = require('socket.io');
 
-export default function (server) {
+module.exports = function (server) {
   const _io = socket(server);
   return new Proxy(_io, {
     get(target, key) {

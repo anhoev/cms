@@ -1,11 +1,11 @@
-import glob from 'glob';
-import path from 'path';
-import yargs from 'yargs';
-import axios from 'axios';
-import chalk from 'chalk';
-import {merge} from 'lodash';
-import signale from 'signale';
-import {AppConst} from '../commons/consts/app.const';
+const glob = require('glob');
+const path = require('path');
+const yargs = require('yargs');
+const axios = require('axios');
+const chalk = require('chalk');
+const {merge} = require('lodash');
+const signale = require('signale');
+const {AppConst} = require('../commons/consts/app.const');
 
 const argv = yargs.argv;
 
@@ -68,4 +68,4 @@ async function setupEnv() {
  * @property {[string]} plugins
  * @property {[string]} plugins
  */
-export const AppConfig = setupEnv();
+exports.AppConfig = setupEnv();

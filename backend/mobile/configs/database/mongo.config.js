@@ -1,6 +1,6 @@
 const signale = require('signale');
 const mongoose = require('mongoose');
-import {AppConfig} from "../app.config";
+const {AppConfig} = require('../app.config');
 
 module.exports = async function connect() {
   const _AppConfig = await AppConfig;

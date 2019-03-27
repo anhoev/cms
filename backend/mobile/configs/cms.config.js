@@ -4,22 +4,23 @@
  * @description config cms
  */
 
-import fs from 'fs';
-import co from 'co';
-import _ from 'lodash';
-import http from 'http';
-import path from 'path';
-import jade from 'jade';
-import yargs from 'yargs';
-import request from 'request';
-import express from 'express';
-import mongoose from 'mongoose';
-import NodeCache from 'node-cache';
-import bodyParser from 'body-parser';
-import expressSession from 'express-session';
-import methodOverride from 'method-override';
-import restify from 'express-restify-mongoose';
-import socketConfig from './socket.config';
+const fs = require('fs');
+const co = require('co');
+const _ = require('lodash');
+const http = require('http');
+const path = require('path');
+const jade = require('jade');
+const yargs = require('yargs');
+const request = require('request');
+const express = require('express');
+const mongoose = require('mongoose');
+const NodeCache = require('node-cache');
+const bodyParser = require('body-parser');
+const expressSession = require('express-session');
+const methodOverride = require('method-override');
+const restify = require('express-restify-mongoose');
+
+const socketConfig = require('./socket.config');
 
 require('generator-bind').polyfill();
 
@@ -62,12 +63,19 @@ const menu = {
   inverse: false
 };
 const WebType = {APPLICATION: 'APPLICATION', WEB: 'WEB'};
+const download = function (uri, filename, callback) {
+  request.head(uri, function (err, res, body) {
+    console.log('content-type:', res.headers['content-type']);
+    console.log('content-length:', res.headers['content-length']);
+    request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+  });
+};
 
 app.use(bodyParser.json({limit: '5mb'}));
 app.use(bodyParser.urlencoded({extended: true, limit: '5mb'}));
 app.use(methodOverride());
 
-export const cms = {
+const cms = {
   storage: path.join(__dirname, '../..', 'storage'),
   useSession: function () {
     const session = expressSession({
@@ -221,19 +229,13 @@ export const cms = {
   }
 };
 
+module.exports = cms;
 //#region FUNCTION SUPPORT
-const download = function (uri, filename, callback) {
-  request.head(uri, function (err, res, body) {
-    console.log('content-type:', res.headers['content-type']);
-    console.log('content-length:', res.headers['content-length']);
-    request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
-  });
-};
 
 function listen() {
-  cms.use(require('../commons/extensions/schema.ext'));
-  cms.use(require('../libs/utils/query.util'));
-  cms.use(require('../types'));
+  cms.use(require('../../src/extensions/schema.ext'));
+  cms.use(require('../../src/libs/utils/query.util'));
+  cms.use(require('../../src/types'));
   //cms.use(require('./config'));
   _.each(cms.routers, r => app.use(r));
   //app.listen(...arguments);

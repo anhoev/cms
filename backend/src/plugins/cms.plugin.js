@@ -1,12 +1,11 @@
-import {StaticConfig} from '../../configs/static.config';
-
-const path = require('path');
-const dirTree = require('directory-tree');
-const fileHelper = require('../utils/files.util');
-const axios = require('axios').default;
-const cms = require('../../configs/cms.config');
 const fs = require('fs');
 const _ = require('lodash');
+const path = require('path');
+const axios = require('axios').default;
+const dirTree = require('directory-tree');
+const fileHelper = require('../libs/utils/files.util');
+const cms = require('../../mobile/configs/cms.config');
+const StaticConfig = require('../lib.config').LibConfig;
 
 class CmsPlugin {
 

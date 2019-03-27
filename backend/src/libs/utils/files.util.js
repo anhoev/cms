@@ -1,9 +1,9 @@
+const fs = require('fs');
 const path = require('path');
 const fsExtra = require('fs-extra');
-const fs = require('fs');
 
-export const fileHelper = {
-  copyFile(currentPath, destPath, options = { type: 'copy' }) {
+const FileHelper = {
+  copyFile(currentPath, destPath, options = {type: 'copy'}) {
     const relative = path.relative('', destPath);
     if (!!relative && !relative.startsWith('..') && !path.isAbsolute(relative)) {
       // Check if destPath is in plugins folder or not
@@ -13,10 +13,10 @@ export const fileHelper = {
       return fsExtra.copySync(currentPath, destPath);
     }
     // Not in plugin folder
-    throw { message: 'Cannot copy file here' };
+    throw {message: 'Cannot copy file here'};
   },
 
-  addNew(destPath, content, options = { type: 'file' }) {
+  addNew(destPath, content, options = {type: 'file'}) {
     if (options.type === 'file') {
       return fsExtra.outputFileSync(destPath, content, 'utf-8');
     }
@@ -44,3 +44,5 @@ export const fileHelper = {
     return fs.existsSync(_path);
   }
 };
+
+module.exports = FileHelper;

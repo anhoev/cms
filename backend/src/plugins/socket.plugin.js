@@ -1,9 +1,9 @@
-import fs from 'fs';
-import _ from 'lodash';
+const fs = require('fs');
+const _ = require('lodash');
 
 const axios = require('axios').default;
-import Plugin from './cms.plugin';
-import {compileContent} from '../utils/compiles.util';
+const Plugin = require('./cms.plugin');
+const compileContent = require('../libs/utils/compiles.util').compileContent;
 
 module.exports = (cms) => {
   const allPlugins = Plugin.initAllPlugin('plugins', cms.config.plugins);

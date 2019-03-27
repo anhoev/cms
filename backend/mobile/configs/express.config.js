@@ -1,16 +1,16 @@
-import path from 'path';
-import cors from 'cors';
-import chalk from 'chalk';
-import signale from 'signale';
-import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
+const path = require('path');
+const cors = require('cors');
+const chalk = require('chalk');
+const signale = require('signale');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
-import {cms} from './cms.config';
-import {AppConfig} from "./app.config";
-import plugins from '../libs/plugins/socket.plugin';
+const cms = require('./cms.config');
+const AppConfig = require('./app.config');
+const plugins = require('../../src/plugins/socket.plugin');
 // const watcher = require('./plugin.watcher');
 
-export default async function () {
+module.exports = async function () {
   const enabledPlugins = (await AppConfig).plugins;
   cms.config = {};
   if (enabledPlugins) {
@@ -29,7 +29,7 @@ export default async function () {
   // cms.use(authenticate);
   // cms.use(watcher);
 
-  cms.use(require('../../mobile/test'));
+  cms.use(require('../test'));
   cms.app.use(cors());
   cms.app.use('/plugins', cms.middleware.static, cms.express.static(path.join(__dirname, 'plugins')));
 };

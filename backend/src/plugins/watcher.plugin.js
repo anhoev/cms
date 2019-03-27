@@ -1,9 +1,9 @@
-import {fileHelper as FileHelper} from "../utils/files.util";
-import path from 'path';
-import chokidar from 'chokidar';
+const path = require('path');
+const chokidar = require('chokidar');
 
 const Plugin = require('./cms.plugin');
-const compileVue = require('../utils/compiles.util');
+const FileHelper = require('../libs/utils/files.util');
+const compileVue = require('../libs/utils/compiles.util');
 
 const {compile} = compileVue;
 

@@ -1,5 +1,5 @@
 const mongooseConfig = require('./mongo.config');
 
-export default function () {
+module.exports = function () {
   mongooseConfig();
 };

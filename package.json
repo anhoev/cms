@@ -13,14 +13,15 @@
   "scripts": {
     "pretest": "npm install",
     "test": "./node_modules/.bin/karma start tests/karma.conf.js",
-    "start": "nodemon ./node_modules/.bin/babel-node ./index.js",
+    "start": "nodemon ./backend/mobile/index.js",
     "safe": "node ./index.js --mode=safemode",
     "digital-signage": "node ./index.js --config=./config/digital-signage.json",
-    "start:test": "export PATH_ENV=https://raw.githubusercontent.com/anhoev/cms_configs/master/digital_signage.json && node ./index.js",
+    "start:test": "export PATH_ENV=https://raw.githubusercontent.com/anhoev/cms_configs/master/digital_signage.json && node ./backend/mobile/index.js",
     "submodule-update": "git submodule foreach -q --recursive 'git checkout $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master) && git pull'",
     "submodule-ci-update": "git submodule update --init --recursive"
   },
   "dependencies": {
+    "@babel/core": "^7.4.0",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-syntax-import-meta": "^7.2.0",
     "@babel/plugin-transform-modules-commonjs": "^7.4.0",
@@ -64,10 +65,5 @@
     "traverse": "^0.6.6",
     "yargs": "^13.2.2"
   },
-  "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.4.0",
-    "@babel/node": "^7.2.2",
-    "@babel/preset-env": "^7.4.2"
-  }
+  "devDependencies": {}
 }
