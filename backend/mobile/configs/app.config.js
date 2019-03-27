@@ -39,10 +39,10 @@ async function setupEnv() {
           'dbName': 'mobile10'
         }
       };
-      if (mode === AppConst.NODE_ENV.LOCAL) {
-        return resolve(defaultConfig);
-      } else if (argv.config) {
+      if (argv.config) {
         return resolve(require(`../../.${argv.config}`));
+      } else if (mode === AppConst.NODE_ENV.LOCAL) {
+        return resolve(defaultConfig);
       } else if (process.env.PATH_ENV) {
         return await axios.get(url)
           .then(res => {
