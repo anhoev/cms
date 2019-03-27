@@ -5,5 +5,5 @@ const path = require('path');
  * @field BASE_PLUGIN
  */
 exports.LibConfig = {
-  BASE_PLUGIN: path.join(__dirname, '../mobile/plugins')
+  BASE_PLUGIN: global._PATH_PLUGIN
 };

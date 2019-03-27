@@ -4,13 +4,22 @@ const path = require('path');
 const axios = require('axios').default;
 const dirTree = require('directory-tree');
 const fileHelper = require('../libs/utils/files.util');
-const cms = require('../../mobile/configs/cms.config');
-const StaticConfig = require('../lib.config').LibConfig;
+const cms = require('../cms');
+const LibConfig = require('../lib.config').LibConfig;
 
 class CmsPlugin {
+  constructor(pluginPath, pluginName, resolveUrlPath) {
+    //this.pluginPath = path.join(name);
+    this.pluginPath = pluginPath;
+    this.pluginName = pluginName ? pluginName : path.basename(pluginPath);
+    if (resolveUrlPath) {
+      this.resolveUrlPath = resolveUrlPath;
+    }
+    this.onEachRead = this.onEachRead.bind(this);
+  }
 
   static initAllPlugin(paths, plugins) {
-    const dirPath = StaticConfig.BASE_PLUGIN;
+    const dirPath = LibConfig.BASE_PLUGIN;
     const dirContent = fs.readdirSync(dirPath)
       .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
     const result = dirContent.reduce((acc, item) => {
@@ -28,30 +37,20 @@ class CmsPlugin {
   }
 
   static getAllPlugin() {
-    const dirPath = path.join(StaticConfig.BASE_PLUGIN);
+    const dirPath = path.join(LibConfig.BASE_PLUGIN);
     const dirContent = fs.readdirSync(dirPath)
       .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
     return dirContent;
   }
 
   static convertInternalPathToFilePathStatic(internalPath, pluginName) {
-    const pluginPath = path.join(StaticConfig.BASE_PLUGIN, pluginName);
+    const pluginPath = path.join(LibConfig.BASE_PLUGIN, pluginName);
     return path.join(pluginPath, internalPath);
   }
 
   static convertFilePathToInternalPathStatic(_filePath, pluginName) {
-    const pluginPath = path.join(StaticConfig.BASE_PLUGIN, pluginName);
+    const pluginPath = path.join(LibConfig.BASE_PLUGIN, pluginName);
     return path.relative(pluginPath, _filePath);
-  }
-
-  constructor(pluginPath, pluginName, resolveUrlPath) {
-    //this.pluginPath = path.join(name);
-    this.pluginPath = pluginPath;
-    this.pluginName = pluginName ? pluginName : path.basename(pluginPath);
-    if (resolveUrlPath) {
-      this.resolveUrlPath = resolveUrlPath;
-    }
-    this.onEachRead = this.onEachRead.bind(this);
   }
 
   resolveUrlPath(internalPath) {

@@ -13,6 +13,7 @@ const jade = require('jade');
 const yargs = require('yargs');
 const request = require('request');
 const express = require('express');
+const socket = require('socket.io');
 const mongoose = require('mongoose');
 const NodeCache = require('node-cache');
 const bodyParser = require('body-parser');
@@ -20,15 +21,14 @@ const expressSession = require('express-session');
 const methodOverride = require('method-override');
 const restify = require('express-restify-mongoose');
 
-const socketConfig = require('./socket.config');
-
 require('generator-bind').polyfill();
 
 const _app = express();
 const server = http.Server(_app);
+
 const argv = yargs.argv;
 const env = argv.mode;
-const io = socketConfig(server);
+const io = socket(server);
 const MongoStore = require('connect-mongo')(expressSession);
 const cache = new NodeCache({useClones: false, stdTTL: 20 * 60});
 const app = new Proxy(_app, {
@@ -233,9 +233,9 @@ module.exports = cms;
 //#region FUNCTION SUPPORT
 
 function listen() {
-  cms.use(require('../../src/extensions/schema.ext'));
-  cms.use(require('../../src/libs/utils/query.util'));
-  cms.use(require('../../src/types'));
+  cms.use(require('./extensions/schema.ext'));
+  cms.use(require('./libs/utils/query.util'));
+  cms.use(require('./types'));
   //cms.use(require('./config'));
   _.each(cms.routers, r => app.use(r));
   //app.listen(...arguments);

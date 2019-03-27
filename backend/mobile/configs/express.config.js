@@ -5,7 +5,7 @@ const signale = require('signale');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
-const cms = require('./cms.config');
+const cms = require('../../src/cms');
 const AppConfig = require('./app.config');
 const plugins = require('../../src/plugins/socket.plugin');
 // const watcher = require('./plugin.watcher');
