@@ -1,31 +1,31 @@
 'use strict';
-const path = require('path');
-const unless = require('express-unless');
-const cheerio = require('cheerio');
 const _ = require('lodash');
-require('generator-bind').polyfill();
+const path = require('path');
 const JsonFn = require('json-fn');
-const autopopulate = require('mongoose-autopopulate');
+const cheerio = require('cheerio');
 const traverse = require('traverse');
+require('generator-bind').polyfill();
+const unless = require('express-unless');
+const autopopulate = require('mongoose-autopopulate');
 
 module.exports = (cms) => {
-  const { app, Q } = cms;
+  const {app, Q} = cms;
 
   app.get('/cms-types', function* (req, res) {
-    res.send(_.map(cms.Types, (v, type) => ({ type })));
+    res.send(_.map(cms.Types, (v, type) => ({type})));
   });
   app.post('/cms-types/:type/:id/:fn', function* (req, res) {
-    const { type, id, fn } = req.params;
+    const {type, id, fn} = req.params;
     const args = _.map(JsonFn.clone(req.body, true), v => v);
-    const { Model, serverFn } = cms.Types[type];
+    const {Model, serverFn} = cms.Types[type];
     const obj = yield Model.findById(id).exec();
     const result = obj ? yield* serverFn[fn].bind(obj)(...args) : yield* serverFn[fn](...args);
     res.send(isNaN(result) ? result : result + '');
   });
 
   app.delete('/cms-types/:type', function* (req, res) {
-    const { type } = req.params;
-    const { Model } = cms.Types[type];
+    const {type} = req.params;
+    const {Model} = cms.Types[type];
     Model.remove({});
     const result = yield Model.remove({}).exec();
     res.send(result);
@@ -39,10 +39,10 @@ module.exports = (cms) => {
       ref = false;
     }
     const content = req.body;
-    const { type } = req.params;
-    const { Model, Formatter, FormatterUrl, Form, info, fn, serverFnForClient } = cms.Types[type];
+    const {type} = req.params;
+    const {Model, Formatter, FormatterUrl, Form, info, fn, serverFnForClient} = cms.Types[type];
 
-    let obj = noElement ? new Model(content) : (ref ? yield Model.findOne({ _id: ref }) : yield Model.create(content));
+    let obj = noElement ? new Model(content) : (ref ? yield Model.findOne({_id: ref}) : yield Model.create(content));
 
     if (noElement && !ref && Model.session) {
       Model.session(req.session, obj);
@@ -66,7 +66,7 @@ module.exports = (cms) => {
       }
     } catch (e) {
     }
-    let result = { info, fn, serverFn: serverFnForClient };
+    let result = {info, fn, serverFn: serverFnForClient};
     result.data = obj;
 
     if (withTemplate) {
@@ -85,7 +85,7 @@ module.exports = (cms) => {
   function registerSchema(schema, options) {
     const {
       name, label, formatter, formatterUrl, initSchema, title, fn = {},
-      serverFn = {}, tabs, isViewElement = true, mTemplate, admin = { query: [] },
+      serverFn = {}, tabs, isViewElement = true, mTemplate, admin = {query: []},
       alwaysLoad = false, restifyOptions,
       info = {}, textIndex,
       controller, lean, link, schemaOptions, form
@@ -97,8 +97,8 @@ module.exports = (cms) => {
     cms.filters.schema.forEach((fn) => fn(schema, name));
     if (!(schema instanceof cms.mongoose.Schema)) {
       schema = new cms.mongoose.Schema(schema, _.assign({
-        toObject: { virtuals: true },
-        toJSON: { virtuals: true }
+        toObject: {virtuals: true},
+        toJSON: {virtuals: true}
       }, schemaOptions));
     }
 
@@ -108,7 +108,7 @@ module.exports = (cms) => {
 
 
     if (textIndex) {
-      schema.add({ _textIndex: { type: String, form: false, index: 'text' } });
+      schema.add({_textIndex: {type: String, form: false, index: 'text'}});
       schema.pre('findOneAndUpdate', function (next) {
         let _textIndex = '';
         traverse(this._update).forEach(function (node) {
@@ -148,7 +148,7 @@ module.exports = (cms) => {
     let Model;
     if (name) {
       Model = cms.mongoose.model(name, schema);
-      cms.restify.serve(app, Model, _.assign(restifyOptions, { lean: false }));
+      cms.restify.serve(app, Model, _.assign(restifyOptions, {lean: false}));
     }
 
     _.merge(fn, cms.filters.fn);
@@ -188,13 +188,13 @@ module.exports = (cms) => {
               }
               scope.serverFn[fnName] = function () {
                 const getFnData = args => _.find(scope.serverFnData,
-                  v => JSON.stringify({ args: v.args, k: v.k }) === JSON.stringify({ args, k: fnName }));
+                  v => JSON.stringify({args: v.args, k: v.k}) === JSON.stringify({args, k: fnName}));
                 const data = getFnData(arguments);
                 if (data && data.result) {
                   return data.result;
                 }
                 if (!data) {
-                  scope.serverFnData.push({ args: arguments, k: fnName });
+                  scope.serverFnData.push({args: arguments, k: fnName});
                   const args = arguments;
                   post(`/cms-types/${type}/${model._id}/${fnName}`, arguments).then(res => getFnData(args).result = res.data);
                   return scope.serverFnData.length - 1;
@@ -250,17 +250,10 @@ module.exports = (cms) => {
     return Model;
   }
 
-  /*cms.filters.serverFn.link = function*(src) {
-   if (!src) return '';
-   if (src.indexOf('http://') !== -1) return src;
-   return `${cms.data.baseUrlPath}${src[0] === '/' ? '' : '/'}${src}`;
-   }*/
-
   cms.registerSchema = registerSchema;
 
   // websocket
 
-  const jsonfn = require('./jsonfn');
   cms.io.on(`connection`, function (socket) {
 
     socket.on('error', function (e) {
@@ -278,8 +271,8 @@ module.exports = (cms) => {
             collection.list.push(...list);
           }
         }
-        cms.middleware.collection({ collections: Types, socket }, _.once(function (err, result) {
-          fn(jsonfn.stringify(result.collections));
+        cms.middleware.collection({collections: Types, socket}, _.once(function (err, result) {
+          fn(JsonFn.stringify(result.collections));
         }));
         // fn(jsonfn.stringify(Types));
       }
@@ -290,8 +283,8 @@ module.exports = (cms) => {
     });
 
     socket.on('registerSchema', async function (schema, options, fn) {
-      options = jsonfn.parse(options);
-      schema = jsonfn.parse(schema);
+      options = JsonFn.parse(options);
+      schema = JsonFn.parse(schema);
       if (cms.Types[options.name]) {
         delete cms.mongoose.connection.models[options.name];
         delete cms.Types[options.name];
@@ -300,9 +293,9 @@ module.exports = (cms) => {
       fn();
     });
 
-    socket.on('interface', async function ({ name, chain }, fn) {
+    socket.on('interface', async function ({name, chain}, fn) {
       const model = cms.getModel(name);
-      cms.middleware.interface({ name, chain, socket, model }, _.once(async function (err, result) {
+      cms.middleware.interface({name, chain, socket, model}, _.once(async function (err, result) {
         try {
           if (err) {
             fn(err);
@@ -310,7 +303,7 @@ module.exports = (cms) => {
           if (result.chain[0].fn === 'new') {
             return fn(null, new result.model(...result.chain[0].args));
           }
-          for (const { fn, args } of result.chain) result.model = result.model[fn](...args);
+          for (const {fn, args} of result.chain) result.model = result.model[fn](...args);
           let response = await result.model;
           fn(null, response);
         } catch (e) {
@@ -334,7 +327,7 @@ module.exports = (cms) => {
       }
     });
 
-    socket.on('message', function* ({ path, params = {}, uuid, model }) {
+    socket.on('message', function* ({path, params = {}, uuid, model}) {
       const base = '([^\/]*)\/api\/v1\/([^\/]*)';
       const modelQueryTester = new RegExp(`${base}$`);
       const countQueryTester = new RegExp(`${base}\/count$`);
@@ -354,7 +347,7 @@ module.exports = (cms) => {
               q = q.lean();
             }
             const result = yield q;
-            socket.emit('message', { result, uuid });
+            socket.emit('message', {result, uuid});
           }
         } else if (method === 'post') {
           if (Object.keys(cms.Types).indexOf(type) !== -1) {
@@ -379,7 +372,7 @@ module.exports = (cms) => {
             }
 
             let result = yield Model.findById(model._id);
-            socket.emit('message', { result, uuid });
+            socket.emit('message', {result, uuid});
           }
         }
       }
@@ -392,7 +385,7 @@ module.exports = (cms) => {
               q = q.session(socket.handshake.session);
             }
             const result = yield q.count(params.query);
-            socket.emit('message', { result, uuid });
+            socket.emit('message', {result, uuid});
           }
         }
       }
@@ -401,10 +394,10 @@ module.exports = (cms) => {
       if (serverFnPath.test(path)) {
         const [type, id, fn] = path.match(serverFnPath);
         const args = params;
-        const { Model, serverFn } = cms.Types[type];
+        const {Model, serverFn} = cms.Types[type];
         const obj = yield Model.findById(id).exec();
         const result = yield* serverFn[fn].bind(obj)(...args);
-        socket.emit('message', { result: isNaN(result) ? result : result + '', uuid });
+        socket.emit('message', {result: isNaN(result) ? result : result + '', uuid});
       }
     });
   });
