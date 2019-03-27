@@ -15,6 +15,9 @@ async function setupEnv() {
     mode = process.argv[2];
   }
   mode = mode.trim();
+  if (Object.values(AppConst.NODE_ENV).indexOf(mode) === -1) {
+    mode = AppConst.NODE_ENV.LOCAL;
+  }
   const environmentFile = glob.sync(path.normalize(__dirname + `/environment/${mode}.env.js`));
   if (environmentFile && !environmentFile.length) {
     signale.note(chalk.default.red(`No configuration file found for "${mode}" environment, using "${process.env.NODE_ENV}" instead!`));
@@ -39,7 +42,7 @@ async function setupEnv() {
       if (mode === AppConst.NODE_ENV.LOCAL) {
         return resolve(defaultConfig);
       } else if (argv.config) {
-        return resolve(require(argv.config));
+        return resolve(require(`../../.${argv.config}`));
       } else if (process.env.PATH_ENV) {
         return await axios.get(url)
           .then(res => {
