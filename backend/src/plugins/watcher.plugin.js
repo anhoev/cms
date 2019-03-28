@@ -5,21 +5,21 @@ const Plugin = require('./cms.plugin');
 const FileHelper = require('../libs/utils/files.util');
 const compileVue = require('../libs/utils/compiles.util');
 
-const {compile} = compileVue;
+const { compile } = compileVue;
 
 function getPluginName(_path) {
-  return path.relative(path.join(__dirname, 'plugins'), _path).split(path.sep).shift();
+  return path.relative(path.join(__dirname, '../../mobile', 'plugins'), _path).split(path.sep).shift();
 }
 
 function getPluginFolder(_path) {
   const pluginName = getPluginName(_path);
-  return path.join(__dirname, 'plugins', pluginName);
+  return path.join(__dirname, '../../mobile', 'plugins', pluginName);
 }
 
 const distRegex = new RegExp(`${path.sep}dist${path.sep}`);
 
 module.exports = cms => {
-  chokidar.watch(path.join(__dirname, 'plugins'), {ignored: [/node_modules/, /(^|[\/\\])\../], ignoreInitial: true})
+  chokidar.watch(path.join(__dirname, '../../mobile', 'plugins'), { ignored: [/node_modules/, /(^|[\/\\])\../], ignoreInitial: true })
     .on('change', (_path) => {
       if (!distRegex.test(_path)) {
         // not in dist, do the compile
@@ -73,7 +73,7 @@ module.exports = cms => {
           if (cms.getModel('PluginFile')) {
             const pluginName = getPluginName(_path);
             const internalPathInPlugin = path.relative(pluginsFolder, _path);
-            await cms.getModel('PluginFile').findOneAndRemove({path: internalPathInPlugin, plugin: pluginName});
+            await cms.getModel('PluginFile').findOneAndRemove({ path: internalPathInPlugin, plugin: pluginName });
           }
           console.log(`delete compiled file: ${destPath}`);
         }
