@@ -72,7 +72,7 @@ module.exports = (cms) => {
     socket.on('loadImportableFile', function (name, fn) {
       const plugin = getPlugin(name);
       if (plugin) {
-        const result = plugin.loadDirTree('', {extensions: /\.json/});
+        const result = plugin.loadDirTree('json', {extensions: /\.json/});
         compareAll(result).then(() => {
           fn(result);
         });
