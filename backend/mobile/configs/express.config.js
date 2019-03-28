@@ -1,8 +1,10 @@
 const path = require('path');
 const cors = require('cors');
 const chalk = require('chalk');
+const helmet = require('helmet');
 const signale = require('signale');
 const bodyParser = require('body-parser');
+const compression = require('compression');
 const cookieParser = require('cookie-parser');
 
 const cms = require('../../src/cms');
@@ -25,11 +27,12 @@ module.exports = async function () {
   });
   cms.useSession();
   cms.app.use(cookieParser());
-  cms.app.use(bodyParser.urlencoded({ extended: false }));
+  cms.app.use(bodyParser.urlencoded({extended: false}));
   cms.use(plugins);
   // cms.use(authenticate);
   cms.use(watcher);
-
+  cms.app.use(helmet());
+  cms.app.use(compression());
   cms.use(require('../test'));
   cms.app.use(cors());
   cms.app.use('/plugins', cms.middleware.static, cms.express.static(LibConfig.BASE_PLUGIN));

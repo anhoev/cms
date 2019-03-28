@@ -1,6 +1,6 @@
 #!/bin/sh
 echo '~~~~~~ Starting build front-end *Giga-Frontend* ~~~~~~~~~'
-cd ../backoffice && npm i && npm run build:dev
+cd ../backoffice && npm i && npm run build:production
 echo '~~~~~~ Finish build front-end *Giga-Frontend* ~~~~~~~~~~~'
 
 echo '~~~~~~ Starting build dockerfile ~~~~~~~~~~~~~~~~~~~~~~'

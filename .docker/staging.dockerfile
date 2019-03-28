@@ -4,8 +4,8 @@ LABEL author="manh.nguyen@vmodev.com"
 RUN mkdir -p /home/giga-office \
   && mkdir -p /home/giga-office/storage
 WORKDIR /home/giga-office
-COPY package.json yarn.lock ecosystem-dev.json ./
 
+COPY package.json yarn.lock ecosystem-dev.json ./
 RUN yarn install --production \
   && yarn cache clean \
   && node-prune
