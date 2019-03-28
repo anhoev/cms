@@ -6,7 +6,7 @@ const Plugin = require('./cms.plugin');
 const FileHelper = require('../libs/utils/files.util');
 const compileVue = require('../libs/utils/compiles.util');
 
-const {compile} = compileVue;
+const { compile } = compileVue;
 
 function getPluginName(_path) {
   return path.relative(LibConfig.BASE_PLUGIN, _path).split(path.sep).shift();
@@ -19,9 +19,27 @@ function getPluginFolder(_path) {
 
 const distRegex = new RegExp(`${path.sep}dist${path.sep}`);
 
+function ignored(_path, stats) {
+  if (/(^|[\/\\])\../.test(_path) || _path.includes('node_modules')) {
+    return true;
+  }
+  if (!stats && fs.existsSync(_path)) {
+    stats = fs.statSync(_path);
+  }
+  if (stats && stats.isDirectory() && _path.includes('dist')) {
+    return true;
+  }
+  if (!stats) {
+    return true;
+  }
+  if (stats && stats.isFile() && path.extname(_path) !== '.vue') {
+    return true;
+  }
+}
+
 module.exports = cms => {
   chokidar.watch(LibConfig.BASE_PLUGIN, {
-    ignored: [/node_modules/, /(^|[\/\\])\../],
+    ignored,
     ignoreInitial: true
   })
     .on('change', (_path) => {
@@ -77,7 +95,7 @@ module.exports = cms => {
           if (cms.getModel('PluginFile')) {
             const pluginName = getPluginName(_path);
             const internalPathInPlugin = path.relative(pluginsFolder, _path);
-            await cms.getModel('PluginFile').findOneAndRemove({path: internalPathInPlugin, plugin: pluginName});
+            await cms.getModel('PluginFile').findOneAndRemove({ path: internalPathInPlugin, plugin: pluginName });
           }
           console.log(`delete compiled file: ${destPath}`);
         }
