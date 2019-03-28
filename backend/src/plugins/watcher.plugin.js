@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const chokidar = require('chokidar');
 
@@ -6,7 +7,7 @@ const Plugin = require('./cms.plugin');
 const FileHelper = require('../libs/utils/files.util');
 const compileVue = require('../libs/utils/compiles.util');
 
-const { compile } = compileVue;
+const {compile} = compileVue;
 
 function getPluginName(_path) {
   return path.relative(LibConfig.BASE_PLUGIN, _path).split(path.sep).shift();
@@ -95,7 +96,7 @@ module.exports = cms => {
           if (cms.getModel('PluginFile')) {
             const pluginName = getPluginName(_path);
             const internalPathInPlugin = path.relative(pluginsFolder, _path);
-            await cms.getModel('PluginFile').findOneAndRemove({ path: internalPathInPlugin, plugin: pluginName });
+            await cms.getModel('PluginFile').findOneAndRemove({path: internalPathInPlugin, plugin: pluginName});
           }
           console.log(`delete compiled file: ${destPath}`);
         }
