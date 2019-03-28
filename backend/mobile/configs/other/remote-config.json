@@ -1,0 +1,12 @@
+{
+  "database": {
+    "host": "localhost",
+    "port": 27017,
+    "dbName": "digitalsignage"
+  },
+  "plugins": [
+    "core-plugin",
+    "digital-signage-plugin",
+    "permission-plugin"
+  ]
+}

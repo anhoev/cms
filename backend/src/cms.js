@@ -1,41 +1,36 @@
-'use strict';
-const _ = require('lodash');
-global['_'] = _;
-const JsonFn = require('json-fn');
-global['JsonFn'] = JsonFn;
-const express = require('express');
-const _app = express();
-const router = express.Router();
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const restify = require('express-restify-mongoose');
-const Q = require('q');
-//const MongoStore = require('connect-mongo')(session);
+/**
+ * @author AnhTT
+ * @supported ManhNV
+ * @description config cms
+ */
 
-const Reflect = require('harmony-reflect');
-require('generator-bind').polyfill();
-const jade = require('jade');
-const NodeCache = require('node-cache');
 const fs = require('fs');
-const cache = new NodeCache({ useClones: false, stdTTL: 20 * 60 });
-const Path = require('path');
 const co = require('co');
-const request = require('request');
-const server = require('http').Server(_app);
-const _io = require('socket.io')(server);
-const argv = require('yargs').argv;
-const env = argv.mode;
+const _ = require('lodash');
+const http = require('http');
 const path = require('path');
+const jade = require('jade');
+const yargs = require('yargs');
+const request = require('request');
+const express = require('express');
+const socket = require('socket.io');
+const mongoose = require('mongoose');
+const NodeCache = require('node-cache');
+const bodyParser = require('body-parser');
+const expressSession = require('express-session');
+const methodOverride = require('method-override');
+const restify = require('express-restify-mongoose');
 
-const download = function (uri, filename, callback) {
-  request.head(uri, function (err, res, body) {
-    console.log('content-type:', res.headers['content-type']);
-    console.log('content-length:', res.headers['content-length']);
+require('generator-bind').polyfill();
 
-    request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
-  });
-};
+const _app = express();
+const server = http.Server(_app);
 
+const argv = yargs.argv;
+const env = argv.mode;
+const io = socket(server);
+const MongoStore = require('connect-mongo')(expressSession);
+const cache = new NodeCache({ useClones: false, stdTTL: 20 * 60 });
 const app = new Proxy(_app, {
   get(target, key) {
     if (['get', 'post', 'put', 'patch', 'delete'].indexOf(key) !== -1) {
@@ -43,8 +38,6 @@ const app = new Proxy(_app, {
         if (arguments[1] && arguments[1].constructor && arguments[1].constructor.name === 'GeneratorFunction') {
           const cb = arguments[1];
           const callback = function (req, res) {
-            /*Q.onerror = onerror.bind(onerror, req, res);
-             Q.spawn(cb.bind(this, ...arguments));*/
             co(cb.bind(this, ...arguments)).then(() => {
             }, onerror.bind(onerror, req, res));
           };
@@ -53,87 +46,38 @@ const app = new Proxy(_app, {
         target[key](...arguments);
       };
     }
-
     return target[key];
-  }
-});
 
-let io = new Proxy(_io, {
-  get(target, key) {
-    if (key === 'on') {
-      return function () {
-        const _fn = arguments[1];
-        if (_fn && _fn.constructor) {
-          const fn = function (socket) {
-            const _on = socket.on;
-            socket.on = function (path, cb) {
-              if (cb && cb.constructor && cb.constructor.name === 'GeneratorFunction') {
-                const callback = function (msg) {
-                  try {
-                    let json = JsonFn.parse(msg, true);
-                    co(cb.bind(this, json)).then(() => {
-                    }, e => {
-                      console.warn(e);
-                    });
-                  } catch (e) {
-                    co(cb.bind(this, msg)).then(() => {
-                    }, e => {
-                      console.warn(e);
-                    });
-                  }
-                };
-
-                _on.bind(socket)(path, callback);
-              } else {
-                _on.bind(socket)(path, cb);
-              }
-            };
-
-            const _emit = socket.emit;
-            socket.emit = function (name, result) {
-              console.time('send');
-              if (typeof result === 'string') {
-                _emit.bind(socket)(name, result);
-              } else {
-                _emit.bind(socket)(name, JsonFn.stringify(result));
-              }
-            };
-            _fn.bind(this)(socket);
-          };
-
-          arguments[1] = fn;
-          target[key](...arguments);
-        }
-      };
+    function onerror(req, res, e) {
+      if (e.handler) {
+        return e.handler(req, res);
+      }
+      cms.data.handlers.forEach(handler => handler(req, res, e));
     }
-
-    return target[key];
   }
 });
-
-app.use(bodyParser.json({ limit: '5mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' }));
-
-
-app.use(require('method-override')());
-
 const CMS_KEY = Symbol('CMS');
-
 const menu = {
   top: '51px',
   bodyPaddingTop: '51px',
   inverse: false
 };
-
 const WebType = { APPLICATION: 'APPLICATION', WEB: 'WEB' };
+const download = function (uri, filename, callback) {
+  request.head(uri, function (err, res, body) {
+    console.log('content-type:', res.headers['content-type']);
+    console.log('content-length:', res.headers['content-length']);
+    request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+  });
+};
 
-// todo : use class for cms
+app.use(bodyParser.json({ limit: '5mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' }));
+app.use(methodOverride());
+
 const cms = {
   storage: path.join(__dirname, '../..', 'storage'),
   useSession: function () {
-    const expressSession = require('express-session');
-    const MongoStore = require('connect-mongo')(expressSession);
-
     const session = expressSession({
       secret: 'best cms system',
       resave: false, saveUninitialized: true,
@@ -223,15 +167,11 @@ const cms = {
   getPath: p => p,
   use: fn => fn(cms),
   listen,
-  Q,
   serverFn: {},
   fn: {},
   Enum: {
     Load: { NOT: 'NOT', LOADING: 'LOADING', LOADED: 'LOADED' },
-    Mode: {
-      ADMIN: 'ADMIN',
-      NORMAL: 'NORMAL'
-    },
+    Mode: { ADMIN: 'ADMIN', NORMAL: 'NORMAL' },
     WebType
   },
   get instance() {
@@ -289,27 +229,14 @@ const cms = {
   }
 };
 
-global[CMS_KEY] = cms;
-global['cms'] = cms;
-
-function onerror(req, res, e) {
-  if (e.handler) {
-    return e.handler(req, res);
-  }
-  cms.data.handlers.forEach(handler => handler(req, res, e));
-}
-
-/**
- *
- * @param mongoose
- * @param app
- * @returns cms;
- */
+global.cms = cms;
 module.exports = cms;
 
+//#region FUNCTION SUPPORT
+
 function listen() {
-  cms.use(require('./schemaExtensionMethod'));
-  cms.use(require('./query'));
+  cms.use(require('./extensions/schema.ext'));
+  cms.use(require('./libs/utils/query.util'));
   cms.use(require('./types'));
   //cms.use(require('./config'));
   _.each(cms.routers, r => app.use(r));
@@ -318,7 +245,7 @@ function listen() {
 }
 
 /**
- *
+ * @method compile
  * @param path
  * @param [options]
  * @param {Function} options.compiler
@@ -334,12 +261,10 @@ function compile(path, options = {}) {
   return fn;
 }
 
-
 function compiler(path) {
   if (path.split('\.').pop() === 'jade') {
     return jade.compileFile(path);
   }
-
   try {
     return function () {
       return this.content;
@@ -349,7 +274,8 @@ function compiler(path) {
 }
 
 /**
- * use to readFile first from cache
+ * @method readFile
+ * @description use to readFile first from cache
  * @param path
  * @returns {Choice|Undefined}
  */
@@ -362,6 +288,12 @@ function readFile(path) {
   return result;
 }
 
+/**
+ * @method clearCache
+ * @description clear cache cms
+ */
 function clearCache() {
   cms.cache.del(cms.cache.keys());
 }
+
+//#endregion
