@@ -8,7 +8,8 @@ const cookieParser = require('cookie-parser');
 const cms = require('../../src/cms');
 const AppConfig = require('./app.config');
 const plugins = require('../../src/plugins/socket.plugin');
-// const watcher = require('./plugin.watcher');
+const watcher = require('../../src/plugins/watcher.plugin');
+const LibConfig = require('../../src/lib.config');
 
 module.exports = async function () {
   const enabledPlugins = (await AppConfig).plugins;
@@ -24,12 +25,12 @@ module.exports = async function () {
   });
   cms.useSession();
   cms.app.use(cookieParser());
-  cms.app.use(bodyParser.urlencoded({extended: false}));
+  cms.app.use(bodyParser.urlencoded({ extended: false }));
   cms.use(plugins);
   // cms.use(authenticate);
-  // cms.use(watcher);
+  cms.use(watcher);
 
   cms.use(require('../test'));
   cms.app.use(cors());
-  cms.app.use('/plugins', cms.middleware.static, cms.express.static(path.join(__dirname, 'plugins')));
+  cms.app.use('/plugins', cms.middleware.static, cms.express.static(LibConfig.BASE_PLUGIN));
 };

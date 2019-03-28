@@ -30,7 +30,7 @@ const argv = yargs.argv;
 const env = argv.mode;
 const io = socket(server);
 const MongoStore = require('connect-mongo')(expressSession);
-const cache = new NodeCache({useClones: false, stdTTL: 20 * 60});
+const cache = new NodeCache({ useClones: false, stdTTL: 20 * 60 });
 const app = new Proxy(_app, {
   get(target, key) {
     if (['get', 'post', 'put', 'patch', 'delete'].indexOf(key) !== -1) {
@@ -62,7 +62,7 @@ const menu = {
   bodyPaddingTop: '51px',
   inverse: false
 };
-const WebType = {APPLICATION: 'APPLICATION', WEB: 'WEB'};
+const WebType = { APPLICATION: 'APPLICATION', WEB: 'WEB' };
 const download = function (uri, filename, callback) {
   request.head(uri, function (err, res, body) {
     console.log('content-type:', res.headers['content-type']);
@@ -71,8 +71,8 @@ const download = function (uri, filename, callback) {
   });
 };
 
-app.use(bodyParser.json({limit: '5mb'}));
-app.use(bodyParser.urlencoded({extended: true, limit: '5mb'}));
+app.use(bodyParser.json({ limit: '5mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' }));
 app.use(methodOverride());
 
 const cms = {
@@ -81,9 +81,9 @@ const cms = {
     const session = expressSession({
       secret: 'best cms system',
       resave: false, saveUninitialized: true,
-      cookie: {maxAge: 2628000000},
+      cookie: { maxAge: 2628000000 },
       expires: 30 * 24 * 60 * 60 * 1000,
-      store: new MongoStore({mongooseConnection: mongoose.connection})
+      store: new MongoStore({ mongooseConnection: mongoose.connection })
     });
 
     app.use(session);
@@ -170,8 +170,8 @@ const cms = {
   serverFn: {},
   fn: {},
   Enum: {
-    Load: {NOT: 'NOT', LOADING: 'LOADING', LOADED: 'LOADED'},
-    Mode: {ADMIN: 'ADMIN', NORMAL: 'NORMAL'},
+    Load: { NOT: 'NOT', LOADING: 'LOADING', LOADED: 'LOADED' },
+    Mode: { ADMIN: 'ADMIN', NORMAL: 'NORMAL' },
     WebType
   },
   get instance() {
@@ -229,7 +229,9 @@ const cms = {
   }
 };
 
+global.cms = cms;
 module.exports = cms;
+
 //#region FUNCTION SUPPORT
 
 function listen() {
@@ -266,7 +268,7 @@ function compiler(path) {
   try {
     return function () {
       return this.content;
-    }.bind({content: fs.readFileSync(path, 'utf8')});
+    }.bind({ content: fs.readFileSync(path, 'utf8') });
   } catch (e) {
   }
 }

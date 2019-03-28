@@ -5,7 +5,7 @@ const axios = require('axios').default;
 const dirTree = require('directory-tree');
 const fileHelper = require('../libs/utils/files.util');
 const cms = require('../cms');
-const LibConfig = require('../lib.config').LibConfig;
+const LibConfig = require('../lib.config');
 
 class CmsPlugin {
   constructor(pluginPath, pluginName, resolveUrlPath) {
