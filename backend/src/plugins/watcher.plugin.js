@@ -4,8 +4,8 @@ const chokidar = require('chokidar');
 
 const LibConfig = require('../lib.config');
 const Plugin = require('./cms.plugin');
-const FileHelper = require('../libs/utils/files.util');
-const compileVue = require('../libs/utils/compiles.util');
+const FileHelper = require('../utils/files.util');
+const compileVue = require('../utils/compiles.util');
 
 const { compile } = compileVue;
 

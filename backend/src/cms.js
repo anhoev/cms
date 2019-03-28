@@ -236,8 +236,9 @@ module.exports = cms;
 
 function listen() {
   cms.use(require('./extensions/schema.ext'));
-  cms.use(require('./libs/utils/query.util'));
+  cms.use(require('./utils/query.util'));
   cms.use(require('./types'));
+  cms.use(require('./buildform'));
   //cms.use(require('./config'));
   _.each(cms.routers, r => app.use(r));
   //app.listen(...arguments);

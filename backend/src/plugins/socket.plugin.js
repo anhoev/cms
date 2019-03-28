@@ -3,7 +3,7 @@ const _ = require('lodash');
 
 const axios = require('axios').default;
 const Plugin = require('./cms.plugin');
-const compileContent = require('../libs/utils/compiles.util').compileContent;
+const compileContent = require('../utils/compiles.util').compileContent;
 
 module.exports = (cms) => {
   const allPlugins = Plugin.initAllPlugin('plugins', cms.config.plugins);

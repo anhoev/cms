@@ -3,7 +3,7 @@ const _ = require('lodash');
 const path = require('path');
 const axios = require('axios').default;
 const dirTree = require('directory-tree');
-const fileHelper = require('../libs/utils/files.util');
+const fileHelper = require('../utils/files.util');
 const cms = require('../cms');
 const LibConfig = require('../lib.config');
 
