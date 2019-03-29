@@ -14,6 +14,7 @@
     "pretest": "npm install",
     "test": "./node_modules/.bin/karma start tests/karma.conf.js",
     "start": "nodemon ./backend/mobile/index.js",
+    "start:dev": "nodemon ./backend/mobile/index.js development",
     "safe": "node ./index.js --mode=safemode",
     "digital-signage": "node ./index.js --config=./config/digital-signage.json",
     "start:test": "export PATH_ENV=https://raw.githubusercontent.com/anhoev/cms_configs/master/digital_signage.json && node ./backend/mobile/index.js",

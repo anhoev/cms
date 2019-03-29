@@ -28,7 +28,6 @@ async function setupEnv() {
   const configRemote = await getConfig();
   // apply secret key
   return await merge(require(`./environment/${process.env.NODE_ENV}.env`), configRemote);
-
   function getConfig() {
     const url = process.env.PATH_ENV;
     return new Promise(async (resolve, reject) => {
@@ -41,8 +40,6 @@ async function setupEnv() {
       };
       if (argv.config) {
         return resolve(require(`../../.${argv.config}`));
-      } else if (mode === AppConst.NODE_ENV.LOCAL) {
-        return resolve(defaultConfig);
       } else if (process.env.PATH_ENV) {
         return await axios.get(url)
           .then(res => {
@@ -52,6 +49,10 @@ async function setupEnv() {
             console.log(err.stack);
             return resolve(defaultConfig);
           });
+      } else if (mode === AppConst.NODE_ENV.LOCAL) {
+        console.log('test');
+
+        return resolve(defaultConfig);
       } else {
         return resolve(defaultConfig);
       }
