@@ -4,5 +4,13 @@ exports.AppConst = {
     DEVELOPMENT: 'development',
     LOCAL: 'local',
     TEST: 'test'
+  },
+
+  DEFAULT_CONFIG: {
+    database: {
+      host: 'localhost',
+      port: 27017,
+      dbName: 'mobile10'
+    }
   }
 };

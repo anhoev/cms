@@ -1,0 +1,127 @@
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+# Author: ManhNV
+version: 2
+jobs:
+  # job scan vulnerabilities *****************************************************************
+  test-vulnerabilities:
+    docker:
+      - image: circleci/node:8.9.4
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: apk add git
+      - run:
+          name: check-vulnerabilities
+          command: |
+            npm install
+            # authenticate with snyk
+            node node_modules/snyk/cli auth ${SNYK_TOKEN} -d
+            # run snyk protect to apply any patches
+            node node_modules/snyk/cli protect
+            # snyk test will run as part of npm test and fail if it finds vulnerabilities
+            npm test
+            # snyk monitor updates the dependencies Snyk will monitor for new vulnerabilities
+            if [ $BITBUCKET_BRANCH == "master" ]; then node node_modules/snyk/cli monitor; fi;
+
+  # job deploy staging **************************************************************************
+  deploy-staging:
+    docker:
+      - image: gigadevteam/ci-node:v1
+    environment:
+      BRANCH: staging
+      HOST: 406942070697.dkr.ecr.us-east-1.amazonaws.com
+      IMAGE: giga-office
+    working_directory: ~/repo
+    steps:
+      - run: apk add git
+      - checkout      
+      - run: git submodule sync
+      - run: git submodule update --init
+#      - run:
+#          name: "Pull Submodules"
+#          command: |
+#            git submodule sync
+#            git submodule init
+#            git submodule update --remote
+#            yarn submodule-ci-update
+#            yarn submodule-update
+      #            git submodule update --remote
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - v1-backend-dependencies-{{ checksum "package.json" }}
+            - v1-frontend-dependencies-{{ checksum "package.json" }}
+            - v1-digital-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: "Install multiple package"
+          command: |
+            yarn install
+            cd backoffice && yarn install && cd ../
+            cd backend/mobile/plugins/digital-signage-plugin && yarn install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-backend-dependencies-{{ checksum "package.json" }}
+      - save_cache:
+          paths:
+            - backoffice/node_modules
+          key: v1-frontend-dependencies-{{ checksum "package.json" }}
+      - save_cache:
+          paths:
+            - backend/mobile/plugins/digital-signage-plugin/node_modules
+          key: v1-digital-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: "Build Frontend"
+          command: pwd && cd backoffice && yarn build:production
+      # Subscript function build docker image ==========
+      - restore_cache:
+          keys:
+            - v1-image-{{ .Branch }}-
+            - v1-image-
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            docker load -i /home/circleci/caches/$IMAGE:$BRANCH.tar | true
+      - run:
+          name: Build application Docker image
+          command: |
+            docker build --cache-from=$HOST/$IMAGE:$BRANCH -t $HOST/$IMAGE:$BRANCH -f .docker/$BRANCH.dockerfile .
+            docker tag $HOST/$IMAGE:$BRANCH $HOST/$IMAGE:$BRANCH-v$CIRCLE_BUILD_NUM
+      - run:
+          name: Save Docker image layer cache
+          command: |
+            mkdir -p /home/circleci/caches
+            docker save -o /home/circleci/caches/$IMAGE:$BRANCH.tar $HOST/$IMAGE:$BRANCH
+      - save_cache:
+          key: v1-image-{{ .Branch }}-{{ epoch }}
+          paths:
+            - /home/circleci/caches
+      - run:
+          name: Prepare environment registry
+          command: |
+            export _DOCKER_REPO="$(aws ecr get-authorization-token --output text  --query 'authorizationData[].proxyEndpoint')"
+            aws ecr get-login --no-include-email --region us-east-1 | awk '{print $6}' | docker login -u AWS --password-stdin $_DOCKER_REPO
+      - run:
+          name: Sync container to ECS
+          command: |
+            docker push $HOST/$IMAGE:$BRANCH
+            docker push $HOST/$IMAGE:$BRANCH-v$CIRCLE_BUILD_NUM
+      - run:
+          name: deployment
+          command: |
+            ssh -o "StrictHostKeyChecking no" ubuntu@rancher.gigaorder.de "cd devops/stack/giga-office-s1/script &&
+            ./giga-office-staging-uadmin.sh"
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - test-vulnerabilities:
+          filters:
+            branches:
+              only: test-vulnerabilities
+      - deploy-staging:
+          filters:
+            branches:
+              only: staging
