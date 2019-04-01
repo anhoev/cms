@@ -83,7 +83,7 @@ module.exports = (cms) => {
         getPlugin(pluginName).addNewFile(_path, content);
         fn();
       } catch (e) {
-        fn(e.stack);
+        fn(e);
       }
     });
     // socket.on('compile', function (pluginName, _path, content, fn) {
@@ -227,7 +227,7 @@ module.exports = (cms) => {
         gitUtils.pullRepository(branch);
         fn();
       } catch (e) {
-        fn(e);
+        fn(e.stack);
       }
     });
   });
