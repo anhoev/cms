@@ -2,8 +2,6 @@ const git = require('simple-git');
 const path = require('path');
 let localPath = path.join(__dirname, '../..', 'mobile/plugins');
 const fs = require('fs');
-const shell = require('child_process');
-const linkGitHub = "https://github.com/anhoev/";
 const gitUtils = {
   pullRepository(branch = 'master') {
     git().pull('origin', branch, (err)=>{
@@ -34,19 +32,8 @@ const gitUtils = {
     list.forEach(item => {
       let pluginPath = `${localPath}/${item.name}`;
       if(!fs.existsSync(pluginPath)){
-        this.cloneRepository(item.url, pluginPath);
+        git().clone(item.url, pluginPath);
       }
-    });
-  },
-  cloneRepository(url, path) {
-    return new Promise((resolve, reject) => {
-      git().clone(url, path, (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
     });
   }
 };
