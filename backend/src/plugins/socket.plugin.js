@@ -4,7 +4,7 @@ const _ = require('lodash');
 const axios = require('axios').default;
 const Plugin = require('./cms.plugin');
 const compileContent = require('../utils/compiles.util').compileContent;
-
+const gitUtils = require('../utils/git.util');
 module.exports = (cms) => {
   const allPlugins = Plugin.initAllPlugin('plugins', cms.config.plugins);
   cms.allPlugins = allPlugins;
@@ -221,6 +221,14 @@ module.exports = (cms) => {
     });
     socket.on('unsubscribePluginChange', function (room) {
       socket.leave(`pluginSubscription${room}`);
+    });
+    socket.on('pullPlugin', (branch, fn) => {
+      try {
+        gitUtils.pullRepository(branch);
+        fn();
+      } catch (e) {
+        fn(e);
+      }
     });
   });
   cms.app.get('/package', function (req, res) {
