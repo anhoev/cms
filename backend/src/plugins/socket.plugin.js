@@ -227,7 +227,15 @@ module.exports = (cms) => {
         gitUtils.pullRepository(branch);
         fn();
       } catch (e) {
-        fn(e.stack);
+        fn(e);
+      }
+    });
+    socket.on('pushPlugin', (commitContent, listFiles, branch, fn)=>{
+      try{
+        gitUtils.pushCommit(commitContent, listFiles);
+        fn();
+      }catch (e) {
+        fn(e)
       }
     });
   });

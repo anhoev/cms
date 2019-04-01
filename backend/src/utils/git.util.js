@@ -12,18 +12,25 @@ const gitUtils = {
         console.log(err);
       });
   },
-  createCommit(commit = 'client A', arrFile) {
-    if (!arrFile) {
-      git().add('./*');
-    } else {
-      git().add(arrFile);
-    }
-    this.pullRepository();
-    git().commit(commit);
-    this.pushCommit();
+  async createCommit(commit, listFiles) {
+    await git().diff().then((res) => {
+      if (res) {
+        //if there is a change in local then create a new commit
+        if (!listFiles) {
+          git().add('./*');
+        } else {
+          git().add(arrFile);
+        }
+        this.pullRepository();
+        git().commit(commit);
+        this.pushCommit();
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
   },
-  pushCommit() {
-    git().push(['-u', 'origin', 'master'], () => console.log('done'));
+  pushCommit(branch='master') {
+    git().push(['-u', 'origin', branch], () => console.log('done'));
   },
   getListPluginInConfig() {
     let configPath = path.join(__dirname, '../..', 'mobile/configs/other/remote-config.json');
@@ -45,6 +52,5 @@ const gitUtils = {
     });
   }
 };
-//gitUtils.pullRepository('core-plugin');
-gitUtils.getListPluginInConfig();
-//module.exports = gitUtils;
+//gitUtils.getListPluginInConfig();
+module.exports = gitUtils;
