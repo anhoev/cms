@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const path = require('path');
 const jsonfn = require('json-fn');
+const history = require('connect-history-api-fallback');
 
 const convertFormToSchema = require('./utils/form.util').convertFormToSchema;
 
@@ -295,4 +296,5 @@ module.exports = async function (cms) {
       });
     });
   }
+  cms.app.use('/', history(), cms.express.static(path.join(__dirname, '../../dist')));
 };

@@ -12,7 +12,6 @@ const AppConfig = require('./app.config');
 const plugins = require('../../src/plugins/socket.plugin');
 const watcher = require('../../src/plugins/watcher.plugin');
 const LibConfig = require('../../src/lib.config');
-const history = require('connect-history-api-fallback');
 
 module.exports = async function () {
   const enabledPlugins = (await AppConfig).plugins;
@@ -28,13 +27,12 @@ module.exports = async function () {
   });
   cms.useSession();
   cms.app.use(cookieParser());
-  cms.app.use(bodyParser.urlencoded({extended: false}));
+  cms.app.use(bodyParser.urlencoded({ extended: false }));
   cms.use(plugins);
   // cms.use(authenticate);
   cms.use(watcher);
   cms.app.use(helmet());
   cms.app.use(compression());
-  cms.app.use('/', history(), cms.express.static(path.join(__dirname, '../../dist')));
-  cms.app.use(cors());
+  cms.app.use(cors({ origin: '*' }));
   cms.app.use('/plugins', cms.middleware.static, cms.express.static(LibConfig.BASE_PLUGIN));
 };
