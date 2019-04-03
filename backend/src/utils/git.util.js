@@ -21,18 +21,15 @@ const gitUtils = {
       });
   },
   createACommit(commit, listFiles, branchName) {
-    if (!listFiles) {
-      git().add('./*');
-    } else {
-      git().add(arrFile);
-    }
-    this.createNewBranch(branchName)
-      .then(() => {
-        this.pushCommit(branchName);
-      })
-      .catch((err) => {
-
-      });
+    this.createNewBranch(branchName).then(() => {
+      if (!listFiles) {
+        git().add('./*');
+      } else {
+        git().add(arrFile);
+      }
+      this.pushCommit(branchName);
+    }).catch((e) => {
+    });
   },
   pushCommit(branch='master') {
     git().push(['-u', 'origin', branch], () => console.log('done'));
