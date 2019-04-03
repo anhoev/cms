@@ -2,6 +2,7 @@ const git = require('simple-git/promise');
 const path = require('path');
 let localPath = path.join(__dirname, '../..', 'mobile/plugins');
 const fs = require('fs');
+let currentBranch = '';
 const gitUtils = {
   pullRepository(branch = 'master') {
     git().pull('origin', branch)
@@ -63,6 +64,20 @@ const gitUtils = {
         }
       });
     });
+  },
+  getCurrentBranch() {
+    return new Promise((resolve, reject)=>{
+      git().branchLocal((err, list) => {
+        if(!err){
+          resolve(list.current);
+        }else{
+          reject(err);
+        }
+      });
+    })
+  },
+  checkOutBranch(branch){
+    git().checkoutBranch(branch);
   }
 };
 //gitUtils.createACommit('test-branch', null,'push-plugin');

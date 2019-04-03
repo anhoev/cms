@@ -238,6 +238,20 @@ module.exports = (cms) => {
         fn(e)
       }
     });
+    socket.on('getCurrentBranch', (fn)=>{
+      gitUtils.getCurrentBranch().then((res)=>{
+        fn(null, res);
+      }).catch((err)=>{
+        fn(err);
+      });
+    });
+    socket.on('checkOutBranch', (branch, fn)=>{
+      gitUtils.checkOutBranch(branch).then((res)=>{
+        fn(null, res);
+      }).catch((err)=>{
+        fn(err);
+      });
+    });
   });
   cms.app.get('/package', function (req, res) {
     axios.get(`https://www.npmjs.com/search/suggestions?q=${req.query.q}`)
