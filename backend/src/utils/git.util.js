@@ -12,22 +12,27 @@ const gitUtils = {
         console.log(err);
       });
   },
-  async createCommit(commit, listFiles) {
-    await git().diff().then((res) => {
-      if (res) {
-        //if there is a change in local then create a new commit
-        if (!listFiles) {
-          git().add('./*');
-        } else {
-          git().add(arrFile);
-        }
-        this.pullRepository();
-        git().commit(commit);
-        this.pushCommit();
-      }
-    }).catch((err) => {
-      console.log(err);
-    });
+  async gitDiff(fn){
+    await git().diff()
+      .then((res) => {
+        fn(null, res);
+      }).catch((e) => {
+        fn(e);
+      });
+  },
+  createACommit(commit, listFiles, branchName) {
+    if (!listFiles) {
+      git().add('./*');
+    } else {
+      git().add(arrFile);
+    }
+    this.createNewBranch(branchName)
+      .then(() => {
+        this.pushCommit(branchName);
+      })
+      .catch((err) => {
+
+      });
   },
   pushCommit(branch='master') {
     git().push(['-u', 'origin', branch], () => console.log('done'));
@@ -50,7 +55,19 @@ const gitUtils = {
           });
       }
     });
+  },
+  createNewBranch(branchName) {
+    return new Promise((resolve, reject) => {
+      git().checkoutLocalBranch(branchName, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
   }
 };
-//gitUtils.getListPluginInConfig();
+//gitUtils.createACommit('test-branch', null,'push-plugin');
+
 module.exports = gitUtils;

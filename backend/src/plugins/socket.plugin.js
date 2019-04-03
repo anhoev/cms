@@ -78,10 +78,10 @@ module.exports = (cms) => {
         });
       }
     });
-    socket.on('save', function (pluginName, _path, content, fn) {
+    socket.on('savePlugin', function (pluginName, _path, content, fn) {
       try {
         getPlugin(pluginName).addNewFile(_path, content);
-        fn();
+            fn();
       } catch (e) {
         fn(e);
       }
@@ -230,9 +230,9 @@ module.exports = (cms) => {
         fn(e);
       }
     });
-    socket.on('pushPlugin', (commitContent, listFiles, branch, fn)=>{
+    socket.on('createCommitAndPush', (commitContent, plugin, branch, fn)=>{
       try{
-        gitUtils.pushCommit(commitContent, listFiles);
+        gitUtils.createACommit(commitContent, plugin, branch);
         fn();
       }catch (e) {
         fn(e)
