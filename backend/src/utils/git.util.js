@@ -27,7 +27,7 @@ const gitUtils = {
       } else {
         git().add(arrFile);
       }
-      this.pushCommit(branchName);
+      git().commit(commit, this.pushCommit(branchName));
     }).catch((e) => {
     });
   },
