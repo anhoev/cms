@@ -4,7 +4,7 @@ const _ = require('lodash');
 const axios = require('axios').default;
 const Plugin = require('./cms.plugin');
 const compileContent = require('../utils/compiles.util').compileContent;
-
+const gitUtils = require('../utils/git.util');
 module.exports = (cms) => {
   const allPlugins = Plugin.initAllPlugin('plugins', cms.config.plugins);
   cms.allPlugins = allPlugins;
@@ -78,12 +78,12 @@ module.exports = (cms) => {
         });
       }
     });
-    socket.on('save', function (pluginName, _path, content, fn) {
+    socket.on('savePlugin', function (pluginName, _path, content, fn) {
       try {
         getPlugin(pluginName).addNewFile(_path, content);
-        fn();
+            fn();
       } catch (e) {
-        fn(e.stack);
+        fn(e);
       }
     });
     // socket.on('compile', function (pluginName, _path, content, fn) {
@@ -221,6 +221,36 @@ module.exports = (cms) => {
     });
     socket.on('unsubscribePluginChange', function (room) {
       socket.leave(`pluginSubscription${room}`);
+    });
+    socket.on('pullPlugin', (branch, fn) => {
+      try {
+        gitUtils.pullRepository(branch);
+        fn();
+      } catch (e) {
+        fn(e);
+      }
+    });
+    socket.on('createCommitAndPush', (commitContent, plugin, branch, fn)=>{
+      try{
+        gitUtils.createACommit(commitContent, plugin, branch);
+        fn();
+      }catch (e) {
+        fn(e)
+      }
+    });
+    socket.on('getCurrentBranch', (fn)=>{
+      gitUtils.getCurrentBranch().then((res)=>{
+        fn(null, res);
+      }).catch((err)=>{
+        fn(err);
+      });
+    });
+    socket.on('checkOutBranch', (branch, fn)=>{
+      gitUtils.checkOutBranch(branch).then((res)=>{
+        fn(null, res);
+      }).catch((err)=>{
+        fn(err);
+      });
     });
   });
   cms.app.get('/package', function (req, res) {

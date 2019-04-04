@@ -9,7 +9,10 @@ const {AppConst} = require('../commons/consts/app.const');
 
 const argv = yargs.argv;
 
-async function setupEnv() {
+/**
+ * @return {Promise<{database: {host: string, port: number,dbName: string, username: string, password: string, plugins: [{name: string, url: string, branch: string}]}}>}
+ */
+module.exports = async function setupEnv() {
   let mode = argv.env && Object.values(AppConst.NODE_ENV).indexOf(argv.env) > -1 ? argv.env : AppConst.NODE_ENV.LOCAL;
   mode = mode.trim();
   const environmentFile = glob.sync(path.normalize(__dirname + `/environment/${mode}.env.js`));
@@ -20,8 +23,7 @@ async function setupEnv() {
     process.env.NODE_ENV = mode;
   }
   const configRemote = await getConfig();
-  // apply secret key
-  return await merge(require(`./environment/${process.env.NODE_ENV}.env`), configRemote);
+  return merge(require(`./environment/${process.env.NODE_ENV}.env`), configRemote);
 
   function getConfig() {
     return new Promise(async (resolve, reject) => {
@@ -43,7 +45,7 @@ async function setupEnv() {
       }
     });
   }
-}
+};
 
 /**
  * @field AppConfig
@@ -57,4 +59,4 @@ async function setupEnv() {
  * @property {[string]} plugins
  * @property {[string]} plugins
  */
-exports.AppConfig = setupEnv();
+// exports.AppConfig = setupEnv();

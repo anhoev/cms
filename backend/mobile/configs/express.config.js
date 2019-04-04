@@ -9,18 +9,23 @@ const cookieParser = require('cookie-parser');
 
 const cms = require('../../src/cms');
 const AppConfig = require('./app.config');
+const pluginConfig = require('../configs/plugin.config');
 const plugins = require('../../src/plugins/socket.plugin');
 const watcher = require('../../src/plugins/watcher.plugin');
 const LibConfig = require('../../src/lib.config');
 
 module.exports = async function () {
-  const enabledPlugins = (await AppConfig).plugins;
+  console.time('Time config');
+  const enabledPlugins = await AppConfig();
   cms.config = {};
   if (enabledPlugins) {
-    console.log(`enabled plugins: ${enabledPlugins}`);
+    signale.complete(`Apply plugins: ${enabledPlugins.plugins.map(plugin => plugin.name).join(',')}`);
+    await pluginConfig();
     cms.config.plugins = enabledPlugins;
   }
+  console.timeEnd('Time config');
   cms.data.security = false;
+
   const port = 8888;
   cms.listen(port, () => {
     signale.success(chalk.default.bgCyan.black(`Server's running at: ${port}`));
