@@ -1,9 +1,10 @@
+const chalk = require('chalk');
 const signale = require('signale');
 const mongoose = require('mongoose');
-const {AppConfig} = require('../app.config');
+const AppConfig = require('../app.config');
 
 module.exports = async function connect() {
-  const _AppConfig = await AppConfig;
+  const _AppConfig = await AppConfig();
   let isConnectedBefore = false;
   const uri = `mongodb://${_AppConfig.database.host}:${_AppConfig.database.port}/${_AppConfig.database.dbName}`;
   const connectionOptions = {
@@ -44,7 +45,7 @@ module.exports = async function connect() {
 
   mongoose.connection.on('connected', function () {
     isConnectedBefore = true;
-    signale.success(`[Mongodb] name: "${_AppConfig.database.dbName}" has connected successfully!`);
+    signale.success(chalk.default.bgCyan.black(`[Mongodb] name: "${_AppConfig.database.dbName}" has connected successfully!`));
   });
 
   mongoose.connection.on('reconnected', function () {

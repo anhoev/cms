@@ -1,7 +1,8 @@
-const git = require('simple-git/promise');
-const path = require('path');
-let localPath = path.join(__dirname, '../..', 'mobile/plugins');
 const fs = require('fs');
+const path = require('path');
+const shellExec = require('shell-exec');
+const git = require('simple-git/promise');
+
 let currentBranch = '';
 const gitUtils = {
   pullRepository(branch = 'master') {
@@ -13,7 +14,7 @@ const gitUtils = {
         console.log(err);
       });
   },
-  async gitDiff(fn){
+  async gitDiff(fn) {
     await git().diff()
       .then((res) => {
         fn(null, res);
@@ -32,27 +33,36 @@ const gitUtils = {
     }).catch((e) => {
     });
   },
-  pushCommit(branch='master') {
+  pushCommit(branch = 'master') {
     git().push(['-u', 'origin', branch], () => console.log('done'));
   },
   getListPluginInConfig() {
     let configPath = path.join(__dirname, '../..', 'mobile/configs/other/remote-config.json');
     const listConfig = fs.readFileSync(configPath, 'utf8');
-    this.cloneListPlugins(JSON.parse(listConfig).plugins);
+    this.cloneListPlugins(JSON.parse(listConfig).plugins, {});
   },
-  cloneListPlugins(list) {
-    list.forEach(item => {
-      let pluginPath = `${localPath}/${item.name}`;
-      if (!fs.existsSync(pluginPath)) {
-        git().clone(item.url, pluginPath)
-          .then((data) => {
-            console.log(data);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+  /**
+   * @method getListPluginInConfig
+   * @param {object} plugins
+   * @param {string} basePathStore
+   * @param {string} plugins[].name
+   * @param {string} plugins[].url
+   * @param {string} plugins[].branch
+   * @param {string} plugins[].package
+   */
+  async cloneListPlugins(plugins, basePathStore) {
+    const pluginsClone = plugins.filter(plugin => {
+      return !fs.existsSync(`${basePathStore}/${plugin.name}`)
     });
+    await Promise.all(pluginsClone.map(pluginClone => {
+      return git().clone(pluginClone.url, `${basePathStore}/${pluginClone.name}`);
+    }));
+    await Promise.all(pluginsClone
+      .filter(plugin => plugin.package)
+      .map(plugin => {
+        return shellExec(`cd ${basePathStore}/${plugin.name}&& yarn install`);
+      })
+    );
   },
   createNewBranch(branchName) {
     return new Promise((resolve, reject) => {
@@ -66,17 +76,17 @@ const gitUtils = {
     });
   },
   getCurrentBranch() {
-    return new Promise((resolve, reject)=>{
+    return new Promise((resolve, reject) => {
       git().branchLocal((err, list) => {
-        if(!err){
+        if (!err) {
           resolve(list.current);
-        }else{
+        } else {
           reject(err);
         }
       });
     })
   },
-  checkOutBranch(branch){
+  checkOutBranch(branch) {
     git().checkoutBranch(branch);
   }
 };

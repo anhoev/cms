@@ -8,15 +8,17 @@
     {
       "name": "core-plugin",
       "url": "https://github.com/anhoev/core-plugin.git",
-      "branch": "develop"
-    },{
+      "branch": "master"
+    },
+    {
       "name": "digital-signage-plugin",
       "url": "https://github.com/anhoev/digital-signage-plugin.git",
-      "branch": "develop"
-    },{
+      "branch": "master"
+    },
+    {
       "name": "permission-plugin",
       "url": "https://github.com/anhoev/permission-plugin.git",
-      "branch": "develop"
+      "branch": "master"
     }
   ]
 }
