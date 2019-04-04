@@ -13,9 +13,9 @@
   "scripts": {
     "pretest": "npm install",
     "test": "./node_modules/.bin/karma start tests/karma.conf.js",
-    "start": "nodemon ./backend/mobile --url=https://raw.githubusercontent.com/anhoev/cms_configs/master/digital_signage.json",
-    "local": "nodemon ./backend/mobile --url=https://raw.githubusercontent.com/anhoev/cms_configs/master/digital_signage.json",
-    "start:dev": "nodemon ./backend/mobile development",
+    "start": "node ./backend/mobile --url=https://raw.githubusercontent.com/anhoev/cms_configs/master/digital_signage.json",
+    "local": "node ./backend/mobile --url=https://raw.githubusercontent.com/anhoev/cms_configs/master/digital_signage.json",
+    "start:dev": "node ./backend/mobile development",
     "safe": "node ./backend/mobile/index.js --mode=safemode",
     "digital-signage": "node ./backend/mobile/index.js --config=./config/digital-signage.json",
     "start:test": "export PATH_ENV=https://raw.githubusercontent.com/anhoev/cms_configs/master/digital_signage.json && node ./backend/mobile/index.js",
