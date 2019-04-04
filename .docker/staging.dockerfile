@@ -1,4 +1,4 @@
-FROM bbbdevteam9x/pm2:v1
+FROM gigadevteam/pm2:v1
 LABEL author="manh.nguyen@vmodev.com"
 
 RUN mkdir -p /home/giga-office \
@@ -11,10 +11,10 @@ RUN yarn install --production \
   && node-prune
 
 # execute plugin
-RUN mkdir -p /home/giga-office/backend/mobile/plugins/digital-signage-plugin
-COPY backend/mobile/plugins/digital-signage-plugin/package.json backend/mobile/plugins/digital-signage-plugin/package.json
-RUN cd backend/mobile/plugins/digital-signage-plugin \
-  && yarn install
+# RUN mkdir -p /home/giga-office/backend/mobile/plugins/digital-signage-plugin
+# COPY backend/mobile/plugins/digital-signage-plugin/package.json backend/mobile/plugins/digital-signage-plugin/package.json
+# RUN cd backend/mobile/plugins/digital-signage-plugin \
+#   && yarn install
 
 COPY ./ ./
 EXPOSE 8888
