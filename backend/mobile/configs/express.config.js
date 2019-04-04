@@ -13,7 +13,6 @@ const pluginConfig = require('../configs/plugin.config');
 const plugins = require('../../src/plugins/socket.plugin');
 const watcher = require('../../src/plugins/watcher.plugin');
 const LibConfig = require('../../src/lib.config');
-const history = require('connect-history-api-fallback');
 
 module.exports = async function () {
   console.time('Time config');
@@ -39,7 +38,6 @@ module.exports = async function () {
   cms.use(watcher);
   cms.app.use(helmet());
   cms.app.use(compression());
-  cms.app.use('/', history(), cms.express.static(path.join(__dirname, '../../dist')));
-  cms.app.use(cors());
+  cms.app.use(cors({ origin: '*' }));
   cms.app.use('/plugins', cms.middleware.static, cms.express.static(LibConfig.BASE_PLUGIN));
 };
