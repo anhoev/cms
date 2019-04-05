@@ -3,9 +3,9 @@ const path = require('path');
 const yargs = require('yargs');
 const axios = require('axios');
 const chalk = require('chalk');
-const {merge} = require('lodash');
+const { merge } = require('lodash');
 const signale = require('signale');
-const {AppConst} = require('../commons/consts/app.const');
+const { AppConst } = require('../commons/consts/app.const');
 
 const argv = yargs.argv;
 
