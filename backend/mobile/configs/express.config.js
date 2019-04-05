@@ -16,10 +16,10 @@ const LibConfig = require('../../src/lib.config');
 
 module.exports = async function () {
   console.time('Time config');
-  const enabledPlugins = await AppConfig();
+  const enabledPlugins = (await AppConfig()).plugins;
   cms.config = {};
   if (enabledPlugins) {
-    signale.complete(`Apply plugins: ${enabledPlugins.plugins.map(plugin => plugin.name).join(',')}`);
+    signale.complete(`Apply plugins: ${enabledPlugins.map(plugin => plugin.name).join(',')}`);
     await pluginConfig();
     cms.config.plugins = enabledPlugins;
   }

@@ -5,22 +5,11 @@ const git = require('simple-git/promise');
 
 let currentBranch = '';
 const gitUtils = {
-  pullRepository(branch = 'master') {
-    git().pull('origin', branch)
-      .then((update) => {
-        console.log(update);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  async pullRepository(_path, branch = 'master') {
+    return await git(_path).pull('origin', branch);
   },
-  async gitDiff(fn) {
-    await git().diff()
-      .then((res) => {
-        fn(null, res);
-      }).catch((e) => {
-        fn(e);
-      });
+  async gitDiff() {
+    return await git().diff();
   },
   createACommit(commit, listFiles, branchName) {
     this.createNewBranch(branchName).then(() => {

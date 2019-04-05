@@ -13,22 +13,22 @@ module.exports = (cms) => {
     return new Promise((resolve => {
       const filePath = Plugin.convertInternalPathToFilePathStatic(path, pluginName);
       fs.readFile(filePath, 'utf8', (err, fileData) => {
-        const colectionName = name.split('.')[1];
+        const collectionName = name.split('.')[1];
         fileData = JSON.parse(fileData);
-        const {_id} = fileData;
-        const Model = cms.getModel(colectionName);
+        const { _id } = fileData;
+        const Model = cms.getModel(collectionName);
         if (_.isEmpty(Model)) {
           return resolve(false);
         }
         const fileModelData = new Model(fileData);
         Model.findById(_id)
-          .then(dbData => {
-            if (!dbData) {
-              return resolve(false);
-            }
-            const dbModelData = new Model(dbData);
-            resolve(_.isEqual(dbModelData.toObject(), fileModelData.toObject()) || JSON.stringify(fileData) === JSON.stringify(dbData.toObject()));
-          });
+        .then(dbData => {
+          if (!dbData) {
+            return resolve(false);
+          }
+          const dbModelData = new Model(dbData);
+          resolve(_.isEqual(dbModelData.toObject(), fileModelData.toObject()) || JSON.stringify(fileData) === JSON.stringify(dbData.toObject()));
+        });
       });
     }));
   }
@@ -52,13 +52,13 @@ module.exports = (cms) => {
   function findFileItem(directoryTree, plugin) {
     return directoryTree &&
       directoryTree
-        .filter(item => fs.statSync(plugin.convertInternalPathToFilePath(item.path)).isFile())
-        .map(item => {
-          return {
-            name: item.name.replace(item.extension, ''),
-            content: fs.readFileSync(plugin.convertInternalPathToFilePath(item.path), 'utf-8')
-          };
-        });
+      .filter(item => fs.statSync(plugin.convertInternalPathToFilePath(item.path)).isFile())
+      .map(item => {
+        return {
+          name: item.name.replace(item.extension, ''),
+          content: fs.readFileSync(plugin.convertInternalPathToFilePath(item.path), 'utf-8')
+        };
+      });
   }
 
   function getPlugin(name) {
@@ -72,7 +72,7 @@ module.exports = (cms) => {
     socket.on('loadImportableFile', function (name, fn) {
       const plugin = getPlugin(name);
       if (plugin) {
-        const result = plugin.loadDirTree('json', {extensions: /\.json/});
+        const result = plugin.loadDirTree('json', { extensions: /\.json/ });
         compareAll(result).then(() => {
           fn(result);
         });
@@ -81,7 +81,7 @@ module.exports = (cms) => {
     socket.on('savePlugin', function (pluginName, _path, content, fn) {
       try {
         getPlugin(pluginName).addNewFile(_path, content);
-            fn();
+        fn();
       } catch (e) {
         fn(e);
       }
@@ -97,19 +97,19 @@ module.exports = (cms) => {
     // });
     socket.on('loadDistPlugin', function (fn) {
       const result = Object
-        .keys(allPlugins)
-        .reduce((acc, item) => {
-          const currentPlugin = allPlugins[item];
-          const modules = currentPlugin.loadModules('modules');
-          const components = currentPlugin.loadModules('components');
-          const dist = currentPlugin.loadDirTree('dist');
-          const plugins = findFileItem(dist ? dist.children : [], currentPlugin);
-          return {
-            plugins: [...acc.plugins, ...plugins],
-            components: [...acc.components, ...components],
-            modules: [...acc.modules, ...modules]
-          };
-        }, {plugins: [], modules: [], components: []});
+      .keys(allPlugins)
+      .reduce((acc, item) => {
+        const currentPlugin = allPlugins[item];
+        const modules = currentPlugin.loadModules('modules');
+        const components = currentPlugin.loadModules('components');
+        const dist = currentPlugin.loadDirTree('dist');
+        const plugins = findFileItem(dist ? dist.children : [], currentPlugin);
+        return {
+          plugins: [...acc.plugins, ...plugins],
+          components: [...acc.components, ...components],
+          modules: [...acc.modules, ...modules]
+        };
+      }, { plugins: [], modules: [], components: [] });
       fn(result);
     });
     socket.on('delete', function (pluginName, _path, fn) {
@@ -117,7 +117,7 @@ module.exports = (cms) => {
         getPlugin(pluginName).removeFile(_path);
         fn();
       } catch (e) {
-        fn(Object.assign({}, e, {message: 'Cannot delete folder with files'}));
+        fn(Object.assign({}, e, { message: 'Cannot delete folder with files' }));
       }
     });
     socket.on('rename', function (pluginName, _path, newName, fn) {
@@ -130,7 +130,7 @@ module.exports = (cms) => {
     });
     socket.on('addNew', function (pluginName, fileName, type, fn) {
       try {
-        getPlugin(pluginName).addNewFile(fileName, '', {type});
+        getPlugin(pluginName).addNewFile(fileName, '', { type });
         fn();
       } catch (e) {
         fn(e);
@@ -147,9 +147,9 @@ module.exports = (cms) => {
     });
     socket.on('addModules', function (pluginName, name, fn) {
       getPlugin(pluginName)
-        .addUnpkgModules(name, 'modules')
-        .then(() => fn())
-        .catch(fn);
+      .addUnpkgModules(name, 'modules')
+      .then(() => fn())
+      .catch(fn);
     });
     socket.on('loadComponents', function (fn) {
       // TODO check if same component name then return with a message
@@ -162,21 +162,21 @@ module.exports = (cms) => {
     });
     socket.on('addComponents', function (pluginName, name, fn) {
       getPlugin(pluginName)
-        .addUnpkgModules(name, 'components')
-        .then(() => fn())
-        .catch(err => fn(err));
+      .addUnpkgModules(name, 'components')
+      .then(() => fn())
+      .catch(err => fn(err));
     });
-    socket.on('copyFile', (pluginName, {path: _path, name, toPlugin}, fn) => {
+    socket.on('copyFile', (pluginName, { path: _path, name, toPlugin }, fn) => {
       try {
-        getPlugin(pluginName).copyFile(_path, name, {type: 'copy', toPlugin});
+        getPlugin(pluginName).copyFile(_path, name, { type: 'copy', toPlugin });
         fn();
       } catch (e) {
         fn(e);
       }
     });
-    socket.on('moveFile', (pluginName, {path: _path, name, toPlugin}, fn) => {
+    socket.on('moveFile', (pluginName, { path: _path, name, toPlugin }, fn) => {
       try {
-        getPlugin(pluginName).copyFile(_path, name, {type: 'move', toPlugin});
+        getPlugin(pluginName).copyFile(_path, name, { type: 'move', toPlugin });
         fn();
       } catch (e) {
         fn(e);
@@ -184,12 +184,12 @@ module.exports = (cms) => {
     });
     socket.on('reexportModel', (item, fn) => {
       getPlugin(item.pluginName).reexportModel(item.path, item.name)
-        .then(() => {
-          fn();
-        })
-        .catch((e) => {
-          fn(e);
-        });
+      .then(() => {
+        fn();
+      })
+      .catch((e) => {
+        fn(e);
+      });
     });
     socket.on('exportModel', (name, content, collection, plugins, filePath, fn) => {
       try {
@@ -201,14 +201,14 @@ module.exports = (cms) => {
     });
     socket.on('importModel', (pluginName, collection, filePath, replace, fn) => {
       getPlugin(pluginName)
-        .importModel(collection, filePath, replace)
-        .then(res => fn(null, res))
-        .catch(err => fn(err));
+      .importModel(collection, filePath, replace)
+      .then(res => fn(null, res))
+      .catch(err => fn(err));
     });
     socket.on('compileContent', (contentIn, fn) => {
       compileContent(contentIn)
-        .then((contentOut) => fn(null, contentOut))
-        .catch(() => fn({err: 'Compile error'}));
+      .then((contentOut) => fn(null, contentOut))
+      .catch(() => fn({ err: 'Compile error' }));
     });
     socket.on('getListPlugin', (fn) => {
       fn(null, Plugin.getAllPlugin());
@@ -222,44 +222,40 @@ module.exports = (cms) => {
     socket.on('unsubscribePluginChange', function (room) {
       socket.leave(`pluginSubscription${room}`);
     });
-    socket.on('pullPlugin', (branch, fn) => {
-      try {
-        gitUtils.pullRepository(branch);
-        fn();
-      } catch (e) {
-        fn(e);
-      }
+    socket.on('pullPlugin', (pluginName, fn) => {
+      const plugin = getPlugin(pluginName);
+      gitUtils.pullRepository(plugin.pluginPath, plugin.config.branch).then(fn, fn);
     });
-    socket.on('createCommitAndPush', (commitContent, plugin, branch, fn)=>{
-      try{
+    socket.on('createCommitAndPush', (commitContent, plugin, branch, fn) => {
+      try {
         gitUtils.createACommit(commitContent, plugin, branch);
         fn();
-      }catch (e) {
+      } catch (e) {
         fn(e)
       }
     });
-    socket.on('getCurrentBranch', (fn)=>{
-      gitUtils.getCurrentBranch().then((res)=>{
+    socket.on('getCurrentBranch', (fn) => {
+      gitUtils.getCurrentBranch().then((res) => {
         fn(null, res);
-      }).catch((err)=>{
+      }).catch((err) => {
         fn(err);
       });
     });
-    socket.on('checkOutBranch', (branch, fn)=>{
-      gitUtils.checkOutBranch(branch).then((res)=>{
+    socket.on('checkOutBranch', (branch, fn) => {
+      gitUtils.checkOutBranch(branch).then((res) => {
         fn(null, res);
-      }).catch((err)=>{
+      }).catch((err) => {
         fn(err);
       });
     });
   });
   cms.app.get('/package', function (req, res) {
     axios.get(`https://www.npmjs.com/search/suggestions?q=${req.query.q}`)
-      .then(response => {
-        res.status(200).json(response.data);
-      })
-      .catch(err => {
-        res.status(400).json(err.response.data);
-      });
+    .then(response => {
+      res.status(200).json(response.data);
+    })
+    .catch(err => {
+      res.status(400).json(err.response.data);
+    });
   });
 };

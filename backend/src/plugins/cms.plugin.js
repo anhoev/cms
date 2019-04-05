@@ -8,8 +8,9 @@ const cms = require('../cms');
 const LibConfig = require('../lib.config');
 
 class CmsPlugin {
-  constructor(pluginPath, pluginName, resolveUrlPath) {
+  constructor(pluginPath, pluginName, resolveUrlPath, config) {
     //this.pluginPath = path.join(name);
+    this.config = config;
     this.pluginPath = pluginPath;
     this.pluginName = pluginName ? pluginName : path.basename(pluginPath);
     if (resolveUrlPath) {
@@ -23,8 +24,8 @@ class CmsPlugin {
     const dirContent = fs.readdirSync(dirPath)
       .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
     const result = dirContent.reduce((acc, item) => {
-      if (!Array.isArray(plugins) || !plugins.length > 0 || plugins.includes(item)) {
-        return Object.assign(acc, {[item]: new CmsPlugin(path.join(dirPath, item))});
+      if (!Array.isArray(plugins) || !plugins.length > 0 || plugins.find(i => i.name === item)) {
+        return Object.assign(acc, {[item]: new CmsPlugin(path.join(dirPath, item), item, null, plugins.find(i => i.name === item))});
       }
       return acc;
     }, {});
