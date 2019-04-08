@@ -226,7 +226,7 @@ module.exports = (cms) => {
       const plugin = getPlugin(pluginName);
       gitUtils.pullRepository(plugin.pluginPath, plugin.config.branch).then(fn, fn);
     });
-    socket.on('createCommitAndPush', (commitContent, pluginName, branch, fn) => {
+    socket.on('createCommitAndPush', (commitContent, pluginName, newBranch, fn) => {
       const plugin = getPlugin(pluginName);
       gitUtils.createACommit(commitContent, plugin.config.branch, plugin.pluginPath, newBranch).then(fn, fn);
     });
