@@ -226,20 +226,12 @@ module.exports = (cms) => {
       const plugin = getPlugin(pluginName);
       gitUtils.pullRepository(plugin.pluginPath, plugin.config.branch).then(fn, fn);
     });
-    socket.on('createCommitAndPush', (commitContent, plugin, branch, fn) => {
-      try {
-        gitUtils.createACommit(commitContent, plugin, branch);
-        fn();
-      } catch (e) {
-        fn(e)
-      }
+    socket.on('createCommitAndPush', (commitContent, pluginName, branch, fn) => {
+      const plugin = getPlugin(pluginName);
+      gitUtils.createACommit(commitContent, plugin.config.branch, plugin.pluginPath, newBranch).then(fn, fn);
     });
     socket.on('getCurrentBranch', (fn) => {
-      gitUtils.getCurrentBranch().then((res) => {
-        fn(null, res);
-      }).catch((err) => {
-        fn(err);
-      });
+      gitUtils.getCurrentBranch().then(fn);
     });
     socket.on('checkOutBranch', (branch, fn) => {
       gitUtils.checkOutBranch(branch).then((res) => {

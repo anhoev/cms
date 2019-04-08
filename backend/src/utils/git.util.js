@@ -1,34 +1,18 @@
 const fs = require('fs');
-const path = require('path');
 const shellExec = require('shell-exec');
 const git = require('simple-git/promise');
-
-let currentBranch = '';
 const gitUtils = {
   async pullRepository(_path, branch = 'master') {
     return await git(_path).pull('origin', branch);
   },
-  async gitDiff() {
-    return await git().diff();
-  },
-  createACommit(commit, listFiles, branchName) {
-    this.createNewBranch(branchName).then(() => {
-      if (!listFiles) {
-        git().add('./*');
-      } else {
-        git().add(arrFile);
-      }
-      git().commit(commit, this.pushCommit(branchName));
-    }).catch((e) => {
-    });
-  },
-  pushCommit(branch = 'master') {
-    git().push(['-u', 'origin', branch], () => console.log('done'));
-  },
-  getListPluginInConfig() {
-    let configPath = path.join(__dirname, '../..', 'mobile/configs/other/remote-config.json');
-    const listConfig = fs.readFileSync(configPath, 'utf8');
-    this.cloneListPlugins(JSON.parse(listConfig).plugins, {});
+  async createACommit(commit, branch, repo, newBranch) {
+    //const listFile = await git().diffSummary(['master', 'backend/mobile/plugins/core-plugin']);
+    const listFile = await git().diffSummary([branch, repo]);
+    if(listFile.files.length > 0){
+      await git().add(['-f', pluginPath]);
+      await git().checkoutLocalBranch(newBranch);
+      return await git().push(['-u', 'origin', newBranch]);
+    }
   },
   /**
    * @method getListPluginInConfig
@@ -53,32 +37,13 @@ const gitUtils = {
       })
     );
   },
-  createNewBranch(branchName) {
-    return new Promise((resolve, reject) => {
-      git().checkoutLocalBranch(branchName, (err, result) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      });
-    });
+  async getCurrentBranch() {
+    return await git().branchLocal();
   },
-  getCurrentBranch() {
-    return new Promise((resolve, reject) => {
-      git().branchLocal((err, list) => {
-        if (!err) {
-          resolve(list.current);
-        } else {
-          reject(err);
-        }
-      });
-    })
-  },
-  checkOutBranch(branch) {
-    git().checkoutBranch(branch);
+  async checkOutBranch(branch) {
+    return await git().checkoutBranch(branch);
   }
 };
-//gitUtils.createACommit('test-branch', null,'push-plugin');
+gitUtils.createACommit('test-branch', 'backend/mobile/plugins/core-plugin', 'push-plugin');
 
-module.exports = gitUtils;
+//module.exports = gitUtils;
