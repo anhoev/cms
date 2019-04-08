@@ -228,7 +228,7 @@ module.exports = (cms) => {
     });
     socket.on('createCommitAndPush', (commitContent, pluginName, newBranch, fn) => {
       const plugin = getPlugin(pluginName);
-      gitUtils.createACommit(commitContent, plugin.config.branch, plugin.pluginPath, newBranch).then(fn, fn);
+      gitUtils.createACommit(commitContent, plugin.pluginPath, newBranch).then(fn, fn);
     });
     socket.on('getCurrentBranch', (fn) => {
       gitUtils.getCurrentBranch().then(fn);

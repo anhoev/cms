@@ -5,13 +5,14 @@ const gitUtils = {
   async pullRepository(_path, branch = 'master') {
     return await git(_path).pull('origin', branch);
   },
-  async createACommit(commit, branch, pluginPath, newBranch) {
-    const listFile = await git().diffSummary(['origin/master', 'backend/mobile/plugins/core-plugin']);
-    //const listFile = await git().diffSummary([branch, pluginPath]);
+  async createACommit(commit, pluginPath, newBranch) {
+    const listFile = await git(pluginPath).diffSummary();
     if(listFile.files.length > 0){
-      await git().add(['-f', pluginPath]);
       await git().checkoutLocalBranch(newBranch);
+      await git().add(['-f', pluginPath]).commit(commit);
       return await git().push(['-u', 'origin', newBranch]);
+    }else{
+      return 'nothing has changed';
     }
   },
   /**
