@@ -11,6 +11,6 @@ const expressConfig = require('./configs/express.config');
   expressConfig();
   databaseConfig();
   signale.timeEnd('Time -setup');
-})()
+})();
 
 module.exports = 'app';

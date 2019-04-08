@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-module.exports = function (app) {
-  router.use('/common', require('./common'));
-
+module.exports = function(app) {
   app.use('/api/v1', router);
-}
+};

@@ -11,5 +11,6 @@ module.exports = {
     dbName: ''
   },
   plugins: [],
+  root: path.join(__dirname, '../../../../'),
   basePlugin: path.join(__dirname, '../../../mobile/plugins')
 };

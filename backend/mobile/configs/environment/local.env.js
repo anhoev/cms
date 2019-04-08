@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   app: {
     port: 8888,
@@ -10,20 +12,22 @@ module.exports = {
   },
   plugins: [
     {
-      name: "core-plugin",
-      url: "https://github.com/anhoev/core-plugin.git",
-      branch: "master"
+      name: 'core-plugin',
+      url: 'https://github.com/anhoev/core-plugin.git',
+      branch: 'master'
     },
     {
-      name: "digital-signage-plugin",
-      url: "https://github.com/anhoev/digital-signage-plugin.git",
-      branch: "master",
+      name: 'digital-signage-plugin',
+      url: 'https://github.com/anhoev/digital-signage-plugin.git',
+      branch: 'master',
       package: true
     },
     {
-      name: "permission-plugin",
-      url: "https://github.com/anhoev/permission-plugin.git",
-      branch: "master"
+      name: 'permission-plugin',
+      url: 'https://github.com/anhoev/permission-plugin.git',
+      branch: 'master'
     }
-  ]
+  ],
+  root: path.join(__dirname, '../../../../'),
+  basePlugin: path.join(__dirname, '../../../mobile/plugins')
 };

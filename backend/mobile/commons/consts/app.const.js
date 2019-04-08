@@ -12,5 +12,10 @@ exports.AppConst = {
       port: 27017,
       dbName: 'mobile10'
     }
+  },
+
+  MODE: {
+    NORMAL: 'normal',
+    SAFE_MODE: 'safemode'
   }
 };
