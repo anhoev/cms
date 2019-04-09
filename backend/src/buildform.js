@@ -116,7 +116,14 @@ module.exports = async function (cms) {
             key: String,
             default: String,
             ref: String,
-            autopopulate: Boolean
+            autopopulate: Boolean,
+            populateSelect: {
+              type: [String], form: {
+                type: 'input@multiSelect', addable: true, flex: 'md12', isVisible: function ({model}) {
+                  return model.autopopulate;
+                }
+              }
+            },
           }
         }, w({
           'ref-select': ['label', 'flex', 'labelProp', 'addable', 'isVisible']
@@ -162,8 +169,8 @@ module.exports = async function (cms) {
       form: { type: 'tree', children: 'fields', choiceKey: 'schemaType' }
     },
     extensions: {
-      type: [{choice: String}],
-      form: {type: 'choiceArray', choiceKey: 'extensionType', dynamicFields: '.form-extension'}
+      type: [{ choice: String }],
+      form: { type: 'choiceArray', choiceKey: 'extensionType', dynamicFields: '.form-extension' }
     },
     tabs: {
       type: [{
