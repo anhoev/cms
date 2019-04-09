@@ -228,17 +228,11 @@ module.exports = (cms) => {
     });
     socket.on('createCommitAndPush', (commitContent, pluginName, newBranch, fn) => {
       const plugin = getPlugin(pluginName);
-      gitUtils.createACommit(commitContent, plugin.pluginPath, newBranch).then(fn).catch((e) => {
-        fn(e.message);
-      });
+      gitUtils.createACommit(commitContent, plugin.pluginPath, newBranch).then(fn).catch(e => fn(e.message));
     });
     socket.on('checkOutBranch', (pluginName, fn) => {
       const plugin = getPlugin(pluginName);
-      gitUtils.checkOutBranch(plugin.pluginPath, plugin.branch).then((res) => {
-        fn(null, res);
-      }).catch((err) => {
-        fn(err);
-      });
+      gitUtils.checkOutBranch(plugin.pluginPath, plugin.branch).then(res => fn(null, res)).catch(fn);
     });
   });
   cms.app.get('/package', function (req, res) {
