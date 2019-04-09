@@ -234,9 +234,9 @@ module.exports = (cms) => {
       const plugin = getPlugin(pluginName);
       fn(plugin.config.branch);
     });
-    socket.on('checkOutBranch', (pluginName, branch, fn) => {
+    socket.on('checkOutBranch', (pluginName, fn) => {
       const plugin = getPlugin(pluginName);
-      gitUtils.checkOutBranch(plugin.pluginPath, branch).then((res) => {
+      gitUtils.checkOutBranch(plugin.pluginPath, plugin.branch).then((res) => {
         fn(null, res);
       }).catch((err) => {
         fn(err);

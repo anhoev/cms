@@ -9,18 +9,15 @@ const gitUtils = {
     const listFile = await git(pluginPath).diffSummary();
     let hasError = null;
     if(listFile.files.length > 0){
-      await git(pluginPath).checkoutLocalBranch(newBranch).then((err, result)=>{
-        hasError = err;
-      }).catch((e)=>{
+      await git(pluginPath).checkoutLocalBranch(newBranch).catch((e)=>{
         hasError = e;
       });
       if(hasError){
-        return hasError;
-      }else{
-        await git(pluginPath).add('./*');
-        await git(pluginPath).commit(commit);
-        return await git(pluginPath).push('origin', newBranch);
+        return hasError.message;
       }
+      await git(pluginPath).add('./*');
+      await git(pluginPath).commit(commit);
+      return await git(pluginPath).push('origin', newBranch);
     }else{
       return 'nothing has changed';
     }
