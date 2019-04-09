@@ -7,14 +7,8 @@ const gitUtils = {
   },
   async createACommit(commit, pluginPath, newBranch) {
     const listFile = await git(pluginPath).diffSummary();
-    let hasError = null;
     if(listFile.files.length > 0){
-      await git(pluginPath).checkoutLocalBranch(newBranch).catch((e)=>{
-        hasError = e;
-      });
-      if(hasError){
-        return hasError.message;
-      }
+      await git(pluginPath).checkoutLocalBranch(newBranch);
       await git(pluginPath).add('./*');
       await git(pluginPath).commit(commit);
       return await git(pluginPath).push('origin', newBranch);
@@ -44,9 +38,6 @@ const gitUtils = {
         return shellExec(`cd ${basePathStore}/${plugin.name}&& yarn install`);
       })
     );
-  },
-  async getCurrentBranch(pluginPath) {
-    return await git(pluginPath).branchLocal();
   },
   async checkOutBranch(pluginPath, branch='master') {
     return await git(pluginPath).checkout(branch);
