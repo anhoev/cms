@@ -226,27 +226,13 @@ module.exports = (cms) => {
       const plugin = getPlugin(pluginName);
       gitUtils.pullRepository(plugin.pluginPath, plugin.config.branch).then(fn, fn);
     });
-    socket.on('createCommitAndPush', (commitContent, plugin, branch, fn) => {
-      try {
-        gitUtils.createACommit(commitContent, plugin, branch);
-        fn();
-      } catch (e) {
-        fn(e)
-      }
+    socket.on('createCommitAndPush', (commitContent, pluginName, newBranch, fn) => {
+      const plugin = getPlugin(pluginName);
+      gitUtils.createACommit(commitContent, plugin.pluginPath, newBranch).then(fn).catch(e => fn(e.message));
     });
-    socket.on('getCurrentBranch', (fn) => {
-      gitUtils.getCurrentBranch().then((res) => {
-        fn(null, res);
-      }).catch((err) => {
-        fn(err);
-      });
-    });
-    socket.on('checkOutBranch', (branch, fn) => {
-      gitUtils.checkOutBranch(branch).then((res) => {
-        fn(null, res);
-      }).catch((err) => {
-        fn(err);
-      });
+    socket.on('checkOutBranch', (pluginName, fn) => {
+      const plugin = getPlugin(pluginName);
+      gitUtils.checkOutBranch(plugin.pluginPath, plugin.branch).then(res => fn(null, res)).catch(fn);
     });
   });
   cms.app.get('/package', function (req, res) {
