@@ -33,10 +33,16 @@ jobs:
       IMAGE: giga-office
     working_directory: ~/repo
     steps:
-      - run: apk add git
-      - checkout      
-      - run: git submodule sync
-      - run: git submodule update --init
+      - checkout
+      - run:
+          name: "Pull Submodules"
+          command: |
+            git submodule init
+            git submodule update --remote
+      # - run: apk add git
+      # - checkout      
+      # - run: git submodule sync
+      # - run: git submodule update --init
 #      - run:
 #          name: "Pull Submodules"
 #          command: |
@@ -51,13 +57,11 @@ jobs:
           keys:
             - v1-backend-dependencies-{{ checksum "package.json" }}
             - v1-frontend-dependencies-{{ checksum "package.json" }}
-            - v1-digital-dependencies-{{ checksum "package.json" }}
       - run:
           name: "Install multiple package"
           command: |
             yarn install
-            cd backoffice && yarn install && cd ../
-            cd backend/mobile/plugins/digital-signage-plugin && yarn install
+            cd backoffice && yarn install
       - save_cache:
           paths:
             - node_modules
@@ -66,10 +70,6 @@ jobs:
           paths:
             - backoffice/node_modules
           key: v1-frontend-dependencies-{{ checksum "package.json" }}
-      - save_cache:
-          paths:
-            - backend/mobile/plugins/digital-signage-plugin/node_modules
-          key: v1-digital-dependencies-{{ checksum "package.json" }}
       - run:
           name: "Build Frontend"
           command: pwd && cd backoffice && yarn build:production
