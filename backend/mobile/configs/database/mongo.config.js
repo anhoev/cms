@@ -1,12 +1,12 @@
 const chalk = require('chalk');
 const signale = require('signale');
 const mongoose = require('mongoose');
-const AppConfig = require('../app.config');
+// const AppConfig = require('../app.config');
 
 module.exports = async function connect() {
-  const _AppConfig = await AppConfig();
+  const appConfig = global.APP_CONFIG;
   let isConnectedBefore = false;
-  const uri = `mongodb://${_AppConfig.database.host}:${_AppConfig.database.port}/${_AppConfig.database.dbName}`;
+  const uri = `mongodb://${appConfig.database.host}:${appConfig.database.port}/${appConfig.database.dbName}`;
   const connectionOptions = {
     useNewUrlParser: true,
     // https://mongoosejs.com/docs/deprecations.html
@@ -14,9 +14,9 @@ module.exports = async function connect() {
     useCreateIndex: true
   };
 
-  if (_AppConfig.database.username && _AppConfig.database.password) {
-    connectionOptions.user = _AppConfig.database.username;
-    connectionOptions.pass = _AppConfig.database.password;
+  if (appConfig.database.username && appConfig.database.password) {
+    connectionOptions.user = appConfig.database.username;
+    connectionOptions.pass = appConfig.database.password;
   }
 
   connect();
@@ -45,7 +45,7 @@ module.exports = async function connect() {
 
   mongoose.connection.on('connected', function () {
     isConnectedBefore = true;
-    signale.success(chalk.default.bgCyan.black(`[Mongodb] name: "${_AppConfig.database.dbName}" has connected successfully!`));
+    signale.success(chalk.default.bgCyan.black(`[Mongodb] name: "${appConfig.database.dbName}" has connected successfully!`));
   });
 
   mongoose.connection.on('reconnected', function () {

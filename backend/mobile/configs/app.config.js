@@ -1,11 +1,14 @@
+const fs = require('fs');
 const glob = require('glob');
 const path = require('path');
 const yargs = require('yargs');
 const axios = require('axios');
 const chalk = require('chalk');
-const {merge} = require('lodash');
+const mkdirp = require('mkdirp');
 const signale = require('signale');
-const {AppConst} = require('../commons/consts/app.const');
+const { merge } = require('lodash');
+
+const { AppConst } = require('../commons/consts/app.const');
 
 const argv = yargs.argv;
 
@@ -28,12 +31,22 @@ module.exports = async function setupEnv() {
   function getConfig() {
     return new Promise(async (resolve, reject) => {
       const defaultConfig = AppConst.DEFAULT_CONFIG;
-      if (argv.config) {
+      if (argv.config && fs.existsSync(argv.config)) {
+        signale.note('App config from file');
         return resolve(require(`../../.${argv.config}`));
       } else if (process.env.PATH_ENV || argv['url']) {
+        signale.note('App config from url');
         const url = process.env.PATH_ENV || argv['url'];
         return await axios.get(url)
           .then(res => {
+            const pathStore = path.join(__dirname, '../../../config');
+            mkdirp(pathStore, function(err) {
+              if (err) {
+                console.log(err);
+              } else {
+                fs.writeFileSync(`${pathStore}/config.json`, JSON.stringify(res.data));
+              }
+            });
             return resolve(res.data);
           })
           .catch(err => {
@@ -59,4 +72,3 @@ module.exports = async function setupEnv() {
  * @property {[string]} plugins
  * @property {[string]} plugins
  */
-// exports.AppConfig = setupEnv();

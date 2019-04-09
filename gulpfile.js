@@ -1,12 +1,12 @@
 'use strict';
 
 const gulp = require('gulp');
-const sass = require('gulp-sass');
-const sourcemaps = require('gulp-sourcemaps');
-const webpack = require('gulp-webpack');
-const clean = require('gulp-clean');
-const minifyCss = require('gulp-minify-css');
 const run = require('gulp-run');
+const sass = require('gulp-sass');
+const clean = require('gulp-clean');
+const webpack = require('gulp-webpack');
+const minifyCss = require('gulp-minify-css');
+const sourcemaps = require('gulp-sourcemaps');
 
 gulp.task('frontend.lib', function() {
     return run('webpack --config lib.webpack.config.js').exec()

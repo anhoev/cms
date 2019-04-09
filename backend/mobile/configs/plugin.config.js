@@ -5,7 +5,7 @@ const AppConfig = require('../configs/app.config');
 const gitUtils = require('../../src/utils/git.util');
 
 module.exports = async function setupPlugin() {
-  const plugins = (await AppConfig()).plugins;
+  const plugins = global.APP_CONFIG.plugins;
   const pathStore = path.join(__dirname, '../plugins');
   try {
     await gitUtils.cloneListPlugins(plugins, pathStore);

@@ -5,6 +5,7 @@
       "script": "./backend/mobile/index.js",
       "merge_logs": true,
       "args": [
+        "--mode=safemode",
         "--env=development",
         "--config=./config/config.json"
       ]
