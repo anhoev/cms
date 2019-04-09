@@ -7,12 +7,12 @@ const gitUtils = {
   },
   async createACommit(commit, pluginPath, newBranch) {
     const listFile = await git(pluginPath).diffSummary();
-    if(listFile.files.length > 0){
+    if (listFile.files.length > 0) {
       await git(pluginPath).checkoutLocalBranch(newBranch);
       await git(pluginPath).add('./*');
       await git(pluginPath).commit(commit);
       return await git(pluginPath).push('origin', newBranch);
-    }else{
+    } else {
       return 'nothing has changed';
     }
   },
@@ -27,7 +27,7 @@ const gitUtils = {
    */
   async cloneListPlugins(plugins, basePathStore) {
     const pluginsClone = plugins.filter(plugin => {
-      return !fs.existsSync(`${basePathStore}/${plugin.name}`)
+      return !fs.existsSync(`${basePathStore}/${plugin.name}`);
     });
     await Promise.all(pluginsClone.map(pluginClone => {
       return git().clone(pluginClone.url, `${basePathStore}/${pluginClone.name}`);
@@ -39,7 +39,7 @@ const gitUtils = {
       })
     );
   },
-  async checkOutBranch(pluginPath, branch='master') {
+  async checkOutBranch(pluginPath, branch = 'master') {
     return await git(pluginPath).checkout(branch);
   }
 };
