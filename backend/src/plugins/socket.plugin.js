@@ -230,11 +230,13 @@ module.exports = (cms) => {
       const plugin = getPlugin(pluginName);
       gitUtils.createACommit(commitContent, plugin.pluginPath, newBranch).then(fn, fn);
     });
-    socket.on('getCurrentBranch', (fn) => {
-      gitUtils.getCurrentBranch().then(fn);
+    socket.on('getCurrentBranch', (pluginName, fn) => {
+      const plugin = getPlugin(pluginName);
+      fn(plugin.config.branch);
     });
-    socket.on('checkOutBranch', (branch, fn) => {
-      gitUtils.checkOutBranch(branch).then((res) => {
+    socket.on('checkOutBranch', (pluginName, branch, fn) => {
+      const plugin = getPlugin(pluginName);
+      gitUtils.checkOutBranch(plugin.pluginPath, branch).then((res) => {
         fn(null, res);
       }).catch((err) => {
         fn(err);

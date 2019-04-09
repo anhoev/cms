@@ -7,10 +7,20 @@ const gitUtils = {
   },
   async createACommit(commit, pluginPath, newBranch) {
     const listFile = await git(pluginPath).diffSummary();
+    let hasError = null;
     if(listFile.files.length > 0){
-      await git().checkoutLocalBranch(newBranch);
-      await git().add(['-f', pluginPath]).commit(commit);
-      return await git().push(['-u', 'origin', newBranch]);
+      await git(pluginPath).checkoutLocalBranch(newBranch).then((err, result)=>{
+        hasError = err;
+      }).catch((e)=>{
+        hasError = e;
+      });
+      if(hasError){
+        return hasError;
+      }else{
+        await git(pluginPath).add('./*');
+        await git(pluginPath).commit(commit);
+        return await git(pluginPath).push('origin', newBranch);
+      }
     }else{
       return 'nothing has changed';
     }
@@ -38,13 +48,11 @@ const gitUtils = {
       })
     );
   },
-  async getCurrentBranch() {
-    return await git().branchLocal();
+  async getCurrentBranch(pluginPath) {
+    return await git(pluginPath).branchLocal();
   },
-  async checkOutBranch(branch) {
-    return await git().checkoutBranch(branch);
+  async checkOutBranch(pluginPath, branch='master') {
+    return await git(pluginPath).checkout(branch);
   }
 };
-//gitUtils.createACommit('test-branch', 'backend/mobile/plugins/core-plugin', 'push-plugin');
-
 module.exports = gitUtils;
