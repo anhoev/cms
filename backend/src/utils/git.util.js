@@ -6,15 +6,10 @@ const gitUtils = {
     return await git(_path).pull('origin', branch);
   },
   async createACommit(commit, pluginPath, newBranch) {
-    const listFile = await git(pluginPath).diffSummary();
-    if (listFile.files.length > 0) {
-      await git(pluginPath).checkoutLocalBranch(newBranch);
-      await git(pluginPath).add('./*');
-      await git(pluginPath).commit(commit);
-      return await git(pluginPath).push('origin', newBranch);
-    } else {
-      return 'nothing has changed';
-    }
+    await git(pluginPath).checkoutLocalBranch(newBranch);
+    await git(pluginPath).add('./*');
+    await git(pluginPath).commit(commit);
+    return await git(pluginPath).push('origin', newBranch);
   },
   /**
    * @method getListPluginInConfig
@@ -41,6 +36,12 @@ const gitUtils = {
   },
   async checkOutBranch(pluginPath, branch = 'master') {
     return await git(pluginPath).checkout(branch);
+  },
+  async gitStatus(pluginPath){
+    return await git(pluginPath).status();
+  },
+  async gitResetHard(pluginPath) {
+    return await git(pluginPath).reset('hard');
   }
 };
 module.exports = gitUtils;
