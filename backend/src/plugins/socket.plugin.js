@@ -222,6 +222,14 @@ module.exports = (cms) => {
     socket.on('unsubscribePluginChange', function (room) {
       socket.leave(`pluginSubscription${room}`);
     });
+    socket.on('gitStatus', (pluginName, fn) => {
+      const plugin = getPlugin(pluginName);
+      gitUtils.gitStatus(plugin.pluginPath).then(fn, fn);
+    });
+    socket.on('resetLocalHard', (pluginName, fn) => {
+      const plugin = getPlugin(pluginName);
+      gitUtils.gitResetHard(plugin.pluginPath).then(fn, fn);
+    });
     socket.on('pullPlugin', (pluginName, fn) => {
       const plugin = getPlugin(pluginName);
       gitUtils.pullRepository(plugin.pluginPath, plugin.config.branch).then(fn, fn);
