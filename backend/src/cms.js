@@ -92,7 +92,8 @@ const cms = {
       autoSave: true
     }));
   },
-  io,
+  socket: io.of('/app'),
+  io: io,
   readFile,
   download,
   compile,
@@ -209,7 +210,7 @@ const cms = {
     }
     switch (type) {
       case 'socket':
-        cms.io.use(func(cms));
+        cms.socket.use(func(cms));
         break;
       case 'express':
         cms.middleware.express = func(cms);

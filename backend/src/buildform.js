@@ -196,14 +196,14 @@ module.exports = async function (cms) {
   function onInitCollection(schema, collectionName) {
     schema.onPostSave(function (doc) {
       if (doc) {
-        cms.io.to(`collectionSubscription${collectionName}`)
+        cms.socket.to(`collectionSubscription${collectionName}`)
         .emit('changeCollectionList', {
           collection: collectionName,
           type: 'update',
           doc: doc
         });
       } else {
-        cms.io.to(`collectionSubscription${collectionName}`)
+        cms.socket.to(`collectionSubscription${collectionName}`)
         .emit('changeCollectionList', {
           collection: collectionName,
           type: 'reload'
@@ -213,14 +213,14 @@ module.exports = async function (cms) {
 
     schema.onPostRemove(function (doc) {
       if (doc) {
-        cms.io.to(`collectionSubscription${collectionName}`)
+        cms.socket.to(`collectionSubscription${collectionName}`)
         .emit('changeCollectionList', {
           collection: collectionName,
           type: 'remove',
           doc: doc
         });
       } else {
-        cms.io.to(`collectionSubscription${collectionName}`)
+        cms.socket.to(`collectionSubscription${collectionName}`)
         .emit('changeCollectionList', {
           collection: collectionName,
           type: 'reload'
@@ -258,7 +258,7 @@ module.exports = async function (cms) {
             delete cms.Types[form.name];
           }
           initSchema(form);
-          cms.io.emit('reloadSchema');
+          cms.socket.emit('reloadSchema');
         }
       });
       // Init collection subscription for form builder

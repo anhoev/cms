@@ -149,7 +149,7 @@ module.exports = (cms) => {
 
   // websocket
 
-  cms.io.on(`connection`, function (socket) {
+  cms.socket.on(`connection`, function (socket) {
 
     socket.on('error', function (e) {
       console.warn(e);
