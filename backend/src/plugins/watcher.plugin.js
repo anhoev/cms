@@ -57,7 +57,7 @@ module.exports = cms => {
               console.log(`compiled to: ${destPath}`);
               const componentName = path.parse(fileName).name;
               const staticPath = Plugin.convertFilePathToInternalPathStatic(destPath, '');
-              cms.io.to(`pluginSubscription${componentName}`).emit(`changePlugin${componentName}`, {
+              cms.socket.to(`pluginSubscription${componentName}`).emit(`changePlugin${componentName}`, {
                 type: 'change',
                 path: path.join('plugins', staticPath),
                 component: componentName
