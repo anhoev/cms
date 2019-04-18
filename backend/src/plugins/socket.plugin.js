@@ -65,7 +65,7 @@ module.exports = (cms) => {
     return allPlugins[name];
   }
 
-  cms.io.on('connection', function (socket) {
+  cms.socket.on('connection', function (socket) {
     socket.on('loadPlugin', function (fn) {
       fn(Object.keys(allPlugins).map(item => getPlugin(item).loadDirTree()));
     });
