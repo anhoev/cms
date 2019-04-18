@@ -29,50 +29,38 @@ jobs:
       - image: gigadevteam/ci-node:v1
     environment:
       BRANCH: staging
-      HOST: 406942070697.dkr.ecr.us-east-1.amazonaws.com
+      HOST: 406942070697.dkr.ecr.ap-southeast-1.amazonaws.com
       IMAGE: giga-office
     working_directory: ~/repo
     steps:
-      - run: apk add git
-      - checkout      
-      - run: git submodule sync
-      - run: git submodule update --init
-#      - run:
-#          name: "Pull Submodules"
-#          command: |
-#            git submodule sync
-#            git submodule init
-#            git submodule update --remote
-#            yarn submodule-ci-update
-#            yarn submodule-update
-      #            git submodule update --remote
+      - checkout
+      - run:
+          name: "Pull Submodules"
+          command: |
+            git submodule init
+            git submodule update --init --recursive
       - setup_remote_docker
       - restore_cache:
           keys:
             - v1-backend-dependencies-{{ checksum "package.json" }}
             - v1-frontend-dependencies-{{ checksum "package.json" }}
-            - v1-digital-dependencies-{{ checksum "package.json" }}
       - run:
-          name: "Install multiple package"
-          command: |
-            yarn install
-            cd backoffice && yarn install && cd ../
-            cd backend/mobile/plugins/digital-signage-plugin && yarn install
+          name: "Install Backend Package"
+          command: yarn install
       - save_cache:
           paths:
             - node_modules
           key: v1-backend-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: "Install Frontend Package"
+          command: cd backoffice && yarn install
       - save_cache:
           paths:
             - backoffice/node_modules
           key: v1-frontend-dependencies-{{ checksum "package.json" }}
-      - save_cache:
-          paths:
-            - backend/mobile/plugins/digital-signage-plugin/node_modules
-          key: v1-digital-dependencies-{{ checksum "package.json" }}
       - run:
           name: "Build Frontend"
-          command: pwd && cd backoffice && yarn build:production
+          command: cd backoffice && yarn build:production
       # Subscript function build docker image ==========
       - restore_cache:
           keys:
@@ -99,9 +87,7 @@ jobs:
             - /home/circleci/caches
       - run:
           name: Prepare environment registry
-          command: |
-            export _DOCKER_REPO="$(aws ecr get-authorization-token --output text  --query 'authorizationData[].proxyEndpoint')"
-            aws ecr get-login --no-include-email --region us-east-1 | awk '{print $6}' | docker login -u AWS --password-stdin $_DOCKER_REPO
+          command: eval $(aws ecr get-login --no-include-email --region ap-southeast-1)
       - run:
           name: Sync container to ECS
           command: |

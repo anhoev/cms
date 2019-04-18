@@ -1,34 +1,15 @@
 const fs = require('fs');
-const path = require('path');
 const shellExec = require('shell-exec');
 const git = require('simple-git/promise');
-
-let currentBranch = '';
 const gitUtils = {
   async pullRepository(_path, branch = 'master') {
     return await git(_path).pull('origin', branch);
   },
-  async gitDiff() {
-    return await git().diff();
-  },
-  createACommit(commit, listFiles, branchName) {
-    this.createNewBranch(branchName).then(() => {
-      if (!listFiles) {
-        git().add('./*');
-      } else {
-        git().add(arrFile);
-      }
-      git().commit(commit, this.pushCommit(branchName));
-    }).catch((e) => {
-    });
-  },
-  pushCommit(branch = 'master') {
-    git().push(['-u', 'origin', branch], () => console.log('done'));
-  },
-  getListPluginInConfig() {
-    let configPath = path.join(__dirname, '../..', 'mobile/configs/other/remote-config.json');
-    const listConfig = fs.readFileSync(configPath, 'utf8');
-    this.cloneListPlugins(JSON.parse(listConfig).plugins, {});
+  async createACommit(commit, pluginPath, newBranch) {
+    await git(pluginPath).checkoutLocalBranch(newBranch);
+    await git(pluginPath).add('./*');
+    await git(pluginPath).commit(commit);
+    return await git(pluginPath).push('origin', newBranch);
   },
   /**
    * @method getListPluginInConfig
@@ -41,7 +22,7 @@ const gitUtils = {
    */
   async cloneListPlugins(plugins, basePathStore) {
     const pluginsClone = plugins.filter(plugin => {
-      return !fs.existsSync(`${basePathStore}/${plugin.name}`)
+      return !fs.existsSync(`${basePathStore}/${plugin.name}`);
     });
     await Promise.all(pluginsClone.map(pluginClone => {
       return git().clone(pluginClone.url, `${basePathStore}/${pluginClone.name}`);
@@ -53,32 +34,14 @@ const gitUtils = {
       })
     );
   },
-  createNewBranch(branchName) {
-    return new Promise((resolve, reject) => {
-      git().checkoutLocalBranch(branchName, (err, result) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      });
-    });
+  async checkOutBranch(pluginPath, branch = 'master') {
+    return await git(pluginPath).checkout(branch);
   },
-  getCurrentBranch() {
-    return new Promise((resolve, reject) => {
-      git().branchLocal((err, list) => {
-        if (!err) {
-          resolve(list.current);
-        } else {
-          reject(err);
-        }
-      });
-    })
+  async gitStatus(pluginPath){
+    return await git(pluginPath).status();
   },
-  checkOutBranch(branch) {
-    git().checkoutBranch(branch);
+  async gitResetHard(pluginPath) {
+    return await git(pluginPath).reset('hard');
   }
 };
-//gitUtils.createACommit('test-branch', null,'push-plugin');
-
 module.exports = gitUtils;

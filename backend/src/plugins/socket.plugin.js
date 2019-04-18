@@ -65,7 +65,7 @@ module.exports = (cms) => {
     return allPlugins[name];
   }
 
-  cms.socket.on('connection', function (socket) {
+  cms.io.on('connection', function (socket) {
     socket.on('loadPlugin', function (fn) {
       fn(Object.keys(allPlugins).map(item => getPlugin(item).loadDirTree()));
     });
@@ -222,31 +222,25 @@ module.exports = (cms) => {
     socket.on('unsubscribePluginChange', function (room) {
       socket.leave(`pluginSubscription${room}`);
     });
+    socket.on('gitStatus', (pluginName, fn) => {
+      const plugin = getPlugin(pluginName);
+      gitUtils.gitStatus(plugin.pluginPath).then(fn, fn);
+    });
+    socket.on('resetLocalHard', (pluginName, fn) => {
+      const plugin = getPlugin(pluginName);
+      gitUtils.gitResetHard(plugin.pluginPath).then(fn, fn);
+    });
     socket.on('pullPlugin', (pluginName, fn) => {
       const plugin = getPlugin(pluginName);
       gitUtils.pullRepository(plugin.pluginPath, plugin.config.branch).then(fn, fn);
     });
-    socket.on('createCommitAndPush', (commitContent, plugin, branch, fn) => {
-      try {
-        gitUtils.createACommit(commitContent, plugin, branch);
-        fn();
-      } catch (e) {
-        fn(e);
-      }
+    socket.on('createCommitAndPush', (commitContent, pluginName, newBranch, fn) => {
+      const plugin = getPlugin(pluginName);
+      gitUtils.createACommit(commitContent, plugin.pluginPath, newBranch).then(fn).catch(e => fn(e.message));
     });
-    socket.on('getCurrentBranch', (fn) => {
-      gitUtils.getCurrentBranch().then((res) => {
-        fn(null, res);
-      }).catch((err) => {
-        fn(err);
-      });
-    });
-    socket.on('checkOutBranch', (branch, fn) => {
-      gitUtils.checkOutBranch(branch).then((res) => {
-        fn(null, res);
-      }).catch((err) => {
-        fn(err);
-      });
+    socket.on('checkOutBranch', (pluginName, fn) => {
+      const plugin = getPlugin(pluginName);
+      gitUtils.checkOutBranch(plugin.pluginPath, plugin.branch).then(res => fn(null, res)).catch(fn);
     });
   });
   cms.app.get('/package', function (req, res) {
