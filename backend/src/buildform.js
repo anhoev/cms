@@ -12,8 +12,9 @@ module.exports = async function (cms) {
     label: String,
     ref: String,
     labelProp: String,
-    flex: { type: String, form: { inputType: 'select', options: ['md2', 'md3', 'md4', 'md5', 'md6', 'md12'] } },
+    flex: { type: String, form: { inputType: 'select', options: ['md2', 'md3', 'md4', 'md5', 'md6', 'md7', 'md8', 'md9', 'md10', 'md11', 'md12'] } },
     addable: Boolean,
+    notOnlyValueInOptions: { type: Boolean, form: { addable: true } },
     isVisible: {
       type: {},
       form: { type: 'editor', height: '100px', flex: 'md12', addable: true }
@@ -91,7 +92,7 @@ module.exports = async function (cms) {
     name: { type: String, flex: 'md4' },
     class: { type: String, flex: 'md4' },
     alwaysLoad: { type: Boolean, flex: 'md4' },
-    type: { type: String, form: { type: 'input@select', options: ['Collection', ''], flex: 'md6' } },
+    type: { type: String, form: { type: 'input@select', options: ['Collection', 'Component', ''], flex: 'md6' } },
     title: { type: String, flex: 'md6' },
     fields: {
       type: [{
@@ -101,11 +102,11 @@ module.exports = async function (cms) {
         }), { type: { form: { form: { dynamicFields: '.mixed' } } } }),
         string: _.merge(w({
           'input': ['label', 'flex', 'addable', 'isVisible'],
-          'input@select': ['label', 'flex', 'options', 'addable', 'isVisible']
+          'input@select': ['label', 'flex', 'options', 'addable', 'isVisible', 'notOnlyValueInOptions']
         }), { type: { form: { form: { dynamicFields: '.string' } } } }),
         number: _.merge(w({
           'input@number': ['label', 'flex', 'addable', 'isVisible'],
-          'input@select:number': ['label', 'flex', 'options', 'addable', 'isVisible']
+          'input@select:number': ['label', 'flex', 'options', 'addable', 'isVisible', 'notOnlyValueInOptions']
         }), { type: { form: { form: { dynamicFields: '.number' } } } }),
         boolean: w({
           'input@switch': ['label', 'flex', 'addable', 'isVisible'],
@@ -119,7 +120,7 @@ module.exports = async function (cms) {
             autopopulate: Boolean,
             populateSelect: {
               type: [String], form: {
-                type: 'input@multiSelect', addable: true, flex: 'md12', isVisible: function ({model}) {
+                type: 'input@multiSelect', addable: true, flex: 'md12', isVisible: function ({ model }) {
                   return model.autopopulate;
                 }
               }
