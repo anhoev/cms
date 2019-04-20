@@ -14,6 +14,7 @@ module.exports = async function (cms) {
     labelProp: String,
     flex: { type: String, form: { inputType: 'select', options: ['md2', 'md3', 'md4', 'md5', 'md6', 'md12'] } },
     addable: Boolean,
+    editable: Boolean,
     isVisible: {
       type: {},
       form: { type: 'editor', height: '100px', flex: 'md12', addable: true }
@@ -126,7 +127,7 @@ module.exports = async function (cms) {
             },
           }
         }, w({
-          'ref-select': ['label', 'flex', 'labelProp', 'addable', 'isVisible']
+          'ref-select': ['label', 'flex', 'labelProp', 'addable', 'isVisible','editable']
         }), { type: { form: { form: { dynamicFields: '.ref' } } } }),
         date: _.merge(w({
           'input@date': ['label', 'flex', 'addable', 'isVisible'],
