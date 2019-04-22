@@ -15,6 +15,7 @@ module.exports = async function (cms) {
     flex: { type: String, form: { inputType: 'select', options: ['md2', 'md3', 'md4', 'md5', 'md6', 'md7', 'md8', 'md9', 'md10', 'md11', 'md12'] } },
     addable: Boolean,
     notOnlyValueInOptions: { type: Boolean, form: { addable: true } },
+    editable: Boolean,
     isVisible: {
       type: {},
       form: { type: 'editor', height: '100px', flex: 'md12', addable: true }
@@ -127,7 +128,7 @@ module.exports = async function (cms) {
             },
           }
         }, w({
-          'ref-select': ['label', 'flex', 'labelProp', 'addable', 'isVisible']
+          'ref-select': ['label', 'flex', 'labelProp', 'addable', 'isVisible','editable']
         }), { type: { form: { form: { dynamicFields: '.ref' } } } }),
         date: _.merge(w({
           'input@date': ['label', 'flex', 'addable', 'isVisible'],
@@ -197,14 +198,14 @@ module.exports = async function (cms) {
   function onInitCollection(schema, collectionName) {
     schema.onPostSave(function (doc) {
       if (doc) {
-        cms.io.to(`collectionSubscription${collectionName}`)
+        cms.socket.to(`collectionSubscription${collectionName}`)
         .emit('changeCollectionList', {
           collection: collectionName,
           type: 'update',
           doc: doc
         });
       } else {
-        cms.io.to(`collectionSubscription${collectionName}`)
+        cms.socket.to(`collectionSubscription${collectionName}`)
         .emit('changeCollectionList', {
           collection: collectionName,
           type: 'reload'
@@ -214,14 +215,14 @@ module.exports = async function (cms) {
 
     schema.onPostRemove(function (doc) {
       if (doc) {
-        cms.io.to(`collectionSubscription${collectionName}`)
+        cms.socket.to(`collectionSubscription${collectionName}`)
         .emit('changeCollectionList', {
           collection: collectionName,
           type: 'remove',
           doc: doc
         });
       } else {
-        cms.io.to(`collectionSubscription${collectionName}`)
+        cms.socket.to(`collectionSubscription${collectionName}`)
         .emit('changeCollectionList', {
           collection: collectionName,
           type: 'reload'
@@ -259,7 +260,7 @@ module.exports = async function (cms) {
             delete cms.Types[form.name];
           }
           initSchema(form);
-          cms.io.emit('reloadSchema');
+          cms.socket.emit('reloadSchema');
         }
       });
       // Init collection subscription for form builder
