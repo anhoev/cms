@@ -25,7 +25,7 @@ class CmsPlugin {
       .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
     const result = dirContent.reduce((acc, item) => {
       if (!Array.isArray(plugins) || !plugins.length > 0 || plugins.find(i => i.name === item)) {
-        return Object.assign(acc, {[item]: new CmsPlugin(path.join(dirPath, item), item, null, plugins.find(i => i.name === item))});
+        return Object.assign(acc, { [item]: new CmsPlugin(path.join(dirPath, item), item, null, plugins.find(i => i.name === item)) });
       }
       return acc;
     }, {});
@@ -76,7 +76,7 @@ class CmsPlugin {
   loadDirTree(internalPath = '', options, onEachFile = this.onEachRead) {
     const dirPath = this.convertInternalPathToFilePath(internalPath);
     const tree = dirTree(dirPath, {
-      exclude: [{test: (filePath) => /^\.|node_modules/.test(path.basename(filePath))}],
+      exclude: [{ test: (filePath) => /^\.|node_modules/.test(path.basename(filePath)) }],
       ...options
     }, onEachFile, onEachFile);
     return tree;
@@ -129,7 +129,7 @@ class CmsPlugin {
     fileHelper.rename(this.convertInternalPathToFilePath(oldPath), newName);
   }
 
-  copyFile(oldPath, newPath, options = {type: 'copy', toPlugin: ''}) {
+  copyFile(oldPath, newPath, options = { type: 'copy', toPlugin: '' }) {
     fileHelper.copyFile(this.convertInternalPathToFilePath(oldPath), CmsPlugin.convertInternalPathToFilePathStatic(newPath, options.toPlugin), options);
   }
 
@@ -142,8 +142,8 @@ class CmsPlugin {
     const content = fileHelper.readFile(this.convertInternalPathToFilePath(filePath), 'utf-8');
     if (replace) {
       const document = JSON.parse(content);
-      const {_id, ...other} = document;
-      return await cms.getModel(collection).findOneAndUpdate({_id: _id}, document, {upsert: true, new: true});
+      const { _id, ...other } = document;
+      return await cms.getModel(collection).findOneAndUpdate({ _id: _id }, document, { upsert: true, new: true });
     }
     return await cms.getModel(collection).create(JSON.parse(content));
   }
@@ -156,7 +156,7 @@ class CmsPlugin {
     const filePath = this.convertInternalPathToFilePath(_path);
     const directoryPath = path.dirname(_path);
     const content = fileHelper.readFile(filePath);
-    const {_id} = JSON.parse(content);
+    const { _id } = JSON.parse(content);
     const [documentName, collectionName] = fileName.split('.');
     const Model = cms.getModel(collectionName);
     return new Promise((resolve, reject) => {

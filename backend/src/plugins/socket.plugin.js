@@ -56,7 +56,8 @@ module.exports = (cms) => {
         .map(item => {
           return {
             name: item.name.replace(item.extension, ''),
-            content: fs.readFileSync(plugin.convertInternalPathToFilePath(item.path), 'utf-8')
+            content: fs.readFileSync(plugin.convertInternalPathToFilePath(item.path), 'utf-8'),
+            path: plugin.resolveUrlPath(plugin.convertInternalPathToFilePath(item.path))
           };
         });
   }
