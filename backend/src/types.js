@@ -7,14 +7,16 @@ const traverse = require('traverse');
 require('generator-bind').polyfill();
 const unless = require('express-unless');
 const autopopulate = require('mongoose-autopopulate');
+const Query = require('mongoose/lib/query');
+const Model = require('mongoose/lib/model');
 
 module.exports = (cms) => {
-  const {app, Q} = cms;
+  const { app, Q } = cms;
 
   function registerSchema(schema, options) {
     const {
       name, label, formatter, formatterUrl, initSchema, title, fn = {},
-      serverFn = {}, tabs, isViewElement = true, mTemplate, admin = {query: []},
+      serverFn = {}, tabs, isViewElement = true, mTemplate, admin = { query: [] },
       alwaysLoad = false, restifyOptions,
       info = {}, textIndex,
       controller, lean, link, schemaOptions, form
@@ -26,8 +28,8 @@ module.exports = (cms) => {
     cms.filters.schema.forEach((fn) => fn(schema, name));
     if (!(schema instanceof cms.mongoose.Schema)) {
       schema = new cms.mongoose.Schema(schema, _.assign({
-        toObject: {virtuals: true},
-        toJSON: {virtuals: true}
+        toObject: { virtuals: true },
+        toJSON: { virtuals: true }
       }, schemaOptions));
     }
 
@@ -37,7 +39,7 @@ module.exports = (cms) => {
 
 
     if (textIndex) {
-      schema.add({_textIndex: {type: String, form: false, index: 'text'}});
+      schema.add({ _textIndex: { type: String, form: false, index: 'text' } });
       schema.pre('findOneAndUpdate', function (next) {
         let _textIndex = '';
         traverse(this._update).forEach(function (node) {
@@ -77,7 +79,7 @@ module.exports = (cms) => {
     let Model;
     if (name) {
       Model = cms.mongoose.model(name, schema);
-      cms.restify.serve(app, Model, _.assign(restifyOptions, {lean: false}));
+      cms.restify.serve(app, Model, _.assign(restifyOptions, { lean: false }));
     }
 
     _.merge(fn, cms.filters.fn);
@@ -166,7 +168,7 @@ module.exports = (cms) => {
             collection.list.push(...list);
           }
         }
-        cms.middleware.collection({collections: Types, socket}, _.once(function (err, result) {
+        cms.middleware.collection({ collections: Types, socket }, _.once(function (err, result) {
           fn(JsonFn.stringify(result.collections));
         }));
         // fn(jsonfn.stringify(Types));
@@ -188,10 +190,10 @@ module.exports = (cms) => {
       fn();
     });
 
-    socket.on('interface', async function ({name, chain}, fn) {
-      chain = JsonFn.clone(chain, true)
+    socket.on('interface', async function ({ name, chain }, fn) {
+      chain = JsonFn.clone(chain, true);
       const model = cms.getModel(name);
-      cms.middleware.interface({name, chain, socket, model}, _.once(async function (err, result) {
+      cms.middleware.interface({ name, chain, socket, model }, _.once(async function (err, result) {
         try {
           if (err) {
             fn(err);
@@ -199,7 +201,11 @@ module.exports = (cms) => {
           if (result.chain[0].fn === 'new') {
             return fn(null, new result.model(...result.chain[0].args));
           }
-          for (const {fn, args} of result.chain) result.model = result.model[fn](...args);
+          for (const { fn, args } of result.chain) {
+            if (result.model instanceof Query || result.model.constructor && new result.model() instanceof Model) {
+              result.model = result.model[fn](...args);
+            }
+          }
           let response = await result.model;
           fn(null, response);
         } catch (e) {
