@@ -175,6 +175,31 @@ module.exports = (cms) => {
       }
     });
 
+    socket.on('importCollections', async (model, deleteExisting, fn) => {
+      try {
+        for (let collection in _.omit(model, 'BuildForm')) {
+          const { list } = model[collection];
+          if (cms.Types[collection]) {
+            const Model = cms.Types[collection].Model;
+            if (deleteExisting) {
+              await Model.remove({});
+            }
+            for (let element of list) {
+              let query = new Query({ _id: element._id }, {upsert: true, new: true});
+              await Model.findOneAndUpdate(query, element);
+            }
+          } else {
+            const newCollection = model['BuildForm'].list.filter(el => el.name === collection);
+            const Model = cms.Types['BuildForm'].Model;
+            await Model.create(newCollection);
+          }
+        }
+        fn('import success');
+      } catch (e) {
+        fn(`error: ${e}`)
+      }
+    });
+
     socket.on('getForm', async function (name, fn) {
       fn(cms.Types[name].webType.form);
     });
