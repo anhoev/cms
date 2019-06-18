@@ -177,7 +177,7 @@ module.exports = (cms) => {
 
     socket.on('importCollections', async (model, deleteExisting, fn) => {
       try {
-        for (let collection in _.omit(model, 'BuildForm')) {
+        for (let collection in model) {
           const { list } = model[collection];
           if (cms.Types[collection]) {
             const Model = cms.Types[collection].Model;
@@ -196,7 +196,7 @@ module.exports = (cms) => {
         }
         fn('import success');
       } catch (e) {
-        fn(`error: ${e}`)
+        fn(e)
       }
     });
 
