@@ -177,21 +177,21 @@ module.exports = (cms) => {
 
     socket.on('importCollections', async (model, deleteExisting, fn) => {
       try {
-        for (let collection in model) {
-          const { list } = model[collection];
-          if (cms.Types[collection]) {
-            const Model = cms.Types[collection].Model;
+        const orderedCollectionNames = model['BuildForm']
+          ? ['BuildForm', ...Object.keys(model).filter(value => value !== 'BuildForm')]
+          : Object.keys(model);
+
+        for (let name of orderedCollectionNames) {
+          const { list } = model[name];
+          if (cms.Types[name]) {
+            const Model = cms.Types[name].Model;
             if (deleteExisting) {
               await Model.remove({});
             }
             for (let element of list) {
-              let query = new Query({ _id: element._id }, {upsert: true, new: true});
+              let query = new Query({ _id: element._id }, { upsert: true, new: true });
               await Model.findOneAndUpdate(query, element);
             }
-          } else {
-            const newCollection = model['BuildForm'].list.filter(el => el.name === collection);
-            const Model = cms.Types['BuildForm'].Model;
-            await Model.create(newCollection);
           }
         }
         fn('import success');
