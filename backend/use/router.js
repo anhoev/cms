@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const childProcess = require('child_process');
-const { AppConst } = require('./commons/consts/app.const');
+const { AppConst } = require('./app.env');
 
 router.get('/switch-env', (req, res) => {
   const appConfig = global.APP_CONFIG;

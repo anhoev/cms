@@ -28,6 +28,6 @@ module.exports = {
       branch: 'master'
     }
   ],
-  root: path.join(__dirname, '../../../../'),
-  basePlugin: path.join(__dirname, '../../../mobile/plugins')
+  root: path.join(__dirname, '../../..'),
+  basePlugin: path.join(__dirname, '../plugins')
 };

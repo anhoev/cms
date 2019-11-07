@@ -4,10 +4,11 @@ package-lock.json
 
 node_modules/
 backend/config/config.js
-backend/mobile/plugins/*
+backend/use/plugins/*
 storage/
-backend/mobile/upload/
+backend/use/upload/
 config/
 dist/
 playground
 webpack
+plugins
