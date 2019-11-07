@@ -2,7 +2,7 @@
   "apps": [
     {
       "name": "cms-staging",
-      "script": "./backend/mobile/index.js",
+      "script": "./backend/use/index.js",
       "merge_logs": true,
       "args": [
         "--env=development",

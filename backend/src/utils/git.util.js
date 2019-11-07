@@ -22,22 +22,26 @@ const gitUtils = {
    */
   async cloneListPlugins(plugins, basePathStore) {
     const pluginsClone = plugins.filter(plugin => {
-      return !fs.existsSync(`${basePathStore}/${plugin.name}`);
+      return !fs.existsSync(`${basePathStore}/${plugin.name}`) && plugin.url;
     });
-    await Promise.all(pluginsClone.map(pluginClone => {
-      return git().clone(pluginClone.url, `${basePathStore}/${pluginClone.name}`);
-    }));
-    await Promise.all(pluginsClone
+    try {
+      await Promise.all(pluginsClone.map(pluginClone => {
+        return git().clone(pluginClone.url, `${basePathStore}/${pluginClone.name}`);
+      }));
+
+      await Promise.all(pluginsClone
       .filter(plugin => plugin.package)
       .map(plugin => {
-        return shellExec(`cd ${basePathStore}/${plugin.name}&& yarn install`);
-      })
-    );
+        return shellExec(`cd ${basePathStore}/${plugin.name}&& npm install`);
+      }));
+    } catch (e) {
+      console.error(e);
+    }
   },
   async checkOutBranch(pluginPath, branch = 'master') {
     return await git(pluginPath).checkout(branch);
   },
-  async gitStatus(pluginPath){
+  async gitStatus(pluginPath) {
     return await git(pluginPath).status();
   },
   async gitResetHard(pluginPath) {

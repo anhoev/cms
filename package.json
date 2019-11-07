@@ -19,6 +19,7 @@
     "safe": "node backend/use/index.js --mode=safemode",
     "digital-signage": "node backend/use/index.js --config=./config/digital-signage.json",
     "start:test": "export PATH_ENV=https://raw.githubusercontent.com/anhoev/cms_configs/master/digital_signage.json && node backend/use/index.js",
+    "start:local": "export PATH_ENV=https://raw.githubusercontent.com/anhoev/cms_configs/master/test.json && node backend/use/index.js --mode=safemode",
     "submodule-update": "git submodule foreach -q --recursive 'git checkout $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master) && git pull'",
     "submodule-ci-update": "git submodule update --init --recursive"
   },
