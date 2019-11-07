@@ -41,10 +41,15 @@ function getConfig() {
     } else if (process.env.PATH_ENV || argv['url']) {
       signale.note('App config from url');
       const url = process.env.PATH_ENV || argv['url'];
+      const pathStore = path.join(__dirname, '../../config');
+      const configFilePath = `${pathStore}/config.json`;
+      mkdirp.sync(pathStore);
+      /*if (fs.existsSync(configFilePath)) {
+        return resolve(require(configFilePath))
+      }*/
+
       return await axios.get(url).then(res => {
-        const pathStore = path.join(__dirname, '../../config');
         try {
-          mkdirp.sync(pathStore);
           fs.writeFileSync(`${pathStore}/config.json`, JSON.stringify(res.data));
         } catch (e) {
           console.error(e)
@@ -56,6 +61,7 @@ function getConfig() {
         console.log(err.stack);
         return resolve(defaultConfig);
       });
+
     } else {
       return resolve(defaultConfig);
     }

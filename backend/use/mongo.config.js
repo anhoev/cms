@@ -1,6 +1,7 @@
 const chalk = require('chalk');
 const signale = require('signale');
 const mongoose = require('mongoose');
+const cms = require('../src/cms');
 // const AppConfig = require('../app.config');
 
 module.exports = async function connect() {
@@ -28,8 +29,10 @@ module.exports = async function connect() {
     mongoose.connect(uri, connectionOptions);
   }
 
-  mongoose.connect(uri, connectionOptions).then(() => {
+  mongoose.connect(uri, connectionOptions).then(async () => {
     // console.log(`connect db ${uri} success`);
+    const BuildForm = cms.getModel('BuildForm');
+    const count = await BuildForm.countDocuments();
   });
 
   mongoose.connection.on('error', function (err) {

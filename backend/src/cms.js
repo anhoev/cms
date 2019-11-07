@@ -28,6 +28,9 @@ const server = http.Server(_app);
 
 const argv = yargs.argv;
 const env = argv.mode;
+if (env === 'safemode') {
+  console.log('Running on safe mode');
+}
 const io = socket(server);
 const MongoStore = require('connect-mongo')(expressSession);
 const cache = new NodeCache({ useClones: false, stdTTL: 20 * 60 });
@@ -205,7 +208,6 @@ const cms = {
   },
   useMiddleWare(type, func) {
     if (env === 'safemode') {
-      console.log('Running on safe mode');
       return;
     }
     switch (type) {

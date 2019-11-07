@@ -149,6 +149,26 @@ module.exports = (cms) => {
 
   cms.registerSchema = registerSchema;
 
+  cms.importCollections = async (model, deleteExisting) => {
+    const orderedCollectionNames = model['BuildForm']
+      ? ['BuildForm', ...Object.keys(model).filter(value => value !== 'BuildForm')]
+      : Object.keys(model);
+
+    for (let name of orderedCollectionNames) {
+      const { list } = model[name];
+      if (cms.Types[name]) {
+        const Model = cms.Types[name].Model;
+        if (deleteExisting) {
+          await Model.remove({});
+        }
+        for (let element of list) {
+          let query = new Query({ _id: element._id }, { upsert: true, new: true });
+          await Model.findOneAndUpdate(query, element);
+        }
+      }
+    }
+  }
+
   // websocket
 
   cms.socket.on(`connection`, function (socket) {
@@ -177,23 +197,7 @@ module.exports = (cms) => {
 
     socket.on('importCollections', async (model, deleteExisting, fn) => {
       try {
-        const orderedCollectionNames = model['BuildForm']
-          ? ['BuildForm', ...Object.keys(model).filter(value => value !== 'BuildForm')]
-          : Object.keys(model);
-
-        for (let name of orderedCollectionNames) {
-          const { list } = model[name];
-          if (cms.Types[name]) {
-            const Model = cms.Types[name].Model;
-            if (deleteExisting) {
-              await Model.remove({});
-            }
-            for (let element of list) {
-              let query = new Query({ _id: element._id }, { upsert: true, new: true });
-              await Model.findOneAndUpdate(query, element);
-            }
-          }
-        }
+        await cms.importCollections(model, deleteExisting);
         fn('import success');
       } catch (e) {
         fn(e)
