@@ -12,11 +12,22 @@ module.exports = async function (cms) {
     label: String,
     ref: String,
     labelProp: String,
-    flex: { type: String, form: { inputType: 'select', options: ['md2', 'md3', 'md4', 'md5', 'md6', 'md7', 'md8', 'md9', 'md10', 'md11', 'md12'] } },
+    flex: {
+      type: String, form: {
+        inputType: 'select',
+        options: ['md2', 'md3', 'md4', 'md5', 'md6', 'md7', 'md8', 'md9', 'md10', 'md11', 'md12'], notOnlyValueInOptions: true
+      }
+    },
     addable: Boolean,
+    selectNodeAfterClick: Boolean,
     notOnlyValueInOptions: { type: Boolean, form: { addable: true } },
     editable: Boolean,
+    chips: Boolean,
     isVisible: {
+      type: {},
+      form: { type: 'editor', height: '100px', flex: 'md12', addable: true }
+    },
+    onChange: {
       type: {},
       form: { type: 'editor', height: '100px', flex: 'md12', addable: true }
     },
@@ -93,7 +104,7 @@ module.exports = async function (cms) {
     name: { type: String, flex: 'md4' },
     class: { type: String, flex: 'md4' },
     alwaysLoad: { type: Boolean, flex: 'md4' },
-    type: { type: String, form: { type: 'input@select', options: ['Collection', 'Component', ''], flex: 'md6' } },
+    type: { type: String, form: { type: 'input@select', options: ['Collection', 'Component', 'Extension', 'FormField'], flex: 'md6', notOnlyValueInOptions: true } },
     title: { type: String, flex: 'md6' },
     fields: {
       type: [{
@@ -102,12 +113,12 @@ module.exports = async function (cms) {
           //'computed': ['label', 'flex', 'addable', 'isVisible']
         }), { type: { form: { form: { dynamicFields: '.mixed' } } } }),
         string: _.merge(w({
-          'input': ['label', 'flex', 'addable', 'isVisible'],
-          'input@select': ['label', 'flex', 'options', 'addable', 'isVisible', 'notOnlyValueInOptions']
+          'input': ['label', 'flex', 'addable', 'isVisible', 'onChange'],
+          'input@select': ['label', 'flex', 'options', 'addable', 'isVisible', 'notOnlyValueInOptions', 'onChange', 'returnObject', 'itemText', 'itemValue', 'chips']
         }), { type: { form: { form: { dynamicFields: '.string' } } } }),
         number: _.merge(w({
           'input@number': ['label', 'flex', 'addable', 'isVisible'],
-          'input@select:number': ['label', 'flex', 'options', 'addable', 'isVisible', 'notOnlyValueInOptions']
+          'input@select:number': ['label', 'flex', 'options', 'addable', 'isVisible', 'notOnlyValueInOptions', 'onChange', 'returnObject', 'itemText', 'itemValue', 'chips']
         }), { type: { form: { form: { dynamicFields: '.number' } } } }),
         boolean: w({
           'input@switch': ['label', 'flex', 'addable', 'isVisible'],
@@ -128,7 +139,7 @@ module.exports = async function (cms) {
             },
           }
         }, w({
-          'ref-select': ['label', 'flex', 'labelProp', 'addable', 'isVisible','editable']
+          'ref-select': ['label', 'flex', 'labelProp', 'addable', 'isVisible', 'editable']
         }), { type: { form: { form: { dynamicFields: '.ref' } } } }),
         date: _.merge(w({
           'input@date': ['label', 'flex', 'addable', 'isVisible'],
@@ -154,25 +165,26 @@ module.exports = async function (cms) {
         }, _.assign(w({
           'array': ['label', 'flex', 'addable', 'isVisible'],
           'tableArray': ['label', 'flex', 'expansion', 'addable', 'isVisible'],
-          'choiceArray': ['label', 'flex', 'addable', 'isVisible'],
+          'choiceArray': ['label', 'flex', 'addable', 'choiceKey', 'isVisible'],
           'object': ['label', 'flex', 'noPanel', 'addable', 'isVisible'],
           'choice': ['label', 'flex', 'choiceKey', 'choiceKeyOutside', 'isVisible'],
           'object@dynamic': ['label', 'flex', 'noPanel', 'addable', 'dynamicFields', 'isVisible'],
-          'tree': ['label', 'children', 'getText'],
-          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue']
+          'tree': ['label', 'children', 'getText', 'selectNodeAfterClick'],
+          'input@select': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips'],
+          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips']
         })), { type: { form: { form: { type: 'choice', dynamicFields: '.mixed' } } } }),
         array: _.merge(w({
           'array': ['label', 'flex', 'addable', 'isVisible'],
           'tableArray': ['label', 'flex', 'expansion', 'addable', 'isVisible'],
-          'choiceArray': ['label', 'flex', 'addable', 'isVisible'],
-          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue']
+          'choiceArray': ['label', 'flex', 'addable', 'choiceKey', 'isVisible'],
+          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips']
         }), { type: { form: { form: { dynamicFields: '.array' } } } })
       }],
       form: { type: 'tree', children: 'fields', choiceKey: 'schemaType' }
     },
     extensions: {
       type: [{ choice: String }],
-      form: { type: 'choiceArray', choiceKey: 'extensionType', dynamicFields: '.form-extension' }
+      form: { type: 'choiceArray', choiceKey: 'extensionType', dynamicFields: '.form-extension', flex: 'md12' }
     },
     tabs: {
       type: [{
@@ -195,7 +207,21 @@ module.exports = async function (cms) {
     }
   };
 
-  function onInitCollection(schema, collectionName) {
+  function onInitCollection(schema, collectionName, schemaForm) {
+    if (schemaForm && !_.isEmpty(schemaForm.extensions)) {
+      let preComputedExtensions = jsonfn.clone(_.filter(schemaForm.extensions, { extensionType: 'PreComputed' }), true, true);
+      for (const { fn } of preComputedExtensions) {
+        schema.pre('findOneAndUpdate', async function (next, done) {
+          const update = this.getUpdate();
+          const doc = await this.model.findOne(this.getQuery());
+          if (!Object.keys(update).find(k => k.includes('$'))) {
+            fn.bind(this)(doc, update, cms, next);
+          } else {
+            //merge to $set
+          }
+        })
+      }
+    }
     schema.onPostSave(function (doc) {
       if (doc) {
         cms.socket.to(`collectionSubscription${collectionName}`)
@@ -241,7 +267,7 @@ module.exports = async function (cms) {
         form: schemaForm.fields,
         autopopulate: true,
         initSchema(schema) {
-          onInitCollection(schema, schemaForm.name);
+          onInitCollection(schema, schemaForm.name, schemaForm);
         }
       });
     } catch (e) {

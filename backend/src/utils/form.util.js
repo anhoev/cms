@@ -26,22 +26,35 @@ module.exports = {
         if (node.unique) {
           _node.unique = true;
         }
-        if (node.schemaType === 'object' && node.fields) {
-          if (node.type === 'choice') {
+        if ((node.schemaType === 'object') && node.fields) {
+          if (node.type === 'choice' && !node.choiceKeyOutside) {
             _node = {};
-            _node[node.choiceKey || 'choice'] = { schemaType: 'string' };
+            _node[node.choiceKey || 'choice'] = { schemaType: 'string' }
             const normalFields = node.fields.filter(f => f.schemaType !== 'object');
             const objectFields = node.fields.filter(f => f.schemaType === 'object');
             _.assign(_node, _.keyBy({ ...normalFields }, 'key'));
             const fields = objectFields.reduce((fields, f) => {
-              if (f.fields) {
-                fields.push(...f.fields);
-              }
+              if (f.fields) fields.push(...f.fields);
               return fields;
             }, []);
             _.assign(_node, _.keyBy({ ...fields }, 'key'));
+          } else if (node.type === 'choice' && node.choiceKeyOutside) {
+            _node = {type: {}};
+            this.parent.after(function (_parentNode) {
+              _parentNode[node.choiceKey] = String
+              this.update(_parentNode);
+            })
           } else {
             _node = _.keyBy({ ...node.fields }, 'key');
+          }
+        }
+        if ((node.schemaType === 'mixed') && node.fields) {
+          if (node.type === 'choice' && node.choiceKeyOutside) {
+            _node = {type: {}};
+            this.parent.after(function (_parentNode) {
+              _parentNode[node.choiceKey] = String
+              this.update(_parentNode);
+            })
           }
         }
 

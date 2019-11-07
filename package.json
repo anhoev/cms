@@ -2,7 +2,7 @@
   "name": "cmsmon",
   "version": "1.0.0",
   "description": "",
-  "main": "backend/src/index.js",
+  "main": "backend/src/cms.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/anhoev/cms.git"
@@ -38,6 +38,7 @@
     "connect-mongo": "^2.0.3",
     "cookie-parser": "latest",
     "cors": "^2.8.5",
+    "dayjs": "^1.8.14",
     "directory-tree": "^2.2.1",
     "express": "^4.16.4",
     "express-restify-mongoose": "^5.0.0",
