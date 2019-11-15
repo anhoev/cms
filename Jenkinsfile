@@ -13,8 +13,11 @@ pipeline {
   stages {
     stage('Prepare config file') {
       steps {
-        withCredentials([string(credentialsId: 'gigasource-github-access-token', variable: 'ACCESS_TOKEN')]) {
-          sh "curl -H 'Authorization: token $ACCESS_TOKEN' -H 'Accept: application/vnd.github.v3.raw' -O -L https://api.github.com/repos/gigasource/cms-configs/contents/cms-config-vn-cluster.json"
+        withCredentials([string(credentialsId: 'gitbot-access-token', variable: 'GITBOT_ACCESS_TOKEN')]) {
+          sh "echo $GITBOT_ACCESS_TOKEN > ./gitbot-access-token"
+        }
+        withCredentials([string(credentialsId: 'gigasource-github-access-token', variable: 'GIGASOURCE_GITHUB_ACCESS_TOKEN')]) {
+          sh "curl -H 'Authorization: token $GIGASOURCE_GITHUB_ACCESS_TOKEN' -H 'Accept: application/vnd.github.v3.raw' -O -L https://api.github.com/repos/gigasource/cms-configs/contents/cms-config-vn-cluster.json"
         }
         sh "mkdir -p ./config"
         sh "mv ./cms-config-vn-cluster.json ./config/config.json"
@@ -36,6 +39,7 @@ pipeline {
                   returnStdout: true
           ).trim()
         }
+
         script {image = docker.build dockerImageName + ":$CURRENT_DATETIME"}
       }
     }
