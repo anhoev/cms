@@ -38,7 +38,7 @@ pipeline {
         }
 
         withCredentials([string(credentialsId: 'gitbot-access-token', variable: 'GITBOT_ACCESS_TOKEN')]) {
-        script {image = docker.build("$dockerImageName:$CURRENT_DATETIME", "--build-arg gitbot_access_token=$GITBOT_ACCESS_TOKEN") }
+        script {image = docker.build("$dockerImageName:$CURRENT_DATETIME", "--build-arg gitbot_access_token=$GITBOT_ACCESS_TOKEN .") }
         }
       }
     }
