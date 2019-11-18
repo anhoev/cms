@@ -11,12 +11,6 @@
       "branch": "master"
     },
     {
-      "name": "digital-signage-plugin",
-      "url": "https://github.com/gigasource/digital-signage-plugin.git",
-      "branch": "master",
-      "package": true
-    },
-    {
       "name": "permission-plugin",
       "url": "https://github.com/gigasource/permission-plugin.git",
       "branch": "master"
