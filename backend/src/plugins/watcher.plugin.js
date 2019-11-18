@@ -38,10 +38,10 @@ function ignored(_path, stats) {
   }
 }
 
-module.exports = cms => {
+const watcher =  cms => {
   chokidar.watch(LibConfig.BASE_PLUGIN, {
     ignored,
-    ignoreInitial: true
+    //ignoreInitial: true
   })
     .on('change', (_path) => {
       if (!distRegex.test(_path)) {
@@ -53,8 +53,8 @@ module.exports = cms => {
               const fileName = path.basename(_path);
               const pluginsFolder = getPluginFolder(_path);
               const destPath = path.join(pluginsFolder, 'dist', fileName);
-              FileHelper.addNew(destPath, content);
-              console.log(`compiled to: ${destPath}`);
+              const added = FileHelper.addNew(destPath, content);
+              if (added) console.log(`compiled to: ${destPath}`);
               const componentName = path.parse(fileName).name;
               const staticPath = Plugin.convertFilePathToInternalPathStatic(destPath, '');
               cms.socket.to(`pluginSubscription${componentName}`).emit(`changePlugin${componentName}`, {
@@ -76,8 +76,8 @@ module.exports = cms => {
           const destPath = path.join(pluginsFolder, 'dist', fileName);
           compile(_path)
             .then((content) => {
-              console.log(`compiled to: ${destPath}`);
-              FileHelper.addNew(destPath, content);
+              const added = FileHelper.addNew(destPath, content);
+              if (added) console.log(`compiled to: ${destPath}`);
             })
             .catch((err) => {
               console.log(err);
@@ -103,3 +103,5 @@ module.exports = cms => {
       }
     });
 };
+
+module.exports = watcher;

@@ -18,9 +18,14 @@ const FileHelper = {
 
   addNew(destPath, content, options = {type: 'file'}) {
     if (options.type === 'file') {
-      return fsExtra.outputFileSync(destPath, content, 'utf-8');
+      if (fs.existsSync(destPath)) {
+        if (fs.readFileSync(destPath, 'utf-8') === content) return false;
+      }
+      fsExtra.outputFileSync(destPath, content, 'utf-8');
+      return true;
     }
-    return fsExtra.mkdirsSync(destPath);
+    fsExtra.mkdirsSync(destPath);
+    return true;
   },
 
   readDir(readPath) {
