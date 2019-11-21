@@ -1,6 +1,6 @@
 {
   "database": {
-    "host": "localhost",
+    "host": "mongo-vn-office.gigasource.io",
     "port": 27017,
     "dbName": "mobile10"
   },
