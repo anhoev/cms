@@ -29,7 +29,8 @@ module.exports = (cms) => {
     if (!(schema instanceof cms.mongoose.Schema)) {
       schema = new cms.mongoose.Schema(schema, _.assign({
         toObject: { virtuals: true },
-        toJSON: { virtuals: true }
+        toJSON: { virtuals: true },
+        id: false
       }, schemaOptions));
     }
 
