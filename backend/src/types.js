@@ -49,7 +49,8 @@ module.exports = (cms) => {
         toObject: { virtuals: true },
         toJSON: { virtuals: true },
         id: false,
-        ...schema._id !== undefined && { _id: false }
+        ...schema._id !== undefined && { _id: false },
+        versionKey: false
       }, schemaOptions));
     }
 
