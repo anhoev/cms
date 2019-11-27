@@ -2,7 +2,10 @@
   "database": {
     "host": "mongo-vn-office.gigasource.io",
     "port": 27017,
-    "dbName": "mobile10"
+    "dbName": "mobile10",
+    "options": {
+      "replicaSet" : "rs0"
+    }
   },
   "plugins": [
     {
