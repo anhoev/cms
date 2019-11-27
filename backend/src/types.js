@@ -12,6 +12,24 @@ const Model = require('mongoose/lib/model');
 
 module.exports = (cms) => {
   const { app, Q } = cms;
+  const originalObjectIdCast = cms.mongoose.ObjectId.cast();
+
+  cms.mongoose.ObjectId.cast(function (v) {
+    try {
+      if (typeof v === 'string') {
+        const isKeyHexStr = v.length === 24 && /^[a-f0-9]+$/i.test(v);
+        if (!isKeyHexStr) throw new Error();
+      }
+      return originalObjectIdCast(v);
+    } catch (e) {
+      if (typeof v === 'object') {
+        if (v._id) return v._id;
+      } else if (typeof v === 'string' || typeof v === 'number') {
+        return v;
+      }
+      throw e;
+    }
+  });
 
   function registerSchema(schema, options) {
     const {
@@ -30,7 +48,8 @@ module.exports = (cms) => {
       schema = new cms.mongoose.Schema(schema, _.assign({
         toObject: { virtuals: true },
         toJSON: { virtuals: true },
-        id: false
+        id: false,
+        ...schema._id !== undefined && { _id: false }
       }, schemaOptions));
     }
 
