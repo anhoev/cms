@@ -298,16 +298,18 @@ module.exports = async function (cms) {
   //todo: change stream
   if (global.APP_CONFIG.replica) {
     BuildForm.watch().on('change', async change => {
-      let form = await BuildForm.findOne({ _id: change.documentKey }).lean();
-      console.log(`change schema: ${form.name}`, form);
-      if (form && form.type === 'Collection') {
-        form = jsonfn.clone(form, true, true);
-        if (cms.Types[form.name]) {
-          delete cms.mongoose.connection.models[form.name];
-          delete cms.Types[form.name];
+      if (['update', 'insert'].includes(change.operationType)) {
+        let form = await BuildForm.findOne({ _id: change.documentKey }).lean();
+        console.log(`change schema: ${form.name}`, form);
+        if (form && form.type === 'Collection') {
+          form = jsonfn.clone(form, true, true);
+          if (cms.Types[form.name]) {
+            delete cms.mongoose.connection.models[form.name];
+            delete cms.Types[form.name];
+          }
+          initSchema(form);
+          cms.socket.emit('reloadSchema');
         }
-        initSchema(form);
-        cms.socket.emit('reloadSchema');
       }
     });
   }
