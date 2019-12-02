@@ -1,13 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 const chokidar = require('chokidar');
+const webpack = require('webpack')
 
 const LibConfig = require('../lib.config');
 const Plugin = require('./cms.plugin');
 const FileHelper = require('../utils/files.util');
 const compileVue = require('../utils/compiles.util');
-
-const { compile } = compileVue;
+const { getWebpackConfig } = require('../utils/webpack.util')
 
 function getPluginName(_path) {
   return path.relative(LibConfig.BASE_PLUGIN, _path).split(path.sep).shift();
@@ -48,21 +48,25 @@ const watcher =  cms => {
         // not in dist, do the compile
         const ext = path.extname(_path);
         if (ext === '.vue') {
-          compile(_path)
-            .then((content) => {
-              const fileName = path.basename(_path);
-              const pluginsFolder = getPluginFolder(_path);
-              const destPath = path.join(pluginsFolder, 'dist', fileName);
-              const added = FileHelper.addNew(destPath, content);
-              if (added) console.log(`compiled to: ${destPath}`);
-              const componentName = path.parse(fileName).name;
-              const staticPath = Plugin.convertFilePathToInternalPathStatic(destPath, '');
-              cms.socket.to(`pluginSubscription${componentName}`).emit(`changePlugin${componentName}`, {
-                type: 'change',
-                path: path.join('plugins', staticPath),
-                component: componentName
-              });
-            }).catch(err => console.log(err));
+          const fileName = path.basename(_path);
+          const pluginsFolder = getPluginFolder(_path);
+          const pluginsName = getPluginName(_path);
+          const destPath = path.join(pluginsFolder, 'dist', fileName);
+          const webpackConfig = getWebpackConfig(pluginsName, fileName, _path);
+          webpack(webpackConfig, function (err, stats) {
+            if (err || stats.hasErrors()) {
+              console.log('Error on bundling file ' + fileName)
+              return
+            }
+            console.log(`Compiled to : ${destPath}`);
+            const componentName = path.parse(fileName).name;
+            const staticPath = Plugin.convertFilePathToInternalPathStatic(destPath, '');
+            cms.socket.to(`pluginSubscription${componentName}`).emit(`changePlugin${componentName}`, {
+              type: 'change',
+              path: path.join('plugins', staticPath),
+              component: componentName
+            });
+          })
         }
       }
     })
@@ -73,15 +77,16 @@ const watcher =  cms => {
         if (ext === '.vue') {
           const fileName = path.basename(_path);
           const pluginsFolder = getPluginFolder(_path);
+          const pluginsName = getPluginName(_path);
           const destPath = path.join(pluginsFolder, 'dist', fileName);
-          compile(_path)
-            .then((content) => {
-              const added = FileHelper.addNew(destPath, content);
-              if (added) console.log(`compiled to: ${destPath}`);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+          const webpackConfig = getWebpackConfig(pluginsName, fileName, _path)
+          webpack(webpackConfig, function (err, stats) {
+            if (err || stats.hasErrors()) {
+              console.log('Error on bundling file ' + fileName)
+              return
+            }
+            console.log(`Compiled to : ${destPath}`);
+          })
         }
       }
     })
