@@ -65,13 +65,18 @@
     "mongoose-autopopulate": "^0.9.1",
     "node-cache": "^4.2.0",
     "request": "^2.88.0",
+    "rollup": "^1.27.8",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-vue": "^5.1.4",
     "sass.js": "^0.10.13",
     "shell-exec": "^1.0.2",
     "signale": "^1.4.0",
     "simple-git": "^1.110.0",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
+    "terser": "^4.4.2",
     "traverse": "^0.6.6",
+    "vue-template-compiler": "^2.6.10",
     "yargs": "^13.2.2"
   },
   "devDependencies": {}
