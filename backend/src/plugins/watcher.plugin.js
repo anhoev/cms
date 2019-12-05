@@ -5,9 +5,10 @@ const chokidar = require('chokidar');
 const LibConfig = require('../lib.config');
 const Plugin = require('./cms.plugin');
 const FileHelper = require('../utils/files.util');
-const compileVue = require('../utils/compiles.util');
 
-const { compile } = compileVue;
+const getRollUpConfig = require('../utils/rollup.util')
+const rollup = require('rollup')
+const terser = require('terser')
 
 function getPluginName(_path) {
   return path.relative(LibConfig.BASE_PLUGIN, _path).split(path.sep).shift();
@@ -48,13 +49,15 @@ const watcher =  cms => {
         // not in dist, do the compile
         const ext = path.extname(_path);
         if (ext === '.vue') {
-          compile(_path)
-            .then((content) => {
-              const fileName = path.basename(_path);
-              const pluginsFolder = getPluginFolder(_path);
-              const destPath = path.join(pluginsFolder, 'dist', fileName);
-              const added = FileHelper.addNew(destPath, content);
-              if (added) console.log(`compiled to: ${destPath}`);
+          const fileName = path.basename(_path);
+          const pluginsFolder = getPluginFolder(_path);
+          const destPath = path.join(pluginsFolder, 'dist', `${fileName.slice(0, -3)}vue`);
+          const rollUpConfig = getRollUpConfig(fileName, destPath, _path);
+          rollup.rollup(rollUpConfig).then(async (buildBundle) => {
+            const generated = await buildBundle.generate(rollUpConfig.output);
+            let code = generated.output[0].code;
+            const added = FileHelper.addNew(destPath, code)
+            if (added) console.log(`Compiled to ${destPath}`)
               const componentName = path.parse(fileName).name;
               const staticPath = Plugin.convertFilePathToInternalPathStatic(destPath, '');
               cms.socket.to(`pluginSubscription${componentName}`).emit(`changePlugin${componentName}`, {
@@ -68,20 +71,23 @@ const watcher =  cms => {
     })
     .on('add', (_path) => {
       if (!distRegex.test(_path)) {
+        if (!_path.includes('dialogNewPayment')) return;
         // not in dist, do the compile
         const ext = path.extname(_path);
         if (ext === '.vue') {
           const fileName = path.basename(_path);
           const pluginsFolder = getPluginFolder(_path);
-          const destPath = path.join(pluginsFolder, 'dist', fileName);
-          compile(_path)
-            .then((content) => {
-              const added = FileHelper.addNew(destPath, content);
-              if (added) console.log(`compiled to: ${destPath}`);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+          const destPath = path.join(pluginsFolder, 'dist', `${fileName.slice(0, -3)}vue`);
+          const rollUpConfig = getRollUpConfig(fileName, destPath, _path);
+          rollup.rollup(rollUpConfig).then(async (buildBundle) => {
+            const generated = await buildBundle.generate(rollUpConfig.output);
+            let code = generated.output[0].code;
+            const added = FileHelper.addNew(destPath, code)
+            if (added) console.log(`Compiled to ${destPath}`)
+          }).catch(e => {
+            console.log(e)
+            // console.log('Error bundling file', fileName);
+          })
         }
       }
     })
