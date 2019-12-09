@@ -4,7 +4,6 @@ const jsdom = require('jsdom');
 const sass = require('sass.js');
 const axios = require('axios').default;
 const terser = require('terser')
-const {transform} = require('@babel/core');
 const babelPluginSyntaxImportMeta = require('@babel/plugin-syntax-import-meta');
 const babelPluginSyntaxDynamicImport = require('@babel/plugin-syntax-dynamic-import');
 const babelPluginTransformModulesCommonJs = require('@babel/plugin-transform-modules-commonjs');
@@ -136,12 +135,7 @@ const STRING_TO_REPLACE_ADDSTYLE = "let HEAD;\r\n" +
   "  }"
 
 langProcessor.es6 = function (script) {
-  return transform(script, {
-    // Enables an access to `this` of the Component
-    // so that this transform can obtain the proper information
-    // of the instance of Component
-    moduleId: this.name,
-  }).code;
+  return script;
 };
 
 langProcessor.scss = function (scssText) {
@@ -307,22 +301,30 @@ class Compiler {
 }
 
 module.exports = function () {
-  let inputList = {}
+  let inputList = {};
   return {
     name: 'plugins',
-    buildStart (options) {
+    buildStart(options) {
       inputList[options.input] = {}
     },
-    async load ( id ) {
+    resolveId(id, importer) {
+      if (!(importer in inputList))
+        return;
+      if (!id.includes('.vue') && !id.includes('script.js'))
+        return;
+      id = path.resolve(path.dirname(importer), id);
+      return id;
+    },
+    async load(id) {
+      if (id.includes('?name=script.js')) {
+        return inputList[id.replace('?name=script.js', '')].script.getContent();
+      }
       if (!(id in inputList)) return null;
       const comp = new Component();
       const data = fs.readFileSync(id, 'utf8');
-      const f = await comp.load(data).normalize();
-      if (id.slice(-8) === "shit.vue") {
-      }
-      inputList[id].template = f.template;
-      inputList[id].styles = f.styles;
-      return '<script>\n' + f.script.getContent() + '\n<' + '/script> \n';
+      inputList[id] = await comp.load(data).normalize();
+      const fileName = path.relative(path.dirname(id), id).split(path.sep).shift();
+      return `export * from '${fileName}?name=script.js'\nimport script from '${fileName}?name=script.js'\nexport default script`;
     },
     generateBundle(options, bundle, isWrite) {
       for (let keys in bundle) {
@@ -354,6 +356,12 @@ module.exports = function () {
         }
         bundle[keys].code = compiler.toString();
       }
+    },
+    transform(source, filename) {
+      if (filename in inputList) {
+        return `//do_nothing;\n${source}`;
+      }
+      return null;
     }
   }
 }

@@ -71,7 +71,6 @@ const watcher =  cms => {
     })
     .on('add', (_path) => {
       if (!distRegex.test(_path)) {
-        if (!_path.includes('dialogNewPayment')) return;
         // not in dist, do the compile
         const ext = path.extname(_path);
         if (ext === '.vue') {
