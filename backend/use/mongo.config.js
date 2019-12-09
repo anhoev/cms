@@ -6,13 +6,17 @@ const cms = require('../src/cms');
 
 module.exports = async function connect() {
   const appConfig = global.APP_CONFIG;
+  if (appConfig.database.options && appConfig.database.options.replicaSet) appConfig.replica = true;
+
   let isConnectedBefore = false;
   const uri = `mongodb://${appConfig.database.host}:${appConfig.database.port}/${appConfig.database.dbName}`;
   const connectionOptions = {
     useNewUrlParser: true,
     // https://mongoosejs.com/docs/deprecations.html
     useFindAndModify: false,
-    useCreateIndex: true
+    useCreateIndex: true,
+    ...appConfig.database.options
+      //replicaSet : 'rs0',
   };
 
   if (appConfig.database.username && appConfig.database.password) {

@@ -13,8 +13,8 @@ const expressConfig = require('./express.config');
   signale.time('Time -setup');
   global.APP_CONFIG = await configLoader();
   await pluginConfig();
-  await expressConfig();
   await mongooseConfig();
+  await expressConfig();
   signale.timeEnd('Time -setup');
 })();
 

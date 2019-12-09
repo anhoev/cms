@@ -278,7 +278,29 @@ module.exports = async function (cms) {
   const BuildForm = cms.registerSchema(buildFormSchema, {
     ...FormBuilderInfo,
     initSchema(schema) {
-      schema.onPostSave(function (form) {
+      if (!global.APP_CONFIG.replica) {
+        schema.onPostSave(function (form) {
+          if (form && form.type === 'Collection') {
+            form = jsonfn.clone(form, true, true);
+            if (cms.Types[form.name]) {
+              delete cms.mongoose.connection.models[form.name];
+              delete cms.Types[form.name];
+            }
+            initSchema(form);
+            cms.socket.emit('reloadSchema');
+          }
+        });
+      }
+      // Init collection subscription for form builder
+      onInitCollection(schema, FormBuilderInfo.name);
+    }
+  });
+  //todo: change stream
+  if (global.APP_CONFIG.replica) {
+    BuildForm.watch().on('change', async change => {
+      if (['update', 'insert'].includes(change.operationType)) {
+        let form = await BuildForm.findOne({ _id: change.documentKey }).lean();
+        console.log(`change schema: ${form.name}`, form);
         if (form && form.type === 'Collection') {
           form = jsonfn.clone(form, true, true);
           if (cms.Types[form.name]) {
@@ -288,11 +310,9 @@ module.exports = async function (cms) {
           initSchema(form);
           cms.socket.emit('reloadSchema');
         }
-      });
-      // Init collection subscription for form builder
-      onInitCollection(schema, FormBuilderInfo.name);
-    }
-  });
+      }
+    });
+  }
 
   const forms = await BuildForm.find({}).lean();
   forms.filter(f => f.type === 'Collection').forEach(form => {
