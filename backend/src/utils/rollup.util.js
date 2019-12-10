@@ -4,7 +4,7 @@ const json = require('rollup-plugin-json');
 const babel = require('rollup-plugin-babel');
 const postcss = require('rollup-plugin-postcss');
 const commonjs = require('rollup-plugin-commonjs');
-const {terser} = require('rollup-plugin-terser');
+const { terser } = require('rollup-plugin-terser');
 const image = require('rollup-plugin-img');
 
 const plugin = require('./plugins');
@@ -43,17 +43,19 @@ module.exports = function (fileName, destPath, filePath) {
       vuePlugin,
       babel({
         babelrc: false,
-        presets: ['vca-jsx', ['@vue/app',
+        presets: ['vca-jsx', ['@vue/jsx',
           {
-            "useBuiltIns": "entry"
+            'useBuiltIns': 'entry'
           }]],
+        plugins: ['@babel/plugin-syntax-import-meta',
+          '@babel/plugin-syntax-dynamic-import'],
         runtimeHelpers: true
       }),
       commonjs(),
       json(),
-      //terser()
+      terser()
     ],
-    external: ['json-fn', 'cms', 'MonacoEditor', 'lodash', 'dayjs', 'dayjs/plugin/relativeTime',
+    external: ['json-fn', 'cms', 'MonacoEditor', 'lodash', 'dayjs',
       'pos-vue-framework', 'vue', 'vue-the-mask', 'vue-fragment', 'vue-runtime-helpers', '@vue/composition-api']
   }
 };
