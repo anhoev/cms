@@ -5,7 +5,8 @@ const babel = require('rollup-plugin-babel');
 const postcss = require('rollup-plugin-postcss');
 const commonjs = require('rollup-plugin-commonjs');
 const {terser} = require('rollup-plugin-terser');
-const image = require('rollup-plugin-image');
+const image = require('rollup-plugin-img');
+
 const plugin = require('./plugins');
 
 module.exports = function (fileName, destPath, filePath) {
@@ -13,11 +14,11 @@ module.exports = function (fileName, destPath, filePath) {
     needMap: false
   });
 
-  const originalVueTransform = vuePlugin.transform;
-  vuePlugin.transform = async function (source, filename) {
-    if (source.includes('//do_nothing;\n')) return source.replace('//do_nothing;\n', '');
-    return originalVueTransform(source, filename);
-  }
+  // const originalVueTransform = vuePlugin.transform;
+  // vuePlugin.transform = async function (source, filename) {
+  //   if (source.includes('//do_nothing;\n')) return source.replace('//do_nothing;\n', '');
+  //   return originalVueTransform(source, filename);
+  // }
 
   return {
     input: `${filePath}`,
@@ -30,7 +31,9 @@ module.exports = function (fileName, destPath, filePath) {
       resolve({
         extensions: ['.mjs', '.js', '.vue', '.json']
       }),
-      image(),
+      image({
+        limit: 500000,
+      }),
       postcss({
         extract: false,
         modules: true,

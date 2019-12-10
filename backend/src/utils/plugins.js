@@ -305,7 +305,7 @@ module.exports = function () {
   return {
     name: 'plugins',
     buildStart(options) {
-      inputList[options.input] = {}
+      inputList[options.input] = {};
     },
     resolveId(id, importer) {
       if (!(importer in inputList))

@@ -6,9 +6,10 @@ const LibConfig = require('../lib.config');
 const Plugin = require('./cms.plugin');
 const FileHelper = require('../utils/files.util');
 
-const getRollUpConfig = require('../utils/rollup.util')
-const rollup = require('rollup')
-const terser = require('terser')
+const getRollUpConfig = require('../utils/rollup.util');
+const rollup = require('rollup');
+const terser = require('terser');
+const md5 = require('md5');
 
 function getPluginName(_path) {
   return path.relative(LibConfig.BASE_PLUGIN, _path).split(path.sep).shift();
@@ -17,6 +18,18 @@ function getPluginName(_path) {
 function getPluginFolder(_path) {
   const pluginName = getPluginName(_path);
   return path.join(LibConfig.BASE_PLUGIN, pluginName);
+}
+
+function checkMD5(_path) {
+  _path = `${getPluginFolder(_path)}/dist/${path.basename(_path)}`;
+  if (!fs.existsSync(_path)) return true;
+  const data = fs.readFileSync(_path, 'utf-8');
+  let lines = data.split('\n');
+  const hash = lines[0];
+  lines.splice(0, 1);
+  const newData = lines.join('\n');
+  if (md5(newData) === hash.slice(5)) return false;
+  return true;
 }
 
 const distRegex = new RegExp(`${path.sep}dist${path.sep}`);
@@ -38,6 +51,33 @@ function ignored(_path, stats) {
     return true;
   }
 }
+
+(function deleteUnusedFile() {
+  const listFiles = [];
+  function walkSync(dir) {
+    if (!fs.lstatSync(dir).isDirectory()) {
+      listFiles.push(path.basename(dir));
+      return
+    }
+
+    fs.readdirSync(dir).map(f => walkSync(path.join(dir, f))); // `join("\n")`
+  }
+
+  walkSync(LibConfig.BASE_PLUGIN);
+  const plugins = fs.readdirSync(LibConfig.BASE_PLUGIN)
+  console.log(plugins)
+  plugins.forEach(function (plugin) {
+    if (fs.existsSync(`${LibConfig.BASE_PLUGIN}/${plugin}/dist`)) {
+      const files = fs.readdirSync(`${LibConfig.BASE_PLUGIN}/${plugin}/dist`);
+      for (let i = 0; i < files.length; i++) {
+        if (!listFiles.includes(files[i])) {
+          console.log(`Deleting unused file ${files[i]}`)
+          FileHelper.delete(`${LibConfig.BASE_PLUGIN}/${plugin}/dist/${files[i]}`);
+        }
+      }
+    }
+  })
+})()
 
 const watcher =  cms => {
   chokidar.watch(LibConfig.BASE_PLUGIN, {
@@ -71,10 +111,10 @@ const watcher =  cms => {
     })
     .on('add', (_path) => {
       if (!distRegex.test(_path)) {
-        // if (!_path.includes('Test2')) return;
+        // if (!_path.includes('PosLoginView')) return;
         // not in dist, do the compile
         const ext = path.extname(_path);
-        if (ext === '.vue') {
+        if (ext === '.vue' && checkMD5(_path)) {
           const fileName = path.basename(_path);
           const pluginsFolder = getPluginFolder(_path);
           const destPath = path.join(pluginsFolder, 'dist', `${fileName.slice(0, -3)}vue`);
@@ -82,6 +122,8 @@ const watcher =  cms => {
           rollup.rollup(rollUpConfig).then(async (buildBundle) => {
             const generated = await buildBundle.generate(rollUpConfig.output);
             let code = generated.output[0].code;
+            const hash = md5(code);
+            code = `//md5${hash}\n${code}`
             const added = FileHelper.addNew(destPath, code)
             if (added) console.log(`Compiled to ${destPath}`)
           }).catch(e => {
