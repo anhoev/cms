@@ -36,7 +36,7 @@ module.exports = function (fileName, destPath, filePath) {
         modules: true,
         use: ['sass']
       }),
-      plugin(),
+      //plugin(),
       vuePlugin,
       babel({
         babelrc: false,
@@ -50,6 +50,7 @@ module.exports = function (fileName, destPath, filePath) {
       json(),
       //terser()
     ],
-    external: ['json-fn', 'cms', 'MonacoEditor', 'lodash', 'dayjs', 'dayjs/plugin/relativeTime', 'pos-vue-framework', 'vue', 'vue-the-mask', 'vue-fragment', 'vue-runtime-helpers']
+    external: ['json-fn', 'cms', 'MonacoEditor', 'lodash', 'dayjs', 'dayjs/plugin/relativeTime',
+      'pos-vue-framework', 'vue', 'vue-the-mask', 'vue-fragment', 'vue-runtime-helpers', '@vue/composition-api']
   }
 };
