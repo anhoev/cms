@@ -1,0 +1,9 @@
+{
+  "include": "node_modules/**",
+  "presets": [
+    "vca-jx",
+    ["@vue/app", {
+        "useBuiltIns": "entry"
+    }]
+  ]
+}
