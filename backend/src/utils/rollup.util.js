@@ -56,6 +56,6 @@ module.exports = function (fileName, destPath, filePath) {
       terser()
     ],
     external: ['json-fn', 'cms', 'MonacoEditor', 'lodash', 'dayjs',
-      'pos-vue-framework', 'vue', 'vue-the-mask', 'vue-fragment', 'vue-runtime-helpers', '@vue/composition-api']
+      'pos-vue-framework', 'vue', 'vue-the-mask', 'vue-fragment', 'vue-runtime-helpers', '@vue/composition-api', 'snackbarController']
   }
 };

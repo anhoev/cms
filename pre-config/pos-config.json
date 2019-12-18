@@ -21,7 +21,8 @@
     {
       "name": "pos-plugin",
       "url": "https://github.com/gigasource/pos-plugin.git",
-      "branch": "master"
+      "branch": "master",
+      "package": true
     }
   ]
 }
