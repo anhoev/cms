@@ -55,29 +55,27 @@ function ignored(_path, stats) {
 (function deleteUnusedFile() {
   const listFiles = [];
   function walkSync(dir) {
-    if (!fs.lstatSync(dir).isDirectory()) {
-      listFiles.push(path.basename(dir));
-      return
+    if (fs.lstatSync(dir).isFile()) {
+      if (!distRegex.test(dir) && path.extname(dir) === '.vue') {
+        listFiles.push(path.basename(dir));
+      }
     }
-
+    if (!fs.lstatSync(dir).isDirectory()) return;
     fs.readdirSync(dir).map(f => walkSync(path.join(dir, f))); // `join("\n")`
   }
-
   walkSync(LibConfig.BASE_PLUGIN);
-  const plugins = fs.readdirSync(LibConfig.BASE_PLUGIN)
-  console.log(plugins)
+  const plugins = fs.readdirSync(LibConfig.BASE_PLUGIN);
   plugins.forEach(function (plugin) {
     if (fs.existsSync(`${LibConfig.BASE_PLUGIN}/${plugin}/dist`)) {
       const files = fs.readdirSync(`${LibConfig.BASE_PLUGIN}/${plugin}/dist`);
       for (let i = 0; i < files.length; i++) {
         if (!listFiles.includes(files[i])) {
-          console.log(`Deleting unused file ${files[i]}`)
           FileHelper.delete(`${LibConfig.BASE_PLUGIN}/${plugin}/dist/${files[i]}`);
         }
       }
     }
   })
-})()
+})();
 
 const watcher =  cms => {
   chokidar.watch(LibConfig.BASE_PLUGIN, {
