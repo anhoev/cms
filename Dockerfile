@@ -1,7 +1,7 @@
 FROM node:10 as intermediate
 WORKDIR /home/giga-office
 RUN mkdir -p /home/giga-office/storage
-COPY package*.json ecosystem-dev.json ./
+COPY package*.json ./
 RUN npm install --production
 COPY . .
 WORKDIR /home/giga-office/backoffice
