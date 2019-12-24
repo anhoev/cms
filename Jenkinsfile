@@ -20,6 +20,7 @@ pipeline {
           sh "curl -H 'Authorization: token $GIGASOURCE_GITHUB_ACCESS_TOKEN' -H 'Accept: application/vnd.github.v3.raw' -O -L https://api.github.com/repos/gigasource/cms-configs/contents/cms-config-vn-cluster.json"
         }
         sh "mkdir -p ./config"
+        sh "mkdir -p ./plugins"
         sh "mv ./cms-config-vn-cluster.json ./config/config.json"
       }
     }
