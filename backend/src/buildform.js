@@ -322,31 +322,34 @@ module.exports = async function (cms) {
   if (model.find) {
     await model.find({ 'loader.type': /backend/i }).then(items => {
       items.forEach((item) => {
-        if (item.loader) {
-          const plugin = cms.allPlugins[item.plugin];
-          if (plugin) {
-            switch (item.loader.type) {
-              case 'backend-middleware-socket': {
-                cms.useMiddleWare('socket', require(plugin.convertInternalPathToFilePath(item.path)));
-                break;
-              }
-              case 'backend-middleware-interface': {
-                cms.useMiddleWare('interface', require(plugin.convertInternalPathToFilePath(item.path)));
-                break;
-              }
-              case 'backend-middleware-collection': {
-                cms.useMiddleWare('collection', require(plugin.convertInternalPathToFilePath(item.path)));
-                break;
-              }
-              case 'backend-middleware-static': {
-                cms.useMiddleWare('static', require(plugin.convertInternalPathToFilePath(item.path)));
-                break;
-              }
-              case 'backend-api': {
-                cms.useMiddleWare('api', require(plugin.convertInternalPathToFilePath(item.path)));
+        try {
+          if (item.loader) {
+            const plugin = cms.allPlugins[item.plugin];
+            if (plugin) {
+              switch (item.loader.type) {
+                case 'backend-middleware-socket': {
+                  cms.useMiddleWare('socket', require(plugin.convertInternalPathToFilePath(item.path)));
+                  break;
+                }
+                case 'backend-middleware-interface': {
+                  cms.useMiddleWare('interface', require(plugin.convertInternalPathToFilePath(item.path)));
+                  break;
+                }
+                case 'backend-middleware-collection': {
+                  cms.useMiddleWare('collection', require(plugin.convertInternalPathToFilePath(item.path)));
+                  break;
+                }
+                case 'backend-middleware-static': {
+                  cms.useMiddleWare('static', require(plugin.convertInternalPathToFilePath(item.path)));
+                  break;
+                }
+                case 'backend-api': {
+                  cms.useMiddleWare('api', require(plugin.convertInternalPathToFilePath(item.path)));
+                }
               }
             }
           }
+        } catch (e) {
         }
       });
     });
