@@ -21,11 +21,6 @@ module.exports = {
       url: 'https://github.com/anhoev/digital-signage-plugin.git',
       branch: 'master',
       package: true
-    },
-    {
-      name: 'permission-plugin',
-      url: 'https://github.com/anhoev/permission-plugin.git',
-      branch: 'master'
     }
   ],
   root: path.join(__dirname, '../../..'),
