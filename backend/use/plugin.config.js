@@ -1,6 +1,7 @@
 const path = require('path');
 const signale = require('signale');
 const cms = require('../src/cms');
+global['cms'] = cms;
 const gitUtils = require('../src/utils/git.util');
 
 module.exports = async function setupPlugin() {
