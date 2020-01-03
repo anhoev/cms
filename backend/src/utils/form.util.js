@@ -63,7 +63,7 @@ module.exports = {
           if (node.autopopulate) {
             autopopulate = true;
             if (!_.isEmpty(node.populateSelect)) {
-              autopopulate = { select: node.populateSelect.join(',') };
+              autopopulate = { select: node.populateSelect.join(','), maxDepth: 1 };
             }
           }
           _node = {
