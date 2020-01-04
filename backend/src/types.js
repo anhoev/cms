@@ -241,7 +241,6 @@ module.exports = (cms) => {
     });
 
     socket.on('interface', async function ({name, chain}, fn = () => null) {
-      console.log({name, chain});
       chain = JsonFn.clone(chain, true);
       const model = cms.getModel(name);
       cms.middleware.interface({name, chain, socket, model}, _.once(async function (err, result) {
