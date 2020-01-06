@@ -2,12 +2,13 @@ pipeline {
   agent any
 
   environment {
-    dockerImageName = 'registry.gigasource.io/cms'
+    dockerImageName = 'registry.gigasource.io/cms-attendace'
     dockerImage = ''
     registryName = 'https://registry.gigasource.io'
     registryCredential = 'registry-user'
     rancherWorkloadType = 'deployment'
-    rancherWorkloadName = 'cms'
+    rancherWorkloadName = 'cms-attendace'
+    configFileName = 'cms-config-vn-cluster.json'
   }
 
   stages {
@@ -17,11 +18,11 @@ pipeline {
           sh "echo $GITBOT_ACCESS_TOKEN > ./gitbot-access-token"
         }
         withCredentials([string(credentialsId: 'gigasource-github-access-token', variable: 'GIGASOURCE_GITHUB_ACCESS_TOKEN')]) {
-          sh "curl -H 'Authorization: token $GIGASOURCE_GITHUB_ACCESS_TOKEN' -H 'Accept: application/vnd.github.v3.raw' -O -L https://api.github.com/repos/gigasource/cms-configs/contents/cms-config-vn-cluster.json"
+          sh "curl -H 'Authorization: token $GIGASOURCE_GITHUB_ACCESS_TOKEN' -H 'Accept: application/vnd.github.v3.raw' -O -L https://api.github.com/repos/gigasource/cms-configs/contents/$configFileName"
         }
         sh "mkdir -p ./config"
         sh "mkdir -p ./plugins"
-        sh "mv ./cms-config-vn-cluster.json ./config/config.json"
+        sh "mv ./$configFileName ./config/config.json"
       }
     }
 
