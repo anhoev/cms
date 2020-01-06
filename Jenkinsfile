@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-    dockerImageName = 'registry.gigasource.io/cms-attendace'
+    dockerImageName = 'registry.gigasource.io/cms-attendance'
     dockerImage = ''
     registryName = 'https://registry.gigasource.io'
     registryCredential = 'registry-user'
