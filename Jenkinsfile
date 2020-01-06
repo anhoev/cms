@@ -7,7 +7,7 @@ pipeline {
     registryName = 'https://registry.gigasource.io'
     registryCredential = 'registry-user'
     rancherWorkloadType = 'deployment'
-    rancherWorkloadName = 'cms-attendace'
+    rancherWorkloadName = 'cms-attendance'
     configFileName = 'attendance-config.json'
   }
 
