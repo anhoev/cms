@@ -101,6 +101,7 @@ const cms = {
   download,
   compile,
   compiler,
+  api: {},
   /**
    * type: NodeCache
    * format: `${prefix}:path`
