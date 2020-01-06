@@ -8,7 +8,7 @@ pipeline {
     registryCredential = 'registry-user'
     rancherWorkloadType = 'deployment'
     rancherWorkloadName = 'cms-attendace'
-    configFileName = 'cms-config-vn-cluster.json'
+    configFileName = 'attendance-config.json'
   }
 
   stages {
