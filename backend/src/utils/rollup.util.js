@@ -10,6 +10,7 @@ const image = require('rollup-plugin-img');
 const plugin = require('./plugins');
 
 module.exports = function (fileName, destPath, filePath) {
+  process.env.VUE_ENV = undefined;
   const vuePlugin = vue({
     needMap: false
   });
