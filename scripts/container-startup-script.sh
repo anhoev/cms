@@ -5,4 +5,4 @@ rm ./gitbot-access-token
 git config --global url."https://${GITBOT_ACCESS_TOKEN}:@github.com/".insteadOf "https://github.com/"
 git config --global user.email "gitbot@gigasource.io"
 git config --global user.name "Gigasource Gitbot"
-node backend/use/index.js --config=./config/config.json --mode=safemode
+node backend/use/index.js --config=./config/config.json
