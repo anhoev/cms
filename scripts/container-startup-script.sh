@@ -1,4 +1,12 @@
 #!/bin/sh
+
+# install fonts for PhantomJS
+apt update
+apt install cabextract -y
+apt install xfonts-utils -y
+wget http://ftp.de.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.6_all.deb
+dpkg -i ttf-mscorefonts-installer_3.6_all.deb
+
 echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl -p
 GITBOT_ACCESS_TOKEN=$(cat ./gitbot-access-token)
 rm ./gitbot-access-token
