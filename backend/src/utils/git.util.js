@@ -30,9 +30,10 @@ const gitUtils = {
       }));
 
       await Promise.all(pluginsClone
-      .filter(plugin => plugin.package)
       .map(plugin => {
-        return shellExec(`cd ${basePathStore}/${plugin.name}&& npm install`);
+        if (fs.existsSync(`${basePathStore}/${plugin.name}/package.json`)) {
+          return shellExec(`cd ${basePathStore}/${plugin.name}&& npm install`);
+        }
       }));
     } catch (e) {
       console.error(e);
