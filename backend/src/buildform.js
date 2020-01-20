@@ -19,6 +19,7 @@ module.exports = async function (cms) {
       }
     },
     addable: Boolean,
+    lazy: {type: Boolean, form: {addable: true}},
     selectNodeAfterClick: Boolean,
     notOnlyValueInOptions: { type: Boolean, form: { addable: true } },
     editable: Boolean,
@@ -175,8 +176,8 @@ module.exports = async function (cms) {
         })), { type: { form: { form: { type: 'choice', dynamicFields: '.mixed' } } } }),
         array: _.merge(w({
           'array': ['label', 'flex', 'addable', 'isVisible'],
-          'tableArray': ['label', 'flex', 'expansion', 'addable', 'isVisible'],
-          'choiceArray': ['label', 'flex', 'addable', 'choiceKey', 'isVisible'],
+          'tableArray': ['label', 'flex', 'expansion', 'addable', 'isVisible', 'lazy'],
+          'choiceArray': ['label', 'flex', 'addable', 'choiceKey', 'isVisible', 'lazy'],
           'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips']
         }), { type: { form: { form: { dynamicFields: '.array' } } } })
       }],
