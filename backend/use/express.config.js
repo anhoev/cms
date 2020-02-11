@@ -17,9 +17,6 @@ const watcher = require('../src/plugins/watcher.plugin');
 module.exports = async function() {
   const appConfig = global.APP_CONFIG;
   cms.data.security = false;
-  cms.listen(appConfig.app.port, appConfig.app.host, () => {
-    signale.success(chalk.default.bgCyan.black(`Server's running at: ${appConfig.app.port}`));
-  });
   cms.useSession();
   cms.app.use(cookieParser());
   cms.app.use(bodyParser.urlencoded({ extended: false }));
@@ -31,4 +28,8 @@ module.exports = async function() {
   cms.app.use(cors({ origin: '*' }));
   cms.app.use(routerConfig);
   cms.app.use('/plugins', cms.middleware.static, cms.express.static(libConfig.BASE_PLUGIN));
+
+  cms.listen(appConfig.app.port, appConfig.app.host, () => {
+    signale.success(chalk.default.bgCyan.black(`Server's running at: ${appConfig.app.port}`));
+  });
 };
