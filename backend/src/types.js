@@ -195,8 +195,8 @@ module.exports = (cms) => {
   cms.app.get('/getTypes', async function (req, res) {
     const Types = {};
     for (let collectionName in cms.Types) {
-      //Types[collectionName] = cms.Types[collectionName].webType;
-      Types[collectionName] = {info: cms.Types[collectionName].info};
+      Types[collectionName] = cms.Types[collectionName].webType;
+      //Types[collectionName] = {info: cms.Types[collectionName].info};
     }
 
     cms.middleware.collection({collections: Types, session: req.session}, _.once(function (err, result) {
