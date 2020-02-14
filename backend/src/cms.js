@@ -204,7 +204,15 @@ const cms = {
     interface(a, fn) {
       fn(null, a);
     },
-    collection(a, fn) {
+    async collection(a, fn) {
+      const collections = a.collections;
+      for (const collectionName in collections) {
+        const collection = collections[collectionName];
+        if (collection.info.alwaysLoad && collection.list.length === 0) {
+          const list = await cms.getModel(collectionName).find({});
+          collection.list.push(...list);
+        }
+      }
       fn(null, a);
     },
     static(req, res, next) {
