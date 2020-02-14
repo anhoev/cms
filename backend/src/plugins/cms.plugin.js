@@ -65,10 +65,10 @@ class CmsPlugin {
     const data = _.reduce(plugins, (acc, plugin) => {
       const jsonPath = path.join(plugin.pluginPath, 'json');
       if (fs.statSync(jsonPath).isDirectory()) {
-        const directories = fs.readdirSync(jsonPath).filter(item => fs.statSync(path.join(jsonPath, item)).isDirectory())
+        const directories = fs.readdirSync(jsonPath).filter(item => fs.statSync(path.join(jsonPath, item)).isDirectory());
 
         if (directories.includes('BuildForm')) {
-          const fileNames = fs.readdirSync(path.join(jsonPath, 'BuildForm')).filter(item => item.includes('.json'))
+          const fileNames = fs.readdirSync(path.join(jsonPath, 'BuildForm')).filter(item => item.includes('.json'));
           acc.buildForms.push(...fileNames.map(file => path.join(jsonPath, 'BuildForm', file)))
         }
 
@@ -76,9 +76,8 @@ class CmsPlugin {
           const fileNames = fs.readdirSync(path.join(jsonPath, collection));
           acc.collections.push(...fileNames.map(file => path.join(jsonPath, collection, file)))
         }
-
-        return acc;
       }
+      return acc
     }, {
       buildForms: [],
       collections: []

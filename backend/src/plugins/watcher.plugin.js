@@ -139,11 +139,6 @@ const watcher =  cms => {
           const pluginsFolder = getPluginFolder(_path);
           const destPath = path.join(pluginsFolder, 'dist', fileName);
           FileHelper.delete(destPath);
-          if (cms.getModel('PluginFile')) {
-            const pluginName = getPluginName(_path);
-            const internalPathInPlugin = path.relative(pluginsFolder, _path);
-            await cms.getModel('PluginFile').findOneAndRemove({ path: internalPathInPlugin, plugin: pluginName });
-          }
           console.log(`delete compiled file: ${destPath}`);
         }
       }
