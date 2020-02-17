@@ -319,41 +319,5 @@ module.exports = async function (cms) {
   forms.filter(f => f.type === 'Collection').forEach(form => {
     initSchema(form);
   });
-  const model = cms.getModel('PluginFile');
-  if (model.find) {
-    await model.find({ 'loader.type': /backend/i }).then(items => {
-      items.forEach((item) => {
-        try {
-          if (item.loader) {
-            const plugin = cms.allPlugins[item.plugin];
-            if (plugin) {
-              switch (item.loader.type) {
-                case 'backend-middleware-socket': {
-                  cms.useMiddleWare('socket', require(plugin.convertInternalPathToFilePath(item.path)));
-                  break;
-                }
-                case 'backend-middleware-interface': {
-                  cms.useMiddleWare('interface', require(plugin.convertInternalPathToFilePath(item.path)));
-                  break;
-                }
-                case 'backend-middleware-collection': {
-                  cms.useMiddleWare('collection', require(plugin.convertInternalPathToFilePath(item.path)));
-                  break;
-                }
-                case 'backend-middleware-static': {
-                  cms.useMiddleWare('static', require(plugin.convertInternalPathToFilePath(item.path)));
-                  break;
-                }
-                case 'backend-api': {
-                  cms.useMiddleWare('api', require(plugin.convertInternalPathToFilePath(item.path)));
-                }
-              }
-            }
-          }
-        } catch (e) {
-        }
-      });
-    });
-  }
   cms.app.use('/', history(), cms.express.static(path.join(__dirname, '../../dist')));
 };

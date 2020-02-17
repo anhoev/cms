@@ -8,6 +8,8 @@ const gitUtils = require('../utils/git.util');
 module.exports = (cms) => {
   const allPlugins = Plugin.initAllPlugin('plugins', cms.config.plugins);
   cms.allPlugins = allPlugins;
+  const pluginFiles = getPluginFiles(allPlugins);
+  resolveFileLoader(pluginFiles)
 
   function compareContentWithDb(pluginName, path, name) {
     return new Promise((resolve => {
@@ -66,6 +68,53 @@ module.exports = (cms) => {
     return allPlugins[name];
   }
 
+  function getPluginFiles(plugins) {
+    const path = require('path');
+    return _.reduce(plugins, (acc, plugin) => {
+      const manifestPath = path.join(plugin.pluginPath, 'manifest.js');
+
+      if (fs.existsSync(manifestPath) && fs.statSync(manifestPath).isFile()) {
+        const {files} = require(manifestPath);
+        acc.push(...files.map(file => ({
+          ...file,
+          plugin: plugin.pluginName
+        })))
+      }
+      return acc
+    }, [])
+  }
+
+  function resolveFileLoader(pluginFiles) {
+    pluginFiles.filter(file => file.loader && file.loader.type && file.loader.type.match(/backend/i)).map(item => {
+      if (item.loader.type) {
+        const plugin = cms.allPlugins[item.plugin];
+        if (plugin) {
+          switch (item.loader.type) {
+            case 'backend-middleware-socket': {
+              cms.useMiddleWare('socket', require(plugin.convertInternalPathToFilePath(item.path)));
+              break;
+            }
+            case 'backend-middleware-interface': {
+              cms.useMiddleWare('interface', require(plugin.convertInternalPathToFilePath(item.path)));
+              break;
+            }
+            case 'backend-middleware-collection': {
+              cms.useMiddleWare('collection', require(plugin.convertInternalPathToFilePath(item.path)));
+              break;
+            }
+            case 'backend-middleware-static': {
+              cms.useMiddleWare('static', require(plugin.convertInternalPathToFilePath(item.path)));
+              break;
+            }
+            case 'backend-api': {
+              cms.useMiddleWare('api', require(plugin.convertInternalPathToFilePath(item.path)));
+            }
+          }
+        }
+      }
+    });
+  }
+
   cms.socket.on('connection', function (socket) {
     socket.on('loadPlugin', function (fn) {
       fn(Object.keys(allPlugins).map(item => getPlugin(item).loadDirTree()));
@@ -96,6 +145,17 @@ module.exports = (cms) => {
     //     fn(e);
     //   }
     // });
+    socket.on('getPluginFiles', function (fn) {
+      try {
+        const pluginFiles = getPluginFiles(allPlugins);
+        fn(pluginFiles.filter(file => {
+          if (file.loader && file.loader.type) return !file.loader.type.match(/backend/i);
+          return true
+        }))
+      } catch (e) {
+        fn(e);
+      }
+    });
     socket.on('loadDistPlugin', function (fn) {
       const result = Object
         .keys(allPlugins)

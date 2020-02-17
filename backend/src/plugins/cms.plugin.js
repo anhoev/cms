@@ -30,6 +30,11 @@ class CmsPlugin {
       return acc;
     }, {});
 
+    if (global.APP_CONFIG.initData) {
+      //todo error handling
+      this.initData(result).catch(e => e)
+    }
+
     return result;
     // return {
     //   testPlugin: new ClassPluginTest('test-plugin'),
@@ -52,6 +57,40 @@ class CmsPlugin {
   static convertFilePathToInternalPathStatic(_filePath, pluginName) {
     const pluginPath = path.join(LibConfig.BASE_PLUGIN, pluginName);
     return path.relative(pluginPath, _filePath);
+  }
+
+  static async initData(plugins) {
+    if (await cms.getModel('BuildForm').countDocuments({})) return;
+
+    const data = _.reduce(plugins, (acc, plugin) => {
+      const jsonPath = path.join(plugin.pluginPath, 'json');
+      if (fs.statSync(jsonPath).isDirectory()) {
+        const directories = fs.readdirSync(jsonPath).filter(item => fs.statSync(path.join(jsonPath, item)).isDirectory());
+
+        if (directories.includes('BuildForm')) {
+          const fileNames = fs.readdirSync(path.join(jsonPath, 'BuildForm')).filter(item => item.includes('.json'));
+          acc.buildForms.push(...fileNames.map(file => path.join(jsonPath, 'BuildForm', file)))
+        }
+
+        for (const collection of _.pull(directories, 'BuildForm')) {
+          const fileNames = fs.readdirSync(path.join(jsonPath, collection));
+          acc.collections.push(...fileNames.map(file => path.join(jsonPath, collection, file)))
+        }
+      }
+      return acc
+    }, {
+      buildForms: [],
+      collections: []
+    });
+
+    await Promise.all(data.buildForms.map(async path => {
+      await cms.getModel('BuildForm').create(JSON.parse(fs.readFileSync(path, 'utf8')))
+    }));
+    await Promise.all(data.collections.map(async path => {
+      const splitPath = path.split('/');
+      const collection = splitPath[splitPath.length - 2];
+      await cms.getModel(collection).create(JSON.parse(fs.readFileSync(path, 'utf8')))
+    }))
   }
 
   resolveUrlPath(internalPath) {
