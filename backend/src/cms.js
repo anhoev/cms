@@ -33,8 +33,9 @@ if (env === 'safemode') {
 }
 const io = socket(server);
 const MongoStore = require('connect-mongo')(expressSession);
-const cache = new NodeCache({ useClones: false, stdTTL: 20 * 60 });
-const app = new Proxy(_app, {
+const cache = new NodeCache({useClones: false, stdTTL: 20 * 60});
+const app = _app;
+/*const app = new Proxy(_app, {
   get(target, key) {
     if (['get', 'post', 'put', 'patch', 'delete'].indexOf(key) !== -1) {
       return function () {
@@ -58,14 +59,14 @@ const app = new Proxy(_app, {
       cms.data.handlers.forEach(handler => handler(req, res, e));
     }
   }
-});
+});*/
 const CMS_KEY = Symbol('CMS');
 const menu = {
   top: '51px',
   bodyPaddingTop: '51px',
   inverse: false
 };
-const WebType = { APPLICATION: 'APPLICATION', WEB: 'WEB' };
+const WebType = {APPLICATION: 'APPLICATION', WEB: 'WEB'};
 const download = function (uri, filename, callback) {
   request.head(uri, function (err, res, body) {
     console.log('content-type:', res.headers['content-type']);
@@ -74,8 +75,8 @@ const download = function (uri, filename, callback) {
   });
 };
 
-app.use(bodyParser.json({ limit: '5mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' }));
+app.use(bodyParser.json({limit: '5mb'}));
+app.use(bodyParser.urlencoded({extended: true, limit: '5mb'}));
 app.use(methodOverride());
 
 const cms = {
@@ -84,14 +85,18 @@ const cms = {
     const session = expressSession({
       secret: 'best cms system',
       resave: false, saveUninitialized: true,
-      cookie: { maxAge: 2628000000 },
+      cookie: {maxAge: 2628000000},
       expires: 30 * 24 * 60 * 60 * 1000,
-      store: new MongoStore({ mongooseConnection: mongoose.connection })
+      store: new MongoStore({mongooseConnection: mongoose.connection})
     });
-
+    cms._session = session;
     app.use(session);
+    const sharedSession = require('express-socket.io-session');
+    io.use(sharedSession(session, {
+      autoSave: true
+    }));
 
-    io.use(require('express-socket.io-session')(session, {
+    cms.socket.use(sharedSession(session, {
       autoSave: true
     }));
   },
@@ -175,8 +180,8 @@ const cms = {
   serverFn: {},
   fn: {},
   Enum: {
-    Load: { NOT: 'NOT', LOADING: 'LOADING', LOADED: 'LOADED' },
-    Mode: { ADMIN: 'ADMIN', NORMAL: 'NORMAL' },
+    Load: {NOT: 'NOT', LOADING: 'LOADING', LOADED: 'LOADED'},
+    Mode: {ADMIN: 'ADMIN', NORMAL: 'NORMAL'},
     WebType
   },
   get instance() {
@@ -199,7 +204,15 @@ const cms = {
     interface(a, fn) {
       fn(null, a);
     },
-    collection(a, fn) {
+    async collection(a, fn) {
+      const collections = a.collections;
+      for (const collectionName in collections) {
+        const collection = collections[collectionName];
+        if (collection.info.alwaysLoad && collection.list.length === 0) {
+          const list = await cms.getModel(collectionName).find({});
+          collection.list.push(...list);
+        }
+      }
       fn(null, a);
     },
     static(req, res, next) {
@@ -273,7 +286,7 @@ function compiler(path) {
   try {
     return function () {
       return this.content;
-    }.bind({ content: fs.readFileSync(path, 'utf8') });
+    }.bind({content: fs.readFileSync(path, 'utf8')});
   } catch (e) {
   }
 }

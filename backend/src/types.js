@@ -146,8 +146,8 @@ module.exports = (cms) => {
           paths: this.Paths,
           list: [],
           info: this.info,
-          fn: this.fn,
-          serverFn: this.serverFnForClient,
+          //fn: this.fn,
+          //serverFn: this.serverFnForClient,
           // columns: _.map(_.pickBy(this.schema.paths, k => ['id', '_id', '__v', '_textIndex'].indexOf(k) === -1, true), (v, k) => {
           //   return v.options && v.options.label ? v.options.label : k;
           // }),
@@ -192,6 +192,18 @@ module.exports = (cms) => {
 
   // websocket
 
+  cms.app.get('/getTypes', async function (req, res) {
+    const Types = {};
+    for (let collectionName in cms.Types) {
+      Types[collectionName] = cms.Types[collectionName].webType;
+      //Types[collectionName] = {info: cms.Types[collectionName].info};
+    }
+
+    cms.middleware.collection({collections: Types, session: req.session}, _.once(function (err, result) {
+      res.send(JsonFn.stringify(result.collections));
+    }));
+  })
+
   cms.socket.on(`connection`, function (socket) {
 
     socket.on('error', function (e) {
@@ -209,7 +221,7 @@ module.exports = (cms) => {
             collection.list.push(...list);
           }
         }
-        cms.middleware.collection({collections: Types, socket}, _.once(function (err, result) {
+        cms.middleware.collection({collections: Types, session: socket.handshake.session}, _.once(function (err, result) {
           fn(JsonFn.stringify(result.collections));
         }));
         // fn(jsonfn.stringify(Types));
