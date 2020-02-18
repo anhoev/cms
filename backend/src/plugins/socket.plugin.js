@@ -8,8 +8,7 @@ const gitUtils = require('../utils/git.util');
 module.exports = (cms) => {
   const allPlugins = Plugin.initAllPlugin('plugins', cms.config.plugins);
   cms.allPlugins = allPlugins;
-  const pluginFiles = getPluginFiles(allPlugins);
-  resolveFileLoader(pluginFiles)
+  cms.pluginFiles = getPluginFiles(allPlugins);
 
   function compareContentWithDb(pluginName, path, name) {
     return new Promise((resolve => {
@@ -84,37 +83,6 @@ module.exports = (cms) => {
     }, [])
   }
 
-  function resolveFileLoader(pluginFiles) {
-    pluginFiles.filter(file => file.loader && file.loader.type && file.loader.type.match(/backend/i)).map(item => {
-      if (item.loader.type) {
-        const plugin = cms.allPlugins[item.plugin];
-        if (plugin) {
-          switch (item.loader.type) {
-            case 'backend-middleware-socket': {
-              cms.useMiddleWare('socket', require(plugin.convertInternalPathToFilePath(item.path)));
-              break;
-            }
-            case 'backend-middleware-interface': {
-              cms.useMiddleWare('interface', require(plugin.convertInternalPathToFilePath(item.path)));
-              break;
-            }
-            case 'backend-middleware-collection': {
-              cms.useMiddleWare('collection', require(plugin.convertInternalPathToFilePath(item.path)));
-              break;
-            }
-            case 'backend-middleware-static': {
-              cms.useMiddleWare('static', require(plugin.convertInternalPathToFilePath(item.path)));
-              break;
-            }
-            case 'backend-api': {
-              cms.useMiddleWare('api', require(plugin.convertInternalPathToFilePath(item.path)));
-            }
-          }
-        }
-      }
-    });
-  }
-
   cms.socket.on('connection', function (socket) {
     socket.on('loadPlugin', function (fn) {
       fn(Object.keys(allPlugins).map(item => getPlugin(item).loadDirTree()));
@@ -148,6 +116,7 @@ module.exports = (cms) => {
     socket.on('getPluginFiles', function (fn) {
       try {
         const pluginFiles = getPluginFiles(allPlugins);
+        cms.pluginFiles = pluginFiles;
         fn(pluginFiles.filter(file => {
           if (file.loader && file.loader.type) return !file.loader.type.match(/backend/i);
           return true
