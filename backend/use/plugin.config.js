@@ -3,6 +3,7 @@ const signale = require('signale');
 const cms = require('../src/cms');
 global['cms'] = cms;
 const gitUtils = require('../src/utils/git.util');
+const LibConfig = require('../src/lib.config');
 
 module.exports = async function setupPlugin() {
   const appConfig = global.APP_CONFIG;
@@ -13,7 +14,7 @@ module.exports = async function setupPlugin() {
 
   const plugins = global.APP_CONFIG.plugins;
   try {
-    await gitUtils.cloneListPlugins(plugins, path.resolve('plugins'));
+    await gitUtils.cloneListPlugins(plugins, LibConfig.BASE_PLUGIN);
     signale.success('Clone plugin success');
   } catch (e) {
     signale.error('Clone error, info: ' + e);

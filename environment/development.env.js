@@ -12,5 +12,5 @@ module.exports = {
   },
   plugins: [],
   root: path.join(__dirname, '../../..'),
-  basePlugin: path.join(__dirname, '../plugins')
+  basePlugin: path.join(__dirname, '../../plugins')
 };
