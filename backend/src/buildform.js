@@ -352,12 +352,12 @@ module.exports = async function (cms) {
   forms.filter(f => f.type === 'Collection').forEach(form => {
     initSchema(form);
   });
-
+  resolveFileLoader(cms.pluginFiles);
   if (fs.existsSync(path.join(__dirname, '../../dist'))) {
     cms.app.use('/', history(), cms.express.static(path.join(__dirname, '../../dist')));
   } else {
     const backofficeProxy = proxy('/', {
-      target: 'http://localhost:8080'
+      target: `http://localhost:${process.env.PORT ? process.env.PORT : 8080}`
     });
     cms.app.use('/', backofficeProxy);
   }

@@ -1,5 +1,5 @@
 {
-  "name": "cmsmon",
+  "name": "cms",
   "version": "1.0.0",
   "description": "",
   "main": "backend/src/cms.js",
