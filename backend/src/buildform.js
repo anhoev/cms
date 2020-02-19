@@ -2,6 +2,8 @@ const _ = require('lodash');
 const path = require('path');
 const jsonfn = require('json-fn');
 const history = require('connect-history-api-fallback');
+const proxy = require('http-proxy-middleware');
+const fs = require('fs');
 
 const convertFormToSchema = require('./utils/form.util').convertFormToSchema;
 
@@ -355,5 +357,12 @@ module.exports = async function (cms) {
       });
     });
   }
-  cms.app.use('/', history(), cms.express.static(path.join(__dirname, '../../dist')));
+  if (fs.existsSync(path.join(__dirname, '../../dist'))) {
+    cms.app.use('/', history(), cms.express.static(path.join(__dirname, '../../dist')));
+  } else {
+    const backofficeProxy = proxy('/', {
+      target: 'http://localhost:8080'
+    });
+    cms.app.use('/', backofficeProxy);
+  }
 };

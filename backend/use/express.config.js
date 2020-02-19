@@ -12,7 +12,7 @@ const routerConfig = require('./router');
 const cms = require('../src/cms');
 const libConfig = require('../src/lib.config');
 const plugins = require('../src/plugins/socket.plugin');
-const watcher = require('../src/plugins/watcher.plugin');
+// const watcher = require('../src/plugins/watcher.plugin');
 
 module.exports = async function() {
   const appConfig = global.APP_CONFIG;
@@ -22,7 +22,7 @@ module.exports = async function() {
   cms.app.use(bodyParser.urlencoded({ extended: false }));
   cms.use(plugins);
   // cms.use(authenticate);
-  cms.use(watcher);
+  // cms.use(watcher);
   cms.app.use(helmet());
   cms.app.use(compression());
   cms.app.use(cors({ origin: '*' }));
