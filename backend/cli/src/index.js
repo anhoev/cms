@@ -17,9 +17,9 @@ async function execCms(argv) {
   while ((await isPortReachable(port, {host: 'localhost'}))) {
     port = port + 1;
   }
-  let config = 'node_modules/cms/config/pos-config.json';
+  let config = path.resolve('node_modules/cms/config/pos-config.json');
   if (argv.c || argv.config) {
-    config = argv.c || argv.config;
+    config = path.resolve(argv.c || argv.config);
   }
   const backofficeProcess = spawn('npx', ['vue-cli-service', 'serve'], {
     cwd: './backoffice'
@@ -27,7 +27,8 @@ async function execCms(argv) {
   const cmsProcess = spawn('node', ['backend/use/index.js', `--config=${config}`], {
     cwd: './node_modules/cms',
     env: Object.assign(process.env, {
-      PORT: port
+      PORT: port,
+      PLUGIN_PATH: path.resolve('plugins')
     })
   });
   cmsProcess.stdout.on('data', (data) => {
