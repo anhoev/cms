@@ -4,7 +4,7 @@ module.exports = function npmInit(path) {
   const result = spawnSync('npm', ['i'], {
     cwd: path,
     env: process.env,
-    stdio: 'pipe',
+    stdio: 'inherit',
     encoding: 'utf-8',
     silient: true
   });

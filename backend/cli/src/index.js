@@ -24,7 +24,8 @@ async function execCms(argv) {
   const backofficeProcess = spawn('npx', ['vue-cli-service', 'serve'], {
     cwd: './backoffice'
   });
-  const cmsProcess = spawn('node', ['./node_modules/cms/backend/use/index.js', `--config=${config}`], {
+  const cmsProcess = spawn('node', ['backend/use/index.js', `--config=${config}`], {
+    cwd: './node_modules/cms',
     env: Object.assign(process.env, {
       PORT: port
     })
