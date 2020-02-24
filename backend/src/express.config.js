@@ -10,6 +10,8 @@ const methodOverride = require('method-override');
 const expressSession = require('express-session');
 const MongoStore = require('connect-mongo')(expressSession);
 const history = require('connect-history-api-fallback');
+const fs = require('fs');
+const proxy = require('http-proxy-middleware');
 
 module.exports = function (cms, config = {}) {
   const {useMongoSession = true} = config;
@@ -47,8 +49,12 @@ module.exports = function (cms, config = {}) {
   if (useMongoSession) useSession();
   //cms.execPost()
 
-  //fixme: not really relate to what important
-  cms.app.use('/plugins', cms.middleware.static, cms.express.static(global.APP_CONFIG.pluginPath));
-
-  cms.r2.use('/', history(), cms.express.static(path.join(__dirname, '../../dist')));
+  if (fs.existsSync(path.join(__dirname, '../../dist'))) {
+    cms.r2.use('/', history(), cms.express.static(path.join(__dirname, '../../dist')));
+  } else {
+    const backofficeProxy = proxy('/', {
+      target: `http://localhost:${process.env.PORT ? process.env.PORT : 8080}`
+    });
+    cms.r2.use('/', backofficeProxy);
+  }
 }
