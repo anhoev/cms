@@ -34,8 +34,8 @@ async function execCms(argv) {
     env: Object.assign(process.env, {
       PORT: port,
       PLUGIN_PATH: path.resolve('plugins')
-    })
-  }, extraEnv);
+    }, extraEnv)
+  });
   cmsProcess.stdout.on('data', (data) => {
     console.log(data.toString('utf8'));
   });
