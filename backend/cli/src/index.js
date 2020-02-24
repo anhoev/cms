@@ -3,6 +3,7 @@ const { spawn, spawnSync } = require('child_process');
 const npmInit = require('./npm_init');
 const { addSubmodule, checkoutBranch } = require('./git_utils');
 const path = require('path');
+const fs = require('fs');
 const isPortReachable = require('is-port-reachable');
 
 function initCms() {
@@ -17,6 +18,10 @@ async function execCms(argv) {
   while ((await isPortReachable(port, {host: 'localhost'}))) {
     port = port + 1;
   }
+  let extraEnv = {};
+  if (fs.existsSync(path.resolve('config/cli-config.js'))) {
+    extraEnv = require(path.resolve('config/cli-config'));
+  }
   let config = path.resolve('node_modules/cms/config/pos-config.json');
   if (argv.c || argv.config) {
     config = path.resolve(argv.c || argv.config);
@@ -30,7 +35,7 @@ async function execCms(argv) {
       PORT: port,
       PLUGIN_PATH: path.resolve('plugins')
     })
-  });
+  }, extraEnv);
   cmsProcess.stdout.on('data', (data) => {
     console.log(data.toString('utf8'));
   });
