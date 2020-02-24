@@ -7,7 +7,6 @@
 const fs = require('fs');
 const _ = require('lodash');
 const http = require('http');
-const path = require('path');
 const yargs = require('yargs');
 const request = require('request');
 const express = require('express');
@@ -50,7 +49,7 @@ const cms = {
     //cms.use(require('./config'));
     app.use(cms.r2);
 
-    server.listen(cms.config.port);
+    server.listen(global.APP_CONFIG.port);
   },
   socket: io.of('/app'),
   io: io,

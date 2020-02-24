@@ -9,7 +9,6 @@ const cookieParser = require('cookie-parser');
 const methodOverride = require('method-override');
 const expressSession = require('express-session');
 const MongoStore = require('connect-mongo')(expressSession);
-const libConfig = require('./lib.config');
 const history = require('connect-history-api-fallback');
 
 module.exports = function (cms, config = {}) {
@@ -49,7 +48,7 @@ module.exports = function (cms, config = {}) {
   //cms.execPost()
 
   //fixme: not really relate to what important
-  cms.app.use('/plugins', cms.middleware.static, cms.express.static(libConfig.BASE_PLUGIN));
+  cms.app.use('/plugins', cms.middleware.static, cms.express.static(global.APP_CONFIG.pluginPath));
 
   cms.r2.use('/', history(), cms.express.static(path.join(__dirname, '../../dist')));
 }

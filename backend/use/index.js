@@ -14,7 +14,6 @@ const {getConfig} = require("../src/utils/config.util");
   global.APP_CONFIG = await getConfig();
   await pluginConfig();
   await mongooseConfig();
-  //await expressConfig();
   await cms.init();
   signale.timeEnd('Time -setup');
 })();

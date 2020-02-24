@@ -9,6 +9,38 @@ module.exports = (cms) => {
   const allPlugins = Plugin.initAllPlugin('plugins', cms.config.plugins);
   cms.allPlugins = allPlugins;
   cms.pluginFiles = getPluginFiles(allPlugins);
+  resolveFileLoader(cms.pluginFiles);
+
+  function resolveFileLoader(pluginFiles) {
+    pluginFiles.filter(file => file.loader && file.loader.type && file.loader.type.match(/backend/i)).map(item => {
+      if (item.loader.type) {
+        const plugin = cms.allPlugins[item.plugin];
+        if (plugin) {
+          switch (item.loader.type) {
+            case 'backend-middleware-socket': {
+              cms.useMiddleWare('socket', require(plugin.convertInternalPathToFilePath(item.path)));
+              break;
+            }
+            case 'backend-middleware-interface': {
+              cms.useMiddleWare('interface', require(plugin.convertInternalPathToFilePath(item.path)));
+              break;
+            }
+            case 'backend-middleware-collection': {
+              cms.useMiddleWare('collection', require(plugin.convertInternalPathToFilePath(item.path)));
+              break;
+            }
+            case 'backend-middleware-static': {
+              cms.useMiddleWare('static', require(plugin.convertInternalPathToFilePath(item.path)));
+              break;
+            }
+            case 'backend-api': {
+              cms.useMiddleWare('api', require(plugin.convertInternalPathToFilePath(item.path)));
+            }
+          }
+        }
+      }
+    });
+  }
 
   function compareContentWithDb(pluginName, path, name) {
     return new Promise((resolve => {
