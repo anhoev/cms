@@ -3,7 +3,6 @@ const signale = require('signale');
 const cms = require('../src/cms');
 global['cms'] = cms;
 const gitUtils = require('../src/utils/git.util');
-const LibConfig = require('../src/lib.config');
 
 module.exports = async function setupPlugin() {
   const appConfig = global.APP_CONFIG;
