@@ -2,8 +2,6 @@ const _ = require('lodash');
 const path = require('path');
 const jsonfn = require('json-fn');
 const history = require('connect-history-api-fallback');
-const proxy = require('http-proxy-middleware');
-const fs = require('fs');
 
 const convertFormToSchema = require('./utils/form.util').convertFormToSchema;
 
@@ -278,37 +276,6 @@ module.exports = async function (cms) {
     }
   }
 
-  function resolveFileLoader(pluginFiles) {
-    pluginFiles.filter(file => file.loader && file.loader.type && file.loader.type.match(/backend/i)).map(item => {
-      if (item.loader.type) {
-        const plugin = cms.allPlugins[item.plugin];
-        if (plugin) {
-          switch (item.loader.type) {
-            case 'backend-middleware-socket': {
-              cms.useMiddleWare('socket', require(plugin.convertInternalPathToFilePath(item.path)));
-              break;
-            }
-            case 'backend-middleware-interface': {
-              cms.useMiddleWare('interface', require(plugin.convertInternalPathToFilePath(item.path)));
-              break;
-            }
-            case 'backend-middleware-collection': {
-              cms.useMiddleWare('collection', require(plugin.convertInternalPathToFilePath(item.path)));
-              break;
-            }
-            case 'backend-middleware-static': {
-              cms.useMiddleWare('static', require(plugin.convertInternalPathToFilePath(item.path)));
-              break;
-            }
-            case 'backend-api': {
-              cms.useMiddleWare('api', require(plugin.convertInternalPathToFilePath(item.path)));
-            }
-          }
-        }
-      }
-    });
-  }
-
   const BuildForm = cms.registerSchema(buildFormSchema, {
     ...FormBuilderInfo,
     initSchema(schema) {
@@ -352,13 +319,6 @@ module.exports = async function (cms) {
   forms.filter(f => f.type === 'Collection').forEach(form => {
     initSchema(form);
   });
-  resolveFileLoader(cms.pluginFiles);
-  if (fs.existsSync(path.join(__dirname, '../../dist'))) {
-    cms.app.use('/', history(), cms.express.static(path.join(__dirname, '../../dist')));
-  } else {
-    const backofficeProxy = proxy('/', {
-      target: `http://localhost:${process.env.PORT ? process.env.PORT : 8080}`
-    });
-    cms.app.use('/', backofficeProxy);
-  }
+
+  cms.execPostSync('load:buildform');
 };

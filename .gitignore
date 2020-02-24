@@ -11,4 +11,4 @@ config/
 dist/
 playground
 webpack
-plugins/
+/plugins
