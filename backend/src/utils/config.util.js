@@ -29,6 +29,8 @@ async function getConfig() {
   _.assign(config, await getConfigFile());
   if (!config.pluginPath && isALibrary()) {
     config.pluginPath = path.resolve(__dirname, '../../../../../plugins');
+  } else if (!config.pluginPath && isASubmodule()) {
+    config.pluginPath = path.resolve(__dirname, '../../../../plugins');
   } else if (!config.pluginPath) {
     config.pluginPath = path.resolve(__dirname, '../../../plugins');
   }
@@ -40,6 +42,11 @@ async function getConfig() {
 function isALibrary() {
   const _path = path.resolve(__dirname, '../../../../');
   return path.basename(_path) === 'node_modules'
+}
+
+function isASubmodule() {
+  const _path = path.resolve(__dirname, '../../../../');
+  return fs.statSync(`${_path}/package.json`).isFile();
 }
 
 module.exports = {

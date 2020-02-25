@@ -14,6 +14,7 @@ function initCms() {
 }
 
 async function execCms(argv) {
+  // find port for backoffice
   let port = 8080;
   while ((await isPortReachable(port, {host: 'localhost'}))) {
     port = port + 1;
@@ -22,6 +23,7 @@ async function execCms(argv) {
   if (fs.existsSync(path.resolve('config/cli-config.js'))) {
     extraEnv = require(path.resolve('config/cli-config'));
   }
+  // config file
   let config = '';
   if (argv.c || argv.config) {
     config = path.resolve(argv.c || argv.config);
@@ -30,41 +32,49 @@ async function execCms(argv) {
     throw new Error('No config found');
     return;
   }
-  const backofficeProcess = spawn('npx', ['vue-cli-service', 'serve'], {
-    cwd: './backoffice'
-  });
-  const cmsProcess = spawn('node', ['backend/use/index.js', `--config=${config}`], {
-    cwd: './node_modules/cms',
-    env: Object.assign(process.env, {
-      PORT: port,
-      PLUGIN_PATH: path.resolve('plugins')
-    }, extraEnv)
-  });
-  cmsProcess.stdout.on('data', (data) => {
-    console.log(data.toString('utf8'));
-  });
-  cmsProcess.on('close', () => {
-    console.log('Closing cms');
-  });
-  cmsProcess.stderr.on('data', (err) => {
-    console.error(err.toString('utf8'));
-  });
-  backofficeProcess.stdout.on('data', data => {
-    console.log(data.toString('utf8'));
-  })
+  let specificEnviroment = argv.backend || argv.frontend;
+  let backofficeProcess;
+  let cmsProcess;
+  if (!specificEnviroment || argv.frontend) {
+    backofficeProcess = spawn('npx', ['vue-cli-service', 'serve'], {
+      cwd: './backoffice'
+    });
+    backofficeProcess.stdout.on('data', data => {
+      console.log(data.toString('utf8'));
+    })
+  }
+  if (!specificEnviroment || argv.backend) {
+    cmsProcess = spawn('node', ['backend/use/index.js', `--config=${config}`], {
+      cwd: './node_modules/cms',
+      env: Object.assign(process.env, {
+        PORT: port,
+        PLUGIN_PATH: path.resolve('plugins')
+      }, extraEnv)
+    });
+    cmsProcess.stdout.on('data', (data) => {
+      console.log(data.toString('utf8'));
+    });
+    cmsProcess.on('close', () => {
+      console.log('Closing cms');
+    });
+    cmsProcess.stderr.on('data', (err) => {
+      console.error(err.toString('utf8'));
+    });
+  }
 }
 
 module.exports = async function (argv2) {
-  const argv = minimist(argv2, {
-    boolean: [ 'init', 'i' ],
+  const argv = minimist(argv2.slice(1), {
+    boolean: [ 'frontend', 'backend' ],
     string: [ 'c', 'config' ],
   });
-  if (argv.i || argv.init) {
+  if (argv2[0] === 'init') {
     initCms();
     return;
   }
-  if (argv.e || argv.exec) {
+  if (argv2[0] === 'start') {
     await execCms(argv);
     return;
   }
+  throw new Error('No such command');
 };
