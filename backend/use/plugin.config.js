@@ -13,7 +13,7 @@ module.exports = async function setupPlugin() {
 
   const plugins = global.APP_CONFIG.plugins;
   try {
-    await gitUtils.cloneListPlugins(plugins, path.resolve('plugins'));
+    await gitUtils.cloneListPlugins(plugins, appConfig.pluginPath);
     signale.success('Clone plugin success');
   } catch (e) {
     signale.error('Clone error, info: ' + e);
