@@ -22,9 +22,13 @@ async function execCms(argv) {
   if (fs.existsSync(path.resolve('config/cli-config.js'))) {
     extraEnv = require(path.resolve('config/cli-config'));
   }
-  let config = path.resolve('node_modules/cms/config/pos-config.json');
+  let config = '';
   if (argv.c || argv.config) {
     config = path.resolve(argv.c || argv.config);
+  }
+  if (!config) {
+    throw new Error('No config found');
+    return;
   }
   const backofficeProcess = spawn('npx', ['vue-cli-service', 'serve'], {
     cwd: './backoffice'
