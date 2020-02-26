@@ -19,10 +19,6 @@ async function execCms(argv) {
   while ((await isPortReachable(port, {host: 'localhost'}))) {
     port = port + 1;
   }
-  let extraEnv = {};
-  if (fs.existsSync(path.resolve('config/cli-config.js'))) {
-    extraEnv = require(path.resolve('config/cli-config'));
-  }
   // config file
   let config = '';
   if (argv.c || argv.config) {
@@ -49,7 +45,7 @@ async function execCms(argv) {
       env: Object.assign(process.env, {
         PORT: port,
         PLUGIN_PATH: path.resolve('plugins')
-      }, extraEnv)
+      })
     });
     cmsProcess.stdout.on('data', (data) => {
       console.log(data.toString('utf8'));
