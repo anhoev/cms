@@ -40,14 +40,16 @@ const download = function (uri, filename, callback) {
 
 const cms = {
   async init() {
-    cms.use(require('./express.config'));
-    cms.use(require('./extensions/schema.ext'));
-    cms.use(require('./utils/query.util'));
-    cms.use(require('./types'));
-    cms.use(require('./plugins/socket.plugin'));
-    cms.use(require('./buildform'));
+    await cms.use(require('./express.config'));
+    await cms.use(require('./extensions/schema.ext'));
+    await cms.use(require('./utils/query.util'));
+    await cms.use(require('./types'));
+    await cms.use(require('./plugins/socket.plugin'));
+    await cms.use(require('./buildform'));
     //cms.use(require('./config'));
+
     app.use(cms.r2);
+
 
     server.listen(global.APP_CONFIG.port);
   },
@@ -107,10 +109,10 @@ const cms = {
   restify,
   Types: {},
   getPath: p => p,
-  use: function (fn) {
+  use: async function (fn) {
     const argv = [...arguments]
     argv.shift();
-    fn(cms, ...argv);
+    await fn(cms, ...argv);
   },
   serverFn: {},
   fn: {},

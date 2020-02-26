@@ -49,12 +49,13 @@ module.exports = function (cms, config = {}) {
   if (useMongoSession) useSession();
   //cms.execPost()
 
-  if (fs.existsSync(path.join(__dirname, '../../dist'))) {
-    cms.r2.use('/', history(), cms.express.static(path.join(__dirname, '../../dist')));
-  } else {
-    const backofficeProxy = proxy('/', {
-      target: `http://localhost:${process.env.PORT ? process.env.PORT : 8080}`
-    });
-    cms.r2.use('/', backofficeProxy);
-  }
+  cms.app.use('/plugins', cms.middleware.static, cms.express.static(global["APP_CONFIG"].pluginPath));
+
+
+  cms.r2.use('/', history(), cms.express.static(path.join(__dirname, '../../../dist')));
+
+  const backofficeProxy = proxy('/', {
+    target: `http://localhost:${process.env.PORT ? process.env.PORT : 8080}`
+  });
+  cms.r2.use('/', backofficeProxy);
 }
