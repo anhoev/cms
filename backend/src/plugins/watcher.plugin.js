@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const chokidar = require('chokidar');
 
-const LibConfig = require('../lib.config');
 const Plugin = require('./cms.plugin');
 const FileHelper = require('../utils/files.util');
 
@@ -12,12 +11,12 @@ const terser = require('terser');
 const md5 = require('md5');
 
 function getPluginName(_path) {
-  return path.relative(LibConfig.BASE_PLUGIN, _path).split(path.sep).shift();
+  return path.relative(global.APP_CONFIG.pluginPath, _path).split(path.sep).shift();
 }
 
 function getPluginFolder(_path) {
   const pluginName = getPluginName(_path);
-  return path.join(LibConfig.BASE_PLUGIN, pluginName);
+  return path.join(global.APP_CONFIG.pluginPath, pluginName);
 }
 
 function checkMD5(_path) {
@@ -63,14 +62,14 @@ function ignored(_path, stats) {
     if (!fs.lstatSync(dir).isDirectory()) return;
     fs.readdirSync(dir).map(f => walkSync(path.join(dir, f))); // `join("\n")`
   }
-  walkSync(LibConfig.BASE_PLUGIN);
-  const plugins = fs.readdirSync(LibConfig.BASE_PLUGIN);
+  walkSync(global.APP_CONFIG.pluginPath);
+  const plugins = fs.readdirSync(global.APP_CONFIG.pluginPath);
   plugins.forEach(function (plugin) {
-    if (fs.existsSync(`${LibConfig.BASE_PLUGIN}/${plugin}/dist`)) {
-      const files = fs.readdirSync(`${LibConfig.BASE_PLUGIN}/${plugin}/dist`);
+    if (fs.existsSync(`${global.APP_CONFIG.pluginPath}/${plugin}/dist`)) {
+      const files = fs.readdirSync(`${global.APP_CONFIG.pluginPath}/${plugin}/dist`);
       for (let i = 0; i < files.length; i++) {
         if (!listFiles.includes(files[i])) {
-          FileHelper.delete(`${LibConfig.BASE_PLUGIN}/${plugin}/dist/${files[i]}`);
+          FileHelper.delete(`${global.APP_CONFIG.pluginPath}/${plugin}/dist/${files[i]}`);
         }
       }
     }
@@ -78,7 +77,7 @@ function ignored(_path, stats) {
 })();
 
 const watcher =  cms => {
-  chokidar.watch(LibConfig.BASE_PLUGIN, {
+  chokidar.watch(global.APP_CONFIG.pluginPath, {
     ignored,
     //ignoreInitial: true
   })
