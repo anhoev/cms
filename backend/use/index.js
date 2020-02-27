@@ -1,18 +1,20 @@
 const path = require('path');
 const signale = require('signale');
-const cms = require('../src/cms');
 
 process.env.NODE_ENV = process.env.NODE_ENV || process.argv[2] || 'local';
+global._PATH_PLUGIN = path.resolve('plugins');
 
+const configLoader = require('./config-loader');
 const mongooseConfig = require('./mongo.config');
 const pluginConfig = require('./plugin.config');
-const {getConfig} = require("../src/utils/config.util");
+const expressConfig = require('./express.config');
 
 (async () => {
   signale.time('Time -setup');
-  global.APP_CONFIG = await getConfig();
+  global.APP_CONFIG = await configLoader();
   await pluginConfig();
   await mongooseConfig();
-  await cms.init();
+  await expressConfig();
   signale.timeEnd('Time -setup');
 })();
+
