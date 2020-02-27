@@ -1,7 +1,7 @@
 const minimist = require('minimist');
 const { spawn, spawnSync } = require('child_process');
 const npmInit = require('./npm_init');
-const { addSubmodule, checkoutBranch } = require('./git_utils');
+const { addSubmodule, checkoutBranch, clonePlugins } = require('./git_utils');
 const path = require('path');
 const fs = require('fs');
 const isPortReachable = require('is-port-reachable');
@@ -59,6 +59,19 @@ async function execCms(argv) {
   }
 }
 
+async function getPlugins(argv) {
+  let config = '';
+  if (argv.c || argv.config) {
+    config = path.resolve(argv.c || argv.config);
+  }
+  if (!config) {
+    throw new Error('No config found');
+    return;
+  }
+  const plugins = require(config).plugins;
+  await clonePlugins(plugins);
+}
+
 module.exports = async function (argv2) {
   const argv = minimist(argv2.slice(1), {
     boolean: [ 'frontend', 'backend' ],
@@ -70,6 +83,10 @@ module.exports = async function (argv2) {
   }
   if (argv2[0] === 'start') {
     await execCms(argv);
+    return;
+  }
+  if (argv2[0] === 'plugins') {
+    await getPlugins(argv);
     return;
   }
   throw new Error('No such command');

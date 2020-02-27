@@ -1,4 +1,6 @@
 const { spawnSync } = require('child_process');
+const gitUtils = require('../../src/utils/git.util');
+const path = require('path');
 
 function updateSubmodule() {
   const result = spawnSync('git', ['submodule', 'update', '--init', '--recursive'], {
@@ -44,4 +46,8 @@ module.exports.checkoutBranch = function (path, branchName) {
     silient: true
   });
   return result.stdout;
+};
+
+module.exports.clonePlugins = async function(plugins) {
+  await gitUtils.cloneListPlugins(plugins, path.resolve(__dirname, '../../../../plugins'));
 };
