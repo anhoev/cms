@@ -201,6 +201,8 @@ module.exports = (cms) => {
     return Types;
   };
 
+  const jsesc = require('jsesc');
+
   //todo: add this to somewhere else
   cms.middleware.getTypesMiddleware = function (req, res, next) {
     if (req.url !== '/index.html') {
@@ -209,9 +211,10 @@ module.exports = (cms) => {
     }
     cms.middleware.collection({collections: cms.getTypes(), session: req.session}, _.once(function (err, result) {
       const indexPath = path.resolve(__dirname, '../../../dist/index.html');
-      const indexData = fs.readFileSync(indexPath);
+      const indexData = fs.readFileSync(indexPath, 'utf-8');
       const headTagPos = indexData.indexOf('</head>');
-      const newIndexData = indexData.slice(0, headTagPos) + `<script>window._types_=${JSON.stringify(result.collections)}</script>` + indexData.slice(headTagPos);
+      const content = jsesc(JsonFn.stringify(result.collections), { json: true, isScriptContext: true })
+      const newIndexData = indexData.slice(0, headTagPos) + `<script>window._types_=${content}</script>` + indexData.slice(headTagPos);
       res.send(newIndexData);
     }));
   };

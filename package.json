@@ -74,6 +74,7 @@
     "is-port-reachable": "^3.0.0",
     "jade": "^1.11.0",
     "jsdom": "^13.2.0",
+    "jsesc": "^2.5.2",
     "json-fn": "github:anhoev/jsonfn",
     "jsonwebtoken": "^8.5.0",
     "kareem": "latest",
