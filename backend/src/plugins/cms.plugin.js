@@ -5,6 +5,7 @@ const axios = require('axios').default;
 const dirTree = require('directory-tree');
 const fileHelper = require('../utils/files.util');
 const cms = require('../cms');
+const LibConfig = require('../lib.config');
 
 class CmsPlugin {
   constructor(pluginPath, pluginName, resolveUrlPath, config) {
@@ -19,7 +20,7 @@ class CmsPlugin {
   }
 
   static initAllPlugin(paths, plugins) {
-    const dirPath = global.APP_CONFIG.pluginPath;
+    const dirPath = LibConfig.BASE_PLUGIN;
     const dirContent = fs.readdirSync(dirPath)
       .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
     const result = dirContent.reduce((acc, item) => {
@@ -42,19 +43,19 @@ class CmsPlugin {
   }
 
   static getAllPlugin() {
-    const dirPath = path.join(global.APP_CONFIG.pluginPath);
+    const dirPath = path.join(LibConfig.BASE_PLUGIN);
     const dirContent = fs.readdirSync(dirPath)
       .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
     return dirContent;
   }
 
   static convertInternalPathToFilePathStatic(internalPath, pluginName) {
-    const pluginPath = path.join(global.APP_CONFIG.pluginPath, pluginName);
+    const pluginPath = path.join(LibConfig.BASE_PLUGIN, pluginName);
     return path.join(pluginPath, internalPath);
   }
 
   static convertFilePathToInternalPathStatic(_filePath, pluginName) {
-    const pluginPath = path.join(global.APP_CONFIG.pluginPath, pluginName);
+    const pluginPath = path.join(LibConfig.BASE_PLUGIN, pluginName);
     return path.relative(pluginPath, _filePath);
   }
 
