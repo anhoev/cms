@@ -1,4 +1,0 @@
-[submodule "backoffice"]
-	path = backoffice
-	url = git@github.com:gigasource/backoffice.git
-	branch = develop

@@ -9,6 +9,7 @@ const unless = require('express-unless');
 const autopopulate = require('mongoose-autopopulate');
 const Query = require('mongoose/lib/query');
 const Model = require('mongoose/lib/model');
+const fs = require('fs');
 
 module.exports = (cms) => {
   const {app, Q} = cms;
@@ -192,14 +193,37 @@ module.exports = (cms) => {
 
   // websocket
 
-  cms.app.get('/getTypes', async function (req, res) {
+  cms.getTypes = function () {
     const Types = {};
     for (let collectionName in cms.Types) {
       Types[collectionName] = cms.Types[collectionName].webType;
-      //Types[collectionName] = {info: cms.Types[collectionName].info};
     }
+    return Types;
+  };
 
-    cms.middleware.collection({collections: Types, session: req.session}, _.once(function (err, result) {
+  //todo: add this to somewhere else
+  cms.middleware.getTypesMiddleware = function (req, res, next) {
+    if (req.url !== '/index.html') {
+      next();
+      return;
+    }
+    cms.middleware.collection({collections: cms.getTypes(), session: req.session}, _.once(function (err, result) {
+      const indexPath = path.resolve(__dirname, '../../../dist/index.html');
+      const indexData = fs.readFileSync(indexPath);
+      const headTagPos = indexData.indexOf('</head>');
+      const newIndexData = indexData.slice(0, headTagPos) + `<script>window._types_=${JSON.stringify(result.collections)}</script>` + indexData.slice(headTagPos);
+      res.send(newIndexData);
+    }));
+  };
+
+  cms.app.get('/getTypes', async function (req, res) {
+    // const Types = {};
+    // for (let collectionName in cms.Types) {
+    //   Types[collectionName] = cms.Types[collectionName].webType;
+    //   //Types[collectionName] = {info: cms.Types[collectionName].info};
+    // }
+
+    cms.middleware.collection({collections: cms.getTypes(), session: req.session}, _.once(function (err, result) {
       res.send(JsonFn.stringify(result.collections));
     }));
   })
@@ -277,4 +301,6 @@ module.exports = (cms) => {
       }));
     });
   });
+
+  cms.execPostSync('load:types');
 };
