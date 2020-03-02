@@ -3,13 +3,15 @@ const _ = require('lodash');
 
 const axios = require('axios').default;
 const Plugin = require('./cms.plugin');
-const compileContent = require('../utils/compiles.util').compileContent;
+// const compileContent = require('../utils/compiles.util', 'must-exclude').compileContent;
 const gitUtils = require('../utils/git.util');
 module.exports = (cms) => {
-  const allPlugins = Plugin.initAllPlugin('plugins', cms.config.plugins);
-  cms.allPlugins = allPlugins;
-  cms.pluginFiles = getPluginFiles(allPlugins);
+  let allPlugins;
+
   cms.post('load:buildform', () => {
+    allPlugins = Plugin.initAllPlugin('plugins', cms.config.plugins);
+    cms.allPlugins = allPlugins;
+    cms.pluginFiles = getPluginFiles(allPlugins);
     resolveFileLoader(cms.pluginFiles);
   })
 
@@ -50,7 +52,7 @@ module.exports = (cms) => {
       fs.readFile(filePath, 'utf8', (err, fileData) => {
         const collectionName = name.split('.')[1];
         fileData = JSON.parse(fileData);
-        const { _id } = fileData;
+        const {_id} = fileData;
         const Model = cms.getModel(collectionName);
         if (_.isEmpty(Model)) {
           return resolve(false);
@@ -124,7 +126,7 @@ module.exports = (cms) => {
     socket.on('loadImportableFile', function (name, fn) {
       const plugin = getPlugin(name);
       if (plugin) {
-        const result = plugin.loadDirTree('json', { extensions: /\.json/ });
+        const result = plugin.loadDirTree('json', {extensions: /\.json/});
         compareAll(result).then(() => {
           fn(result);
         });
@@ -173,7 +175,7 @@ module.exports = (cms) => {
             components: [...acc.components, ...components],
             modules: [...acc.modules, ...modules]
           };
-        }, { plugins: [], modules: [], components: [] });
+        }, {plugins: [], modules: [], components: []});
       fn(result);
     });
     socket.on('delete', function (pluginName, _path, fn) {
@@ -181,7 +183,7 @@ module.exports = (cms) => {
         getPlugin(pluginName).removeFile(_path);
         fn();
       } catch (e) {
-        fn(Object.assign({}, e, { message: 'Cannot delete folder with files' }));
+        fn(Object.assign({}, e, {message: 'Cannot delete folder with files'}));
       }
     });
     socket.on('rename', function (pluginName, _path, newName, fn) {
@@ -194,7 +196,7 @@ module.exports = (cms) => {
     });
     socket.on('addNew', function (pluginName, fileName, type, fn) {
       try {
-        getPlugin(pluginName).addNewFile(fileName, '', { type });
+        getPlugin(pluginName).addNewFile(fileName, '', {type});
         fn();
       } catch (e) {
         fn(e);
@@ -230,17 +232,17 @@ module.exports = (cms) => {
         .then(() => fn())
         .catch(err => fn(err));
     });
-    socket.on('copyFile', (pluginName, { path: _path, name, toPlugin }, fn) => {
+    socket.on('copyFile', (pluginName, {path: _path, name, toPlugin}, fn) => {
       try {
-        getPlugin(pluginName).copyFile(_path, name, { type: 'copy', toPlugin });
+        getPlugin(pluginName).copyFile(_path, name, {type: 'copy', toPlugin});
         fn();
       } catch (e) {
         fn(e);
       }
     });
-    socket.on('moveFile', (pluginName, { path: _path, name, toPlugin }, fn) => {
+    socket.on('moveFile', (pluginName, {path: _path, name, toPlugin}, fn) => {
       try {
-        getPlugin(pluginName).copyFile(_path, name, { type: 'move', toPlugin });
+        getPlugin(pluginName).copyFile(_path, name, {type: 'move', toPlugin});
         fn();
       } catch (e) {
         fn(e);
@@ -269,11 +271,11 @@ module.exports = (cms) => {
         .then(res => fn(null, res))
         .catch(err => fn(err));
     });
-    socket.on('compileContent', (contentIn, fn) => {
-      compileContent(contentIn)
-        .then((contentOut) => fn(null, contentOut))
-        .catch(() => fn({ err: 'Compile error' }));
-    });
+    // socket.on('compileContent', (contentIn, fn) => {
+    //   compileContent(contentIn)
+    //     .then((contentOut) => fn(null, contentOut))
+    //     .catch(() => fn({ err: 'Compile error' }));
+    // });
     socket.on('getListPlugin', (fn) => {
       fn(null, Plugin.getAllPlugin());
     });

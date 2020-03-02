@@ -18,6 +18,9 @@ async function getConfigFile() {
     signale.note('App config from url');
     const url = process.env.PATH_ENV || argv['url'];
     return (await axios.get(url)).data;
+  } else if (process.env.CONFIG_PATH) {
+    signale.note('App config from pkg');
+    return require(process.env.CONFIG_PATH);
   } else {
     throw new Error('please put a config file')
   }
