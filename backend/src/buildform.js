@@ -282,7 +282,7 @@ module.exports = async function (cms) {
       if (!global.APP_CONFIG.replica) {
         schema.onPostSave(function (form) {
           if (form && form.type === 'Collection') {
-            form = jsonfn.clone(form, true, true);
+            form = jsonfn.clone(form, true, false);
             if (cms.Types[form.name]) {
               delete cms.mongoose.connection.models[form.name];
               delete cms.Types[form.name];
@@ -303,7 +303,7 @@ module.exports = async function (cms) {
         let form = await BuildForm.findOne({ _id: change.documentKey }).lean();
         console.log(`change schema: ${form.name}`, form);
         if (form && form.type === 'Collection') {
-          form = jsonfn.clone(form, true, true);
+          form = jsonfn.clone(form, true, false);
           if (cms.Types[form.name]) {
             delete cms.mongoose.connection.models[form.name];
             delete cms.Types[form.name];
