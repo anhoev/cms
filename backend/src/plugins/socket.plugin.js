@@ -1,5 +1,9 @@
 const fs = require('fs');
 const _ = require('lodash');
+const getRollUpConfig = require('../utils/rollup.util');
+const FileHelper = require('../utils/files.util');
+const rollup = require('rollup');
+const path = require('path');
 
 const axios = require('axios').default;
 const Plugin = require('./cms.plugin');
@@ -39,6 +43,21 @@ module.exports = (cms) => {
             }
             case 'backend-api': {
               cms.useMiddleWare('api', require(plugin.convertInternalPathToFilePath(item.path)));
+              break;
+            }
+            case 'backend-ssr': {
+              const fileName = path.basename(item.path);
+              const absoluteFilePath = plugin.convertInternalPathToFilePath(item.path);
+              const absoluteDestPath = `${cms.allPlugins[item.plugin].pluginPath}/dist/${fileName}`;
+
+              const rollUpConfig = getRollUpConfig(fileName, absoluteDestPath, absoluteFilePath);
+              rollup.rollup(rollUpConfig).then(async (buildBundle) => {
+                const generated = await buildBundle.generate(rollUpConfig.output);
+                FileHelper.addNew(absoluteDestPath, generated.output[0].code);
+                console.log(`SSR file built: ${absoluteDestPath}`);
+              }); // let errors be thrown to make errors visible
+
+              break;
             }
           }
         }
@@ -59,13 +78,13 @@ module.exports = (cms) => {
         }
         const fileModelData = new Model(fileData);
         Model.findById(_id)
-          .then(dbData => {
-            if (!dbData) {
-              return resolve(false);
-            }
-            const dbModelData = new Model(dbData);
-            resolve(_.isEqual(dbModelData.toObject(), fileModelData.toObject()) || JSON.stringify(fileData) === JSON.stringify(dbData.toObject()));
-          });
+            .then(dbData => {
+              if (!dbData) {
+                return resolve(false);
+              }
+              const dbModelData = new Model(dbData);
+              resolve(_.isEqual(dbModelData.toObject(), fileModelData.toObject()) || JSON.stringify(fileData) === JSON.stringify(dbData.toObject()));
+            });
       });
     }));
   }
@@ -88,15 +107,15 @@ module.exports = (cms) => {
 
   function findFileItem(directoryTree, plugin) {
     return directoryTree &&
-      directoryTree
-        .filter(item => fs.statSync(plugin.convertInternalPathToFilePath(item.path)).isFile())
-        .map(item => {
-          return {
-            name: item.name.replace(item.extension, ''),
-            content: fs.readFileSync(plugin.convertInternalPathToFilePath(item.path), 'utf-8'),
-            path: plugin.resolveUrlPath(plugin.convertInternalPathToFilePath(item.path))
-          };
-        });
+        directoryTree
+            .filter(item => fs.statSync(plugin.convertInternalPathToFilePath(item.path)).isFile())
+            .map(item => {
+              return {
+                name: item.name.replace(item.extension, ''),
+                content: fs.readFileSync(plugin.convertInternalPathToFilePath(item.path), 'utf-8'),
+                path: plugin.resolveUrlPath(plugin.convertInternalPathToFilePath(item.path))
+              };
+            });
   }
 
   function getPlugin(name) {
@@ -163,19 +182,19 @@ module.exports = (cms) => {
     });
     socket.on('loadDistPlugin', function (fn) {
       const result = Object
-        .keys(allPlugins)
-        .reduce((acc, item) => {
-          const currentPlugin = allPlugins[item];
-          const modules = currentPlugin.loadModules('modules');
-          const components = currentPlugin.loadModules('components');
-          const dist = currentPlugin.loadDirTree('dist');
-          const plugins = findFileItem(dist ? dist.children : [], currentPlugin);
-          return {
-            plugins: [...acc.plugins, ...plugins],
-            components: [...acc.components, ...components],
-            modules: [...acc.modules, ...modules]
-          };
-        }, {plugins: [], modules: [], components: []});
+          .keys(allPlugins)
+          .reduce((acc, item) => {
+            const currentPlugin = allPlugins[item];
+            const modules = currentPlugin.loadModules('modules');
+            const components = currentPlugin.loadModules('components');
+            const dist = currentPlugin.loadDirTree('dist');
+            const plugins = findFileItem(dist ? dist.children : [], currentPlugin);
+            return {
+              plugins: [...acc.plugins, ...plugins],
+              components: [...acc.components, ...components],
+              modules: [...acc.modules, ...modules]
+            };
+          }, {plugins: [], modules: [], components: []});
       fn(result);
     });
     socket.on('delete', function (pluginName, _path, fn) {
@@ -213,9 +232,9 @@ module.exports = (cms) => {
     });
     socket.on('addModules', function (pluginName, name, fn) {
       getPlugin(pluginName)
-        .addUnpkgModules(name, 'modules')
-        .then(() => fn())
-        .catch(fn);
+          .addUnpkgModules(name, 'modules')
+          .then(() => fn())
+          .catch(fn);
     });
     socket.on('loadComponents', function (fn) {
       // TODO check if same component name then return with a message
@@ -228,9 +247,9 @@ module.exports = (cms) => {
     });
     socket.on('addComponents', function (pluginName, name, fn) {
       getPlugin(pluginName)
-        .addUnpkgModules(name, 'components')
-        .then(() => fn())
-        .catch(err => fn(err));
+          .addUnpkgModules(name, 'components')
+          .then(() => fn())
+          .catch(err => fn(err));
     });
     socket.on('copyFile', (pluginName, {path: _path, name, toPlugin}, fn) => {
       try {
@@ -250,12 +269,12 @@ module.exports = (cms) => {
     });
     socket.on('reexportModel', (item, fn) => {
       getPlugin(item.pluginName).reexportModel(item.path, item.name)
-        .then(() => {
-          fn();
-        })
-        .catch((e) => {
-          fn(e);
-        });
+          .then(() => {
+            fn();
+          })
+          .catch((e) => {
+            fn(e);
+          });
     });
     socket.on('exportModel', (name, content, collection, plugins, filePath, fn) => {
       try {
@@ -267,9 +286,9 @@ module.exports = (cms) => {
     });
     socket.on('importModel', (pluginName, collection, filePath, replace, fn) => {
       getPlugin(pluginName)
-        .importModel(collection, filePath, replace)
-        .then(res => fn(null, res))
-        .catch(err => fn(err));
+          .importModel(collection, filePath, replace)
+          .then(res => fn(null, res))
+          .catch(err => fn(err));
     });
     // socket.on('compileContent', (contentIn, fn) => {
     //   compileContent(contentIn)
@@ -311,11 +330,11 @@ module.exports = (cms) => {
   });
   cms.app.get('/package', function (req, res) {
     axios.get(`https://www.npmjs.com/search/suggestions?q=${req.query.q}`)
-      .then(response => {
-        res.status(200).json(response.data);
-      })
-      .catch(err => {
-        res.status(400).json(err.response.data);
-      });
+        .then(response => {
+          res.status(200).json(response.data);
+        })
+        .catch(err => {
+          res.status(400).json(err.response.data);
+        });
   });
 };
