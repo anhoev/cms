@@ -117,6 +117,7 @@ class CmsPlugin {
         console.warn(e, collection);
       }
     }));
+    cms.emit('initData-complete')
   }
 
   resolveUrlPath(internalPath) {
