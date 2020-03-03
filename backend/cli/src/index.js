@@ -3,8 +3,14 @@ const { spawn, spawnSync } = require('child_process');
 const npmInit = require('./npm_init');
 const { addSubmodule, checkoutBranch, clonePlugins } = require('./git_utils');
 const path = require('path');
-const fs = require('fs');
+const {getConfig} = require('../../src/utils/config.util');
+const CmsPlugin = require('../../src/plugins/cms.plugin');
 const isPortReachable = require('is-port-reachable');
+const fs = require('fs');
+const _ = require('lodash');
+const getRollUpConfig = require('../../src/utils/rollup.util');
+const FileHelper = require('../../src/utils/files.util');
+const rollup = require('rollup');
 
 function initCms() {
   addSubmodule('https://github.com/gigasource/backoffice.git');
@@ -60,6 +66,7 @@ async function execCms(argv) {
 }
 
 async function getPlugins(argv) {
+  console.log('Start fetching plugins');
   let config = '';
   if (argv.c || argv.config) {
     config = path.resolve(argv.c || argv.config);
@@ -70,6 +77,48 @@ async function getPlugins(argv) {
   }
   const plugins = require(config).plugins;
   await clonePlugins(plugins);
+}
+
+async function buildSsrFiles() {
+  const config = await getConfig();
+  const {plugins, pluginPath} = config;
+  const pluginNames = fs.readdirSync(pluginPath).filter(item => fs.statSync(path.join(pluginPath, item)).isDirectory());
+
+  const pluginInfos = pluginNames.reduce((acc, item) => {
+    if (!Array.isArray(plugins) || !plugins.length > 0 || plugins.find(i => i.name === item)) {
+      return Object.assign(acc, {[item]: new CmsPlugin(path.join(pluginPath, item), item, null, plugins.find(i => i.name === item))});
+    }
+    return acc;
+  }, {});
+
+  const pluginFiles = _.reduce(pluginInfos, (acc, plugin) => {
+    const manifestPath = path.join(plugin.pluginPath, 'manifest.js');
+
+    if (fs.existsSync(manifestPath) && fs.statSync(manifestPath).isFile()) {
+      const {files} = require(manifestPath);
+      acc.push(...files.map(file => ({
+        ...file,
+        plugin: plugin.pluginName
+      })))
+    }
+    return acc
+  }, []);
+
+  pluginFiles.filter(file => file.loader && file.loader.type && file.loader.type === 'ssr').map(item => {
+    const plugin = pluginInfos[item.plugin];
+    if (plugin) {
+      const fileName = path.basename(item.path);
+      const absoluteFilePath = path.join(plugin.pluginPath, item.path);
+      const absoluteDestPath = `${pluginInfos[item.plugin].pluginPath}/dist/${fileName}`;
+
+      const rollUpConfig = getRollUpConfig(fileName, absoluteDestPath, absoluteFilePath);
+      rollup.rollup(rollUpConfig).then(async (buildBundle) => {
+        const generated = await buildBundle.generate(rollUpConfig.output);
+        FileHelper.addNew(absoluteDestPath, generated.output[0].code);
+        console.log(`SSR file built: ${absoluteDestPath}`);
+      }); // let errors be thrown to make errors visible
+    }
+  });
 }
 
 module.exports = async function (argv2) {
@@ -87,6 +136,7 @@ module.exports = async function (argv2) {
   }
   if (argv2[0] === 'plugins') {
     await getPlugins(argv);
+    await buildSsrFiles();
     return;
   }
   throw new Error('No such command');
