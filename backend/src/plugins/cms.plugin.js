@@ -5,6 +5,7 @@ const axios = require('axios').default;
 const dirTree = require('directory-tree');
 const fileHelper = require('../utils/files.util');
 const cms = require('../cms');
+const chalk = require('chalk');
 
 class CmsPlugin {
   constructor(pluginPath, pluginName, resolveUrlPath, config) {
@@ -61,26 +62,45 @@ class CmsPlugin {
   static async initData(plugins) {
     if (await cms.getModel('BuildForm').countDocuments({})) return;
 
-    const data = _.reduce(plugins, (acc, plugin) => {
-      const jsonPath = path.join(plugin.pluginPath, 'json');
-      if (fs.statSync(jsonPath).isDirectory()) {
-        const directories = fs.readdirSync(jsonPath).filter(item => fs.statSync(path.join(jsonPath, item)).isDirectory());
+    console.log('Initialize database...')
+    const data = { buildForms: [], collections: [] }
+    const pluginNames = _.map(global.APP_CONFIG.plugins, plugin => plugin.name)
+    // NOTE: load data collection name base on order of plugins in config files
+    _.each(pluginNames, pluginName => {
+      if (_.has(plugins, pluginName)) {
+        const plugin = plugins[pluginName]
+        const jsonPath = path.join(plugin.pluginPath, 'json')
+        if (fs.statSync(jsonPath).isDirectory()) {
+          const directories = fs.readdirSync(jsonPath).filter(item => fs.statSync(path.join(jsonPath, item)).isDirectory());
 
-        if (directories.includes('BuildForm')) {
-          const fileNames = fs.readdirSync(path.join(jsonPath, 'BuildForm')).filter(item => item.includes('.json'));
-          acc.buildForms.push(...fileNames.map(file => path.join(jsonPath, 'BuildForm', file)))
-        }
+          if (directories.includes('BuildForm')) {
+            const fileNames = fs.readdirSync(path.join(jsonPath, 'BuildForm')).filter(item => item.endsWith('.json'))
+            _.each(fileNames, file => {
+              const filePath = path.join(jsonPath, 'BuildForm', file)
+              const indexOfFile = _.findIndex(data.buildForms, bf => bf.endsWith(file))
+              if (indexOfFile !== -1) {
+                console.log(`Using ${chalk.yellow(filePath)} instead of ${chalk.yellow(data.buildForms[indexOfFile])}`)
+                data.buildForms.splice(indexOfFile, 1)
+              }
+              data.buildForms.push(filePath)
+            })
+          }
 
-        for (const collection of _.pull(directories, 'BuildForm')) {
-          const fileNames = fs.readdirSync(path.join(jsonPath, collection));
-          acc.collections.push(...fileNames.map(file => path.join(jsonPath, collection, file)))
+          for (const collection of _.pull(directories, 'BuildForm')) {
+            const fileNames = fs.readdirSync(path.join(jsonPath, collection));
+            _.each(fileNames, file => {
+              const filePath = path.join(jsonPath, collection, file)
+              const indexOfFile = _.findIndex(data.collections, bf => bf.endsWith(file))
+              if (indexOfFile !== -1) {
+                console.log(`Using ${chalk.yellow(filePath)} instead of ${ chalk.yellow(data.collections[indexOfFile])}`)
+                data.collections.splice(indexOfFile, 1)
+              }
+              data.collections.push(filePath)
+            })
+          }
         }
       }
-      return acc
-    }, {
-      buildForms: [],
-      collections: []
-    });
+    })
 
     await Promise.all(data.buildForms.map(async path => {
       let buildform = JSON.parse(fs.readFileSync(path, 'utf8'));
