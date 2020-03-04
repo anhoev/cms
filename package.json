@@ -115,5 +115,8 @@
     "vue-template-compiler": "2.6.10",
     "yargs": "^13.2.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "inquirer": "^7.0.5",
+    "inquirer-search-checkbox": "^1.0.0"
+  }
 }
