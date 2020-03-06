@@ -214,7 +214,8 @@ module.exports = (cms) => {
       const indexData = fs.readFileSync(indexPath, 'utf-8');
       const headTagPos = indexData.indexOf('</head>');
       const content = jsesc(JsonFn.stringify(result.collections), { json: true, isScriptContext: true })
-      const newIndexData = indexData.slice(0, headTagPos) + `<script>window._types_=${content}</script>` + indexData.slice(headTagPos);
+      const loginUser=jsesc(JsonFn.stringify({ role: req.session && req.session.userRole }), { json: true, isScriptContext: true })
+      const newIndexData = indexData.slice(0, headTagPos) + `<script>window._types_=${content};window._loginUser_=${loginUser}</script>` + indexData.slice(headTagPos);
       res.send(newIndexData);
     }));
   };
@@ -226,8 +227,11 @@ module.exports = (cms) => {
     //   //Types[collectionName] = {info: cms.Types[collectionName].info};
     // }
 
-    cms.middleware.collection({collections: cms.getTypes(), session: req.session}, _.once(function (err, result) {
-      res.send(JsonFn.stringify(result.collections));
+    cms.middleware.collection({ collections: cms.getTypes(), session: req.session }, _.once(function (err, result) {
+      res.send(JsonFn.stringify({
+        collections: result.collections,
+        loginUser: { role: req.session && req.session.userRole }
+      }));
     }));
   })
 
