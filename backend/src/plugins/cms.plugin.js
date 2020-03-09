@@ -121,11 +121,18 @@ class CmsPlugin {
   }
 
   getI18n() {
-    if (fs.existsSync(`${this.pluginPath}/i18n`) && fs.statSync(`${this.pluginPath}/i18n`).isDirectory()) {
-      const fileList = fs.readdirSync(`${this.pluginPath}/i18n`);
+    const manifestPath = path.join(this.pluginPath, 'manifest.js');
+
+    if (fs.existsSync(manifestPath) && fs.statSync(manifestPath).isFile()) {
+      const {files} = require(manifestPath);
+      const localeFile = files.filter(file => {
+        return file.loader && file.loader.type === 'i18n';
+      });
       let result = {};
-      fileList.forEach(file => {
-        result[file.slice(0, -3)] = require(`${this.pluginPath}/i18n/${file}`);
+      localeFile.forEach(file => {
+        const filePath = path.resolve(this.pluginPath, file.path);
+        const basename = path.basename(filePath).slice(0, -3);
+        result[basename] = require(filePath);
       });
       return result;
     }
