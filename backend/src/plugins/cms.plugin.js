@@ -130,9 +130,7 @@ class CmsPlugin {
       });
       let result = {};
       localeFile.forEach(file => {
-        const filePath = path.resolve(this.pluginPath, file.path);
-        const basename = path.basename(filePath).slice(0, -3);
-        result[basename] = require(filePath);
+        result = _.merge(result, require(path.resolve(this.pluginPath, file.path)));
       });
       return result;
     }
