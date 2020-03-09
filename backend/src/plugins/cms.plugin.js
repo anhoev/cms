@@ -120,6 +120,19 @@ class CmsPlugin {
     cms.emit('initData-complete')
   }
 
+  getI18n() {
+    if (fs.existsSync(`${this.pluginPath}/i18n`) && fs.statSync(`${this.pluginPath}/i18n`).isDirectory()) {
+      const fileList = fs.readdirSync(`${this.pluginPath}/i18n`);
+      let result = {};
+      fileList.forEach(file => {
+        result[file.slice(0, -3)] = require(`${this.pluginPath}/i18n/${file}`);
+      });
+      return result;
+    }
+    return {};
+  }
+
+
   resolveUrlPath(internalPath) {
     const pluginsFolderPath = path.join(path.dirname(this.pluginPath), '../');
     return path.relative(pluginsFolderPath, internalPath);

@@ -201,6 +201,20 @@ module.exports = (cms) => {
     return Types;
   };
 
+  function getI18nFromPlugins() {
+    const i18nCache = cms.cache.get('i18n');
+    if (i18nCache) {
+      return i18nCache;
+    } else {
+      let result = {};
+      Object.keys(cms.allPlugins).forEach(key => {
+        result = _.merge(result, cms.allPlugins[key].getI18n());
+      });
+      cms.cache.set('i18n', result);
+      return result;
+    }
+  }
+
   const jsesc = require('jsesc');
 
   //todo: add this to somewhere else
@@ -213,9 +227,10 @@ module.exports = (cms) => {
       const indexPath = path.resolve(__dirname, '../../../dist/index.html');
       const indexData = fs.readFileSync(indexPath, 'utf-8');
       const headTagPos = indexData.indexOf('</head>');
-      const content = jsesc(JsonFn.stringify(result.collections), { json: true, isScriptContext: true })
-      const loginUser=jsesc(JsonFn.stringify({ role: req.session && req.session.userRole }), { json: true, isScriptContext: true })
-      const newIndexData = indexData.slice(0, headTagPos) + `<script>window._types_=${content};window._loginUser_=${loginUser}</script>` + indexData.slice(headTagPos);
+      const content = jsesc(JsonFn.stringify(result.collections), { json: true, isScriptContext: true });
+      const loginUser = jsesc(JsonFn.stringify({ role: req.session && req.session.userRole }), { json: true, isScriptContext: true });
+      const i18n = jsesc(JsonFn.stringify(getI18nFromPlugins()));
+      const newIndexData = indexData.slice(0, headTagPos) + `<script>window._types_=${content};window._loginUser_=${loginUser};window._i18n_=${i18n}</script>` + indexData.slice(headTagPos);
       res.send(newIndexData);
     }));
   };
