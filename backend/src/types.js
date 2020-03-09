@@ -217,6 +217,13 @@ module.exports = (cms) => {
 
   const jsesc = require('jsesc');
 
+  cms.post('getTypes', async function (info, req) {
+    info.loginUser = {
+      role: req.session && req.session.userRole
+    }
+    info.i18n = getI18nFromPlugins();
+  });
+
   //todo: add this to somewhere else
   cms.middleware.getTypesMiddleware = function (req, res, next) {
     if (req.url !== '/index.html') {
@@ -227,26 +234,25 @@ module.exports = (cms) => {
       const indexPath = path.resolve(__dirname, '../../../dist/index.html');
       const indexData = fs.readFileSync(indexPath, 'utf-8');
       const headTagPos = indexData.indexOf('</head>');
-      const content = jsesc(JsonFn.stringify(result.collections), { json: true, isScriptContext: true });
-      const loginUser = jsesc(JsonFn.stringify({ role: req.session && req.session.userRole }), { json: true, isScriptContext: true });
-      const i18n = jsesc(JsonFn.stringify(getI18nFromPlugins()));
-      const newIndexData = indexData.slice(0, headTagPos) + `<script>window._types_=${content};window._loginUser_=${loginUser};window._i18n_=${i18n}</script>` + indexData.slice(headTagPos);
-      res.send(newIndexData);
+      let info = {
+        collections: result.collections,
+      };
+      cms.execPost('getTypes', null, [info, req], function () {
+        let infoStringify = jsesc(JsonFn.stringify(info), {json: true, isScriptContext: true});
+        const newIndexData = indexData.slice(0, headTagPos) + `<script>window._info_ = ${infoStringify}</script>` + indexData.slice(headTagPos);
+        res.send(newIndexData);
+      })
     }));
   };
 
   cms.app.get('/getTypes', async function (req, res) {
-    // const Types = {};
-    // for (let collectionName in cms.Types) {
-    //   Types[collectionName] = cms.Types[collectionName].webType;
-    //   //Types[collectionName] = {info: cms.Types[collectionName].info};
-    // }
-
-    cms.middleware.collection({ collections: cms.getTypes(), session: req.session }, _.once(function (err, result) {
-      res.send(JsonFn.stringify({
+    cms.middleware.collection({collections: cms.getTypes(), session: req.session}, _.once(function (err, result) {
+      let info = {
         collections: result.collections,
-        loginUser: { role: req.session && req.session.userRole }
-      }));
+      };
+      cms.execPost('getTypes', null, [info, req], function () {
+        res.send(JsonFn.stringify(info));
+      });
     }));
   })
 
@@ -267,7 +273,10 @@ module.exports = (cms) => {
             collection.list.push(...list);
           }
         }
-        cms.middleware.collection({collections: Types, session: socket.handshake.session}, _.once(function (err, result) {
+        cms.middleware.collection({
+          collections: Types,
+          session: socket.handshake.session
+        }, _.once(function (err, result) {
           fn(JsonFn.stringify(result.collections));
         }));
         // fn(jsonfn.stringify(Types));
