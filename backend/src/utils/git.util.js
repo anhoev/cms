@@ -1,5 +1,6 @@
 const fs = require('fs');
 const shellExec = require('shell-exec');
+const chalk = require('chalk');
 const git = require('simple-git/promise');
 const gitUtils = {
   async pullRepository(_path, branch = 'master') {
@@ -26,14 +27,14 @@ const gitUtils = {
     });
     try {
       await Promise.all(pluginsClone.map(async pluginClone => {
-        const pluginPath = `${basePathStore}/${pluginClone.name}`
-        console.log('Clone plugin', pluginClone.url, 'to', pluginPath)
-        await git().clone(pluginClone.url, pluginPath);
         try {
-          console.log('Checkout', pluginPath, 'to branch', pluginClone.branch)
+          const pluginPath = `${basePathStore}/${pluginClone.name}`
+          console.log(`Cloning plugin ${chalk.yellow(pluginClone.url)} to ${chalk.yellow(pluginPath)}`)
+          await git().clone(pluginClone.url, pluginPath);
+          console.log(`Checking out ${pluginClone.name} to branch ${pluginClone.branch}`)
           await git(pluginPath).checkout(pluginClone.branch);
         } catch (e) {
-          console.log('Checkout exception', e, 'Please verify your plugin configuration.')
+          console.log(chalk.red(`CloneListPlugins exception. Please verify "${pluginClone.name}" configuration.`))
           throw e
         }
       }));
