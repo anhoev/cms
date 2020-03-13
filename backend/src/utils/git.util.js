@@ -25,14 +25,16 @@ const gitUtils = {
       return !fs.existsSync(`${basePathStore}/${plugin.name}`) && plugin.url;
     });
     try {
-      await Promise.all(pluginsClone.map(pluginClone => {
-        return git().clone(pluginClone.url, `${basePathStore}/${pluginClone.name}`);
+      await Promise.all(pluginsClone.map(async pluginClone => {
+        const pluginPath = `${basePathStore}/${pluginClone.name}`
+        await git().clone(pluginClone.url, pluginPath);
+        await this.checkoutBranch(pluginPath, pluginClone.branch)
       }));
 
       await Promise.all(pluginsClone
       .map(plugin => {
         if (fs.existsSync(`${basePathStore}/${plugin.name}/package.json`)) {
-          return shellExec(`cd ${basePathStore}/${plugin.name}&& npm install`);
+          return shellExec(`cd ${basePathStore}/${plugin.name} && npm install`);
         }
       }));
     } catch (e) {
