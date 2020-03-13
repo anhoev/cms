@@ -1,5 +1,6 @@
 const fs = require('fs');
 const shellExec = require('shell-exec');
+const chalk = require('chalk');
 const git = require('simple-git/promise');
 const gitUtils = {
   async pullRepository(_path, branch = 'master') {
@@ -25,14 +26,23 @@ const gitUtils = {
       return !fs.existsSync(`${basePathStore}/${plugin.name}`) && plugin.url;
     });
     try {
-      await Promise.all(pluginsClone.map(pluginClone => {
-        return git().clone(pluginClone.url, `${basePathStore}/${pluginClone.name}`);
+      await Promise.all(pluginsClone.map(async pluginClone => {
+        try {
+          const pluginPath = `${basePathStore}/${pluginClone.name}`
+          console.log(`Cloning plugin ${chalk.yellow(pluginClone.url)} to ${chalk.yellow(pluginPath)}`)
+          await git().clone(pluginClone.url, pluginPath);
+          console.log(`Checking out ${pluginClone.name} to branch ${pluginClone.branch}`)
+          await git(pluginPath).checkout(pluginClone.branch);
+        } catch (e) {
+          console.log(chalk.red(`CloneListPlugins exception. Please verify "${pluginClone.name}" configuration.`))
+          throw e
+        }
       }));
 
       await Promise.all(pluginsClone
       .map(plugin => {
         if (fs.existsSync(`${basePathStore}/${plugin.name}/package.json`)) {
-          return shellExec(`cd ${basePathStore}/${plugin.name}&& npm install`);
+          return shellExec(`cd ${basePathStore}/${plugin.name} && npm install`);
         }
       }));
     } catch (e) {
