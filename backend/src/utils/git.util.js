@@ -27,8 +27,15 @@ const gitUtils = {
     try {
       await Promise.all(pluginsClone.map(async pluginClone => {
         const pluginPath = `${basePathStore}/${pluginClone.name}`
+        console.log('Clone plugin', pluginClone.url, 'to', pluginPath)
         await git().clone(pluginClone.url, pluginPath);
-        await this.checkoutBranch(pluginPath, pluginClone.branch)
+        try {
+          console.log('Checkout', pluginPath, 'to branch', pluginClone.branch)
+          await git(pluginPath).checkout(pluginClone.branch);
+        } catch (e) {
+          console.log('Checkout exception', e, 'Please verify your plugin configuration.')
+          throw e
+        }
       }));
 
       await Promise.all(pluginsClone
