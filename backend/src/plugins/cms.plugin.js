@@ -118,6 +118,7 @@ class CmsPlugin {
       }
     }));
     cms.emit('initData-complete')
+    console.log('Init database completed.')
   }
 
   getI18n() {
