@@ -23,6 +23,7 @@ module.exports = async function (cms) {
     lazy: {type: Boolean, form: {addable: true}},
     selectNodeAfterClick: Boolean,
     notOnlyValueInOptions: {type: Boolean, form: {addable: true}},
+    allowDuplicates: {type: Boolean, form: {addable: true}},
     editable: Boolean,
     chips: Boolean,
     isVisible: {
@@ -180,13 +181,13 @@ module.exports = async function (cms) {
           'object@dynamic': ['label', 'flex', 'noPanel', 'addable', 'dynamicFields', 'isVisible'],
           'tree': ['label', 'children', 'getText', 'selectNodeAfterClick'],
           'input@select': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips'],
-          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips']
+          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips', 'allowDuplicates']
         })), {type: {form: {form: {type: 'choice', dynamicFields: '.mixed'}}}}),
         array: _.merge(w({
           'array': ['label', 'flex', 'addable', 'isVisible'],
           'tableArray': ['label', 'flex', 'expansion', 'addable', 'isVisible', 'lazy'],
           'choiceArray': ['label', 'flex', 'addable', 'choiceKey', 'isVisible', 'lazy'],
-          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips']
+          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips', 'allowDuplicates']
         }), {type: {form: {form: {dynamicFields: '.array'}}}})
       }],
       form: {type: 'tree', children: 'fields', choiceKey: 'schemaType'}
