@@ -34,6 +34,10 @@ module.exports = async function (cms) {
       type: {},
       form: {type: 'editor', height: '100px', flex: 'md12', addable: true}
     },
+    normalize: {
+      type: {},
+      form: {type: 'editor', height: '100px', flex: 'md12', addable: true}
+    },
     itemText: {
       type: {},
       form: {type: 'editor', height: '100px', flex: 'md12', addable: true}
@@ -180,14 +184,14 @@ module.exports = async function (cms) {
           'choice': ['label', 'flex', 'choiceKey', 'choiceKeyOutside', 'isVisible'],
           'object@dynamic': ['label', 'flex', 'noPanel', 'addable', 'dynamicFields', 'isVisible'],
           'tree': ['label', 'children', 'getText', 'selectNodeAfterClick'],
-          'input@select': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips'],
-          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips', 'allowDuplicates']
+          'input@select': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips','normalize'],
+          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips', 'allowDuplicates','normalize']
         })), {type: {form: {form: {type: 'choice', dynamicFields: '.mixed'}}}}),
         array: _.merge(w({
           'array': ['label', 'flex', 'addable', 'isVisible'],
           'tableArray': ['label', 'flex', 'expansion', 'addable', 'isVisible', 'lazy'],
           'choiceArray': ['label', 'flex', 'addable', 'choiceKey', 'isVisible', 'lazy'],
-          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips', 'allowDuplicates']
+          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips', 'allowDuplicates','normalize']
         }), {type: {form: {form: {dynamicFields: '.array'}}}})
       }],
       form: {type: 'tree', children: 'fields', choiceKey: 'schemaType'}
@@ -234,7 +238,7 @@ module.exports = async function (cms) {
     }
     schema.onPostSave(function (doc) {
       if (doc) {
-        cms.socket.to(`collectionSubscription${collectionName}`)
+        cms.socket/*.to(`collectionSubscription${collectionName}`)*/
           .emit('changeCollectionList', {
             collection: collectionName,
             type: 'update',
