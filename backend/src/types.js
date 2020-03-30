@@ -307,6 +307,10 @@ module.exports = (cms) => {
       fn();
     });
 
+    socket.on('subscribeCollection', function (room) {
+      socket.join(`collectionSubscription${room}`);
+    });
+
     socket.on('interface', async function ({name, chain}, fn = () => null) {
       chain = JsonFn.clone(chain, true);
       const model = cms.getModel(name);

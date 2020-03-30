@@ -280,9 +280,6 @@ module.exports = (cms) => {
     socket.on('getListPlugin', (fn) => {
       fn(null, Plugin.getAllPlugin());
     });
-    socket.on('subscribeCollection', function (room) {
-      socket.join(`collectionSubscription${room}`);
-    });
     socket.on('subscribePluginChange', function (room) {
       socket.join(`pluginSubscription${room}`);
     });
