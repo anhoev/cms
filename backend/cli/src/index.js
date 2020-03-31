@@ -143,6 +143,10 @@ module.exports = async function (argv2) {
     await buildSsrFiles();
     return;
   }
+  if (argv2[0] === 'build-ssr') {
+    await buildSsrFiles();
+    return;
+  }
   if (argv2[0] === 'download') {
     await download();
     return;
