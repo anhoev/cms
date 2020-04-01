@@ -113,7 +113,8 @@
     "vue-runtime-helpers": "^1.1.2",
     "vue-server-renderer": "2.6.10",
     "vue-template-compiler": "2.6.10",
-    "yargs": "^13.2.2"
+    "yargs": "^13.2.2",
+    "file-explorer-backend": "github:gigasource/file-explorer-backend"
   },
   "devDependencies": {
     "inquirer": "^7.0.5",
