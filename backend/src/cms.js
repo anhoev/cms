@@ -46,10 +46,10 @@ const cms = {
     await cms.use(require('./types'));
     await cms.use(require('./plugins/socket.plugin'));
     await cms.use(require('./buildform'));
+    await cms.use(require('./file-explorer-backend'));
     //cms.use(require('./config'));
 
     app.use(cms.r2);
-
 
     server.listen(global.APP_CONFIG.port);
   },
