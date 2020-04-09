@@ -219,6 +219,7 @@ module.exports = (cms) => {
 
   cms.post('getTypes', async function (info, req) {
     info.loginUser = {
+      user : req.session && req.session.user,
       role: req.session && req.session.userRole
     }
     info.i18n = getI18nFromPlugins();
