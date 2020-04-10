@@ -56,7 +56,7 @@ module.exports = function (cms, config = {}) {
       cms.r2.use('/', history(), cms.middleware.getTypesMiddleware, cms.express.static(path.join(__dirname, '../../../dist')));
     } else {
       const backofficeProxy = proxy('/', {
-        target: `http://localhost:${process.env.PORT ? process.env.PORT : 8080}`
+        target: `http://localhost:${global.APP_CONFIG.proxyPort ? global.APP_CONFIG.proxyPort : 8080}`
       });
       cms.r2.use('/', backofficeProxy);
     }

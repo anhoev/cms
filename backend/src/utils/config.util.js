@@ -38,6 +38,7 @@ async function getConfig() {
     config.pluginPath = path.resolve(__dirname, '../../../plugins');
   }
   if (!config.port) config.port = 8888;
+  if (!config.proxyPort) config.proxyPort = 8080;
   _config = config;
   return config;
 }
