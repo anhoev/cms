@@ -1,4 +1,4 @@
-const path = require('path');
+const argv = require('yargs').argv;
 const signale = require('signale');
 const cms = require('../src/cms');
 
@@ -11,6 +11,7 @@ const {getConfig} = require("../src/utils/config.util");
 (async () => {
   signale.time('Time -setup');
   global.APP_CONFIG = await getConfig();
+  if (argv['withFrontend']) await require('./runFrontend')();
   await pluginConfig();
   await mongooseConfig();
   await cms.init();
