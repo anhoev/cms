@@ -5,6 +5,9 @@ const fs = require('fs');
 const tcpPortUsed = require('tcp-port-used');
 
 module.exports = async function () {
+  if (fs.existsSync(path.join(__dirname, '../../../dist'))) {
+    return;
+  }
   const lockPath = path.resolve(__dirname, '../../../.frontend-lock');
   const run = async function () {
     const port = await portfinder.getPortPromise({
