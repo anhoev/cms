@@ -31,9 +31,20 @@ async function getConfigFile() {
   }
 }
 
+async function setEnv() {
+  if (process.env.NODE_ENV) return;
+  if (argv.development) {
+    process.env.NODE_ENV = 'development';
+  } else if (argv.production) {
+    process.env.NODE_ENV = 'production';
+  }
+  process.env.NODE_ENV = 'local';
+}
+
 async function getConfig() {
   if (_config) return _config;
   const config = getConfigFromArgv();
+  await setEnv();
   _.assign(config, await getConfigFile());
   if (!config.pluginPath && isALibrary()) {
     config.pluginPath = path.resolve(__dirname, '../../../../../plugins');

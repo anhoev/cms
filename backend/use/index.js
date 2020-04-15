@@ -2,7 +2,7 @@ const argv = require('yargs').argv;
 const signale = require('signale');
 const cms = require('../src/cms');
 
-process.env.NODE_ENV = process.env.NODE_ENV || process.argv[2] || 'local';
+//process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 const mongooseConfig = require('./mongo.config');
 const pluginConfig = require('./plugin.config');
