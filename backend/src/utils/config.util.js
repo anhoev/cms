@@ -30,7 +30,9 @@ async function getConfig() {
   if (_config) return _config;
   const config = getConfigFromArgv();
   _.assign(config, await getConfigFile());
-  if (!config.pluginPath && isALibrary()) {
+  if (config.pluginPath) {
+    config.pluginPath = path.resolve(__dirname, `../../../../${config.pluginPath}`);
+  } else if (!config.pluginPath && isALibrary()) {
     config.pluginPath = path.resolve(__dirname, '../../../../../plugins');
   } else if (!config.pluginPath && isASubmodule()) {
     config.pluginPath = path.resolve(__dirname, '../../../../plugins');
