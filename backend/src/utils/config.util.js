@@ -13,7 +13,12 @@ function getConfigFromArgv() {
 async function getConfigFile() {
   if (argv.config && fs.existsSync(argv.config)) {
     signale.note('App config from file');
-    return require(path.resolve(argv.config));
+    let _path = path.resolve(argv.config);
+    if (fs.existsSync(_path)) {
+      return require(_path);
+    } else if (_.endWith(_path, '.js')) {
+      return require(_path.replace('.js', '.json'));
+    }
   } else if (process.env.PATH_ENV || argv['url']) {
     signale.note('App config from url');
     const url = process.env.PATH_ENV || argv['url'];
