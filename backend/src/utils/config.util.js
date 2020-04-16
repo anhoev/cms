@@ -11,14 +11,20 @@ function getConfigFromArgv() {
 }
 
 async function getConfigFile() {
-  if (argv.config && fs.existsSync(argv.config)) {
-    signale.note('App config from file');
-    let _path = path.resolve(argv.config);
-    if (fs.existsSync(_path)) {
-      return require(_path);
-    } else if (_.endWith(_path, '.js')) {
-      return require(_path.replace('.js', '.json'));
+  if (argv.config) {
+    if (fs.existsSync(argv.config)) {
+      signale.note('App config from file');
+      return require(path.resolve(argv.config));
+    } else if (argv.config.endsWith('.js')) {
+      const configFile = argv.config.replace('.js', '.json');
+      if (fs.existsSync(configFile)) {
+        signale.note('App config from file');
+        return require(path.resolve(configFile));
+      }
     }
+  } else if (argv.config.endsWith('.js')) {
+    signale.note('App config from file');
+    argv.config = argv.config.replace('.js', '.json')
   } else if (process.env.PATH_ENV || argv['url']) {
     signale.note('App config from url');
     const url = process.env.PATH_ENV || argv['url'];
@@ -26,9 +32,9 @@ async function getConfigFile() {
   } else if (process.env.CONFIG_PATH) {
     signale.note('App config from pkg');
     return require(process.env.CONFIG_PATH);
-  } else {
-    throw new Error('please put a config file')
   }
+
+  throw new Error('please put a config file')
 }
 
 async function setEnv() {
