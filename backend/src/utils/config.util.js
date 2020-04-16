@@ -22,9 +22,6 @@ async function getConfigFile() {
         return require(path.resolve(configFile));
       }
     }
-  } else if (argv.config.endsWith('.js')) {
-    signale.note('App config from file');
-    argv.config = argv.config.replace('.js', '.json')
   } else if (process.env.PATH_ENV || argv['url']) {
     signale.note('App config from url');
     const url = process.env.PATH_ENV || argv['url'];
