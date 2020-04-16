@@ -8,15 +8,20 @@ module.exports = async function () {
   if (fs.existsSync(path.join(__dirname, '../../../dist'))) {
     return;
   }
-  const lockPath = path.resolve(__dirname, '../../../.frontend-lock.json');
+  const lockPath = path.resolve(__dirname, '../../../.frontend-lock');
   let config = {};
   if (fs.existsSync(lockPath)) {
-    config = require(lockPath);
+    config = JSON.parse(fs.readFileSync(lockPath));
   }
   const run = async function () {
     const port = await portfinder.getPortPromise({
       port: 8080,
-    })
+    });
+    Object.keys(config).forEach(key => {
+      if (config[key] === port) {
+        delete config[key];
+      }
+    });
     config[global.APP_CONFIG.pluginPath] = port;
     fs.writeFileSync(lockPath, JSON.stringify(config), 'utf-8');
     const child = exec(`osascript -e 'tell application "Terminal" to do script "cd ${path.resolve(__dirname, '../../../backoffice')} && npx vue-cli-service serve --port=${port} --pluginPath=${global.APP_CONFIG.pluginPath}"'`, {stdio: 'inherit'});
@@ -25,7 +30,7 @@ module.exports = async function () {
   if (!fs.existsSync(lockPath)) {
     await run();
   } else {
-    const port = require(lockPath)[global.APP_CONFIG.pluginPath];
+    const port = JSON.parse(fs.readFileSync(lockPath))[global.APP_CONFIG.pluginPath];
     const inUse = port ? await tcpPortUsed.check(port, '127.0.0.1') : false;
     if (inUse) {
       global.APP_CONFIG.proxyPort = port;
