@@ -28,6 +28,7 @@ module.exports = function (cms, config = {}) {
 
   function useSession() {
     const session = expressSession({
+      ...global.APP_CONFIG.expressSessionName && {name: global.APP_CONFIG.expressSessionName},
       secret: 'best cms system',
       resave: false, saveUninitialized: true,
       cookie: {maxAge: 2628000000},
@@ -53,6 +54,13 @@ module.exports = function (cms, config = {}) {
 
   cms.post('load:types', () => {
     if (fs.existsSync(path.join(__dirname, '../../../dist'))) {
+      if (global.APP_CONFIG.allowIframe) {
+        cms.app.use(function (req, res, next) {
+          res.setHeader('Content-Security-Policy', 'frame-ancestors *')
+          next()
+        })
+      }
+
       cms.r2.use('/', history(), cms.middleware.getTypesMiddleware, cms.express.static(path.join(__dirname, '../../../dist')));
     } else {
       const backofficeProxy = proxy('/', {
