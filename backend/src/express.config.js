@@ -28,6 +28,7 @@ module.exports = function (cms, config = {}) {
 
   function useSession() {
     const session = expressSession({
+      ...global.APP_CONFIG.expressSessionName && {name: global.APP_CONFIG.expressSessionName},
       secret: 'best cms system',
       resave: false, saveUninitialized: true,
       cookie: {maxAge: 2628000000},
