@@ -40,7 +40,7 @@ module.exports = function (cms) {
   route.get('/folder-tree', getFolderTree);
   route.get('/property-mappings', getPropertyMappings);
   route.post('/folders', createFolder);
-  route.delete('/files/:id', deleteFile);
+  route.delete('/files/:id(*)', deleteFile);
   route.put('/file-metadata/rename/:id', renameFileMetadata);
   route.put('/file-metadata/move/:id', moveFileMetadata);
   // APIs if GridFS driver is used
