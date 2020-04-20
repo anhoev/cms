@@ -15,6 +15,7 @@ const gridFsFileStorage = new GridFsFileStorage(mongoose.connection.db, {
 module.exports = function (cms) {
   const {
     deleteFile,
+    deleteFileByFilePath,
     getFileMetadata,
     createFolder,
     listFilesByFolder,
@@ -47,6 +48,9 @@ module.exports = function (cms) {
   route.get('/files/view/:filePath(*)', viewFileByFilePath);
   route.get('/files/download/:filePath(*)', downloadFileByFilePath);
   route.post('/files', uploadFile);
+
+  // file path's api
+  route.delete('/filePaths/:filePath(*)', deleteFileByFilePath);
 
   cms.app.use('/cms-files', route);
 };
