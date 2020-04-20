@@ -7,7 +7,7 @@ const fs = require('fs');
 let _config;
 
 function getConfigFromArgv() {
-  return _.pick(argv, ['pluginPath', 'port']);
+  return _.pick(argv, ['pluginPath', 'port', 'force-init-data']);
 }
 
 async function getConfigFile() {

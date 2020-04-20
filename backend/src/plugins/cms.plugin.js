@@ -34,6 +34,9 @@ class CmsPlugin {
       //todo error handling
       this.initData(result).catch(e => e)
     }
+    if (global.APP_CONFIG['force-init-data']) {
+      this.initData(result, true).catch(e => e)
+    }
 
     return result;
     // return {
@@ -59,8 +62,8 @@ class CmsPlugin {
     return path.relative(pluginPath, _filePath);
   }
 
-  static async initData(plugins) {
-    if (await cms.getModel('BuildForm').countDocuments({})) return;
+  static async initData(plugins, forceInit = false) {
+    if (await cms.getModel('BuildForm').countDocuments({}) && !forceInit) return;
 
     console.log('Initialize database...')
     const data = { buildForms: [], collections: [] }
@@ -103,16 +106,32 @@ class CmsPlugin {
     })
 
     await Promise.all(data.buildForms.map(async path => {
-      let buildform = JSON.parse(fs.readFileSync(path, 'utf8'));
-      await new Promise(resolve => {
-        cms.on(`model-created:${buildform.name}`, resolve);
-        cms.getModel('BuildForm').create(buildform).then();
-      });
+      try {
+        let buildform = JSON.parse(fs.readFileSync(path, 'utf8'));
+        await new Promise(resolve => {
+          cms.on(`model-created:${buildform.name}`, resolve);
+
+          if (forceInit && buildform._id) {
+            cms.getModel('BuildForm').remove({ _id: buildform._id }).then()
+          }
+          cms.getModel('BuildForm').create(buildform).then();
+        });
+      } catch (e) {
+        console.log(e)
+      }
     }));
     await Promise.all(data.collections.map(async _path => {
       const collection = path.basename(path.dirname(_path));
       try {
-        await cms.getModel(collection).create(JSON.parse(fs.readFileSync(_path, 'utf8')))
+        const document = JSON.parse(fs.readFileSync(_path, 'utf8'));
+
+        if (forceInit && document._id) {
+          await cms.getModel(collection).updateOne({ _id: document._id },
+            { $set: {..._.omit(document, '_id')}, $setOnInsert: { _id: document._id }},
+            { upsert: true })
+        } else {
+          await cms.getModel(collection).create(document)
+        }
       } catch (e) {
         console.warn(e, collection);
       }
