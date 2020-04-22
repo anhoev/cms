@@ -9,7 +9,14 @@ module.exports = async function connect() {
   if (appConfig.database.options && appConfig.database.options.replicaSet) appConfig.replica = true;
 
   let isConnectedBefore = false;
-  const uri = `mongodb://${appConfig.database.host}:${appConfig.database.port}/${appConfig.database.dbName}`;
+  let uri;
+
+  if (appConfig.database.uri) {
+    uri = appConfig.database.uri;
+  } else {
+    uri = `mongodb://${appConfig.database.host}:${appConfig.database.port}/${appConfig.database.dbName}`
+  }
+
   const connectionOptions = {
     useNewUrlParser: true,
     // https://mongoosejs.com/docs/deprecations.html
