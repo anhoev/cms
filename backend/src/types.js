@@ -52,7 +52,7 @@ module.exports = (cms) => {
         id: false,
         ...schema._id !== undefined && {_id: false},
         versionKey: false
-      }, schemaOptions));
+      }, {w: 'majority', ...schemaOptions}));
     }
 
     if (options.autopopulate) {
@@ -173,8 +173,8 @@ module.exports = (cms) => {
 
   cms.importCollections = async (model, deleteExisting) => {
     const orderedCollectionNames = model['BuildForm']
-      ? ['BuildForm', ...Object.keys(model).filter(value => value !== 'BuildForm')]
-      : Object.keys(model);
+        ? ['BuildForm', ...Object.keys(model).filter(value => value !== 'BuildForm')]
+        : Object.keys(model);
 
     for (let name of orderedCollectionNames) {
       const {list} = model[name];
@@ -219,7 +219,7 @@ module.exports = (cms) => {
 
   cms.post('getTypes', async function (info, req) {
     info.loginUser = {
-      user : req.session && req.session.user,
+      user: req.session && req.session.user,
       role: req.session && req.session.userRole
     }
     info.i18n = getI18nFromPlugins();
