@@ -60,7 +60,7 @@ module.exports = async function connect() {
 
   mongoose.connection.on('connected', function () {
     isConnectedBefore = true;
-    signale.success(chalk.default.bgCyan.black(`[Mongodb] name: "${appConfig.database.dbName}" has connected successfully!`));
+    signale.success(chalk.default.bgCyan.black(`[Mongodb] name: "${mongoose.connection.name}" has connected successfully!`));
   });
 
   mongoose.connection.on('reconnected', function () {
