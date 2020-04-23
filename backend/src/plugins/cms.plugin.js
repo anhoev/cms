@@ -19,23 +19,23 @@ class CmsPlugin {
     this.onEachRead = this.onEachRead.bind(this);
   }
 
-  static initAllPlugin(paths, plugins) {
+  static async initAllPlugin(paths, plugins) {
     const dirPath = global.APP_CONFIG.pluginPath;
     const dirContent = fs.readdirSync(dirPath)
-      .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
+    .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
     const result = dirContent.reduce((acc, item) => {
       if (!Array.isArray(plugins) || !plugins.length > 0 || plugins.find(i => i.name === item)) {
-        return Object.assign(acc, {[item]: new CmsPlugin(path.join(dirPath, item), item, null, plugins.find(i => i.name === item))});
+        return Object.assign(acc, { [item]: new CmsPlugin(path.join(dirPath, item), item, null, plugins.find(i => i.name === item)) });
       }
       return acc;
     }, {});
 
     if (global.APP_CONFIG.initData) {
       //todo error handling
-      this.initData(result).catch(e => e)
+      await this.initData(result).catch(e => e)
     }
     if (global.APP_CONFIG['force-init-data']) {
-      this.initData(result, true).catch(e => e)
+      await this.initData(result, true).catch(e => e)
     }
 
     return result;
@@ -63,15 +63,21 @@ class CmsPlugin {
   }
 
   static async initData(plugins, forceInit = false) {
-    if (await cms.getModel('BuildForm').countDocuments({}) && !forceInit) return;
+    const buildFormCount = await cms.getModel('BuildForm').countDocuments({});
 
     console.log('Initialize database...')
     const data = { buildForms: [], collections: [] }
     const pluginNames = _.map(global.APP_CONFIG.plugins, plugin => plugin.name)
     // NOTE: load data collection name base on order of plugins in config files
-    _.each(pluginNames, pluginName => {
+    await Promise.all(pluginNames.map(async pluginName => {
       if (_.has(plugins, pluginName)) {
         const plugin = plugins[pluginName]
+
+        const shouldUpdate = require('./cms-plugins-versioning');
+        const _shouldUpdate = await shouldUpdate(plugin)
+        forceInit = buildFormCount ? _shouldUpdate : forceInit
+        if (buildFormCount && !forceInit) return;
+
         const jsonPath = path.join(plugin.pluginPath, 'json')
         if (fs.statSync(jsonPath).isDirectory()) {
           const directories = fs.readdirSync(jsonPath).filter(item => fs.statSync(path.join(jsonPath, item)).isDirectory());
@@ -103,7 +109,7 @@ class CmsPlugin {
           }
         }
       }
-    })
+    }))
 
     await Promise.all(data.buildForms.map(async path => {
       try {

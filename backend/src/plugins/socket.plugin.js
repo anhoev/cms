@@ -8,8 +8,8 @@ const gitUtils = require('../utils/git.util');
 module.exports = (cms) => {
   let allPlugins;
 
-  cms.post('load:buildform', () => {
-    allPlugins = Plugin.initAllPlugin('plugins', cms.config.plugins);
+  cms.post('load:buildform', async () => {
+    allPlugins = await Plugin.initAllPlugin('plugins', cms.config.plugins);
     cms.allPlugins = allPlugins;
     cms.pluginFiles = getPluginFiles(allPlugins);
     resolveFileLoader(cms.pluginFiles);
