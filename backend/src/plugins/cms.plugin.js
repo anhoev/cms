@@ -63,15 +63,21 @@ class CmsPlugin {
   }
 
   static async initData(plugins, forceInit = false) {
-    if (await cms.getModel('BuildForm').countDocuments({}) && !forceInit) return;
+    const buildFormCount = await cms.getModel('BuildForm').countDocuments({});
 
     console.log('Initialize database...')
     const data = { buildForms: [], collections: [] }
     const pluginNames = _.map(global.APP_CONFIG.plugins, plugin => plugin.name)
     // NOTE: load data collection name base on order of plugins in config files
-    _.each(pluginNames, pluginName => {
+    _.each(pluginNames, async pluginName => {
       if (_.has(plugins, pluginName)) {
         const plugin = plugins[pluginName]
+
+        const shouldUpdate = require('./cms-plugins-versioning');
+        forceInit = forceInit || await shouldUpdate(plugin)
+
+        if (buildFormCount && !forceInit) return;
+
         const jsonPath = path.join(plugin.pluginPath, 'json')
         if (fs.statSync(jsonPath).isDirectory()) {
           const directories = fs.readdirSync(jsonPath).filter(item => fs.statSync(path.join(jsonPath, item)).isDirectory());
