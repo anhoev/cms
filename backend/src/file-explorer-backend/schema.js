@@ -33,7 +33,10 @@ const fileSchema = new Schema({
     trim: true,
   },
 }, {
-  timestamps: true
+  timestamps: true,
+  writeConcern: {
+    w: 'majority',
+  },
 });
 
 module.exports = mongoose.model('CmsFile', fileSchema);
