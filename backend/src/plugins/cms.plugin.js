@@ -65,7 +65,6 @@ class CmsPlugin {
   static async initData(plugins, forceInit = false) {
     const buildFormCount = await cms.getModel('BuildForm').countDocuments({});
 
-    console.log('Initialize database...')
     const data = { buildForms: [], collections: [] }
     const pluginNames = _.map(global.APP_CONFIG.plugins, plugin => plugin.name)
     // NOTE: load data collection name base on order of plugins in config files
@@ -142,8 +141,16 @@ class CmsPlugin {
         console.warn(e, collection);
       }
     }));
-    cms.emit('initData-complete')
-    console.log('Init database completed.')
+    if (buildFormCount) {
+      if (forceInit) {
+        console.log('Update database completed')
+      }
+    } else {
+      cms.on('all-plugins-loaded', () => {
+        cms.emit('initData-complete')
+      })
+      console.log('Init database completed')
+    }
   }
 
   getI18n() {
