@@ -13,6 +13,7 @@ module.exports = (cms) => {
     cms.allPlugins = allPlugins;
     cms.pluginFiles = getPluginFiles(allPlugins);
     resolveFileLoader(cms.pluginFiles);
+    cms.emit('all-plugins-loaded')
   })
 
   function resolveFileLoader(pluginFiles) {

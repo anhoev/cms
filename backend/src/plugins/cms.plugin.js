@@ -142,8 +142,16 @@ class CmsPlugin {
         console.warn(e, collection);
       }
     }));
-    cms.emit('initData-complete')
-    console.log('Init database completed.')
+    if (buildFormCount) {
+      if (forceInit) {
+        console.log('force init data')
+      } else console.log('Init database cancelled, data exists')
+    } else {
+      cms.on('all-plugins-loaded', () => {
+        cms.emit('initData-complete')
+      })
+      console.log('Init database completed.')
+    }
   }
 
   getI18n() {
