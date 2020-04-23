@@ -52,11 +52,7 @@ module.exports = (cms) => {
         id: false,
         ...schema._id !== undefined && {_id: false},
         versionKey: false
-      }, {
-        writeConcern: {
-          w: 'majority',
-        }, ...schemaOptions
-      }));
+      }, schemaOptions));
     }
 
     if (options.autopopulate) {
