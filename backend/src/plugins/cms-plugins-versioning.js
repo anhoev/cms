@@ -30,7 +30,7 @@ module.exports = async function ({ pluginName, pluginPath }) {
 
   let currentVersion = await getVersion(pluginName)
 
-  if (semver.gt(version, currentVersion) || !currentVersion) {
+  if (!currentVersion || semver.gt(version, currentVersion) ) {
     await model.updateOne({ name: pluginName }, { name: pluginName, version }, { upsert: true })
     return true
   }
