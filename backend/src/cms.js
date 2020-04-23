@@ -41,6 +41,7 @@ const download = function (uri, filename, callback) {
 const cms = {
   async init() {
     await cms.use(require('./express.config'));
+    await cms.use(require('./mongoose-plugins'));
     await cms.use(require('./extensions/schema.ext'));
     await cms.use(require('./utils/query.util'));
     await cms.use(require('./types'));
