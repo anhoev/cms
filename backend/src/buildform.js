@@ -334,5 +334,15 @@ module.exports = async function (cms) {
     initSchema(form);
   });
 
-  cms.execPostSync('load:buildform');
+  //todo: make lib for this one
+  cms.execPostAsync = async function(name, context, args) {
+    const posts = this._posts.get(name) || [];
+    const numPosts = posts.length;
+
+    for (let i = 0; i < numPosts; ++i) {
+      await posts[i].fn.bind(context)(...(args || []));
+    }
+  };
+
+  await cms.execPostAsync('load:buildform');
 };
