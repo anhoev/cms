@@ -119,7 +119,9 @@
     "yargs": "^13.2.2",
     "file-explorer-backend": "github:gigasource/file-explorer-backend",
     "portfinder": "latest",
-    "tcp-port-used": "latest"
+    "tcp-port-used": "latest",
+    "@sentry/integrations": "^5.15.5",
+    "@sentry/node": "^5.15.5"
   },
   "devDependencies": {
     "inquirer": "^7.0.5",

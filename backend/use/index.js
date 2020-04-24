@@ -6,6 +6,7 @@ const cms = require('../src/cms');
 
 const mongooseConfig = require('./mongo.config');
 const pluginConfig = require('./plugin.config');
+const loggingConfig = require('./logging.config');
 const {getConfig} = require("../src/utils/config.util");
 
 (async () => {
@@ -14,6 +15,7 @@ const {getConfig} = require("../src/utils/config.util");
   if (argv['withFrontend']) await require('./runFrontend')();
   await pluginConfig();
   await mongooseConfig();
+  loggingConfig();
   await cms.init();
   signale.timeEnd('Time -setup');
 })();
