@@ -1,4 +1,4 @@
-module.exports = function loggingCon() {
+module.exports = function () {
   if (!global.APP_CONFIG.sentryConfig) return;
 
   const Sentry = require('@sentry/node');
@@ -14,5 +14,9 @@ module.exports = function loggingCon() {
     dsn,
     integrations: [captureConsoleIntegration, new Dedupe()],
     ...environment && {environment},
+  });
+
+  global.cms.socket.on('connect', socket => {
+    socket.on('getSentryConfig', callback => callback(global.APP_CONFIG.sentryConfig));
   });
 }
