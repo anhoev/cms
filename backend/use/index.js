@@ -15,7 +15,8 @@ const {getConfig} = require("../src/utils/config.util");
   if (argv['withFrontend']) await require('./runFrontend')();
   await pluginConfig();
   await mongooseConfig();
-  loggingConfig();
   await cms.init();
+  // loggingConfig must be place after cms.init() because it needs to use socket in global.cms object
+  loggingConfig();
   signale.timeEnd('Time -setup');
 })();
