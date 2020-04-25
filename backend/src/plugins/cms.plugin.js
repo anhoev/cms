@@ -22,7 +22,7 @@ class CmsPlugin {
   static async initAllPlugin(paths, plugins) {
     const dirPath = global.APP_CONFIG.pluginPath;
     const dirContent = fs.readdirSync(dirPath)
-    .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
+      .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
     const result = dirContent.reduce((acc, item) => {
       if (!Array.isArray(plugins) || !plugins.length > 0 || plugins.find(i => i.name === item)) {
         return Object.assign(acc, { [item]: new CmsPlugin(path.join(dirPath, item), item, null, plugins.find(i => i.name === item)) });
@@ -68,6 +68,7 @@ class CmsPlugin {
     const data = { buildForms: [], collections: [] }
     const pluginNames = _.map(global.APP_CONFIG.plugins, plugin => plugin.name)
     // NOTE: load data collection name base on order of plugins in config files
+    const _log = _.once(() => console.log('init database start ...'))
     await Promise.all(pluginNames.map(async pluginName => {
       if (_.has(plugins, pluginName)) {
         const plugin = plugins[pluginName]
@@ -77,6 +78,7 @@ class CmsPlugin {
         forceInit = buildFormCount ? _shouldUpdate : forceInit
         if (buildFormCount && !forceInit) return;
 
+        _log();
         const jsonPath = path.join(plugin.pluginPath, 'json')
         if (fs.statSync(jsonPath).isDirectory()) {
           const directories = fs.readdirSync(jsonPath).filter(item => fs.statSync(path.join(jsonPath, item)).isDirectory());
@@ -113,13 +115,10 @@ class CmsPlugin {
     await Promise.all(data.buildForms.map(async path => {
       try {
         let buildform = JSON.parse(fs.readFileSync(path, 'utf8'));
-        await new Promise(resolve => {
+        await new Promise(async resolve => {
           cms.on(`model-created:${buildform.name}`, resolve);
 
-          if (forceInit && buildform._id) {
-            cms.getModel('BuildForm').remove({ _id: buildform._id }).then()
-          }
-          cms.getModel('BuildForm').create(buildform).then();
+          await cms.getModel('BuildForm').findOneAndUpdate({ _id: buildform._id }, buildform, { upsert: true, new: true })
         });
       } catch (e) {
         console.log(e)
@@ -129,14 +128,7 @@ class CmsPlugin {
       const collection = path.basename(path.dirname(_path));
       try {
         const document = JSON.parse(fs.readFileSync(_path, 'utf8'));
-
-        if (forceInit && document._id) {
-          await cms.getModel(collection).updateOne({ _id: document._id },
-            { $set: {..._.omit(document, '_id')}, $setOnInsert: { _id: document._id }},
-            { upsert: true })
-        } else {
-          await cms.getModel(collection).create(document)
-        }
+        await cms.getModel(collection).findOneAndUpdate({ _id: document._id }, document, { upsert: true, new: true })
       } catch (e) {
         console.warn(e, collection);
       }
