@@ -6,6 +6,8 @@ const dirTree = require('directory-tree');
 const fileHelper = require('../utils/files.util');
 const cms = require('../cms');
 const chalk = require('chalk');
+const { shouldUpdate, updateVersion } = require('./cms-plugins-versioning');
+const semver = require('semver');
 
 class CmsPlugin {
   constructor(pluginPath, pluginName, resolveUrlPath, config) {
@@ -73,7 +75,6 @@ class CmsPlugin {
       if (_.has(plugins, pluginName)) {
         const plugin = plugins[pluginName]
 
-        const shouldUpdate = require('./cms-plugins-versioning');
         const _shouldUpdate = await shouldUpdate(plugin)
         forceInit = buildFormCount ? _shouldUpdate : forceInit
         if (buildFormCount && !forceInit) return;
@@ -285,6 +286,17 @@ class CmsPlugin {
 
   }
 
+  async incrementVersion() {
+    const packagePath = path.join(this.pluginPath, 'package.json')
+    if (!fs.existsSync(packagePath)) return
+
+    const pkgRaw = JSON.parse(fs.readFileSync(packagePath, 'utf8'))
+    if (!pkgRaw.version) return
+
+    pkgRaw.version = semver.inc(version, 'patch')
+    fs.writeFileSync(packagePath, JSON.stringify(pkgRaw, null, 2), 'utf-8')
+    return await updateVersion(this.pluginName, pkgRaw.version)
+  }
 }
 
 module.exports = CmsPlugin;

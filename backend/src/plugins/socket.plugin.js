@@ -259,9 +259,10 @@ module.exports = (cms) => {
           fn(e);
         });
     });
-    socket.on('exportModel', (name, content, collection, plugins, filePath, fn) => {
+    socket.on('exportModel', async (name, content, collection, plugins, filePath, fn) => {
       try {
         getPlugin(plugins).exportModel(name, content, collection, filePath);
+        await getPlugin(plugins).incrementVersion()
         fn();
       } catch (e) {
         fn(e);

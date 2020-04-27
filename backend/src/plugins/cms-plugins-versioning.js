@@ -8,7 +8,11 @@ async function getVersion(pluginName) {
   return plugin ? plugin.version : undefined
 }
 
-module.exports = async function ({ pluginName, pluginPath }) {
+async function updateVersion(pluginName, version) {
+  await model.updateOne({ name: pluginName }, { name: pluginName, version }, { upsert: true })
+}
+
+async function shouldUpdate ({ pluginName, pluginPath }) {
   let version
 
   const manifestPath = path.join(pluginPath, 'manifest.js')
@@ -31,11 +35,16 @@ module.exports = async function ({ pluginName, pluginPath }) {
   let currentVersion = await getVersion(pluginName)
 
   if (!currentVersion || semver.gt(version, currentVersion) ) {
-    await model.updateOne({ name: pluginName }, { name: pluginName, version }, { upsert: true })
+    await updateVersion(pluginName, version);
     return true
   }
 
   return false
+}
+
+module.exports = {
+  shouldUpdate,
+  updateVersion
 }
 
 
