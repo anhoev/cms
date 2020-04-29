@@ -82,7 +82,15 @@ class CmsPlugin {
         _log();
         const jsonPath = path.join(plugin.pluginPath, 'json')
         if (fs.statSync(jsonPath).isDirectory()) {
-          const directories = fs.readdirSync(jsonPath).filter(item => fs.statSync(path.join(jsonPath, item)).isDirectory());
+          let directories = fs.readdirSync(jsonPath).filter(item => fs.statSync(path.join(jsonPath, item)).isDirectory());
+
+          const manifestPath = path.join(plugin.pluginPath, 'manifest.js')
+          if (fs.existsSync(manifestPath) && forceInit) {
+            const { onlyUpdateCollections } = require(manifestPath)
+            if (onlyUpdateCollections && onlyUpdateCollections instanceof Array) {
+              directories = directories.filter(item => onlyUpdateCollections.includes(item))
+            }
+          }
 
           if (directories.includes('BuildForm')) {
             const fileNames = fs.readdirSync(path.join(jsonPath, 'BuildForm')).filter(item => item.endsWith('.json'))
