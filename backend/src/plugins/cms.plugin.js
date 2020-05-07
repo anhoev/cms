@@ -301,7 +301,7 @@ class CmsPlugin {
     const pkgRaw = JSON.parse(fs.readFileSync(packagePath, 'utf8'))
     if (!pkgRaw.version) return
 
-    pkgRaw.version = semver.inc(version, 'patch')
+    pkgRaw.version = semver.inc(pkgRaw.version, 'patch')
     fs.writeFileSync(packagePath, JSON.stringify(pkgRaw, null, 2), 'utf-8')
     return await updateVersion(this.pluginName, pkgRaw.version)
   }
