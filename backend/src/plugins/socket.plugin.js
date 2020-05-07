@@ -18,7 +18,7 @@ module.exports = async (cms) => {
   cms.post('load:buildform', async () => {
     if (global.APP_CONFIG.initData) {
       //todo error handling
-      await Plugin.initData(result, global.APP_CONFIG['force-init-data']).catch(e => e)
+      await Plugin.initData(cms.allPlugins, global.APP_CONFIG['force-init-data']).catch(e => e)
     }
 
     resolveFileLoader(cms.pluginFiles);
