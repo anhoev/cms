@@ -282,6 +282,7 @@ module.exports = async function (cms) {
         autopopulate: true,
         initSchema(schema) {
           onInitCollection(schema, schemaForm.name, schemaForm);
+          cms.execPostSync(`init-schema:${schemaForm.name}`, null, [schema]);
         }
       });
     } catch (e) {
