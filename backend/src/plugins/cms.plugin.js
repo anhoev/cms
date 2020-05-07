@@ -32,14 +32,6 @@ class CmsPlugin {
       return acc;
     }, {});
 
-    if (global.APP_CONFIG.initData) {
-      //todo error handling
-      await this.initData(result).catch(e => e)
-    }
-    if (global.APP_CONFIG['force-init-data']) {
-      await this.initData(result, true).catch(e => e)
-    }
-
     return result;
     // return {
     //   testPlugin: new ClassPluginTest('test-plugin'),

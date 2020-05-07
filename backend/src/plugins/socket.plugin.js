@@ -5,16 +5,38 @@ const axios = require('axios').default;
 const Plugin = require('./cms.plugin');
 // const compileContent = require('../utils/compiles.util', 'must-exclude').compileContent;
 const gitUtils = require('../utils/git.util');
-module.exports = (cms) => {
+module.exports = async (cms) => {
   let allPlugins;
 
+  allPlugins = await Plugin.initAllPlugin('plugins', cms.config.plugins);
+  cms.allPlugins = allPlugins;
+  cms.pluginFiles = getPluginFiles(allPlugins);
+
+  //todo: resolve
+  resolveFileLoaderBeforeInitModel(cms.pluginFiles);
+
   cms.post('load:buildform', async () => {
-    allPlugins = await Plugin.initAllPlugin('plugins', cms.config.plugins);
-    cms.allPlugins = allPlugins;
-    cms.pluginFiles = getPluginFiles(allPlugins);
+    if (global.APP_CONFIG.initData) {
+      //todo error handling
+      await Plugin.initData(result, global.APP_CONFIG['force-init-data']).catch(e => e)
+    }
+
     resolveFileLoader(cms.pluginFiles);
     cms.emit('all-plugins-loaded')
   })
+
+  function resolveFileLoaderBeforeInitModel(pluginFiles) {
+    pluginFiles.filter(file => file.loader && file.loader.type && file.loader.type.match(/backend/i)).map(item => {
+      if (item.loader.type) {
+        const plugin = cms.allPlugins[item.plugin];
+        if (plugin) {
+          if (item.loader.type === 'backend-api-before-init-model') {
+            cms.useMiddleWare('api', require(plugin.convertInternalPathToFilePath(item.path)));
+          }
+        }
+      }
+    });
+  }
 
   function resolveFileLoader(pluginFiles) {
     pluginFiles.filter(file => file.loader && file.loader.type && file.loader.type.match(/backend/i)).map(item => {
