@@ -28,7 +28,7 @@ class CmsPlugin {
       .filter(item => fs.statSync(path.join(dirPath, item)).isDirectory());
     const result = dirContent.reduce((acc, item) => {
       if (!Array.isArray(plugins) || !plugins.length > 0 || plugins.find(i => i.name === item)) {
-        return Object.assign(acc, { [item]: new CmsPlugin(path.join(dirPath, item), item, null, plugins.find(i => i.name === item)) });
+        return Object.assign(acc, {[item]: new CmsPlugin(path.join(dirPath, item), item, null, plugins.find(i => i.name === item))});
       }
       return acc;
     }, {});
@@ -58,9 +58,9 @@ class CmsPlugin {
   }
 
   static async initData(plugins, forceInit = false) {
-    const buildFormCount = await cms.getModel('BuildForm').countDocuments({});
+    const dbExists = (await cms.getModel('BuildForm').findOne({}).lean()) ? 1 : 0;
 
-    const data = { buildForms: [], collections: [] }
+    const data = {buildForms: [], collections: []}
     const pluginNames = _.map(global.APP_CONFIG.plugins, plugin => plugin.name)
     // NOTE: load data collection name base on order of plugins in config files
     const _log = _.once(() => console.log('init database start ...'))
@@ -69,8 +69,8 @@ class CmsPlugin {
         const plugin = plugins[pluginName]
 
         const _shouldUpdate = await shouldUpdate(plugin)
-        forceInit = buildFormCount ? _shouldUpdate : forceInit
-        if (buildFormCount && !forceInit) return;
+        forceInit = dbExists ? _shouldUpdate : forceInit
+        if (dbExists && !forceInit) return;
 
         _log();
         const jsonPath = path.join(plugin.pluginPath, 'json')
@@ -79,7 +79,7 @@ class CmsPlugin {
 
           const manifestPath = path.join(plugin.pluginPath, 'manifest.js')
           if (fs.existsSync(manifestPath) && forceInit) {
-            const { onlyUpdateCollections } = require(manifestPath)
+            const {onlyUpdateCollections} = require(manifestPath)
             if (onlyUpdateCollections && onlyUpdateCollections instanceof Array) {
               directories = directories.filter(item => onlyUpdateCollections.includes(item))
             }
@@ -104,7 +104,7 @@ class CmsPlugin {
               const filePath = path.join(jsonPath, collection, file)
               const indexOfFile = _.findIndex(data.collections, bf => bf.endsWith(file))
               if (indexOfFile !== -1) {
-                console.log(`Using ${chalk.yellow(filePath)} instead of ${ chalk.yellow(data.collections[indexOfFile])}`)
+                console.log(`Using ${chalk.yellow(filePath)} instead of ${chalk.yellow(data.collections[indexOfFile])}`)
                 data.collections.splice(indexOfFile, 1)
               }
               data.collections.push(filePath)
@@ -120,7 +120,7 @@ class CmsPlugin {
         await new Promise(async resolve => {
           cms.on(`model-created:${buildform.name}`, resolve);
 
-          await cms.getModel('BuildForm').findOneAndUpdate({ _id: buildform._id }, buildform, { upsert: true, new: true })
+          await cms.getModel('BuildForm').findOneAndUpdate({_id: buildform._id}, buildform, {upsert: true, new: true})
         });
       } catch (e) {
         console.log(e)
@@ -130,12 +130,13 @@ class CmsPlugin {
       const collection = path.basename(path.dirname(_path));
       try {
         const document = JSON.parse(fs.readFileSync(_path, 'utf8'));
-        await cms.getModel(collection).findOneAndUpdate({ _id: document._id }, document, { upsert: true, new: true })
+        await cms.getModel(collection).findOneAndUpdate({_id: document._id}, document, {upsert: true, new: true})
       } catch (e) {
         console.warn(e, collection);
       }
     }));
-    if (buildFormCount) {
+
+    if (dbExists) {
       if (forceInit) {
         console.log('Update database completed')
       }
