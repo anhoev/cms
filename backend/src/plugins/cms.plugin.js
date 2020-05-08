@@ -6,7 +6,8 @@ const dirTree = require('directory-tree');
 const fileHelper = require('../utils/files.util');
 const cms = require('../cms');
 const chalk = require('chalk');
-const { shouldUpdate, updateVersion } = require('./cms-plugins-versioning');
+const { shouldUpdate, updateVersion, getShouldUpdateApp } = require('./cms-plugins-versioning');
+cms.utils.getShouldUpdateApp = getShouldUpdateApp;
 const semver = require('semver');
 
 class CmsPlugin {

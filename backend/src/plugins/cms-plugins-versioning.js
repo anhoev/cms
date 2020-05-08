@@ -2,7 +2,7 @@ const model = require('./cms-plugin-schema')
 const path = require('path')
 const fs = require('fs')
 const semver = require('semver')
-
+let _shouldUpdateApp
 async function getVersion(pluginName) {
   const plugin = await model.findOne({ name: pluginName })
   return plugin ? plugin.version : undefined
@@ -36,6 +36,7 @@ async function shouldUpdate ({ pluginName, pluginPath }) {
 
   if (!currentVersion || semver.gt(version, currentVersion) ) {
     await updateVersion(pluginName, version);
+    _shouldUpdateApp = true;
     return true
   }
 
@@ -44,7 +45,8 @@ async function shouldUpdate ({ pluginName, pluginPath }) {
 
 module.exports = {
   shouldUpdate,
-  updateVersion
+  updateVersion,
+  getShouldUpdateApp: () => _shouldUpdateApp
 }
 
 
