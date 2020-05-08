@@ -10,6 +10,7 @@ const mongooseFileMetadataStorage = new MongooseFileMetadataStorage(CmsFileModel
 const GridFsFileStorage = require('file-explorer-backend/file-storage-gridfs');
 const gridFsFileStorage = new GridFsFileStorage(mongoose.connection.db, {
   bucketName: 'cmsfiles',
+  writeConcern: {w: 'majority'},
 });
 
 module.exports = function (cms) {
