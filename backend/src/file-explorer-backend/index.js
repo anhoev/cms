@@ -27,6 +27,7 @@ module.exports = function (cms) {
     renameFileMetadata,
     moveFileMetadata,
     getPropertyMappings,
+    checkFileExisted,
     namespaceMiddleware,
   } = initFileExplorer({
     dependencies: {
@@ -40,6 +41,7 @@ module.exports = function (cms) {
   route.get('/file-metadata/:id', getFileMetadata);
   route.get('/file-metadata', listFilesByFolder);
   route.get('/folder-tree', getFolderTree);
+  route.get('/file-existed', checkFileExisted);
   route.get('/property-mappings', getPropertyMappings);
   route.post('/folders', createFolder);
   route.delete('/files/:id', deleteFile);
