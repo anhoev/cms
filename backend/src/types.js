@@ -223,6 +223,7 @@ module.exports = (cms) => {
       role: req.session && req.session.userRole
     }
     info.i18n = getI18nFromPlugins();
+    info.sharedConfig = global.APP_CONFIG.sharedConfig;
   });
 
   //todo: add this to somewhere else
