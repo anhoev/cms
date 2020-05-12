@@ -117,7 +117,7 @@
     "vue-server-renderer": "2.6.10",
     "vue-template-compiler": "2.6.10",
     "yargs": "^13.2.2",
-    "file-explorer-backend": "github:gigasource/file-explorer-backend#1.0.2",
+    "file-explorer-backend": "github:gigasource/file-explorer-backend#1.0.3",
     "portfinder": "latest",
     "tcp-port-used": "latest",
     "@sentry/integrations": "^5.15.5",
