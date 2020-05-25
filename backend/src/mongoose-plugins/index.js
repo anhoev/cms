@@ -1,9 +1,9 @@
 module.exports = function () {
   const mongoose = require('mongoose');
 
-  const writeConcernMajorityPlugin = function (schema) {
-    schema.set('writeConcern', {w: global.APP_CONFIG.writeConcern});
+  const writeConcernPlugin = function (schema) {
+    schema.set('writeConcern', {w: global.APP_CONFIG.writeConcern || 'primary'});
   }
 
-  mongoose.plugin(writeConcernMajorityPlugin);
+  mongoose.plugin(writeConcernPlugin);
 }
