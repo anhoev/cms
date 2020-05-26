@@ -9,7 +9,7 @@ const mongooseFileMetadataStorage = new MongooseFileMetadataStorage(CmsFileModel
 
 const {database: dbConfig} = global.APP_CONFIG;
 const defaultWriteConcern = 'primary';
-const writeConcern = dbConfig.options.replicaSet ? (dbConfig.writeConcern || defaultWriteConcern) : null;
+const writeConcern = dbConfig.options && dbConfig.options.replicaSet ? (dbConfig.writeConcern || defaultWriteConcern) : null;
 
 const GridFsFileStorage = require('file-explorer-backend/file-storage-gridfs');
 const gridFsFileStorage = new GridFsFileStorage(mongoose.connection.db, {
