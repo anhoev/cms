@@ -7,10 +7,14 @@ const initFileExplorer = require('file-explorer-backend');
 const MongooseFileMetadataStorage = require('file-explorer-backend/file-metadata-mongoose');
 const mongooseFileMetadataStorage = new MongooseFileMetadataStorage(CmsFileModel);
 
+const {database: dbConfig} = global.APP_CONFIG;
+const defaultWriteConcern = 'primary';
+const writeConcern = dbConfig.options.replicaSet ? (dbConfig.writeConcern || defaultWriteConcern) : null;
+
 const GridFsFileStorage = require('file-explorer-backend/file-storage-gridfs');
 const gridFsFileStorage = new GridFsFileStorage(mongoose.connection.db, {
   bucketName: 'cmsfiles',
-  writeConcern: {w: global.APP_CONFIG.writeConcern},
+  ...writeConcern ? {writeConcern: {w: writeConcern}} : {},
 });
 
 module.exports = function (cms) {
