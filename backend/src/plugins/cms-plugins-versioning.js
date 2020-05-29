@@ -14,6 +14,9 @@ async function getLastVersion(pluginName) {
 }
 
 async function updateVersion(pluginName, version, lastVersion) {
+  if (!lastVersion) {
+    lastVersion = await getVersion(pluginName)
+  }
   await model.updateOne({ name: pluginName }, { name: pluginName, version, lastVersion }, { upsert: true })
 }
 
