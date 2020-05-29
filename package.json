@@ -36,7 +36,7 @@
     "@babel/plugin-transform-modules-commonjs": "^7.4.0",
     "@babel/preset-env": "^7.7.4",
     "@gigasource/nodejs-proxy-server": "^1.1.0",
-    "@gigasource/socket.io-p2p-plugin": "^1.8.3",
+    "@gigasource/socket.io-p2p-plugin": "^1.8.4",
     "@vue/babel-preset-app": "^4.1.1",
     "autoprefixer": "^9.7.3",
     "axios": "^0.18.0",
