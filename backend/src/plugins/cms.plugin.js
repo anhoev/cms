@@ -6,8 +6,9 @@ const dirTree = require('directory-tree');
 const fileHelper = require('../utils/files.util');
 const cms = require('../cms');
 const chalk = require('chalk');
-const { shouldUpdate, updateVersion, getShouldUpdateApp } = require('./cms-plugins-versioning');
+const { shouldUpdate, updateVersion, getShouldUpdateApp, getLastVersion } = require('./cms-plugins-versioning');
 cms.utils.getShouldUpdateApp = getShouldUpdateApp;
+cms.utils.getLastVersion = getLastVersion;
 const semver = require('semver');
 
 class CmsPlugin {
@@ -138,11 +139,14 @@ class CmsPlugin {
 
     if (dbExists) {
       if (forceInit) {
+        cms.on('all-plugins-loaded', () => {
+          cms.emit('migrate-data')
+        })
         console.log('Update database completed')
       }
     } else {
       cms.on('all-plugins-loaded', () => {
-        cms.emit('initData-complete')
+        cms.emit('init-data-complete')
       })
       console.log('Init database completed')
     }
