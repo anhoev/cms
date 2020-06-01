@@ -293,7 +293,7 @@ module.exports = async function (cms) {
   const BuildForm = cms.registerSchema(buildFormSchema, {
     ...FormBuilderInfo,
     initSchema(schema) {
-      if (!global.APP_CONFIG.replica) {
+      if (!global.APP_CONFIG.useChangeStream) {
         schema.onPostSave(function (form) {
           if (form && form.type === 'Collection') {
             form = jsonfn.clone(form, true, false);
@@ -312,7 +312,7 @@ module.exports = async function (cms) {
     }
   });
   //todo: change stream
-  if (global.APP_CONFIG.replica) {
+  if (global.APP_CONFIG.useChangeStream) {
     BuildForm.watch().on('change', async change => {
       if (['update', 'insert'].includes(change.operationType)) {
         let form = await BuildForm.findOne({_id: change.documentKey}).lean();
