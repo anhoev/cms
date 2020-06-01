@@ -8,8 +8,10 @@ const MongooseFileMetadataStorage = require('file-explorer-backend/file-metadata
 const mongooseFileMetadataStorage = new MongooseFileMetadataStorage(CmsFileModel);
 
 const {database: dbConfig} = global.APP_CONFIG;
-const defaultWriteConcern = 'primary';
-const writeConcern = dbConfig.options && dbConfig.options.replicaSet ? (dbConfig.writeConcern || defaultWriteConcern) : null;
+const defaultWriteConcern = 1;
+let writeConcern = dbConfig.options && dbConfig.options.replicaSet ? (dbConfig.writeConcern || defaultWriteConcern) : null;
+
+if (!isNaN(writeConcern) && !isNaN(Number.parseInt(writeConcern))) writeConcern = Number.parseInt(writeConcern);
 
 const GridFsFileStorage = require('file-explorer-backend/file-storage-gridfs');
 const gridFsFileStorage = new GridFsFileStorage(mongoose.connection.db, {
