@@ -58,9 +58,6 @@ module.exports = function (cms, config = {}) {
         cms.app.use(function (req, res, next) {
           res.setHeader('Content-Security-Policy', 'frame-ancestors *')
           res.setHeader('X-Frame-Options', 'ALLOW-FROM *')
-          res.setHeader('Access-Control-Allow-Headers', 'X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method')
-          res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
-          res.setHeader('Allow', 'GET, POST, OPTIONS, PUT, DELETE')
           next()
         })
       }
