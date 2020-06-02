@@ -57,6 +57,7 @@ module.exports = function (cms, config = {}) {
       if (global.APP_CONFIG.allowIframe) {
         cms.app.use(function (req, res, next) {
           res.setHeader('Content-Security-Policy', 'frame-ancestors *')
+          res.setHeader('X-Frame-Options', 'ALLOW-FROM *')
           next()
         })
       }
