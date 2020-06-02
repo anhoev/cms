@@ -19,4 +19,45 @@ module.exports = function () {
   global.cms.socket.on('connect', socket => {
     socket.on('getSentryConfig', callback => callback(global.APP_CONFIG.sentryConfig));
   });
+
+  // Add tagging capabilities for console functions
+  // NOTE: substitution for console functions are not yet supported
+  if (Array.isArray(captureConsoleLevels)) {
+    captureConsoleLevels.forEach(consoleLevel => {
+      if (typeof console[consoleLevel] !== 'function') return;
+
+      console[consoleLevel] = new Proxy(console[consoleLevel], {
+        apply(target, thisArg, argArray) {
+          const firstArg = argArray[0];
+          const secondArg = argArray[1];
+
+          // Example of adding tags: console.debug('sentry:store=test store,b=2,c=3', 'log here')
+
+          if (firstArg && typeof firstArg === 'string' && firstArg.startsWith('sentry:')) {
+            let tags = firstArg.slice('sentry:'.length);
+
+            if (tags.length > 0) {
+              tags = tags.split(',').reduce((tagsObj, keyValuePair) => {
+                const [tag, value] = keyValuePair.split('=');
+                tagsObj[tag] = value;
+                return tagsObj;
+              }, {});
+
+              if (tags && typeof tags === 'object' && Object.keys(tags).length > 0) {
+                Sentry.withScope(function (scope) {
+                  scope.setTags(tags);
+                  scope.setLevel(consoleLevel);
+                  Sentry.captureMessage(secondArg);
+                });
+              }
+
+              return target.apply(thisArg, argArray.slice(1));
+            }
+          }
+
+          return target.apply(thisArg, argArray);
+        }
+      })
+    });
+  }
 }
