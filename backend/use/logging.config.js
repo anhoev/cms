@@ -6,6 +6,10 @@ module.exports = function () {
 
   const {dsn, captureConsoleLevels, environment} = global.APP_CONFIG.sentryConfig;
 
+  // retain original console functions
+  const _console = {};
+  captureConsoleLevels.forEach(level => _console[level] = console[level]);
+
   const captureConsoleIntegration = Array.isArray(captureConsoleLevels)
       ? new CaptureConsole({levels: captureConsoleLevels})
       : new CaptureConsole();
@@ -23,10 +27,10 @@ module.exports = function () {
   // Add tagging capabilities for console functions
   // NOTE: substitution for console functions are not yet supported
   if (Array.isArray(captureConsoleLevels)) {
-    captureConsoleLevels.forEach(consoleLevel => {
-      if (typeof console[consoleLevel] !== 'function') return;
+    captureConsoleLevels.forEach(level => {
+      if (typeof console[level] !== 'function') return;
 
-      console[consoleLevel] = new Proxy(console[consoleLevel], {
+      console[level] = new Proxy(console[level], {
         apply(target, thisArg, argArray) {
           const firstArg = argArray[0];
           const secondArg = argArray[1];
@@ -46,9 +50,10 @@ module.exports = function () {
               if (tags && typeof tags === 'object' && Object.keys(tags).length > 0) {
                 Sentry.withScope(function (scope) {
                   scope.setTags(tags);
-                  scope.setLevel(consoleLevel);
+                  scope.setLevel(level);
                   Sentry.captureMessage(secondArg);
                 });
+                return _console[level].apply(thisArg, argArray.slice(1));
               }
 
               return target.apply(thisArg, argArray.slice(1));
