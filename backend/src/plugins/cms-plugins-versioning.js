@@ -41,12 +41,13 @@ async function shouldUpdate ({ pluginName, pluginPath }) {
   if (!version) return false
 
   let currentVersion = await getVersion(pluginName)
-
+  console.debug(`sentry:oldVer=${currentVersion},newVer=${version}`, '')
   if (!currentVersion || semver.gt(version, currentVersion) ) {
     await updateVersion(pluginName, version, currentVersion);
     _shouldUpdateApp = true;
     return true
   }
+  console.debug(`sentry:shouldupdateApp=${_shouldUpdateApp}`, '')
 
   return false
 }
