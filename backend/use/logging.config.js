@@ -35,6 +35,7 @@ module.exports = function () {
         apply(target, thisArg, argArray) {
           const firstArg = argArray[0];
           const secondArg = argArray[1];
+          const payload = argArray[2];
 
           // Example of adding tags: console.debug('sentry:store=test store,b=2,c=3', 'log here')
 
@@ -50,17 +51,9 @@ module.exports = function () {
 
               if (tags && typeof tags === 'object' && Object.keys(tags).length > 0) {
                 Sentry.withScope(function (scope) {
-                  for (const key in tags) {
-                    if (key.startsWith('extra:')) {
-                      const extraKey = key.slice('extra:'.length);
-                      const extraValue = tags[key];
-                      scope.setExtra(extraKey, extraValue);
-                      delete tags[key];
-                    }
-                  }
-
                   scope.setTags(tags);
                   scope.setLevel(level);
+                  if (payload) scope.setExtra("content", payload);
                   Sentry.captureMessage(secondArg);
                 });
                 return _console[level].apply(thisArg, argArray.slice(1));
