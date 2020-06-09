@@ -2,7 +2,7 @@ module.exports = function () {
   if (!global.APP_CONFIG.sentryConfig) return;
 
   const Sentry = require('@sentry/node');
-  const {CaptureConsole, Dedupe} = require('@sentry/integrations');
+  const {CaptureConsole} = require('@sentry/integrations');
 
   const {dsn, captureConsoleLevels, environment} = global.APP_CONFIG.sentryConfig;
 
@@ -16,7 +16,8 @@ module.exports = function () {
 
   Sentry.init({
     dsn,
-    integrations: [captureConsoleIntegration, new Dedupe()],
+    integrations: [captureConsoleIntegration],
+    normalizeDepth: 10,
     ...environment && {environment},
   });
 
@@ -41,7 +42,7 @@ module.exports = function () {
             let tags = firstArg.slice('sentry:'.length);
 
             if (tags.length > 0) {
-              tags = tags.split(',').reduce((tagsObj, keyValuePair) => {
+              tags = tags.split(';').reduce((tagsObj, keyValuePair) => {
                 const [tag, value] = keyValuePair.split('=');
                 tagsObj[tag] = value;
                 return tagsObj;
@@ -49,6 +50,15 @@ module.exports = function () {
 
               if (tags && typeof tags === 'object' && Object.keys(tags).length > 0) {
                 Sentry.withScope(function (scope) {
+                  for (const key in tags) {
+                    if (key.startsWith('extra:')) {
+                      const extraKey = key.slice('extra:'.length);
+                      const extraValue = tags[key];
+                      scope.setExtra(extraKey, extraValue);
+                      delete tags[key];
+                    }
+                  }
+
                   scope.setTags(tags);
                   scope.setLevel(level);
                   Sentry.captureMessage(secondArg);
