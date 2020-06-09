@@ -43,7 +43,7 @@ module.exports = function () {
             let tags = firstArg.slice('sentry:'.length);
 
             if (tags.length > 0) {
-              tags = tags.split(';').reduce((tagsObj, keyValuePair) => {
+              tags = tags.split(',').reduce((tagsObj, keyValuePair) => {
                 const [tag, value] = keyValuePair.split('=');
                 tagsObj[tag] = value;
                 return tagsObj;
