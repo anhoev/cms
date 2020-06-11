@@ -56,7 +56,7 @@ module.exports = function () {
                   if (payload) scope.setExtra("content", payload);
                   Sentry.captureMessage(secondArg);
                 });
-                return _console[level].apply(thisArg, argArray.slice(1));
+                return _console[level].apply(thisArg, [secondArg]);
               }
 
               return target.apply(thisArg, argArray.slice(1));
