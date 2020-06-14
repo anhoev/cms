@@ -4,7 +4,7 @@ module.exports = function () {
   const Sentry = require('@sentry/node');
   const {CaptureConsole} = require('@sentry/integrations');
 
-  const {dsn, captureConsoleLevels, environment} = global.APP_CONFIG.sentryConfig;
+  const {dsn, captureConsoleLevels, environment, instanceId} = global.APP_CONFIG.sentryConfig;
 
   // retain original console functions
   const _console = {};
@@ -20,6 +20,7 @@ module.exports = function () {
     normalizeDepth: 10,
     ...environment && {environment},
   });
+  if (instanceId) Sentry.setTag('instanceId', instanceId);
 
   global.cms.socket.on('connect', socket => {
     socket.on('getSentryConfig', callback => callback(global.APP_CONFIG.sentryConfig));
