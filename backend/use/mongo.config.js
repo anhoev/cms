@@ -66,11 +66,4 @@ module.exports = async function connect() {
   mongoose.connection.on('reconnected', function () {
     console.log('Db has reconnected!');
   });
-
-  process.on('SIGINT', function () {
-    mongoose.connection.close(function () {
-      console.log('Mongoose default connection disconnected through app terminal!');
-      process.exit(0);
-    });
-  });
 };
