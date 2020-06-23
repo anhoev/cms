@@ -2,9 +2,9 @@ const express = require('express');
 const route = express.Router();
 const mongoose = require('mongoose');
 const CmsFileModel = require('./schema');
-const initFileExplorer = require('file-explorer-backend');
+const initFileExplorer = require('@gigasource/file-explorer-backend');
 
-const MongooseFileMetadataStorage = require('file-explorer-backend/file-metadata-mongoose');
+const MongooseFileMetadataStorage = require('@gigasource/file-explorer-backend/file-metadata-mongoose');
 const mongooseFileMetadataStorage = new MongooseFileMetadataStorage(CmsFileModel);
 
 const {database: dbConfig} = global.APP_CONFIG;
@@ -13,7 +13,7 @@ let writeConcern = dbConfig.options && dbConfig.options.replicaSet ? (dbConfig.w
 
 if (!isNaN(writeConcern) && !isNaN(Number.parseInt(writeConcern))) writeConcern = Number.parseInt(writeConcern);
 
-const GridFsFileStorage = require('file-explorer-backend/file-storage-gridfs');
+const GridFsFileStorage = require('@gigasource/file-explorer-backend/file-storage-gridfs');
 const gridFsFileStorage = new GridFsFileStorage(mongoose.connection.db, {
   bucketName: 'cmsfiles',
   ...writeConcern ? {writeConcern: {w: writeConcern}} : {},
@@ -34,6 +34,7 @@ module.exports = function (cms) {
     moveFileMetadata,
     getPropertyMappings,
     checkFileExisted,
+    cloneFile,
     namespaceMiddleware,
   } = initFileExplorer({
     dependencies: {
@@ -50,6 +51,7 @@ module.exports = function (cms) {
   route.get('/file-existed', checkFileExisted);
   route.get('/property-mappings', getPropertyMappings);
   route.post('/folders', createFolder);
+  route.post('/files/clone/:id', cloneFile);
   route.delete('/files/:id', deleteFile);
   route.put('/file-metadata/rename/:id', renameFileMetadata);
   route.put('/file-metadata/move/:id', moveFileMetadata);
