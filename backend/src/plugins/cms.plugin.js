@@ -116,7 +116,7 @@ class CmsPlugin {
         }
       }))
     } catch (e) {
-      console.error('Expcetion occured when loading /json', e)
+      console.error('Exception occur when loading /json', e)
       return;
     }
 
@@ -134,7 +134,8 @@ class CmsPlugin {
         }
       }));
     } catch (e) {
-      console.error('Exception when update buildform collections', e)
+      console.error('Exception when update buildForm collections', e)
+      return
     }
 
     try {
@@ -149,6 +150,7 @@ class CmsPlugin {
       }));
     } catch (e) {
       console.error('Exception when update another collections', e)
+      return
     }
 
     if (dbExists) {
