@@ -65,77 +65,93 @@ class CmsPlugin {
     const pluginNames = _.map(global.APP_CONFIG.plugins, plugin => plugin.name)
     // NOTE: load data collection name base on order of plugins in config files
     const _log = _.once(() => console.log('init database start ...'))
-    await Promise.all(pluginNames.map(async pluginName => {
-      if (_.has(plugins, pluginName)) {
-        const plugin = plugins[pluginName]
+    try {
+      await Promise.all(pluginNames.map(async pluginName => {
+        if (_.has(plugins, pluginName)) {
+          const plugin = plugins[pluginName]
 
-        const _shouldUpdate = await shouldUpdate(plugin)
-        forceInit = dbExists ? _shouldUpdate : forceInit
-        if (dbExists && !forceInit) return;
+          const _shouldUpdate = await shouldUpdate(plugin)
+          forceInit = dbExists ? _shouldUpdate : forceInit
+          if (dbExists && !forceInit) return;
 
-        _log();
-        const jsonPath = path.join(plugin.pluginPath, 'json')
-        if (fs.statSync(jsonPath).isDirectory()) {
-          let directories = fs.readdirSync(jsonPath).filter(item => fs.statSync(path.join(jsonPath, item)).isDirectory());
+          _log();
+          const jsonPath = path.join(plugin.pluginPath, 'json')
+          if (fs.statSync(jsonPath).isDirectory()) {
+            let directories = fs.readdirSync(jsonPath).filter(item => fs.statSync(path.join(jsonPath, item)).isDirectory());
 
-          const manifestPath = path.join(plugin.pluginPath, 'manifest.js')
-          if (fs.existsSync(manifestPath) && forceInit) {
-            const {onlyUpdateCollections} = require(manifestPath)
-            if (onlyUpdateCollections && onlyUpdateCollections instanceof Array) {
-              directories = directories.filter(item => onlyUpdateCollections.includes(item))
+            const manifestPath = path.join(plugin.pluginPath, 'manifest.js')
+            if (fs.existsSync(manifestPath) && forceInit) {
+              const {onlyUpdateCollections} = require(manifestPath)
+              if (onlyUpdateCollections && onlyUpdateCollections instanceof Array) {
+                directories = directories.filter(item => onlyUpdateCollections.includes(item))
+              }
+            }
+
+            if (directories.includes('BuildForm')) {
+              const fileNames = fs.readdirSync(path.join(jsonPath, 'BuildForm')).filter(item => item.endsWith('.json'))
+              _.each(fileNames, file => {
+                const filePath = path.join(jsonPath, 'BuildForm', file)
+                const indexOfFile = _.findIndex(data.buildForms, bf => bf.endsWith(file))
+                if (indexOfFile !== -1) {
+                  console.log(`Using ${chalk.yellow(filePath)} instead of ${chalk.yellow(data.buildForms[indexOfFile])}`)
+                  data.buildForms.splice(indexOfFile, 1)
+                }
+                data.buildForms.push(filePath)
+              })
+            }
+
+            for (const collection of _.pull(directories, 'BuildForm')) {
+              const fileNames = fs.readdirSync(path.join(jsonPath, collection));
+              _.each(fileNames, file => {
+                const filePath = path.join(jsonPath, collection, file)
+                const indexOfFile = _.findIndex(data.collections, bf => bf.endsWith(file))
+                if (indexOfFile !== -1) {
+                  console.log(`Using ${chalk.yellow(filePath)} instead of ${chalk.yellow(data.collections[indexOfFile])}`)
+                  data.collections.splice(indexOfFile, 1)
+                }
+                data.collections.push(filePath)
+              })
             }
           }
-
-          if (directories.includes('BuildForm')) {
-            const fileNames = fs.readdirSync(path.join(jsonPath, 'BuildForm')).filter(item => item.endsWith('.json'))
-            _.each(fileNames, file => {
-              const filePath = path.join(jsonPath, 'BuildForm', file)
-              const indexOfFile = _.findIndex(data.buildForms, bf => bf.endsWith(file))
-              if (indexOfFile !== -1) {
-                console.log(`Using ${chalk.yellow(filePath)} instead of ${chalk.yellow(data.buildForms[indexOfFile])}`)
-                data.buildForms.splice(indexOfFile, 1)
-              }
-              data.buildForms.push(filePath)
-            })
-          }
-
-          for (const collection of _.pull(directories, 'BuildForm')) {
-            const fileNames = fs.readdirSync(path.join(jsonPath, collection));
-            _.each(fileNames, file => {
-              const filePath = path.join(jsonPath, collection, file)
-              const indexOfFile = _.findIndex(data.collections, bf => bf.endsWith(file))
-              if (indexOfFile !== -1) {
-                console.log(`Using ${chalk.yellow(filePath)} instead of ${chalk.yellow(data.collections[indexOfFile])}`)
-                data.collections.splice(indexOfFile, 1)
-              }
-              data.collections.push(filePath)
-            })
-          }
         }
-      }
-    }))
+      }))
+    } catch (e) {
+      console.error('Exception occur when loading /json', e)
+      return;
+    }
 
-    await Promise.all(data.buildForms.map(async path => {
-      try {
-        let buildform = JSON.parse(fs.readFileSync(path, 'utf8'));
-        await new Promise(async resolve => {
-          cms.on(`model-created:${buildform.name}`, resolve);
+    try {
+      await Promise.all(data.buildForms.map(async path => {
+        try {
+          let buildform = JSON.parse(fs.readFileSync(path, 'utf8'));
+          await new Promise(async resolve => {
+            cms.on(`model-created:${buildform.name}`, resolve);
 
-          await cms.getModel('BuildForm').findOneAndUpdate({_id: buildform._id}, buildform, {upsert: true, new: true})
-        });
-      } catch (e) {
-        console.log(e)
-      }
-    }));
-    await Promise.all(data.collections.map(async _path => {
-      const collection = path.basename(path.dirname(_path));
-      try {
-        const document = JSON.parse(fs.readFileSync(_path, 'utf8'));
-        await cms.getModel(collection).findOneAndUpdate({_id: document._id}, document, {upsert: true, new: true})
-      } catch (e) {
-        console.warn(e, collection);
-      }
-    }));
+            await cms.getModel('BuildForm').findOneAndUpdate({_id: buildform._id}, buildform, {upsert: true, new: true})
+          });
+        } catch (e) {
+          console.log(e)
+        }
+      }));
+    } catch (e) {
+      console.error('Exception when update buildForm collections', e)
+      return
+    }
+
+    try {
+      await Promise.all(data.collections.map(async _path => {
+        const collection = path.basename(path.dirname(_path));
+        try {
+          const document = JSON.parse(fs.readFileSync(_path, 'utf8'));
+          await cms.getModel(collection).findOneAndUpdate({_id: document._id}, document, {upsert: true, new: true})
+        } catch (e) {
+          console.warn(e, collection);
+        }
+      }));
+    } catch (e) {
+      console.error('Exception when update another collections', e)
+      return
+    }
 
     if (dbExists) {
       if (forceInit) {
