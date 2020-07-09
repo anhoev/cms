@@ -234,7 +234,13 @@ module.exports = (cms) => {
     }
     cms.middleware.collection({collections: cms.getTypes(), session: req.session}, _.once(function (err, result) {
       const indexPath = path.resolve(__dirname, '../../../dist/index.html');
-      const indexData = fs.readFileSync(indexPath, 'utf-8');
+      let indexData = fs.readFileSync(indexPath, 'utf-8');
+
+      // this function can be found in config/config.js file
+      const indexHtmlMutateFn = global.APP_CONFIG.mutateIndexHtml
+      if (indexHtmlMutateFn) indexData = indexHtmlMutateFn(indexData)
+
+      // append data into head tag
       const headTagPos = indexData.indexOf('</head>');
       let info = {
         collections: result.collections,
