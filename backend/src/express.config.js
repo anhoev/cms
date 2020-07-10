@@ -62,7 +62,9 @@ module.exports = function (cms, config = {}) {
         })
       }
 
-      cms.r2.use('/', history(), cms.middleware.getTypesMiddleware, cms.express.static(path.join(__dirname, '../../../dist')));
+      cms.r2.use('/', history(), cms.middleware.getTypesMiddleware, cms.express.static(path.join(__dirname, '../../../dist'), {
+        maxAge: 30 * 86400 * 1000 // 30 days (in milliseconds)
+      }));
     } else {
       const backofficeProxy = proxy('/', {
         target: `http://localhost:${global.APP_CONFIG.proxyPort ? global.APP_CONFIG.proxyPort : 8080}`
