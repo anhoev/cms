@@ -226,42 +226,51 @@ module.exports = (cms) => {
     info.sharedConfig = global.APP_CONFIG.sharedConfig;
   });
 
+  function getCollectionData(req) {
+    return new Promise(resolve => {
+      cms.middleware.collection({collections: cms.getTypes(), session: req.session},
+          _.once(function (err, result) {
+            if (req.originalUrl !== '/admin' && req.originalUrl !== '/getTypes') {
+              Object.keys(result.collections).forEach(key => {
+                const propertiesToOmit = Object.keys(result.collections[key]).filter(e => {
+                  return _.isNil(result.collections[key][e]);
+                }).concat(['queries', 'paths', 'form', 'tabs']);
+
+                result.collections[key] = _.omit(result.collections[key], propertiesToOmit);
+              });
+            }
+
+            const info = {collections: result.collections};
+            cms.execPost('getTypes', null, [info, req], () => resolve(info));
+          }));
+    });
+  }
+
   //todo: add this to somewhere else
   cms.middleware.getTypesMiddleware = function (req, res, next) {
     if (req.url !== '/index.html') {
       next();
       return;
     }
-    cms.middleware.collection({collections: cms.getTypes(), session: req.session}, _.once(function (err, result) {
-      const indexPath = path.resolve(__dirname, '../../../dist/index.html');
-      let indexData = fs.readFileSync(indexPath, 'utf-8');
 
-      // this function can be found in config/config.js file
-      const indexHtmlMutateFn = global.APP_CONFIG.mutateIndexHtml
-      if (indexHtmlMutateFn) indexData = indexHtmlMutateFn(indexData)
+    const indexPath = path.resolve(__dirname, '../../../dist/index.html');
+    let indexData = fs.readFileSync(indexPath, 'utf-8');
 
+    // this function can be found in config/config.js file
+    const indexHtmlMutateFn = global.APP_CONFIG.mutateIndexHtml;
+    if (indexHtmlMutateFn) indexData = indexHtmlMutateFn(indexData);
+
+    const headTagPos = indexData.indexOf('</head>');
+    getCollectionData(req).then(info => {
       // append data into head tag
-      const headTagPos = indexData.indexOf('</head>');
-      let info = {
-        collections: result.collections,
-      };
-      cms.execPost('getTypes', null, [info, req], function () {
-        let infoStringify = jsesc(JsonFn.stringify(info), {json: true, isScriptContext: true});
-        const newIndexData = indexData.slice(0, headTagPos) + `<script>window._info_ = ${infoStringify}</script>` + indexData.slice(headTagPos);
-        res.send(newIndexData);
-      })
-    }));
+      let infoStringify = jsesc(JsonFn.stringify(info), {json: true, isScriptContext: true});
+      const newIndexData = indexData.slice(0, headTagPos) + `<script>window._info_ = ${infoStringify}</script>` + indexData.slice(headTagPos);
+      res.send(newIndexData);
+    });
   };
 
-  cms.app.get('/getTypes', async function (req, res) {
-    cms.middleware.collection({collections: cms.getTypes(), session: req.session}, _.once(function (err, result) {
-      let info = {
-        collections: result.collections,
-      };
-      cms.execPost('getTypes', null, [info, req], function () {
-        res.send(JsonFn.stringify(info));
-      });
-    }));
+  cms.app.get('/getTypes', function (req, res) {
+    getCollectionData(req).then(info => res.send(JsonFn.stringify(info)));
   })
 
   cms.socket.on(`connection`, function (socket) {
