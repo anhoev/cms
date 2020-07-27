@@ -264,7 +264,16 @@ module.exports = (cms) => {
     getCollectionData(req).then(info => {
       // append data into head tag
       let infoStringify = jsesc(JsonFn.stringify(info), {json: true, isScriptContext: true});
-      const newIndexData = indexData.slice(0, headTagPos) + `<script>window._info_ = ${infoStringify}</script>` + indexData.slice(headTagPos);
+
+      let appendContent = `<script>window._info_ = ${infoStringify}</script>`;
+      const {appendHtmlHeaderConfig} = global.APP_CONFIG;
+      if (appendHtmlHeaderConfig) {
+        for (const path in appendHtmlHeaderConfig) {
+          if (req.originalUrl.startsWith(path)) appendContent += appendHtmlHeaderConfig[path];
+        }
+      }
+
+      const newIndexData = indexData.slice(0, headTagPos) + appendContent + indexData.slice(headTagPos);
       res.send(newIndexData);
     });
   };
