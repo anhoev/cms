@@ -363,5 +363,30 @@ module.exports = (cms) => {
     });
   });
 
+  cms.r2.post('/interface', (req, res) =>  {
+    let { name, chain } = req.body;
+    chain = JsonFn.clone(chain, true);
+    const model = cms.getModel(name);
+    cms.middleware.interface({name, chain, model}, _.once(async function (err, result) {
+      try {
+        if (err) {
+          return res.status(400).json({error: "Error occured"});
+        }
+        if (result.chain[0].fn === 'new') {
+          return res.status(200).json(new result.model(...result.chain[0].args));
+        }
+        for (const {fn, args} of result.chain) {
+          if (result.model instanceof Query || result.model.constructor && new result.model() instanceof Model) {
+            result.model = result.model[fn](...args);
+          }
+        }
+        let response = await result.model;
+        res.status(200).json(response);
+      } catch (e) {
+        res.status(400).json({error: "Error occured"});
+      }
+    }));
+  });
+
   cms.execPostSync('load:types');
 };
