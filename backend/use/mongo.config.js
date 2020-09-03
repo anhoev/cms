@@ -41,12 +41,6 @@ module.exports = async function connect() {
     mongoose.connect(uri, connectionOptions);
   }
 
-  mongoose.connect(uri, connectionOptions).then(async () => {
-    // console.log(`connect db ${uri} success`);
-    const BuildForm = cms.getModel('BuildForm');
-    const count = await BuildForm.countDocuments();
-  });
-
   mongoose.connection.on('error', function (err) {
     console.log('Could not connect to Mongodb: ', err);
   });
