@@ -91,7 +91,7 @@ class CmsPlugin {
               const fileNames = fs.readdirSync(path.join(jsonPath, 'BuildForm')).filter(item => item.endsWith('.json'))
               _.each(fileNames, file => {
                 const filePath = path.join(jsonPath, 'BuildForm', file)
-                const indexOfFile = _.findIndex(data.buildForms, bf => bf.endsWith(file))
+                const indexOfFile = _.findIndex(data.buildForms, bf => path.basename(bf) === file)
                 if (indexOfFile !== -1) {
                   console.log(`Using ${chalk.yellow(filePath)} instead of ${chalk.yellow(data.buildForms[indexOfFile])}`)
                   data.buildForms.splice(indexOfFile, 1)
