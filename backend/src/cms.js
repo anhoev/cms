@@ -52,7 +52,9 @@ const cms = {
 
     app.use(cms.r2);
 
-    server.listen(global.APP_CONFIG.port);
+    server.listen(global.APP_CONFIG.port, async () => {
+      await cms.execPostAsync('load:afterServerListen');
+    });
   },
   socket: io.of('/app'),
   io: io,
