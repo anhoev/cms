@@ -8,15 +8,15 @@ const convertFormToSchema = require('./utils/form.util').convertFormToSchema;
 module.exports = async function (cms) {
   const {mongoose} = cms;
 
-  jsonfn.addHandler((k,v) => {
+  /*jsonfn.addHandler((k,v) => {
     return v instanceof mongoose.Types.ObjectId;
   }, (k,v) => {
-    return v.startsWith('__object_id__');
+    return typeof v === 'string' && v.length === 24 && mongoose.Types.ObjectId.isValid(v);
   }, (k,v) => {
-    return '__object_id__' + v.toString();
+    return v.toString();
   }, (k,v) => {
-    return mongoose.Types.ObjectId(v.slice(13));
-  })
+    return mongoose.Types.ObjectId(v);
+  })*/
 
   const makeSchema = (_with) => _.pick({
     label: String,
