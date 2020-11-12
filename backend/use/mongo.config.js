@@ -1,6 +1,7 @@
 const chalk = require('chalk');
 const signale = require('signale');
-const mongoose = require('mongoose');
+const orm = require('schemahandler');
+//const mongoose = require('mongoose');
 const cms = require('../src/cms');
 // const AppConfig = require('../app.config');
 
@@ -10,11 +11,12 @@ module.exports = async function connect() {
 
   let isConnectedBefore = false;
   let uri;
+  let dbName = appConfig.database.dbName
 
   if (appConfig.database.uri) {
     uri = appConfig.database.uri;
   } else {
-    uri = `mongodb://${appConfig.database.host}:${appConfig.database.port}/${appConfig.database.dbName}`
+    uri = `mongodb://${appConfig.database.host}:${appConfig.database.port}`
   }
 
   const connectionOptions = {
@@ -38,26 +40,30 @@ module.exports = async function connect() {
     if (isConnectedBefore) {
       console.info('Db reconnecting...');
     }
-    mongoose.connect(uri, connectionOptions);
+    orm.connect({uri, options: connectionOptions}, dbName, function (err) {
+      if (err) {
+        console.log('Could not connect to Mongodb: ', err);
+        return;
+      }
+      _init();
+    });
   }
 
-  mongoose.connection.on('error', function (err) {
-    console.log('Could not connect to Mongodb: ', err);
-  });
+  function _init() {
+    orm.connection.on('disconnected', function () {
+      console.log('Db has lost connection...');
+      if (!isConnectedBefore) {
+        setTimeout(connect, 5000);
+      }
+    });
 
-  mongoose.connection.on('disconnected', function () {
-    console.log('Db has lost connection...');
-    if (!isConnectedBefore) {
-      setTimeout(connect, 5000);
-    }
-  });
+    orm.connection.on('connected', function () {
+      isConnectedBefore = true;
+      signale.success(chalk.default.bgCyan.black(`[Mongodb] name: "${orm.connection.s.url}" has connected successfully!`));
+    });
 
-  mongoose.connection.on('connected', function () {
-    isConnectedBefore = true;
-    signale.success(chalk.default.bgCyan.black(`[Mongodb] name: "${mongoose.connection.name}" has connected successfully!`));
-  });
-
-  mongoose.connection.on('reconnected', function () {
-    console.log('Db has reconnected!');
-  });
+    orm.connection.on('reconnected', function () {
+      console.log('Db has reconnected!');
+    });
+  }
 };

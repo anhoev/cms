@@ -11,10 +11,11 @@ const yargs = require('yargs');
 const request = require('request');
 const express = require('express');
 const socket = require('socket.io');
-const mongoose = require('mongoose');
+const orm = require('schemahandler');
+//const mongoose = require('mongoose');
 const NodeCache = require('node-cache');
 
-const restify = require('express-restify-mongoose');
+//const restify = require('express-restify-mongoose');
 const Kareem = require('kareem');
 
 const app = express();
@@ -42,7 +43,7 @@ const cms = {
   async init() {
     await cms.use(require('./express.config'));
     await cms.use(require('./mongoose-plugins'));
-    await cms.use(require('./extensions/schema.ext'));
+    //await cms.use(require('./extensions/schema.ext'));
     await cms.use(require('./utils/query.util'));
     await cms.use(require('./types'));
     await cms.use(require('./plugins/socket.plugin'));
@@ -107,9 +108,10 @@ const cms = {
   r1: express.Router(),
   r2: express.Router(),
   app,
-  mongoose,
+  orm,
+  //mongoose,
   routers: {},
-  restify,
+  //restify,
   Types: {},
   getPath: p => p,
   use: async function (fn) {

@@ -6,11 +6,16 @@ module.exports = function () {
   if (!isNaN(writeConcern) && !isNaN(Number.parseInt(writeConcern))) writeConcern = Number.parseInt(writeConcern);
 
   if (writeConcern) {
-    const mongoose = require('mongoose');
+    const orm = require("schemahandler");
+    orm.registerCollectionOptions(() => true, {
+      w: writeConcern
+    });
+
+    /*const mongoose = require('mongoose');
     const writeConcernPlugin = function (schema) {
       schema.set('writeConcern', {w: writeConcern});
     }
 
-    mongoose.plugin(writeConcernPlugin);
+    mongoose.plugin(writeConcernPlugin);*/
   }
 }
