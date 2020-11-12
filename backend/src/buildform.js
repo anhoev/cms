@@ -5,7 +5,7 @@ const jsonfn = require('json-fn');
 const convertFormToSchema = require('./utils/form.util').convertFormToSchema;
 
 module.exports = async function (cms) {
-  const {mongoose} = cms;
+  const {orm} = cms;
 
   /*jsonfn.addHandler((k,v) => {
     return v instanceof mongoose.Types.ObjectId;
@@ -231,7 +231,7 @@ module.exports = async function (cms) {
   };
 
   function onInitCollection(schema, collectionName, schemaForm) {
-    if (schemaForm && !_.isEmpty(schemaForm.extensions)) {
+    /*if (schemaForm && !_.isEmpty(schemaForm.extensions)) {
       let preComputedExtensions = jsonfn.clone(_.filter(schemaForm.extensions, {extensionType: 'PreComputed'}), true, true);
       for (const {fn} of preComputedExtensions) {
         schema.pre('findOneAndUpdate', async function (next, done) {
@@ -244,7 +244,8 @@ module.exports = async function (cms) {
           }
         })
       }
-    }
+    }*/
+
     schema.onPostSave(function (doc) {
       if (doc) {
         cms.socket/*.to(`collectionSubscription${collectionName}`)*/
@@ -320,6 +321,13 @@ module.exports = async function (cms) {
       onInitCollection(schema, FormBuilderInfo.name);
     }
   });
+
+  if (!global.APP_CONFIG.useChangeStream) {
+    orm.post(`update:BuildForm`, null, function (result, target) {
+      //todo: code here;
+    });
+  }
+
   //todo: change stream
   if (global.APP_CONFIG.useChangeStream) {
     BuildForm.watch().on('change', async change => {

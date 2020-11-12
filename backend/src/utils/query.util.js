@@ -2,6 +2,7 @@
 const _ = require('lodash');
 const traverse = require('traverse');
 const _merge = require('extend');
+let Schema;
 
 function merge() {
   return _merge(true, ...arguments);
@@ -9,9 +10,14 @@ function merge() {
 
 module.exports = cms => {
   cms.utils.initType = init;
-  const { Schema } = cms.mongoose;
 
   function init(schema, tabs, name) {
+    if (!Schema) Schema = require('mongoose').Schema;
+    const mongooseSchema = new Schema(schema);
+    return _init(mongooseSchema, tabs, name);
+  }
+
+  function _init(schema, tabs, name) {
     const Queries = [];
 
     const paths = traverse(schema.paths).map(function (node) {

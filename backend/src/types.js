@@ -13,9 +13,9 @@ const fs = require('fs');
 
 module.exports = (cms) => {
   const {app, Q} = cms;
-  const originalObjectIdCast = cms.mongoose.ObjectId.cast();
+  //const originalObjectIdCast = cms.mongoose.ObjectId.cast();
 
-  cms.mongoose.ObjectId.cast(function (v) {
+  /*cms.mongoose.ObjectId.cast(function (v) {
     try {
       if (typeof v === 'string') {
         const isKeyHexStr = v.length === 24 && /^[a-f0-9]+$/i.test(v);
@@ -30,7 +30,7 @@ module.exports = (cms) => {
       }
       throw e;
     }
-  });
+  });*/
 
   function registerSchema(schema, options) {
     const {
@@ -44,7 +44,7 @@ module.exports = (cms) => {
       return;
     }
 
-    cms.filters.schema.forEach((fn) => fn(schema, name));
+    /*cms.filters.schema.forEach((fn) => fn(schema, name));
     if (!(schema instanceof cms.mongoose.Schema)) {
       schema = new cms.mongoose.Schema(schema, _.assign({
         toObject: {virtuals: true},
@@ -53,14 +53,14 @@ module.exports = (cms) => {
         ...schema._id !== undefined && {_id: false},
         versionKey: false
       }, schemaOptions));
-    }
+    }*/
 
-    if (options.autopopulate) {
+    /*if (options.autopopulate) {
       schema.plugin(autopopulate);
-    }
+    }*/
 
 
-    if (textIndex) {
+    /*if (textIndex) {
       schema.add({_textIndex: {type: String, form: false, index: 'text'}});
       schema.pre('findOneAndUpdate', function (next) {
         let _textIndex = '';
@@ -90,22 +90,24 @@ module.exports = (cms) => {
         this._update._textIndex = _textIndex;
         next();
       });
-    }
+    }*/
 
 
     // schema.index({'$**': 'text'});
 
-    if (initSchema) {
-      initSchema(schema);
-    }
     let Model;
     if (name) {
-      Model = cms.mongoose.model(name, schema);
-      cms.restify.serve(app, Model, _.assign(restifyOptions, {lean: false}));
+      cms.orm.registerSchema(name, schema);
+      Model = cms.orm.getCollection(name);
+      //cms.restify.serve(app, Model, _.assign(restifyOptions, {lean: false}));
     }
 
-    _.merge(fn, cms.filters.fn);
-    _.merge(serverFn, cms.filters.serverFn);
+    if (initSchema) {
+      initSchema(Model);
+    }
+
+    /*_.merge(fn, cms.filters.fn);
+    _.merge(serverFn, cms.filters.serverFn);*/
 
 
     cms.Types[name] = {
@@ -349,9 +351,9 @@ module.exports = (cms) => {
             return fn(null, new result.model(...result.chain[0].args));
           }
           for (const {fn, args} of result.chain) {
-            if (result.model instanceof Query || result.model.constructor && new result.model() instanceof Model) {
+            //if (result.model instanceof Query || result.model.constructor && new result.model() instanceof Model) {
               result.model = result.model[fn](...args);
-            }
+            //}
           }
           let response = await result.model;
           fn(null, response);
@@ -376,9 +378,9 @@ module.exports = (cms) => {
           return res.status(200).json(new result.model(...result.chain[0].args));
         }
         for (const {fn, args} of result.chain) {
-          if (result.model instanceof Query || result.model.constructor && new result.model() instanceof Model) {
+          //if (result.model instanceof Query || result.model.constructor && new result.model() instanceof Model) {
             result.model = result.model[fn](...args);
-          }
+          //}
         }
         let response = await result.model;
         res.status(200).json(response);

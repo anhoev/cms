@@ -1,7 +1,6 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const orm = require('schemahandler');
 
-const fileSchema = new Schema({
+const fileSchema = {
   fileName: {
     type: String,
     trim: true,
@@ -32,8 +31,8 @@ const fileSchema = new Schema({
     type: String,
     trim: true,
   },
-}, {
-  timestamps: true,
-});
+}
 
-module.exports = mongoose.model('CmsFile', fileSchema);
+orm.registerSchema('CmsFile', fileSchema);
+
+module.exports = orm.getCollection('CmsFile');

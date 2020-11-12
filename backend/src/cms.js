@@ -41,6 +41,7 @@ const download = function (uri, filename, callback) {
 
 const cms = {
   async init() {
+    console.log(process.memoryUsage());
     await cms.use(require('./express.config'));
     await cms.use(require('./mongoose-plugins'));
     //await cms.use(require('./extensions/schema.ext'));
@@ -56,6 +57,8 @@ const cms = {
     server.listen(global.APP_CONFIG.port, async () => {
       await cms.execPostAsync('load:afterServerListen');
     });
+
+    console.log(process.memoryUsage());
   },
   socket: io.of('/app'),
   io: io,

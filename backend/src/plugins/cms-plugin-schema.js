@@ -1,9 +1,9 @@
-const mongoose = require('mongoose')
+const orm = require('schemahandler')
 
-const pluginSchema = new mongoose.Schema({
+orm.registerSchema('CmsPlugin', {
   name: String,
   version: String,
   lastVersion: String
 })
 
-module.exports = mongoose.model('CmsPlugin', pluginSchema)
+module.exports = orm.getCollection('CmsPlugin');
