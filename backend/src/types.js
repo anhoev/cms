@@ -358,6 +358,7 @@ module.exports = (cms) => {
           let response = await result.model;
           fn(null, response);
         } catch (e) {
+          console.warn(e)
           fn(e);
         }
 
