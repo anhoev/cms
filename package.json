@@ -122,7 +122,8 @@
     "portfinder": "latest",
     "tcp-port-used": "latest",
     "@sentry/integrations": "5.15.5",
-    "@sentry/node": "5.15.5"
+    "@sentry/node": "5.15.5",
+    "schemahandler": "github:gigasource/schemaHandler#1.0.17"
   },
   "devDependencies": {
     "inquirer": "^7.0.5",
