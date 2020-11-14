@@ -246,9 +246,9 @@ module.exports = async function (cms) {
       }
     }*/
 
-    schema.onPostSave(function (doc) {
+    /*schema.onPostSave(function (doc) {
       if (doc) {
-        cms.socket/*.to(`collectionSubscription${collectionName}`)*/
+        cms.socket/!*.to(`collectionSubscription${collectionName}`)*!/
           .emit('changeCollectionList', {
             collection: collectionName,
             type: 'update',
@@ -278,7 +278,7 @@ module.exports = async function (cms) {
             type: 'reload'
           });
       }
-    });
+    });*/
   }
 
   function initSchema(schemaForm) {
@@ -304,7 +304,18 @@ module.exports = async function (cms) {
     ...FormBuilderInfo,
     initSchema(schema) {
       if (!global.APP_CONFIG.useChangeStream) {
-        schema.onPostSave(function (form) {
+        orm.post('update:BuildForm', null, function (form, target) {
+          if (form && form.type === 'Collection') {
+            form = jsonfn.clone(form, true, false);
+            if (cms.Types[form.name]) {
+              delete cms.Types[form.name];
+            }
+            initSchema(form);
+            cms.socket.emit('reloadSchema');
+          }
+          cms.emit(`model-created:${form.name}`)
+        });
+        /*schema.onPostSave(function (form) {
           if (form && form.type === 'Collection') {
             form = jsonfn.clone(form, true, false);
             if (cms.Types[form.name]) {
@@ -315,7 +326,7 @@ module.exports = async function (cms) {
             cms.socket.emit('reloadSchema');
           }
           cms.emit(`model-created:${form.name}`)
-        });
+        });*/
       }
       // Init collection subscription for form builder
       onInitCollection(schema, FormBuilderInfo.name);

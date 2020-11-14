@@ -58,7 +58,7 @@ const cms = {
       await cms.execPostAsync('load:afterServerListen');
     });
 
-    console.log(process.memoryUsage());
+    //console.log(process.memoryUsage());
   },
   socket: io.of('/app'),
   io: io,
