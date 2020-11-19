@@ -30,7 +30,7 @@ module.exports = async function connect() {
 
   if (appConfig.database.username && appConfig.database.password) {
     connectionOptions.user = appConfig.database.username;
-    connectionOptions.pass = appConfig.database.password;
+    connectionOptions.password = appConfig.database.password;
     connectionOptions.authSource = appConfig.database.authSource || "admin";
   }
 
