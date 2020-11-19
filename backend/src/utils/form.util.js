@@ -20,7 +20,8 @@ module.exports = {
         const convertMap = {
           'string': String,
           'number': Number,
-          'boolean': Boolean
+          'boolean': Boolean,
+          'date': Date
         };
         let _node = { type: convertMap[node.schemaType] || {} };
         if (node.unique) {
