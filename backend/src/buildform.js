@@ -8,6 +8,7 @@ const convertFormToSchema = require('./utils/form.util').convertFormToSchema;
 module.exports = async function (cms) {
   const {mongoose} = cms;
 
+  cms.convertFormToSchema = convertFormToSchema;
   /*jsonfn.addHandler((k,v) => {
     return v instanceof mongoose.Types.ObjectId;
   }, (k,v) => {
