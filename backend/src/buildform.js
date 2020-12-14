@@ -304,7 +304,7 @@ module.exports = async function (cms) {
     ...FormBuilderInfo,
     initSchema(schema) {
       if (!global.APP_CONFIG.useChangeStream) {
-        orm.post('update:BuildForm', null, function (form, target) {
+        orm.on('update:BuildForm', function (form, target) {
           if (form && form.type === 'Collection') {
             form = jsonfn.clone(form, true, false);
             if (cms.Types[form.name]) {
@@ -334,7 +334,7 @@ module.exports = async function (cms) {
   });
 
   if (!global.APP_CONFIG.useChangeStream) {
-    orm.post(`update:BuildForm`, null, function (result, target) {
+    orm.on(`update:BuildForm`, function (result, target) {
       //todo: code here;
     });
   }
