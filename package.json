@@ -150,7 +150,7 @@
     "tls": "0.0.1",
     "traverse": "^0.6.6",
     "url-loader": "^0.5.7",
-    "utf-8-validate": "^1.2.1",
+    "utf-8-validate": "^5.0.3",
     "uuid": "^2.0.1",
     "ws": "^5.2.0"
   }
