@@ -44,12 +44,9 @@ module.exports = function (fileName, destPath, filePath) {
       vuePlugin,
       babel({
         babelrc: false,
-        presets: ['vca-jsx', ['@vue/jsx',
-          {
-            'useBuiltIns': 'entry'
-          }]],
+        presets: ['@vue/cli-plugin-babel/preset'],
         plugins: ['@babel/plugin-syntax-import-meta',
-          '@babel/plugin-syntax-dynamic-import'],
+          '@babel/plugin-syntax-dynamic-import', '@vue/babel-plugin-jsx'],
         runtimeHelpers: true
       }),
       commonjs(),
