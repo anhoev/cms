@@ -29,7 +29,7 @@
     "submodule-update": "git submodule foreach -q --recursive 'git checkout $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master) && git pull'",
     "submodule-ci-update": "git submodule update --init --recursive"
   },
-  "peerDependencies": {
+  "dependencies": {
     "@babel/core": "^7.4.0",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-syntax-import-meta": "^7.2.0",
@@ -113,17 +113,13 @@
     "sugarss": "^2.0.0",
     "terser": "^4.4.2",
     "traverse": "^0.6.6",
-    "vue": "2.6.10",
-    "vue-runtime-helpers": "^1.1.2",
-    "vue-server-renderer": "2.6.10",
-    "vue-template-compiler": "2.6.10",
     "yargs": "^13.2.2",
     "file-explorer-backend": "github:gigasource/file-explorer-backend#1.0.8",
     "portfinder": "latest",
     "tcp-port-used": "latest",
     "@sentry/integrations": "5.15.5",
     "@sentry/node": "5.15.5",
-    "schemahandler": "github:gigasource/schemaHandler#1.0.17"
+    "schemahandler": "github:gigasource/schemaHandler#1.0.87"
   },
   "devDependencies": {
     "inquirer": "^7.0.5",
