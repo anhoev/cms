@@ -128,6 +128,13 @@ module.exports = async (cms) => {
   }
 
   function getPluginFiles(plugins) {
+    function camelize(str){
+      let arr = str.split('-');
+      let capital = arr.map((item, index) => index ? item.charAt(0).toUpperCase() + item.slice(1).toLowerCase() : item.toLowerCase());
+      // ^-- change here.
+      return capital.join("");
+    }
+
     const path = require('path');
     return _.reduce(plugins, (acc, plugin) => {
       const manifestPath = path.join(plugin.pluginPath, 'manifest.js');
@@ -136,7 +143,7 @@ module.exports = async (cms) => {
         const {files} = require(manifestPath);
         acc.push(...files.map(file => ({
           ...file,
-          plugin: plugin.pluginName
+          plugin: camelize(plugin.pluginName)
         })))
       }
       return acc

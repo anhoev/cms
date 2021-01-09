@@ -50,9 +50,27 @@ module.exports = function (cms, config = {}) {
   if (useMongoSession) useSession();
   //cms.execPost()
 
-  cms.app.use('/plugins', cms.middleware.static, cms.express.static(global["APP_CONFIG"].pluginPath));
+  cms.app.use('/', cms.middleware.static, cms.express.static(global["APP_CONFIG"].pluginPath));
 
   cms.post('load:types', () => {
+    // dist for pos plugins
+    if (fs.existsSync('../../../pos-plugin/dist')) {
+      cms.r2.use('/plugins', cms.express.static('../../../plugins/pos-plugin/dist'), {
+        maxAge: 30 * 86400 * 1000
+      })
+    } else {
+      const posPluginProxy = proxy('/plugins', {
+        target: `http://localhost:${global.APP_CONFIG.proxyPosPluginPort ? global.APP_CONFIG.proxyPosPluginPort : 8081}`
+      })
+      cms.r2.use('/plugins', posPluginProxy)
+    }
+    cms.socket.on('connection', socket => {
+      socket.on('remoteEntry', (ack) => {
+        ack([`http://localhost:${global.APP_CONFIG.port ? global.APP_CONFIG.port : 8888}/plugins/remoteEntry.js`])
+      })
+    })
+
+    // dist for backoffice
     if (fs.existsSync(path.join(__dirname, '../../../dist'))) {
       if (global.APP_CONFIG.allowIframe) {
         cms.app.use(function (req, res, next) {
@@ -71,6 +89,5 @@ module.exports = function (cms, config = {}) {
       });
       cms.r2.use('/', backofficeProxy);
     }
-
   })
 }
