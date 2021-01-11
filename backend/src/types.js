@@ -2,13 +2,7 @@
 const _ = require('lodash');
 const path = require('path');
 const JsonFn = require('json-fn');
-const cheerio = require('cheerio');
-const traverse = require('traverse');
 require('generator-bind').polyfill();
-const unless = require('express-unless');
-const autopopulate = require('mongoose-autopopulate');
-const Query = require('mongoose/lib/query');
-const Model = require('mongoose/lib/model');
 const fs = require('fs');
 
 module.exports = (cms) => {
@@ -186,8 +180,7 @@ module.exports = (cms) => {
           await Model.remove({});
         }
         for (let element of list) {
-          let query = new Query({_id: element._id}, {upsert: true, new: true});
-          await Model.findOneAndUpdate(query, element);
+          await Model.findOneAndUpdate({_id: element._id}, element);
         }
       }
     }
