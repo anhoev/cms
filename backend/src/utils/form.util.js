@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const traverse = require('traverse');
-const objectId = require('mongoose/lib/schema/objectid');
+const objectId = require('bson').ObjectId;
 
 module.exports = {
   convertFormToSchema: function (buildForm) {
