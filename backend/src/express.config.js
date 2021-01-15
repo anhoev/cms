@@ -52,7 +52,7 @@ module.exports = function (cms, config = {}) {
 
   cms.app.use('/plugins', cms.middleware.static, cms.express.static(global["APP_CONFIG"].pluginPath));
 
-  cms.post('load:types', () => {
+  cms.on('load:types', () => {
     if (fs.existsSync(path.join(__dirname, '../../../dist'))) {
       if (global.APP_CONFIG.allowIframe) {
         cms.app.use(function (req, res, next) {

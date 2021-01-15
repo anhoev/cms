@@ -16,7 +16,7 @@ const orm = require('schemahandler');
 const NodeCache = require('node-cache');
 
 //const restify = require('express-restify-mongoose');
-const Kareem = require('kareem');
+const Hooks = require('schemahandler/hooks/hooks');
 
 const app = express();
 const server = http.Server(app);
@@ -55,7 +55,7 @@ const cms = {
     app.use(cms.r2);
 
     server.listen(global.APP_CONFIG.port, async () => {
-      await cms.execPostAsync('load:afterServerListen');
+      await cms.emit('load:afterServerListen');
     });
 
     //console.log(process.memoryUsage());
@@ -190,8 +190,7 @@ const cms = {
   }
 };
 
-_.extend(cms, new Kareem());
-require('event-emitter')(cms);
+_.extend(cms, new Hooks());
 
 global.cms = cms;
 module.exports = cms;

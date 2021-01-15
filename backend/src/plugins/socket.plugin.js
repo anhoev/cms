@@ -15,7 +15,7 @@ module.exports = async (cms) => {
   //todo: resolve
   resolveFileLoaderBeforeInitModel(cms.pluginFiles);
 
-  cms.post('load:buildform', async () => {
+  cms.on('load:buildform', async () => {
     if (global.APP_CONFIG.initData) {
       //todo error handling
       await Plugin.initData(cms.allPlugins, global.APP_CONFIG['force-init-data']).catch(e => e)
@@ -144,6 +144,7 @@ module.exports = async (cms) => {
   }
 
   cms.socket.on('connection', function (socket) {
+    cms.emit('run:internalSocketConnected', socket)
     socket.on('loadPlugin', function (fn) {
       fn(Object.keys(allPlugins).map(item => getPlugin(item).loadDirTree()));
     });

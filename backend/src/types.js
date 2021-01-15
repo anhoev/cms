@@ -219,7 +219,7 @@ module.exports = (cms) => {
 
   const jsesc = require('jsesc');
 
-  cms.post('getTypes', async function (info, req) {
+  cms.on('getTypes', async function (info, req) {
     info.loginUser = {
       user: req.session && req.session.user,
       role: req.session && req.session.userRole
@@ -243,7 +243,8 @@ module.exports = (cms) => {
             }
 
             const info = {collections: result.collections};
-            cms.execPost('getTypes', null, [info, req], () => resolve(info));
+            cms.emit('getTypes', info, req);
+            resolve(info)
           }));
     });
   }
@@ -391,5 +392,5 @@ module.exports = (cms) => {
     }));
   });
 
-  cms.execPostSync('load:types');
+  cms.emit('load:types');
 };

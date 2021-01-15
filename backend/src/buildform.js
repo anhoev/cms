@@ -292,7 +292,7 @@ module.exports = async function (cms) {
         autopopulate: true,
         initSchema(schema) {
           onInitCollection(schema, schemaForm.name, schemaForm);
-          cms.execPostSync(`init-schema:${schemaForm.name}`, null, [schema]);
+          cms.emit(`init-schema:${schemaForm.name}`, schema);
         }
       });
     } catch (e) {
@@ -363,15 +363,5 @@ module.exports = async function (cms) {
     initSchema(form);
   });
 
-  //todo: make lib for this one
-  cms.execPostAsync = async function(name, context, args) {
-    const posts = this._posts.get(name) || [];
-    const numPosts = posts.length;
-
-    for (let i = 0; i < numPosts; ++i) {
-      await posts[i].fn.bind(context)(...(args || []));
-    }
-  };
-
-  await cms.execPostAsync('load:buildform');
+  await cms.emit('load:buildform');
 };
