@@ -152,7 +152,7 @@ const cms = {
       const collections = a.collections;
       for (const collectionName in collections) {
         const collection = collections[collectionName];
-        if (collection.info.alwaysLoad && collection.list.length === 0) {
+        if (collection && collection.info.alwaysLoad && collection.list.length === 0) {
           const list = await cms.getModel(collectionName).find({});
           collection.list.push(...list);
         }
