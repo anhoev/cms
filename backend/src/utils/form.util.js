@@ -75,7 +75,7 @@ module.exports = {
         }
         if (node.schemaType === 'array') {
           _node = [_.keyBy({ ...node.fields }, 'key')];
-          if (node.fields.length === 1 && node.fields[0].schemaType !== 'array') {
+          if (node.fields && node.fields.length === 1 && node.fields[0].schemaType !== 'array') {
             this.after(function (_node) {
               _node = [_.map(_node[0], f => f)[0]];
               this.update(_node);

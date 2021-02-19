@@ -58,7 +58,7 @@ module.exports = cms => {
     let Form = traverse(paths).map(function (node) {
       // control
       {
-
+        if (!node) return
         if (!this.key) {
           return;
         }
@@ -67,7 +67,7 @@ module.exports = cms => {
           this.delete();
           return this.block();
         }
-        if (!node.fieldGroup && !node.instance && (!_.includes(['schema', 'field', 'fields', 'fieldGroup'], this.key))) {
+        if (node && !node.fieldGroup && !node.instance && (!_.includes(['schema', 'field', 'fields', 'fieldGroup'], this.key))) {
           return this.block();
         }
 
@@ -81,7 +81,7 @@ module.exports = cms => {
 
       // make Form
       {
-        const label = node.options ? node.options.label : null;
+        const label = (node && node.options) ? node.options.label : null;
         if (node.instance === 'Array') {
           let form = convertArrayField(node, { key: this.key, label: label || this.key });
           this.update(form);
