@@ -10,6 +10,7 @@ const autopopulate = require('mongoose-autopopulate');
 const Query = require('mongoose/lib/query');
 const Model = require('mongoose/lib/model');
 const fs = require('fs');
+const {ObjectID} = require('bson');
 
 module.exports = (cms) => {
   const {app, Q} = cms;
@@ -33,7 +34,7 @@ module.exports = (cms) => {
   });*/
 
   function registerSchema(schema, options) {
-    const {
+    let {
       name, label, formatter, formatterUrl, initSchema, title, fn = {},
       serverFn = {}, tabs, isViewElement = true, mTemplate, admin = {query: []},
       alwaysLoad = false, restifyOptions,
@@ -109,6 +110,24 @@ module.exports = (cms) => {
     /*_.merge(fn, cms.filters.fn);
     _.merge(serverFn, cms.filters.serverFn);*/
 
+    if (form) {
+      form = traverse(form).map(function (node) {
+        const {key, path, isRoot, parent} = this;
+        if (isRoot) return;
+        if (!node || typeof node !== 'object') return this.block();
+        if (this.node_ instanceof ObjectID || (typeof this.node_ === 'object' && ObjectID.isValid(this.node_))) {
+          delete this.node_['__id'];
+          this.update(this.node_, true);
+          return this.block();
+        }
+        if (node.schemaType === 'objectId') {
+
+          this.after(function(_node) {
+            this.update(_.assign(_node, {type: 'refSelect'}));
+          })
+        }
+      })
+    }
 
     cms.Types[name] = {
       schema,
