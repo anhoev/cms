@@ -120,7 +120,8 @@ module.exports = async function (cms) {
     name: {type: String, flex: 'md4'},
     class: {type: String, flex: 'md4'},
     alwaysLoad: {type: Boolean, flex: 'md4'},
-    type: {type: String,
+    type: {
+      type: String,
       form: {
         type: 'input@select',
         options: ['Collection', 'Component', 'Extension', 'FormField'],
@@ -193,17 +194,30 @@ module.exports = async function (cms) {
           'choice': ['label', 'flex', 'choiceKey', 'choiceKeyOutside', 'isVisible'],
           'object@dynamic': ['label', 'flex', 'noPanel', 'addable', 'dynamicFields', 'isVisible'],
           'tree': ['label', 'children', 'getText', 'selectNodeAfterClick'],
-          'input@select': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips','normalize'],
-          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips', 'allowDuplicates','normalize']
+          'input@select': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips', 'normalize'],
+          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips', 'allowDuplicates', 'normalize']
         })), {type: {form: {form: {type: 'choice', dynamicFields: '.mixed'}}}}),
         array: _.merge(w({
           'array': ['label', 'flex', 'addable', 'isVisible'],
           'tableArray': ['label', 'flex', 'expansion', 'addable', 'isVisible', 'lazy'],
           'choiceArray': ['label', 'flex', 'addable', 'choiceKey', 'isVisible', 'lazy'],
-          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips', 'allowDuplicates','normalize']
-        }), {type: {form: {form: {dynamicFields: '.array'}}}})
+          'input@multiSelect': ['label', 'flex', 'options', 'addable', 'isVisible', 'returnObject', 'itemText', 'itemValue', 'chips', 'allowDuplicates', 'normalize']
+        }), {type: {form: {form: {dynamicFields: '.array'}}}}),
+        layout: _.merge(w({
+          //'computed': ['label', 'flex', 'addable', 'isVisible']
+        }), {type: {form: {form: {dynamicFields: '.layout'}}}}),
       }],
-      form: {type: 'tree', children: 'fields', choiceKey: 'schemaType'}
+      form: {type: 'tree', children: 'fields', choiceKey: 'schemaType',
+      getText: (item) => {
+        if (item.schemaType === 'layout') {
+          const form = cms.Types['BuildForm'].list.find(f => f.name === item.type);
+          return `${item.type.replace('Layout', '')}:${item[form.title]}`;
+        }
+        if (item.key) {
+          return `${item.key} : ${_.lowerCase(item['schemaType'])}`;
+        }
+        return _.lowerCase(item['schemaType']);
+      }}
     },
     extensions: {
       type: [{choice: String}],
