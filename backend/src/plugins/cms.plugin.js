@@ -138,20 +138,22 @@ class CmsPlugin {
       return
     }
 
-    try {
-      await Promise.all(data.collections.map(async _path => {
-        const collection = path.basename(path.dirname(_path));
-        try {
-          const document = JSON.parse(fs.readFileSync(_path, 'utf8'));
-          await cms.getModel(collection).findOneAndUpdate({_id: document._id}, document, {upsert: true, new: true})
-        } catch (e) {
-          console.warn(e, collection);
-        }
-      }));
-    } catch (e) {
-      console.error('Exception when update another collections', e)
-      return
-    }
+    cms.on('all-plugins-loaded', async () => {
+      try {
+        await Promise.all(data.collections.map(async _path => {
+          const collection = path.basename(path.dirname(_path));
+          try {
+            const document = JSON.parse(fs.readFileSync(_path, 'utf8'));
+            await cms.getModel(collection).findOneAndUpdate({_id: document._id}, document, {upsert: true, new: true})
+          } catch (e) {
+            console.warn(e, collection);
+          }
+        }));
+      } catch (e) {
+        console.error('Exception when update another collections', e)
+        return
+      }
+    })
 
     if (dbExists) {
       if (forceInit) {

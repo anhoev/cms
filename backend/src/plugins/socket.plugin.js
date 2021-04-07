@@ -22,7 +22,7 @@ module.exports = async (cms) => {
     }
 
     resolveFileLoader(cms.pluginFiles);
-    cms.emit('all-plugins-loaded')
+    await cms.emit('all-plugins-loaded')
   })
 
   function resolveFileLoaderBeforeInitModel(pluginFiles) {

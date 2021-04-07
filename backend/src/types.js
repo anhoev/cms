@@ -253,6 +253,7 @@ module.exports = (cms) => {
           _.once(function (err, result) {
             if (req.originalUrl !== '/admin' && req.originalUrl !== '/getTypes') {
               Object.keys(result.collections).forEach(key => {
+                if (!result.collections[key]) return
                 const propertiesToOmit = Object.keys(result.collections[key]).filter(e => {
                   return _.isNil(result.collections[key][e]);
                 }).concat(['queries', 'paths', 'form', 'tabs']);
