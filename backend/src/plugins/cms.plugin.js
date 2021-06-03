@@ -151,23 +151,13 @@ class CmsPlugin {
         }));
       } catch (e) {
         console.error('Exception when update another collections', e)
-        return
       }
-    })
 
-    if (dbExists) {
-      if (forceInit) {
-        cms.on('all-plugins-loaded', () => {
-          cms.emit('migrate-data')
-        })
-        console.log('Update database completed')
-      }
-    } else {
-      cms.on('all-plugins-loaded', () => {
-        cms.emit('init-data-complete')
-      })
-      console.log('Init database completed')
-    }
+      if (!dbExists)
+        await cms.emit('init-data-complete')
+
+      await cms.emit('migrate-data')
+    })
   }
 
   getI18n() {
