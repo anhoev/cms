@@ -61,7 +61,6 @@ class CmsPlugin {
 
   static async initData(plugins, forceInit = false) {
     const dbExists = (await cms.getModel('BuildForm').findOne({}).lean()) ? 1 : 0;
-
     const data = {buildForms: [], collections: []}
     const pluginNames = _.map(global.APP_CONFIG.plugins, plugin => plugin.name)
     // NOTE: load data collection name base on order of plugins in config files
@@ -154,10 +153,10 @@ class CmsPlugin {
         console.error('Exception when update another collections', e)
       }
 
-      if (!dbExists)
+      if (dbExists)
+        await cms.emit('migrate-data')
+      else
         await cms.emit('init-data-complete')
-
-      await cms.emit('migrate-data')
     })
   }
 
