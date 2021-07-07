@@ -281,7 +281,12 @@ module.exports = (cms) => {
 
     // this function can be found in config/config.js file
     const indexHtmlMutateFn = global.APP_CONFIG.mutateIndexHtml;
-    if (indexHtmlMutateFn) indexData = indexHtmlMutateFn(indexData);
+    if (indexHtmlMutateFn) {
+      console.log('cms/types/middleware.getTypesMiddleware: indexHtmlMutateFn')
+      indexData = indexHtmlMutateFn(indexData);
+    } else {
+      console.log('cms/types/middleware.getTypesMiddleware: indexHtmlMutateFn not found')
+    }
 
     const headTagPos = indexData.indexOf('</head>');
     getCollectionData(req).then(info => {
