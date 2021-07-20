@@ -13,6 +13,11 @@ async function getLastVersion(pluginName) {
   return plugin ? plugin.lastVersion : undefined
 }
 
+async function getShouldUpdateApp(pluginName) {
+  const plugin = await model.findOne({ name: pluginName })
+  return plugin && plugin.shouldUpdateApp ? pluginName.shouldUpdateApp : false
+}
+
 async function updateVersion(pluginName, version, lastVersion) {
   if (!lastVersion) {
     lastVersion = await getVersion(pluginName)
@@ -41,13 +46,21 @@ async function shouldUpdate ({ pluginName, pluginPath }) {
   if (!version) return false
 
   let currentVersion = await getVersion(pluginName)
+
+  _shouldUpdateApp = await getShouldUpdateApp(pluginName)
+
   if (!currentVersion || semver.gt(version, currentVersion) ) {
     await updateVersion(pluginName, version, currentVersion);
-    _shouldUpdateApp = true;
+    await setShouldUpdateApp(pluginName, true)
+    _shouldUpdateApp = true
     return true
   }
 
   return false
+}
+
+async function setShouldUpdateApp(pluginName, shouldUpdateApp) {
+  await model.updateOne({ name: pluginName }, { shouldUpdateApp }, { upsert: true })
 }
 
 module.exports = {

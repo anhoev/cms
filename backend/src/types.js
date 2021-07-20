@@ -270,8 +270,9 @@ module.exports = (cms) => {
   }
 
   //todo: add this to somewhere else
+  // this only run when frontend is built
   cms.middleware.getTypesMiddleware = function (req, res, next) {
-    if (req.url !== '/index.html') {
+    if (req.url !== '/index.html' || req.originalUrl !== '/admin') {
       next();
       return;
     }
@@ -287,7 +288,12 @@ module.exports = (cms) => {
     const headTagPos = indexData.indexOf('</head>');
     getCollectionData(req).then(info => {
       // append data into head tag
-      let infoStringify = jsesc(JsonFn.stringify(info), {json: true, isScriptContext: true});
+      const infoData = JsonFn.stringify(info)
+      let infoStringify = ''
+      // prevent mem leak
+      for (let i = 0; i < infoData.length; i += 500) {
+        infoStringify += jsesc(infoData.slice(i, i + 500), {json: true, isScriptContext: true});
+      }
 
       let appendContent = `<script>window._info_ = ${infoStringify}</script>`;
       const {appendHtmlHeaderConfig} = global.APP_CONFIG;

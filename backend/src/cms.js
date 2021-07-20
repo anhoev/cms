@@ -187,6 +187,9 @@ const cms = {
       case 'api':
         cms.use(func);
     }
+  },
+  emitAction: function () {
+    console.warn('Emit action is not registered')
   }
 };
 
